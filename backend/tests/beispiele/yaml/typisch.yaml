@@ -1,0 +1,14 @@
+# Dienstkonfiguration Werkzeugkiste Nord
+standard: &standard
+  zeitlimit: 30
+  wiederholungen: 3
+
+dienste:
+  # Interne Dienste
+  lager:
+    <<: *standard
+    port: 8081
+  versand:
+    <<: *standard
+    port: 8082
+    wiederholungen: 5

@@ -1,0 +1,6 @@
+# Kaputte Einrückung: 'port:' ist tiefer eingerückt als 'zeitlimit' -
+# der Parser meldet den Fehler in Zeile 6, Spalte 11 (am Doppelpunkt).
+dienste:
+  lager:
+    zeitlimit: 30
+      port: 8081

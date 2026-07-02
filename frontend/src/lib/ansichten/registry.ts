@@ -1,7 +1,7 @@
 // Ansichts-Registry: Jede Ansicht (Baum, Editor, Tabelle, ...) meldet sich
 // als AnsichtsModul an, die Schale rendert die Reiter aus dieser Liste.
-// Die Props der Ansichts-Komponenten kommen in Phase 0.3 - das Interface
-// bleibt bis dahin bewusst schlank.
+// Die Ansichts-Komponenten bekommen keine Props - sie lesen den aktiven Tab
+// selbst aus dem tabs-Store.
 
 import type { Component } from 'svelte'
 
@@ -10,7 +10,7 @@ export type Eignung = 'geeignet' | 'eingeschraenkt' | 'ungeeignet'
 export interface AnsichtsModul {
   id: string
   titel: string
-  /** Icon-Klasse ohne Stil-Präfix, zum Beispiel "fa-folder-tree". */
+  /** Vollständige Icon-Klasse, zum Beispiel "fa-solid fa-code". */
   icon: string
   /** Sortierposition in der Ansichtswahl (aufsteigend). */
   reihenfolge: number

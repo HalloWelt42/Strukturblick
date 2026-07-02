@@ -1,0 +1,3 @@
+{"nummer":"B-2026-0412","kunde":{"name":"Erika Musterfrau","email":"erika.musterfrau@beispiel.de"},"summe":68.3,"bezahlt":true}
+{"nummer":"B-2026-0413","kunde":{"name":"Jürgen Schäfer","email":"juergen.schaefer@beispiel.de"},"summe":129.0,"bezahlt":false}
+{"nummer":"B-2026-0414","kunde":{"name":"Käthe Größner","email":"kaethe.groessner@beispiel.de"},"summe":109.8,"bezahlt":true}

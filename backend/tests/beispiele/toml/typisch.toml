@@ -1,0 +1,16 @@
+# Stammdaten der Stadtbücherei
+titel = "Stadtbücherei Kiel"
+eroeffnet = 1998-04-01
+plaetze = 120
+
+[adresse]
+strasse = "Holstenstraße 1"
+ort = "Kiel"
+
+[[medien]]
+titel = "Der Datenbaum"
+seiten = 320
+
+[[medien]]
+titel = "Strukturen verstehen"
+seiten = 208

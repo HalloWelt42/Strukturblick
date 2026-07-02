@@ -1,46 +1,80 @@
 <script lang="ts">
-  // Ansichtswahl (Reiterzeile über der Ansichtsfläche). Die Reiter kommen aus
-  // der Ansichts-Registry; solange dort nichts angemeldet ist (Phase 0.2),
-  // erscheinen die acht Mockup-Reiter deaktiviert mit Tooltip.
+  // Ansichtswahl (Reiterzeile über der Ansichtsfläche) in Mockup-Reihenfolge.
+  // Registrierte Ansichten sind echte Reiter (Klick wechselt die Ansicht des
+  // aktiven Tabs), künftige Ansichten erscheinen deaktiviert mit Tooltip.
+  // Ohne Tab sind alle Reiter deaktiviert.
   import { ansichten } from '../ansichten/registry'
   import Tooltip from '../hilfsteile/Tooltip.svelte'
+  import { aktiverTab, setzeAnsicht } from '../zustand/tabs.svelte'
 
-  interface PlatzhalterReiter {
+  interface ReiterDefinition {
+    id: string
     icon: string
     titel: string
   }
 
-  const PLATZHALTER: PlatzhalterReiter[] = [
-    { icon: 'fa-folder-tree', titel: 'Baum' },
-    { icon: 'fa-code', titel: 'Editor' },
-    { icon: 'fa-table', titel: 'Tabelle' },
-    { icon: 'fa-chart-column', titel: 'Statistik' },
-    { icon: 'fa-diagram-project', titel: 'Schema' },
-    { icon: 'fa-code-compare', titel: 'Vergleich' },
-    { icon: 'fa-circle-nodes', titel: 'Graph' },
-    { icon: 'fa-book-open', titel: 'Lexikon' },
+  // Reihenfolge und Icons exakt wie in den Mockups (Baum vor Editor).
+  const MOCKUP_REITER: ReiterDefinition[] = [
+    { id: 'baum', icon: 'fa-solid fa-folder-tree', titel: 'Baum' },
+    { id: 'editor', icon: 'fa-solid fa-code', titel: 'Editor' },
+    { id: 'tabelle', icon: 'fa-solid fa-table', titel: 'Tabelle' },
+    { id: 'statistik', icon: 'fa-solid fa-chart-column', titel: 'Statistik' },
+    { id: 'schema', icon: 'fa-solid fa-diagram-project', titel: 'Schema' },
+    { id: 'vergleich', icon: 'fa-solid fa-code-compare', titel: 'Vergleich' },
+    { id: 'graph', icon: 'fa-solid fa-circle-nodes', titel: 'Graph' },
+    { id: 'lexikon', icon: 'fa-solid fa-book-open', titel: 'Lexikon' },
   ]
 
-  const registrierteAnsichten = ansichten()
+  const registrierteIds = new Set(ansichten().map((modul) => modul.id))
+  const tab = $derived(aktiverTab())
 </script>
 
 <div class="ansichtswahl">
-  {#if registrierteAnsichten.length === 0}
-    {#each PLATZHALTER as reiter (reiter.titel)}
-      <Tooltip text="Folgt mit den ersten Dokumenten">
+  {#each MOCKUP_REITER as reiter (reiter.id)}
+    {#if registrierteIds.has(reiter.id) && tab !== null}
+      {@const aktivesTabId = tab.id}
+      <button
+        class="reiter"
+        class:aktiv={tab.aktiveAnsicht === reiter.id}
+        onclick={() => setzeAnsicht(aktivesTabId, reiter.id)}
+      >
+        <i class={reiter.icon}></i>
+        {reiter.titel}
+      </button>
+    {:else if registrierteIds.has(reiter.id)}
+      <span class="reiter deaktiviert">
+        <i class={reiter.icon}></i>
+        {reiter.titel}
+      </span>
+    {:else}
+      <Tooltip text="Folgt in einer späteren Ausbaustufe">
         <span class="reiter deaktiviert">
-          <i class="fa-solid {reiter.icon}"></i>
+          <i class={reiter.icon}></i>
           {reiter.titel}
         </span>
       </Tooltip>
-    {/each}
-  {:else}
-    <!-- Aktiv-Zustand und Umschalten der Ansichten kommen in Phase 0.3. -->
-    {#each registrierteAnsichten as modul (modul.id)}
-      <span class="reiter">
-        <i class="fa-solid {modul.icon}"></i>
-        {modul.titel}
-      </span>
-    {/each}
-  {/if}
+    {/if}
+  {/each}
 </div>
+
+<style>
+  /* Button-Reset: die Mockups nutzen <a>-Elemente, in der App sind die
+     aktiven Reiter echte Knöpfe. Optik kommt aus .reiter in app.css; die
+     Zustände werden hier wegen der höheren Spezifität mitgeführt. */
+  button.reiter {
+    border: none;
+    background: none;
+    font-family: var(--schrift-anzeige);
+    cursor: pointer;
+  }
+
+  button.reiter:hover {
+    background: var(--akzent-weich);
+    color: var(--text-1);
+  }
+
+  button.reiter.aktiv {
+    background: var(--flaeche-panel);
+    color: var(--text-1);
+  }
+</style>

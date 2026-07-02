@@ -4,13 +4,15 @@
  * FehlerAntwort ({ fehler: { code, meldung, ... } }).
  */
 
-import type { FehlerAntwort } from './typen'
+import type { FehlerAntwort, FehlerDetail } from './typen'
 
 export class ApiError extends Error {
   constructor(
     public readonly status: number,
     public readonly code: string,
     public readonly meldung: string,
+    /** Volles Fehlermodell des Backends (inkl. Position), falls vorhanden. */
+    public readonly detail: FehlerDetail | null = null,
   ) {
     super(`Backend-Fehler ${status} (${code}): ${meldung}`)
     this.name = 'ApiError'
@@ -24,7 +26,15 @@ async function fehlerAusAntwort(antwort: Response): Promise<ApiError> {
     const daten = JSON.parse(body) as Partial<FehlerAntwort>
     const detail = daten.fehler
     if (detail && typeof detail.code === 'string' && typeof detail.meldung === 'string') {
-      return new ApiError(antwort.status, detail.code, detail.meldung)
+      const voll: FehlerDetail = {
+        code: detail.code,
+        meldung: detail.meldung,
+        pfad: detail.pfad ?? null,
+        position: detail.position ?? null,
+        details: detail.details ?? {},
+        request_id: detail.request_id ?? '',
+      }
+      return new ApiError(antwort.status, detail.code, detail.meldung, voll)
     }
   } catch {
     // Body war kein JSON - Fallback unten.

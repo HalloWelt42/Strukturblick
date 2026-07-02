@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buecherei eroeffnet="1998">
+  <!-- Bestand der Stadtbücherei -->
+  <buch isbn="978-3-16-148410-0">
+    <titel>Der Datenbaum</titel>
+    <autor>Erika Musterfrau</autor>
+    <preis waehrung="EUR">24.90</preis>
+  </buch>
+  <buch isbn="978-3-16-148411-7">
+    <titel>Strukturen verstehen</titel>
+    <autor>Sönke Matthiesen</autor>
+    <preis waehrung="EUR">19.90</preis>
+  </buch>
+</buecherei>
