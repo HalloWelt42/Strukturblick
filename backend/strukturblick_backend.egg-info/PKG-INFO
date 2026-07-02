@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: strukturblick-backend
-Version: 0.2.0
+Version: 0.4.0
 Summary: Backend des Strukturdaten-Assistenten Strukturblick
 Requires-Python: >=3.12
 Requires-Dist: fastapi>=0.115

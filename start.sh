@@ -354,6 +354,7 @@ usage() {
   cat <<'EOF'
 Strukturblick - Start/Stop
 
+  ./start.sh           Backend + Frontend starten (Kurzform für start)
   ./start.sh start     Backend + Frontend starten
   ./start.sh stop      Backend + Frontend stoppen
   ./start.sh restart   Backend + Frontend neu starten
@@ -371,12 +372,12 @@ EOF
 # Einstiegspunkt
 # ----------------------------------------------------------------------------
 case "${1:-}" in
-  start)         cmd_start ;;
+  ""|start)      cmd_start ;;
   stop)          cmd_stop ;;
   restart)       cmd_restart ;;
   status)        cmd_status ;;
   logs)          cmd_logs ;;
   setup)         cmd_setup ;;
-  ""|-h|--help|help) usage ;;
+  -h|--help|help) usage ;;
   *) err "Unbekanntes Kommando: $1"; echo; usage; exit 1 ;;
 esac
