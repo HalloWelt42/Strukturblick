@@ -1,10 +1,10 @@
 {
   "name": "strukturblick-frontend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Frontend des Strukturdaten-Assistenten (Aufbau folgt; aktuell liefern die Pakete Schrift und Icons für die Mockups)",
   "dependencies": {
-    "@fontsource/chakra-petch": "^5.2.7",
+    "@fontsource/barlow": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fortawesome/fontawesome-free": "^7.2.0"
   }

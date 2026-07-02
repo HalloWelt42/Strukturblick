@@ -23,7 +23,7 @@
   --rohfarbe-amber: #a8894f;
 
   /* Schrift */
-  --schrift-anzeige: "Chakra Petch", system-ui, -apple-system, sans-serif;
+  --schrift-anzeige: "Barlow", system-ui, -apple-system, sans-serif;
   --schrift-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* Kanten: alles eckig, nur Knöpfe leicht gerundet */
