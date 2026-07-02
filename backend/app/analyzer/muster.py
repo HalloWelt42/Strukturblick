@@ -21,9 +21,14 @@ from app.registry import analyzer
 
 _MINDEST_ABDECKUNG = 0.9
 _MINDEST_WERTE = 2
-_ENUM_MINDEST_WERTE = 6
-_ENUM_MIN_VERSCHIEDEN = 3
-_ENUM_MAX_VERSCHIEDEN = 8
+# Ein Aufzaehlungs-Kandidat verlangt WIEDERHOLUNG: eine kleine Menge verschiedener
+# Werte, die sich ueber genuegend Vorkommen wiederholen. Ohne die Wiederholungs-
+# Bedingung wuerden z. B. sechs unterschiedliche Artikelnamen faelschlich als
+# Aufzaehlung gemeldet (jeder Wert genau einmal - keine Aufzaehlung).
+_ENUM_MINDEST_WERTE = 8
+_ENUM_MIN_VERSCHIEDEN = 2
+_ENUM_MAX_VERSCHIEDEN = 12
+_ENUM_MAX_ANTEIL_VERSCHIEDEN = 0.5
 _BASE64_MINDEST_LAENGE = 16
 
 _UUID_MUSTER = re.compile(
@@ -118,10 +123,17 @@ def _enum_fund(pfad_muster: str, werte: list[str], max_beispiele: int) -> Muster
     verschiedene = sorted(set(werte))
     if not _ENUM_MIN_VERSCHIEDEN <= len(verschiedene) <= _ENUM_MAX_VERSCHIEDEN:
         return None
+    # Entscheidend: die verschiedenen Werte muessen sich wiederholen. Sind fast
+    # alle Werte einzigartig, ist es keine Aufzaehlung, sondern ein freies Feld.
+    if len(verschiedene) > len(werte) * _ENUM_MAX_ANTEIL_VERSCHIEDEN:
+        return None
+    # Abdeckung = mittlere Haeufigkeit je verschiedenem Wert, normiert auf 0..1
+    # (viele Wiederholungen -> nahe 1). Nur informativ fuer die Anzeige.
+    abdeckung = round(1.0 - len(verschiedene) / len(werte), 3)
     return MusterFund(
         pfad_muster=pfad_muster,
         muster="enum_kandidat",
-        abdeckung=1.0,
+        abdeckung=abdeckung,
         anzahl_werte=len(werte),
         beispiele=werte[:max_beispiele],
         enum_werte=verschiedene,

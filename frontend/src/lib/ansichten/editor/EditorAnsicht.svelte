@@ -3,9 +3,7 @@
   // mockups/editor.html. Der Editor ist an den aktiven Tab gebunden; beim
   // Tab-Wechsel wird er neu aufgebaut, damit die Undo-Historie nicht in ein
   // fremdes Dokument hinüberreicht.
-  import { foldEffect, foldNodeProp, syntaxTree, unfoldAll } from '@codemirror/language'
   import { openSearchPanel } from '@codemirror/search'
-  import type { StateEffect } from '@codemirror/state'
   import type { EditorView } from '@codemirror/view'
   import { untrack } from 'svelte'
 
@@ -17,6 +15,7 @@
     pfadZuSpanne,
     type PfadIndex,
   } from '../../dienste/pfadIndex'
+  import { ebenenAnzahl } from '../../dienste/tiefe'
   import { aktualisiereDokument, speichereDokument } from '../../speicher/dokumente'
   import { ladeNeu } from '../../zustand/dokumentListe.svelte'
   import { selektion, setzeSelektion } from '../../zustand/selektion.svelte'
@@ -25,7 +24,10 @@
   import { zeige } from '../../zustand/toaster.svelte'
   import {
     alsOffsetBereich,
+    entfalteAlles,
     erzeugeEditor,
+    falteAlles,
+    falteAufEbene,
     setzeDiagnosen,
     setzeDokument,
     setzeSprache,
@@ -53,6 +55,14 @@
     const tab = aktiverTab()
     if (tab === null || tab.analyse === null) return []
     return baueIndex(tab.analyse.positionen)
+  })
+
+  // Anzahl sinnvoller Ebenen-Knoepfe aus der tatsaechlichen Verschachtelungs-
+  // tiefe des Dokuments - genau wie beim Baum (mind. 1, gedeckelt bei 9).
+  const ebenen = $derived.by((): number => {
+    const tab = aktiverTab()
+    if (tab === null || tab.analyse === null) return 1
+    return ebenenAnzahl(tab.analyse.wurzel)
   })
 
   // Editor-Lebenszyklus: bei Tab-Wechsel neu aufbauen.
@@ -187,30 +197,20 @@
     zeige('Folgt in der Ausbaustufe Transformation.', 'info')
   }
 
-  /** Faltet alle faltbaren Knoten ab Tiefe N; vorher wird alles aufgeklappt. */
-  function falteAbEbene(ebene: number): void {
+  /** Faltet alle faltbaren Knoten ab Tiefe N (robust auch bei grossen Dateien). */
+  function zeigeEbene(ebene: number): void {
     if (view === null) return
-    unfoldAll(view)
-    const state = view.state
-    const effekte: StateEffect<unknown>[] = []
-    const stapel: boolean[] = []
-    let tiefe = 0
-    syntaxTree(state).iterate({
-      enter: (knoten) => {
-        const falter = knoten.type.prop(foldNodeProp)
-        const bereich = falter !== undefined ? falter(knoten.node, state) : null
-        const faltbar = bereich !== null && bereich.to > bereich.from
-        stapel.push(faltbar)
-        if (faltbar) {
-          tiefe += 1
-          if (tiefe >= ebene) effekte.push(foldEffect.of(bereich))
-        }
-      },
-      leave: () => {
-        if (stapel.pop() === true) tiefe -= 1
-      },
-    })
-    if (effekte.length > 0) view.dispatch({ effects: effekte })
+    falteAufEbene(view, ebene)
+  }
+
+  function allesAufklappen(): void {
+    if (view === null) return
+    entfalteAlles(view)
+  }
+
+  function allesZuklappen(): void {
+    if (view === null) return
+    falteAlles(view)
   }
 
   function oeffneSuche(): void {
@@ -290,10 +290,16 @@
     <button class="knopf klein" onclick={transformationFolgt}>
       <i class="fa-solid fa-arrow-down-a-z"></i> Schlüssel sortieren
     </button>
-    <span class="beschriftung">Falten:</span>
-    <button class="knopf klein" onclick={() => falteAbEbene(1)}>Ebene 1</button>
-    <button class="knopf klein" onclick={() => falteAbEbene(2)}>Ebene 2</button>
-    <button class="knopf klein" onclick={() => falteAbEbene(3)}>Ebene 3</button>
+    <button class="knopf klein" onclick={allesAufklappen}>
+      <i class="fa-solid fa-angles-down"></i> Alles aufklappen
+    </button>
+    <button class="knopf klein" onclick={allesZuklappen}>
+      <i class="fa-solid fa-angles-up"></i> Alles zuklappen
+    </button>
+    <span class="beschriftung">Ebene:</span>
+    {#each Array.from({ length: ebenen }, (_, i) => i + 1) as ebene (ebene)}
+      <button class="knopf klein" onclick={() => zeigeEbene(ebene)}>{ebene}</button>
+    {/each}
     <span class="luecke"></span>
     <button class="knopf klein" onclick={oeffneSuche}>
       <i class="fa-solid fa-magnifying-glass"></i> Suchen

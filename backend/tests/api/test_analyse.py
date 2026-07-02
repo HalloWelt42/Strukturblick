@@ -273,9 +273,22 @@ def test_muster_enum_kandidat(client: TestClient) -> None:
     fund = funde[0]
     assert fund["pfad_muster"] == "/*/status"
     assert fund["anzahl_werte"] == 9
-    assert fund["abdeckung"] == 1.0
+    # abdeckung = Wiederholungsgrad (1 - verschieden/gesamt): 1 - 3/9 = 0.667
+    assert fund["abdeckung"] == 0.667
     assert fund["enum_werte"] == ["erledigt", "in_arbeit", "offen"]
     assert fund["beispiele"] == ["offen", "in_arbeit", "erledigt"]
+
+
+def test_muster_freies_feld_ist_kein_enum(client: TestClient) -> None:
+    # Neun voellig verschiedene Werte sind KEINE Aufzaehlung (keine Wiederholung).
+    namen = [f"Artikel {n}" for n in range(9)]
+    dokument = json.dumps([{"artikel": name} for name in namen])
+
+    antwort = client.post("/api/analyse/muster", json={"dokument": {"inhalt_text": dokument}})
+
+    assert antwort.status_code == 200
+    enums = [fund for fund in antwort.json()["funde"] if fund["muster"] == "enum_kandidat"]
+    assert enums == []
 
 
 def test_capabilities_enthaelt_die_analyzer(client: TestClient) -> None:

@@ -90,15 +90,40 @@ const basisTheme = EditorView.theme({
   '.cm-panels.cm-panels-bottom': {
     borderTop: '1px solid var(--rand-2)',
   },
+  // Such-Panel im App-Look: bequeme Innenabstaende, umbruchfaehige Zeile,
+  // Platz fuer das Schliessen-Kreuz oben rechts.
   '.cm-panel.cm-search': {
     fontFamily: 'var(--schrift-anzeige)',
     fontSize: '0.82rem',
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 'var(--a2)',
+    padding: 'var(--a2) var(--a5) var(--a2) var(--a3)',
+    position: 'relative',
   },
+  // Eingabefelder deutlich groesser und breiter; das Suchfeld extra breit.
   '.cm-textfield': {
     backgroundColor: 'var(--flaeche-eingabe)',
     border: '1px solid var(--rand-2)',
     borderRadius: 'var(--radius-eingabe)',
     color: 'var(--text-1)',
+    fontFamily: 'var(--schrift-anzeige)',
+    fontSize: '0.82rem',
+    height: '28px',
+    padding: '0 var(--a2)',
+    margin: '0',
+  },
+  '.cm-textfield:focus, .cm-textfield:focus-visible': {
+    outline: '2px solid var(--akzent)',
+    outlineOffset: '-1px',
+    borderColor: 'var(--akzent)',
+  },
+  '.cm-panel.cm-search .cm-textfield[name="search"]': {
+    minWidth: '220px',
+  },
+  '.cm-panel.cm-search .cm-textfield[name="replace"]': {
+    minWidth: '180px',
   },
   '.cm-button': {
     backgroundColor: 'var(--flaeche-panel)',
@@ -106,14 +131,78 @@ const basisTheme = EditorView.theme({
     border: '1px solid var(--rand-2)',
     borderRadius: 'var(--radius-knopf)',
     color: 'var(--text-1)',
+    fontFamily: 'var(--schrift-anzeige)',
+    fontSize: '0.8rem',
+    height: '28px',
+    padding: '0 var(--a2)',
+    margin: '0',
     cursor: 'pointer',
+  },
+  '.cm-button:hover': {
+    backgroundColor: 'var(--akzent-weich)',
   },
   '.cm-button:active': {
     backgroundImage: 'none',
     backgroundColor: 'var(--akzent-weich)',
   },
-  '.cm-panel.cm-search [name="close"]': {
+  '.cm-button:focus-visible': {
+    outline: '2px solid var(--akzent)',
+    outlineOffset: '-1px',
+  },
+  // Checkbox-Labels ("match case", "regexp", "by word") kompakt und gedaempft.
+  '.cm-panel.cm-search label': {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 'var(--a1)',
     color: 'var(--text-2)',
+    fontFamily: 'var(--schrift-anzeige)',
+    fontSize: '0.8rem',
+    whiteSpace: 'nowrap',
+  },
+  '.cm-panel.cm-search label input[type="checkbox"]': {
+    accentColor: 'var(--akzent)',
+    margin: '0',
+    cursor: 'pointer',
+  },
+  // Schliessen-Kreuz: ordentliche Klickflaeche, gut sichtbar, oben rechts.
+  '.cm-panel.cm-search [name="close"]': {
+    position: 'absolute',
+    top: '50%',
+    right: 'var(--a2)',
+    transform: 'translateY(-50%)',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '24px',
+    height: '24px',
+    padding: '0',
+    border: '1px solid transparent',
+    borderRadius: 'var(--radius-knopf)',
+    background: 'none',
+    color: 'var(--text-1)',
+    fontSize: '1.1rem',
+    lineHeight: '1',
+    cursor: 'pointer',
+  },
+  '.cm-panel.cm-search [name="close"]:hover': {
+    backgroundColor: 'var(--akzent-weich)',
+    color: 'var(--text-1)',
+  },
+  '.cm-panel.cm-search [name="close"]:focus-visible': {
+    outline: '2px solid var(--akzent)',
+    outlineOffset: '-1px',
+  },
+  // Trefferzaehler-Zeile unter dem Such-Panel.
+  '.cm-treffer-zaehler': {
+    padding: 'var(--a1) var(--a3)',
+    fontFamily: 'var(--schrift-anzeige)',
+    fontSize: '0.78rem',
+    color: 'var(--text-2)',
+    borderTop: '1px solid var(--rand-1)',
+    backgroundColor: 'var(--flaeche-panel-2)',
+  },
+  '.cm-treffer-zaehler:empty': {
+    display: 'none',
   },
   // Diagnose-Einblendungen der Lint-Erweiterung.
   '.cm-tooltip': {

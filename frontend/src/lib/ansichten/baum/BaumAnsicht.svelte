@@ -7,6 +7,7 @@
 
   import { baueSichtbareZeilen, type BaumZeileDaten } from '../../dienste/baumZeilen'
   import { markeFuerPfad } from '../../dienste/musterZuordnung'
+  import { ebenenAnzahl } from '../../dienste/tiefe'
   import LeererZustand from '../../hilfsteile/LeererZustand.svelte'
   import VirtuelleListe from '../../hilfsteile/VirtuelleListe.svelte'
   import { extrasFuer, ladeMuster } from '../../zustand/analyseExtras.svelte'
@@ -46,6 +47,12 @@
     return baueSichtbareZeilen(tab.analyse.wurzel, tab.analyse.positionen, zustand)
   })
   const begriff = $derived(zustand?.suchbegriff.trim().toLowerCase() ?? '')
+  // Anzahl sinnvoller Ebenen-Knoepfe aus der tatsaechlichen Verschachtelungs-
+  // tiefe des Dokuments (mind. 1, gedeckelt bei 9). Ein flaches Dokument zeigt
+  // so nur den Knopf "1", tiefere Strukturen entsprechend mehr.
+  const ebenen = $derived(
+    tab !== null && tab.analyse !== null ? ebenenAnzahl(tab.analyse.wurzel) : 1,
+  )
   /** Muster-Funde zum Dokument (leer, solange nichts geladen ist). */
   const musterFunde = $derived(
     tab !== null && tab.analyse !== null
@@ -152,9 +159,9 @@
       <i class="fa-solid fa-angles-up"></i> Alles zuklappen
     </button>
     <span class="beschriftung">Ebene:</span>
-    <button class="knopf klein" onclick={() => zeigeEbene(1)}>1</button>
-    <button class="knopf klein" onclick={() => zeigeEbene(2)}>2</button>
-    <button class="knopf klein" onclick={() => zeigeEbene(3)}>3</button>
+    {#each Array.from({ length: ebenen }, (_, i) => i + 1) as ebene (ebene)}
+      <button class="knopf klein" onclick={() => zeigeEbene(ebene)}>{ebene}</button>
+    {/each}
     <span class="luecke"></span>
     <div class="feld-zeile">
       <input

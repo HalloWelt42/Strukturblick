@@ -8,7 +8,16 @@
 //   EditorView.editorAttributes-Facet im attribute-Compartment.
 
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
-import { bracketMatching, foldGutter, foldKeymap } from '@codemirror/language'
+import {
+  bracketMatching,
+  ensureSyntaxTree,
+  foldEffect,
+  foldGutter,
+  foldKeymap,
+  foldNodeProp,
+  syntaxTree,
+  unfoldAll,
+} from '@codemirror/language'
 import { lintGutter, setDiagnostics, type Diagnostic } from '@codemirror/lint'
 import { highlightSelectionMatches, search, searchKeymap } from '@codemirror/search'
 import {
@@ -30,6 +39,7 @@ import {
 import type { FormatId, QuellSpanne } from '../../api/typen'
 import { editorTheme } from './editorTheme'
 import { sprachExtension } from './sprachen'
+import { suchZaehlung } from './suchZaehlung'
 
 export interface EditorArgs {
   inhalt: string
@@ -68,6 +78,7 @@ export function erzeugeEditor(elternElement: HTMLElement, args: EditorArgs): Edi
       highlightSelectionMatches(),
       lintGutter(),
       search({ top: false }),
+      suchZaehlung,
       keymap.of([
         ...defaultKeymap,
         ...historyKeymap,
@@ -134,6 +145,69 @@ function alsOffsetBereich(doc: Text, position: QuellSpanne | null): { from: numb
       : 1
   const zeile = doc.line(nummer)
   return { from: zeile.from, to: zeile.to }
+}
+
+// ----- Faltung ------------------------------------------------------------
+//
+// Obergrenzen, damit die Faltung auch bei sehr grossen Dokumenten (grosse
+// NDJSON-/JSON-Baeume) zuegig bleibt und weder haengt noch fehlschlaegt:
+// - PARSE_ZEITBUDGET_MS begrenzt, wie lange der Parser hoechstens laeuft, um
+//   den Syntaxbaum zu vervollstaendigen. Reicht die Zeit nicht, wird der
+//   bereits geparste (unvollstaendige) Baum verwendet - lieber die oberen
+//   Ebenen falten als den Browser blockieren.
+// - MAX_KNOTEN kappt die Iteration; darueber hinaus werden keine weiteren
+//   Faltbereiche gesammelt. So bleibt der eine Sammel-Dispatch beschraenkt.
+const PARSE_ZEITBUDGET_MS = 150
+const MAX_KNOTEN = 200_000
+
+/**
+ * Faltet alle faltbaren Container ab Tiefe `ebene` (1-basiert) zusammen und
+ * klappt zuvor alles auf. Robust fuer grosse Dokumente: der Syntaxbaum wird
+ * nur bis zu einem Zeitbudget vervollstaendigt, die Iteration bei MAX_KNOTEN
+ * gekappt, und alle Faltungen laufen in EINEM Dispatch.
+ */
+export function falteAufEbene(view: EditorView, ebene: number): void {
+  unfoldAll(view)
+  const state = view.state
+  // Parser bis zum Dokumentende laufen lassen, aber nur im Zeitbudget - liefert
+  // bei Zeitueberschreitung null, dann greifen wir auf den Teilbaum zurueck.
+  const baum =
+    ensureSyntaxTree(state, state.doc.length, PARSE_ZEITBUDGET_MS) ?? syntaxTree(state)
+  const effekte: ReturnType<typeof foldEffect.of>[] = []
+  // Tiefenzaehler ueber einen Stapel: jeder betretene Knoten legt ab, ob er
+  // faltbar war, jeder verlassene raeumt entsprechend ab.
+  const stapel: boolean[] = []
+  let tiefe = 0
+  let besucht = 0
+  baum.iterate({
+    enter: (knoten) => {
+      if (besucht >= MAX_KNOTEN) return false
+      besucht += 1
+      const falter = knoten.type.prop(foldNodeProp)
+      const bereich = falter !== undefined ? falter(knoten.node, state) : null
+      const faltbar = bereich !== null && bereich.to > bereich.from
+      stapel.push(faltbar)
+      if (faltbar) {
+        tiefe += 1
+        if (tiefe >= ebene) effekte.push(foldEffect.of(bereich))
+      }
+      return undefined
+    },
+    leave: () => {
+      if (stapel.pop() === true) tiefe -= 1
+    },
+  })
+  if (effekte.length > 0) view.dispatch({ effects: effekte })
+}
+
+/** Klappt alle faltbaren Container des Dokuments zusammen (wie Ebene 1). */
+export function falteAlles(view: EditorView): void {
+  falteAufEbene(view, 1)
+}
+
+/** Klappt alle Faltungen wieder auf. */
+export function entfalteAlles(view: EditorView): void {
+  unfoldAll(view)
 }
 
 /** Übergibt die Diagnosen an die Lint-Erweiterung (Unterstreichung + Gutter). */

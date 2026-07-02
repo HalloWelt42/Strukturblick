@@ -11,6 +11,13 @@
     tabs,
     type DokumentTab,
   } from '../zustand/tabs.svelte'
+  import { vergleichStatus } from '../zustand/vergleichStatus.svelte'
+
+  /** Ist dieser Tab an einem gerade laufenden Vergleich beteiligt? */
+  function imVergleich(id: string): boolean {
+    if (!vergleichStatus.aktiv) return false
+    return id === vergleichStatus.linksTabId || id === vergleichStatus.rechtsTabId
+  }
 
   let schliessDialogOffen = $state(false)
   let zuSchliessendeTabId: string | null = null
@@ -41,6 +48,7 @@
     <div
       class="tab"
       class:aktiv={tab.id === tabs.aktiveTabId}
+      class:im-vergleich={imVergleich(tab.id)}
       role="button"
       tabindex="0"
       onclick={() => setzeAktiv(tab.id)}
@@ -51,6 +59,9 @@
         }
       }}
     >
+      {#if imVergleich(tab.id)}
+        <i class="fa-solid fa-code-compare vergleich-symbol" aria-hidden="true"></i>
+      {/if}
       <i class="fa-solid {iconFuerFormat(tab.format)}"></i>
       {tab.titel}
       {#if tab.geaendert}
@@ -80,3 +91,27 @@
   bestaetigenText="Schließen"
   onErgebnis={beiSchliessErgebnis}
 />
+
+<style>
+  /* Hervorhebung der beiden am aktiven Vergleich beteiligten Tabs. Wirkt
+     zusätzlich zum aktiv-Zustand: aktiv trägt einen oberen --akzent-Streifen
+     (app.css), diese Markierung legt einen weichen Zweitakzent-Hintergrund und
+     einen unteren Zweitakzent-Streifen darüber - kein seitlicher Rand. */
+  .tab.im-vergleich {
+    background: var(--zweitakzent-weich);
+    box-shadow: inset 0 -2px 0 var(--zweitakzent);
+  }
+
+  /* Aktiver UND im Vergleich: oberer Akzentstreifen (aktiv) und unterer
+     Zweitakzentstreifen zugleich sichtbar halten. */
+  .tab.im-vergleich.aktiv {
+    box-shadow:
+      inset 0 2px 0 var(--akzent),
+      inset 0 -2px 0 var(--zweitakzent);
+  }
+
+  .vergleich-symbol {
+    color: var(--zweitakzent);
+    font-size: 0.8rem;
+  }
+</style>

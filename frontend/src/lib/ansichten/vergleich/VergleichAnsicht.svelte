@@ -27,6 +27,7 @@
   import { dokumentListe } from '../../zustand/dokumentListe.svelte'
   import { setzeSelektion } from '../../zustand/selektion.svelte'
   import { aktiverTab, tabs, type DokumentTab } from '../../zustand/tabs.svelte'
+  import { beendeVergleich, setzeVergleich } from '../../zustand/vergleichStatus.svelte'
   import { erzeugeMergeAnsicht } from './erzeugeMergeAnsicht'
 
   /** Wählbare Vergleichsquelle: anderer offener Tab oder gespeichertes Dokument. */
@@ -46,6 +47,8 @@
   /** Ergebnis eines Laufs, gebunden an den verglichenen Tab. */
   interface Lauf {
     tabId: string
+    /** id des rechten Tabs, falls die rechte Seite ein offener Tab war, sonst null. */
+    rechtsTabId: string | null
     linksText: string
     linksFormat: FormatId | null
     linksTitel: string
@@ -104,6 +107,20 @@
   $effect(() => () => {
     merge?.destroy()
     merge = null
+  })
+
+  // Tab-Hervorhebung: solange ein Ergebnis für den aktiven Tab angezeigt wird,
+  // die beiden beteiligten Tabs in der Tab-Leiste markieren. Verschwindet das
+  // Ergebnis (Tab-Wechsel, kein Lauf), wird die Markierung wieder aufgehoben;
+  // ebenso beim Verlassen der Ansicht (Cleanup).
+  $effect(() => {
+    const daten = anzeige
+    if (daten === null) {
+      beendeVergleich()
+      return
+    }
+    setzeVergleich(daten.tabId, daten.rechtsTabId)
+    return () => beendeVergleich()
   })
 
   /** Löst die gewählte rechte Seite in Text, Format und Namen auf. */
@@ -166,8 +183,11 @@
       }
       const rechtsRef: DokumentReferenz = { inhalt_text: rechts.text, dateiname: rechts.titel }
       const antwort = await mitCacheWiederholung(links, rechtsRef)
+      // rechte Seite als offener Tab? Dann seine id für die Tab-Hervorhebung merken.
+      const rechtsTabId = wahl.startsWith('tab:') ? wahl.slice(4) : null
       lauf = {
         tabId: links.id,
+        rechtsTabId,
         linksText: links.inhalt,
         linksFormat: links.format,
         linksTitel: links.titel,
@@ -299,20 +319,16 @@
       </span>
     </div>
   {:else if anzeige !== null}
-    <div class="diff-split">
-      <div class="diff-pane diff-koepfe">
-        <div class="diff-pane-kopf">
-          <i class="fa-solid fa-file-code"></i>
-          {anzeige.linksTitel}
-          <span class="abzeichen">Tab</span>
-        </div>
+    <div class="v-koepfe">
+      <div class="diff-pane-kopf">
+        <i class="fa-solid fa-file-code"></i>
+        {anzeige.linksTitel}
+        <span class="abzeichen">Tab</span>
       </div>
-      <div class="diff-pane diff-koepfe">
-        <div class="diff-pane-kopf">
-          <i class="fa-solid fa-file-code"></i>
-          {anzeige.rechts.titel}
-          <span class="abzeichen">{anzeige.rechts.herkunft}</span>
-        </div>
+      <div class="diff-pane-kopf">
+        <i class="fa-solid fa-file-code"></i>
+        {anzeige.rechts.titel}
+        <span class="abzeichen">{anzeige.rechts.herkunft}</span>
       </div>
     </div>
     <div class="merge-wirt" bind:this={wirt}></div>
@@ -372,10 +388,21 @@
     outline-offset: 2px;
   }
 
-  /* Nur die Pane-Köpfe (Dateiname + Abzeichen) liegen im Mockup-Grid; die
-     eigentlichen Editoren rendert die MergeView darunter. */
-  .diff-koepfe {
-    overflow: visible;
+  /* Nur die Pane-Köpfe (Dateiname + Abzeichen) sitzen in einer schlanken
+     Zwei-Spalten-Leiste (flex: none); die eigentlichen Editoren rendert die
+     MergeView im flex:1-Wirt darunter. Nicht .diff-split verwenden - das trägt
+     in app.css flex:1 und würde die Höhe der Editoren nach unten drücken. */
+  .v-koepfe {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    flex: none;
+    background: var(--rand-2);
+    border-bottom: 1px solid var(--rand-2);
+  }
+
+  .v-koepfe .diff-pane-kopf {
+    background: var(--flaeche-panel-2);
   }
 
   /* Wirt-Container der MergeView: Abstände per padding, nie margin am
