@@ -10,6 +10,7 @@ import EditorAnsicht from './editor/EditorAnsicht.svelte'
 import { registriereAnsicht } from './registry'
 import StatistikAnsicht from './statistik/StatistikAnsicht.svelte'
 import TabellenAnsicht from './tabelle/TabellenAnsicht.svelte'
+import VergleichAnsicht from './vergleich/VergleichAnsicht.svelte'
 
 registriereAnsicht({
   id: 'baum',
@@ -53,4 +54,14 @@ registriereAnsicht({
   brauchtAnalyse: true,
   eignung: () => 'geeignet',
   komponente: StatistikAnsicht,
+})
+
+registriereAnsicht({
+  id: 'vergleich',
+  titel: 'Vergleich',
+  icon: 'fa-solid fa-code-compare',
+  reihenfolge: 50,
+  brauchtAnalyse: true,
+  eignung: () => 'geeignet',
+  komponente: VergleichAnsicht,
 })

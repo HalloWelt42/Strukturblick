@@ -1,8 +1,8 @@
-"""JSONPath (RFC 9535) ueber jsonpath_rfc9535 auf dem normalisierten Wertebaum.
+"""JSONPath (RFC 9535) über jsonpath_rfc9535 auf dem normalisierten Wertebaum.
 
 finditer liefert je Treffer eine location (Tupel aus str/int-Segmenten) und den
-Wert. Aus der location wird ueber pointer_aus_segmenten der JSON-Pointer gebaut,
-der zugleich Schluessel in die Positionskarte des Dokuments ist. Syntaxfehler des
+Wert. Aus der location wird über pointer_aus_segmenten der JSON-Pointer gebaut,
+der zugleich Schlüssel in die Positionskarte des Dokuments ist. Syntaxfehler des
 Ausdrucks werden als AbfrageSyntaxFehler mit deutscher Meldung weitergereicht.
 """
 
@@ -56,6 +56,6 @@ def fuehre_jsonpath(dok: GeparstesDokument, ausdruck: str, max_treffer: int) -> 
 
 def _syntaxfehler(fehler: jp.JSONPathError) -> AbfrageSyntaxFehler:
     return AbfrageSyntaxFehler(
-        f"Der JSONPath-Ausdruck ist ungueltig: {fehler}",
+        f"Der JSONPath-Ausdruck ist ungültig: {fehler}",
         details={"technisch": str(fehler)},
     )

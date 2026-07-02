@@ -103,8 +103,8 @@ export function baueSichtbareZeilen(
       treffer: istTreffer(begriff, schluessel, vorschau),
       liste_erkannt: typ === 'liste' && istGleichfoermigeObjektListe(wert),
     })
-    // Im Filter-Modus vollstaendig absteigen, damit auch Treffer in
-    // zugeklappten Teilbaeumen gefunden werden.
+    // Im Filter-Modus vollständig absteigen, damit auch Treffer in
+    // zugeklappten Teilbäumen gefunden werden.
     if (!istContainer || (!filtern && !aufgeklappt)) return
     if (Array.isArray(wert)) {
       wert.forEach((kind, kindIndex) => {

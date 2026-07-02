@@ -58,20 +58,36 @@ def _format_bestimmen(roh: bytes, referenz: DokumentReferenz) -> FormatId:
     return kandidaten[0].format_id
 
 
-def parse_mit_cache(referenz: DokumentReferenz) -> tuple[str, GeparstesDokument]:
-    """Zentrale Auflösung: Referenz -> (Hash, geparstes Dokument), mit Cache-Pflege."""
+def roh_und_dokument(referenz: DokumentReferenz) -> tuple[bytes, str, GeparstesDokument]:
+    """Zentrale Auflösung: Referenz -> (Rohbytes, Hash, geparstes Dokument), mit Cache-Pflege.
+
+    Wie parse_mit_cache, liefert aber zusätzlich die Rohbytes - nötig überall dort,
+    wo der ursprüngliche Text gebraucht wird (etwa für die Reparatur).
+    """
     roh = _roh_aus_referenz(referenz)
     hash_wert = dokument_hash(roh)
 
     eintrag = dokument_cache.hole(hash_wert)
     if eintrag is not None and referenz.format_id in (None, eintrag.dokument.format_id):
-        return hash_wert, eintrag.dokument
+        return eintrag.roh, hash_wert, eintrag.dokument
 
     format_id = _format_bestimmen(roh, referenz)
     engine = engine_fuer(format_id)
     dokument = engine.parsen(roh, referenz.parse_optionen)
     dokument_cache.lege_ab(hash_wert, CacheEintrag(roh=roh, dokument=dokument))
+    return roh, hash_wert, dokument
+
+
+def parse_mit_cache(referenz: DokumentReferenz) -> tuple[str, GeparstesDokument]:
+    """Zentrale Auflösung: Referenz -> (Hash, geparstes Dokument), mit Cache-Pflege."""
+    _, hash_wert, dokument = roh_und_dokument(referenz)
     return hash_wert, dokument
+
+
+def roh_und_format(referenz: DokumentReferenz) -> tuple[bytes, FormatId]:
+    """Löst Rohbytes und Format auf, ohne zu parsen - nötig für defekte Eingaben (Reparatur)."""
+    roh = _roh_aus_referenz(referenz)
+    return roh, _format_bestimmen(roh, referenz)
 
 
 @router.post("/dokumente/erkennen")

@@ -1,8 +1,8 @@
-"""Volltext- und Regex-Suche per rekursivem Durchlauf ueber den Wertebaum.
+"""Volltext- und Regex-Suche per rekursivem Durchlauf über den Wertebaum.
 
-Wie in der Statistik wird der Wertebaum mit Pointer-Mitfuehrung durchlaufen. Je
-nach nur_schluessel werden entweder die Objektschluessel oder die skalaren Werte
-(in str() umgewandelt) geprueft. Bei regex=True wird der Ausdruck kompiliert
+Wie in der Statistik wird der Wertebaum mit Pointer-Mitführung durchlaufen. Je
+nach nur_schluessel werden entweder die Objektschlüssel oder die skalaren Werte
+(in str() umgewandelt) geprüft. Bei regex=True wird der Ausdruck kompiliert
 (re.error -> AbfrageSyntaxFehler), sonst case-insensitiv als Substring gesucht.
 """
 
@@ -28,7 +28,7 @@ def fuehre_volltext(
     regex: bool,
     nur_schluessel: bool,
 ) -> list[Treffer]:
-    """Durchsucht Schluessel oder skalare Werte; liefert bis zu max_treffer + 1 Treffer."""
+    """Durchsucht Schlüssel oder skalare Werte; liefert bis zu max_treffer + 1 Treffer."""
     passt = _regex_pruefung(ausdruck) if regex else _substring_pruefung(ausdruck)
     treffer: list[Treffer] = []
     _durchlaufe(dok, dok.wurzel, "", passt, nur_schluessel, max_treffer, treffer)
@@ -45,7 +45,7 @@ def _regex_pruefung(ausdruck: str) -> _Prueffung:
         muster = re.compile(ausdruck)
     except re.error as fehler:
         raise AbfrageSyntaxFehler(
-            f"Der regulaere Ausdruck ist ungueltig: {fehler}",
+            f"Der reguläre Ausdruck ist ungültig: {fehler}",
             details={"technisch": str(fehler)},
         ) from fehler
     return lambda text: muster.search(text) is not None
@@ -70,7 +70,7 @@ def _durchlaufe(
     max_treffer: int,
     treffer: list[Treffer],
 ) -> None:
-    """Rekursiver Abstieg; bricht ab, sobald ein Treffer ueber max_treffer hinaus faellt."""
+    """Rekursiver Abstieg; bricht ab, sobald ein Treffer über max_treffer hinaus fällt."""
     if len(treffer) > max_treffer:
         return
     if isinstance(wert, dict):

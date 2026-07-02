@@ -55,6 +55,17 @@ from app.modelle.system import (
     Limits,
     ModulInfo,
 )
+from app.modelle.transform import (
+    DiffAnfrage,
+    DiffAntwort,
+    DiffArt,
+    DiffEintrag,
+    KonvertierAnfrage,
+    KonvertierAntwort,
+    ReparaturAnfrage,
+    ReparaturAntwort,
+    VerlustHinweis,
+)
 
 __all__ = [
     "AbfrageAnfrage",
@@ -63,6 +74,10 @@ __all__ = [
     "CacheStatusAntwort",
     "CapabilitiesAntwort",
     "DialektInfo",
+    "DiffAnfrage",
+    "DiffAntwort",
+    "DiffArt",
+    "DiffEintrag",
     "DokumentReferenz",
     "ErkennungsAntwort",
     "ErkennungsErgebnis",
@@ -74,6 +89,8 @@ __all__ = [
     "HistogrammEimer",
     "JsonWert",
     "KnotenSpannen",
+    "KonvertierAnfrage",
+    "KonvertierAntwort",
     "KonvertierungsPaar",
     "Limits",
     "ModulInfo",
@@ -86,6 +103,8 @@ __all__ = [
     "Positionsgenauigkeit",
     "QuellPosition",
     "QuellSpanne",
+    "ReparaturAnfrage",
+    "ReparaturAntwort",
     "SchemaAnfrage",
     "SchemaAntwort",
     "SchemaArt",
@@ -100,6 +119,7 @@ __all__ = [
     "ValidierungsAnfrage",
     "ValidierungsAntwort",
     "ValidierungsFehler",
+    "VerlustHinweis",
     "Verlustaspekt",
     "ZahlenHistogramm",
 ]

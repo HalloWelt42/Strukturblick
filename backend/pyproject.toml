@@ -22,6 +22,8 @@ dependencies = [
     "jsonschema>=4.22",
     "xmlschema>=3.3",
     "jsonpath-rfc9535>=0.1",
+    "json-repair>=0.30",
+    "deepdiff>=8.0",
 ]
 
 [project.optional-dependencies]

@@ -1,9 +1,11 @@
 // Registry der Werkzeuge (linke Leiste). Jedes Werkzeug meldet sich mit id,
 // Titel und Komponente an; die Schale rendert das aktive Werkzeug anhand der
-// id aus dem werkzeug-Zustand. Weitere Werkzeuge (Konvertieren, Reparatur,
-// Code erzeugen, Testdaten) kommen in späteren Ausbaustufen einfach dazu.
+// id aus dem werkzeug-Zustand. Weitere Werkzeuge (Code erzeugen, Testdaten)
+// kommen in späteren Ausbaustufen einfach dazu.
 import type { Component } from 'svelte'
 
+import KonvertierenWerkzeug from './KonvertierenWerkzeug.svelte'
+import ReparaturWerkzeug from './ReparaturWerkzeug.svelte'
 import ValidierenWerkzeug from './ValidierenWerkzeug.svelte'
 
 export interface WerkzeugModul {
@@ -22,4 +24,6 @@ export function werkzeugKomponente(id: string): Component | undefined {
   return WERKZEUGE.get(id)?.komponente
 }
 
+registriereWerkzeug({ id: 'konvertieren', titel: 'Konvertieren', komponente: KonvertierenWerkzeug })
 registriereWerkzeug({ id: 'validieren', titel: 'Validieren', komponente: ValidierenWerkzeug })
+registriereWerkzeug({ id: 'reparatur', titel: 'Reparatur', komponente: ReparaturWerkzeug })

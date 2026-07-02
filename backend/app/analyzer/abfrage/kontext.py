@@ -1,7 +1,7 @@
-"""Gemeinsame Kontext-Darstellung fuer Treffer aller Abfragesprachen.
+"""Gemeinsame Kontext-Darstellung für Treffer aller Abfragesprachen.
 
-Der Kontext ist eine kurze, menschenlesbare Zeile - fuer skalare Werte der Wert
-selbst, fuer Objekte und Listen eine knappe Typangabe. Der letzte Pfadschluessel
+Der Kontext ist eine kurze, menschenlesbare Zeile - für skalare Werte der Wert
+selbst, für Objekte und Listen eine knappe Typangabe. Der letzte Pfadschlüssel
 dient als Beschriftung (z. B. "summe: 68.3").
 """
 
@@ -20,7 +20,7 @@ def _letzter_schluessel(pfad: str) -> str:
 
 def _wert_darstellung(wert: JsonWert) -> str:
     if isinstance(wert, dict):
-        return f"{{Objekt mit {len(wert)} Schluesseln}}"
+        return f"{{Objekt mit {len(wert)} Schlüsseln}}"
     if isinstance(wert, list):
         return f"[Liste mit {len(wert)} Elementen]"
     if isinstance(wert, bool):
@@ -31,7 +31,7 @@ def _wert_darstellung(wert: JsonWert) -> str:
 
 
 def kontext_bilden(pfad: str, wert: JsonWert) -> str:
-    """Kurze Textdarstellung eines Treffers, optional mit Schluessel als Praefix."""
+    """Kurze Textdarstellung eines Treffers, optional mit Schlüssel als Präfix."""
     darstellung = _wert_darstellung(wert)
     schluessel = _letzter_schluessel(pfad)
     text = f"{schluessel}: {darstellung}" if schluessel else darstellung

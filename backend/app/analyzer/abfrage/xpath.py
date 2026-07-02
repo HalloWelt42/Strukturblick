@@ -1,20 +1,20 @@
-"""XPath ueber lxml auf dem nativen XML-Baum - nur fuer XML-Dokumente.
+"""XPath über lxml auf dem nativen XML-Baum - nur für XML-Dokumente.
 
-Zustaendigkeit: Nur wenn das Dokument als XML geparst wurde und ein lxml-Baum als
+Zuständigkeit: Nur wenn das Dokument als XML geparst wurde und ein lxml-Baum als
 natives Handle vorliegt. Sonst KonvertierungUnmoeglich.
 
-Rueckabbildung auf unsere Pfade: lxml liefert je Element eine Position (getpath
+Rückabbildung auf unsere Pfade: lxml liefert je Element eine Position (getpath
 mit 1-basierten Predikaten). Wir bilden daraus den JSON-Pointer in der
 xmltodict-Konvention des Projekts (siehe xml_engine): Elementname als Segment,
 wiederholte gleichnamige Geschwister als 0-basierte Liste, einzelne Kinder ohne
 Index. So findet der Pointer die Position in dok.positionen wieder.
 
 Grenzen: XPath kann auch Nicht-Element-Ergebnisse liefern (Attribut- und
-Textknoten sowie Skalare wie count()). Fuer Attribut- und Textknoten wird der
+Textknoten sowie Skalare wie count()). Für Attribut- und Textknoten wird der
 Pointer des tragenden Elements genutzt (bei Attributen mit "@name"-Segment, bei
 Text mit "#text"), die Position erbt das Element. Skalare Ergebnisse (Zahl,
 Wahrheitswert, String ohne Herkunftsknoten) haben keinen Pfad - pfad bleibt leer
-und der Kontext traegt den Wert. Die exakte Rueckabbildung greift nur, solange
+und der Kontext trägt den Wert. Die exakte Rückabbildung greift nur, solange
 der Ausdruck auf Knoten des Original-Baums zeigt; berechnete Knoten sind nicht
 adressierbar.
 """
@@ -38,7 +38,7 @@ def fuehre_xpath(dok: GeparstesDokument, ausdruck: str, max_treffer: int) -> lis
         ergebnis = wurzel_element.xpath(ausdruck, smart_strings=True)
     except etree.XPathError as fehler:
         raise AbfrageSyntaxFehler(
-            f"Der XPath-Ausdruck ist ungueltig: {fehler}",
+            f"Der XPath-Ausdruck ist ungültig: {fehler}",
             details={"technisch": str(fehler)},
         ) from fehler
 
@@ -53,7 +53,7 @@ def fuehre_xpath(dok: GeparstesDokument, ausdruck: str, max_treffer: int) -> lis
 
 def _xml_wurzel(dok: GeparstesDokument) -> etree._Element:
     if dok.format_id != FormatId.XML or not isinstance(dok.nativ, etree._Element):
-        raise KonvertierungUnmoeglich("XPath ist nur fuer XML-Dokumente verfuegbar.")
+        raise KonvertierungUnmoeglich("XPath ist nur für XML-Dokumente verfügbar.")
     return dok.nativ
 
 

@@ -17,6 +17,7 @@ export type SelektionsQuelle =
   | 'inspektor'
   | 'tabelle'
   | 'suche'
+  | 'diff'
 
 export interface PfadSelektion {
   tabId: string

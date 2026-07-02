@@ -1,5 +1,5 @@
 // TS-Spiegel der Backend-Modelle (backend/app/modelle/). Feldnamen exakt wie
-// im Backend (snake_case) - Aenderungen dort zuerst, dann hier nachziehen.
+// im Backend (snake_case) - Änderungen dort zuerst, dann hier nachziehen.
 
 /** Beliebiger JSON-Wert, entspricht JsonWert im Backend. */
 export type JsonWert =
@@ -21,7 +21,7 @@ export type FormatId =
   | 'md_tabelle'
   | 'html_tabelle'
 
-/** Was ein Format ausdruecken kann bzw. ein Dokument tatsaechlich nutzt. */
+/** Was ein Format ausdrücken kann bzw. ein Dokument tatsächlich nutzt. */
 export type Verlustaspekt =
   | 'kommentare'
   | 'anker'
@@ -54,7 +54,7 @@ export interface KnotenSpannen {
   wert: QuellSpanne
 }
 
-/** Vom Nutzer uebersteuerbare Parse-Einstellungen (Request-Modell, alles optional). */
+/** Vom Nutzer übersteuerbare Parse-Einstellungen (Request-Modell, alles optional). */
 export interface ParseOptionen {
   tolerant?: boolean
   csv_trennzeichen?: string | null
@@ -162,7 +162,7 @@ export interface SchemaAnfrage {
 
 export interface SchemaAntwort {
   art: SchemaArt
-  /** Im Backend intern schema_wert, ueber die API heisst das Feld "schema". */
+  /** Im Backend intern schema_wert, über die API heißt das Feld "schema". */
   schema: JsonWert
   hinweise: string[]
 }
@@ -269,6 +269,75 @@ export interface AbfrageAntwort {
   anzahl: number
   abgeschnitten: boolean
   sprache: AbfrageSprache
+}
+
+// ----- Transformation (backend/app/modelle/transform.py) -------------------
+
+/** Optionen für die Serialisierung ins Zielformat (Request-Modell). */
+export interface SerialisierungsOptionen {
+  einrueckung: number
+  sortiere_schluessel: boolean
+  csv_trennzeichen: string
+}
+
+/** Serialisiertes Ergebnis: Text oder (bei binären Zielen) Base64. */
+export interface SerialisierungsErgebnis {
+  inhalt_text: string | null
+  inhalt_base64: string | null
+  warnungen: string[]
+}
+
+/** Ein bei der Konvertierung verlorener Aspekt samt verständlicher Meldung. */
+export interface VerlustHinweis {
+  aspekt: Verlustaspekt
+  meldung: string
+  betroffene_pfade: string[]
+}
+
+export interface KonvertierAnfrage {
+  dokument: DokumentReferenz
+  ziel_format: FormatId
+  optionen?: SerialisierungsOptionen
+}
+
+export interface KonvertierAntwort {
+  ergebnis: SerialisierungsErgebnis
+  verluste: VerlustHinweis[]
+  ziel_format: FormatId
+}
+
+export interface DiffAnfrage {
+  links: DokumentReferenz
+  rechts: DokumentReferenz
+  ignoriere_reihenfolge?: boolean
+}
+
+export type DiffArt = 'hinzugefuegt' | 'entfernt' | 'geaendert' | 'typ_geaendert'
+
+export interface DiffEintrag {
+  art: DiffArt
+  pfad: string
+  position_links: QuellSpanne | null
+  position_rechts: QuellSpanne | null
+  wert_links: JsonWert | null
+  wert_rechts: JsonWert | null
+}
+
+export interface DiffAntwort {
+  eintraege: DiffEintrag[]
+  anzahl: number
+}
+
+export interface ReparaturAnfrage {
+  dokument: DokumentReferenz
+}
+
+export interface ReparaturAntwort {
+  reparierbar: boolean
+  veraendert: boolean
+  ergebnis_text: string
+  diff_unified: string
+  aenderungen: string[]
 }
 
 /** Einheitliches Fehlermodell aller Endpunkte. */

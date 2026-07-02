@@ -18,7 +18,7 @@ type AbfrageSprache = Literal["jsonpath", "xpath", "volltext", "regex"]
 
 
 class AbfrageAnfrage(BaseModel):
-    """Eine Abfrage gegen ein Dokument. nur_schluessel gilt nur fuer volltext/regex."""
+    """Eine Abfrage gegen ein Dokument. nur_schluessel gilt nur für volltext/regex."""
 
     dokument: DokumentReferenz
     sprache: AbfrageSprache
@@ -26,7 +26,7 @@ class AbfrageAnfrage(BaseModel):
     max_treffer: int = Field(default=500, ge=1)
     nur_schluessel: bool = Field(
         default=False,
-        description="Nur bei volltext/regex: Schluesselnamen statt Werte durchsuchen",
+        description="Nur bei volltext/regex: Schlüsselnamen statt Werte durchsuchen",
     )
 
 

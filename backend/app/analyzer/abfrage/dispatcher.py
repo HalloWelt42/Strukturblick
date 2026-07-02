@@ -1,8 +1,8 @@
-"""Abfrage-Dispatcher: waehlt nach Sprache, kappt auf max_treffer, baut die Antwort.
+"""Abfrage-Dispatcher: wählt nach Sprache, kappt auf max_treffer, baut die Antwort.
 
 Die einzelnen Verfahren liefern bis zu max_treffer + 1 Treffer. Liegt einer
-darueber, gilt die Antwort als abgeschnitten und die Liste wird auf max_treffer
-gekuerzt. anzahl bezieht sich auf die ausgelieferten Treffer.
+darüber, gilt die Antwort als abgeschnitten und die Liste wird auf max_treffer
+gekürzt. anzahl bezieht sich auf die ausgelieferten Treffer.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ def _treffer_ermitteln(dok: GeparstesDokument, anfrage: AbfrageAnfrage) -> list[
 
 
 def fuehre_abfrage(dok: GeparstesDokument, anfrage: AbfrageAnfrage) -> AbfrageAntwort:
-    """Fuehrt die Abfrage aus und formt sie in die AbfrageAntwort."""
+    """Führt die Abfrage aus und formt sie in die AbfrageAntwort."""
     treffer = _treffer_ermitteln(dok, anfrage)
     abgeschnitten = len(treffer) > anfrage.max_treffer
     if abgeschnitten:

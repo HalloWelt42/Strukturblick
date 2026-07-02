@@ -7,7 +7,7 @@ export interface ThemeDefinition {
   art: 'hell' | 'dunkel'
   quelle: 'eingebaut' | 'nutzer'
   vorschau: { flaeche: string; text: string; akzent: string }
-  /** Token-Overrides fuer Nutzer-Themes; eingebaute Themes kommen aus tokens.css. */
+  /** Token-Overrides für Nutzer-Themes; eingebaute Themes kommen aus tokens.css. */
   tokens?: Record<string, string>
 }
 

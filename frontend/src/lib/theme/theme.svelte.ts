@@ -1,6 +1,6 @@
 // Theme-Engine: Auswahl wird gemerkt, eingebaute Themes schalten nur das
-// data-theme-Attribut, Nutzer-Themes setzen zusaetzlich Token-Overrides.
-// Reaktiver Zustand via Svelte-5-Runes, ueber Module-Import geteilt.
+// data-theme-Attribut, Nutzer-Themes setzen zusätzlich Token-Overrides.
+// Reaktiver Zustand via Svelte-5-Runes, über Module-Import geteilt.
 
 import { STANDARD_THEME_ID, THEMES, type ThemeDefinition } from './themes'
 
@@ -12,7 +12,7 @@ function findeTheme(id: string): ThemeDefinition | undefined {
   return THEMES.find((eintrag) => eintrag.id === id)
 }
 
-/** Entfernt alle Token-Overrides, die ein Nutzer-Theme gesetzt haben koennte. */
+/** Entfernt alle Token-Overrides, die ein Nutzer-Theme gesetzt haben könnte. */
 function raeumeTokenOverridesAb(): void {
   const stil = document.documentElement.style
   for (const definition of THEMES) {
@@ -36,7 +36,7 @@ export function wendeThemeAn(id: string): void {
     wurzel.dataset.theme = definition.id
   } else {
     // Nutzer-Themes bauen auf dem passenden eingebauten Grundton auf
-    // und uebersteuern einzelne Token direkt am Wurzelelement.
+    // und übersteuern einzelne Token direkt am Wurzelelement.
     wurzel.dataset.theme = definition.art === 'dunkel' ? 'dunkel' : STANDARD_THEME_ID
     for (const [tokenName, wert] of Object.entries(definition.tokens ?? {})) {
       wurzel.style.setProperty(tokenName, wert)
