@@ -253,6 +253,50 @@ export interface MusterAntwort {
   funde: MusterFund[]
 }
 
+export interface ProfilAnfrage {
+  dokument: DokumentReferenz
+}
+
+/** Wie oft an einem Pfad ein bestimmter Werttyp vorkommt. */
+export interface FeldTypAnteil {
+  /** objekt / liste / text / zahl / wahrheitswert / null */
+  typ: string
+  anzahl: number
+}
+
+/** Kennzahlen aller Werte an genau einem Pfad-Muster (Listenindizes als *). */
+export interface FeldProfil {
+  /** z. B. "/bestellungen/*​/summe" oder "" für die Wurzel */
+  pfad_muster: string
+  /** Wie oft dieser Pfad im Dokument auftritt. */
+  vorkommen: number
+  /** Typverteilung der Werte an diesem Pfad. */
+  typen: FeldTypAnteil[]
+  /** Anteil null/fehlend (0..1). */
+  null_anteil: number
+  /** Anzahl verschiedener Werte (für Skalare). */
+  verschiedene: number
+  /** Kürzeste Zeichenkette (nur wenn Textwerte vorkommen). */
+  text_min_laenge: number | null
+  /** Längste Zeichenkette (nur wenn Textwerte vorkommen). */
+  text_max_laenge: number | null
+  /** Kleinster Zahlenwert (nur wenn Zahlen vorkommen). */
+  zahl_minimum: number | null
+  /** Größter Zahlenwert (nur wenn Zahlen vorkommen). */
+  zahl_maximum: number | null
+  /** Min Anzahl direkter Unterelemente (nur für Container-Pfade). */
+  kind_min: number | null
+  /** Max Anzahl direkter Unterelemente (nur für Container-Pfade). */
+  kind_max: number | null
+  /** Bis zu fünf Beispiel-Kurzdarstellungen der Werte. */
+  beispielwerte: string[]
+}
+
+export interface ProfilAntwort {
+  felder: FeldProfil[]
+  anzahl_felder: number
+}
+
 // ----- Abfrage (backend/app/modelle/abfrage.py) ---------------------------
 
 export type AbfrageSprache = 'jsonpath' | 'xpath' | 'volltext' | 'regex'

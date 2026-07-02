@@ -10,19 +10,25 @@
 
 import { SvelteMap } from 'svelte/reactivity'
 
-import { musterErkennen, statistikBerechnen } from '../api/analyse'
+import { musterErkennen, profilLaden, statistikBerechnen } from '../api/analyse'
 import { ApiError } from '../api/http'
-import type { DokumentReferenz, MusterAntwort, StatistikAntwort } from '../api/typen'
+import type {
+  DokumentReferenz,
+  MusterAntwort,
+  ProfilAntwort,
+  StatistikAntwort,
+} from '../api/typen'
 import type { DokumentTab } from './tabs.svelte'
 
 export interface AnalyseExtras {
   statistik?: StatistikAntwort
   muster?: MusterAntwort
+  profil?: ProfilAntwort
   laed: boolean
   fehler: string | null
 }
 
-type ExtrasArt = 'statistik' | 'muster'
+type ExtrasArt = 'statistik' | 'muster' | 'profil'
 
 const cache = new SvelteMap<string, AnalyseExtras>()
 /** Laufende Anfragen als "hash:art" - verhindert doppelte Requests. */
@@ -74,18 +80,26 @@ async function lade(tab: DokumentTab, art: ExtrasArt, erzwingen: boolean): Promi
         statistikBerechnen({ dokument }),
       )
       aktualisiere(hash, { statistik: antwort })
-    } else {
+    } else if (art === 'muster') {
       const antwort = await mitCacheWiederholung(tab, hash, (dokument) =>
         musterErkennen({ dokument }),
       )
       aktualisiere(hash, { muster: antwort })
+    } else {
+      const antwort = await mitCacheWiederholung(tab, hash, (dokument) =>
+        profilLaden({ dokument }),
+      )
+      aktualisiere(hash, { profil: antwort })
     }
   } catch (grund: unknown) {
     aktualisiere(hash, { fehler: fehlerText(grund) })
   } finally {
     laufend.delete(schluessel)
     aktualisiere(hash, {
-      laed: laufend.has(`${hash}:statistik`) || laufend.has(`${hash}:muster`),
+      laed:
+        laufend.has(`${hash}:statistik`) ||
+        laufend.has(`${hash}:muster`) ||
+        laufend.has(`${hash}:profil`),
     })
   }
 }
@@ -98,4 +112,9 @@ export function ladeStatistik(tab: DokumentTab, erzwingen = false): Promise<void
 /** Lädt die Muster-Funde zum Tab-Dokument (übersprungen, wenn schon im Cache). */
 export function ladeMuster(tab: DokumentTab, erzwingen = false): Promise<void> {
   return lade(tab, 'muster', erzwingen)
+}
+
+/** Lädt das Feld-Profil zum Tab-Dokument (übersprungen, wenn schon im Cache). */
+export function ladeProfil(tab: DokumentTab, erzwingen = false): Promise<void> {
+  return lade(tab, 'profil', erzwingen)
 }

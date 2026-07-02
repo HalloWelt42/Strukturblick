@@ -4,6 +4,8 @@ import { requestJson } from './http'
 import type {
   MusterAnfrage,
   MusterAntwort,
+  ProfilAnfrage,
+  ProfilAntwort,
   SchemaAnfrage,
   SchemaAntwort,
   StatistikAnfrage,
@@ -35,6 +37,13 @@ export function statistikBerechnen(anfrage: StatistikAnfrage): Promise<Statistik
 
 export function musterErkennen(anfrage: MusterAnfrage): Promise<MusterAntwort> {
   return requestJson<MusterAntwort>('/api/analyse/muster', {
+    method: 'POST',
+    body: JSON.stringify(anfrage),
+  })
+}
+
+export function profilLaden(anfrage: ProfilAnfrage): Promise<ProfilAntwort> {
+  return requestJson<ProfilAntwort>('/api/analyse/profil', {
     method: 'POST',
     body: JSON.stringify(anfrage),
   })

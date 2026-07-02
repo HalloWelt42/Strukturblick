@@ -114,3 +114,36 @@ class MusterFund(BaseModel):
 
 class MusterAntwort(BaseModel):
     funde: list[MusterFund] = Field(default_factory=list)
+
+
+class ProfilAnfrage(BaseModel):
+    dokument: DokumentReferenz
+
+
+class FeldTypAnteil(BaseModel):
+    """Wie oft an einem Pfad ein bestimmter Werttyp vorkommt."""
+
+    typ: str  # objekt / liste / text / zahl / wahrheitswert / null
+    anzahl: int
+
+
+class FeldProfil(BaseModel):
+    """Kennzahlen aller Werte an genau einem Pfad-Muster (Listenindizes als *)."""
+
+    pfad_muster: str  # z. B. "/bestellungen/*/summe" oder "" für die Wurzel
+    vorkommen: int  # wie oft dieser Pfad im Dokument auftritt
+    typen: list[FeldTypAnteil]  # Typverteilung der Werte an diesem Pfad
+    null_anteil: float  # Anteil null/fehlend (0..1)
+    verschiedene: int  # Anzahl verschiedener Werte (für Skalare)
+    text_min_laenge: int | None = None  # kürzeste Zeichenkette (nur wenn Textwerte vorkommen)
+    text_max_laenge: int | None = None  # längste Zeichenkette (nur wenn Textwerte vorkommen)
+    zahl_minimum: float | None = None  # kleinster Zahlenwert (nur wenn Zahlen vorkommen)
+    zahl_maximum: float | None = None  # größter Zahlenwert (nur wenn Zahlen vorkommen)
+    kind_min: int | None = None  # min Anzahl direkter Unterelemente (nur für Container-Pfade)
+    kind_max: int | None = None  # max Anzahl direkter Unterelemente (nur für Container-Pfade)
+    beispielwerte: list[str]  # bis zu 5 Beispiel-Kurzdarstellungen der Werte
+
+
+class ProfilAntwort(BaseModel):
+    felder: list[FeldProfil]
+    anzahl_felder: int

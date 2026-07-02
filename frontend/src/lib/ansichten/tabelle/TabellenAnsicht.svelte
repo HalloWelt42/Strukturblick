@@ -3,6 +3,14 @@
   // Dialekt-Abzeichen, sonst nur Filter + Export), darunter eine echte
   // <table class="tabelle"> mit sortierbaren Köpfen und Typ-Abzeichen.
   //
+  // Ausbau: Der Nutzer kann Spalten umsortieren, aus- und einblenden, umbenennen
+  // und Werte je Spalte per Übersetzungstabelle abbilden. Bei CSV lässt sich der
+  // Trenner wechseln (löst ein Neu-Parsen aus), beim Export der Zieltrenner. All
+  // das wirkt zusammen: die Tabelle rendert nur die sichtbaren Spalten in der
+  // gewählten Reihenfolge mit Anzeigenamen und übersetzten Werten; Sortieren und
+  // Filter arbeiten auf den angezeigten (übersetzten) Werten; der Export liefert
+  // genau diesen umgebauten View.
+  //
   // Virtualisierung: Statt der generischen VirtuelleListe (die auf <div>-Zeilen
   // baut und die Element-Selektoren .tabelle td/th nicht bekäme) wird hier die
   // Tabellen-Semantik bewahrt und von Hand virtualisiert - nur der sichtbare
@@ -10,24 +18,38 @@
   // halten die Scrollhöhe korrekt. So bleibt die Mockup-Optik (Zebra, Hover,
   // .selektiert, .zahl, .null-wert) exakt erhalten und auch sehr viele Zeilen
   // bleiben flüssig.
+  import { dokumentParsen } from '../../api/dokumente'
+  import type { ParseAntwort } from '../../api/typen'
   import { kindPointer } from '../../dienste/pfade'
   import {
-    alsCsv,
     alleZeilen,
-    filtere,
+    alsCsvAngezeigt,
+    anzeigeName,
+    filtereAngezeigt,
     istTabellarisch,
-    sortiere,
+    sichtbareSpalten,
+    sortiereAngezeigt,
     spaltenAus,
+    trennerKollisionen,
     typVonSpalte,
-    zellText,
+    verschiedeneRohwerte,
+    zellAnzeige,
     zellwert,
     type Sortierrichtung,
   } from '../../dienste/tabellenModell'
   import { ladeHerunter } from '../../dienste/dateiEinAusgabe'
   import { typVon } from '../../dienste/wertZugriff'
+  import Modal from '../../hilfsteile/Modal.svelte'
   import FachbegriffLink from '../../lexikon/FachbegriffLink.svelte'
   import { selektion, setzeSelektion } from '../../zustand/selektion.svelte'
   import { aktiverTab, setzeAnsicht } from '../../zustand/tabs.svelte'
+  import {
+    schalteSichtbar,
+    setzeAnzeigename,
+    setzeWertErsatz,
+    tabellenZustandFuer,
+    verschiebeSpalte,
+  } from './tabellenAnsichtZustand.svelte'
 
   /** Feste Zeilenhöhe in Pixeln (Padding 5px + Text ~19px, wie .tabelle td). */
   const ZEILEN_HOEHE = 29
@@ -44,12 +66,33 @@
     null: 'Null',
   }
 
+  /** Wählbare CSV-Trenner (Wert = tatsächliches Zeichen, Name = Beschriftung). */
+  const TRENNER_KANDIDATEN: { zeichen: string; name: string }[] = [
+    { zeichen: ',', name: 'Komma' },
+    { zeichen: ';', name: 'Semikolon' },
+    { zeichen: '\t', name: 'Tabulator' },
+    { zeichen: '|', name: 'Senkrechtstrich' },
+  ]
+
   const tab = $derived(aktiverTab())
   const wurzel = $derived(tab?.analyse?.wurzel ?? null)
   const tabellarisch = $derived(wurzel !== null && istTabellarisch(wurzel))
   const dialekt = $derived(tab?.analyse?.dialekt_info ?? null)
+  const istCsv = $derived(tab?.format === 'csv')
   const spalten = $derived(wurzel !== null ? spaltenAus(wurzel) : [])
   const basisZeilen = $derived(wurzel !== null ? alleZeilen(wurzel) : [])
+
+  // Anzeige-Zustand je Tab (Reihenfolge/Sichtbarkeit/Umbenennung/Wert-Karten).
+  // Wird bei jedem Lauf mit dem aktuellen Spaltensatz abgeglichen.
+  const ansichtZustand = $derived(
+    tab !== null ? tabellenZustandFuer(tab.id, spalten) : null,
+  )
+
+  /** Die tatsächlich gerenderten Spalten: Reihenfolge, ohne versteckte. */
+  const angezeigteSpalten = $derived.by((): string[] => {
+    if (ansichtZustand === null) return spalten
+    return sichtbareSpalten(spalten, ansichtZustand.spaltenReihenfolge, ansichtZustand.versteckt)
+  })
 
   let filterText = $state('')
   let sortSpalte = $state<string | null>(null)
@@ -57,10 +100,11 @@
 
   /** Sichtbare Zeilen-Indizes: erst filtern, dann (falls gewählt) sortieren. */
   const sichtbareZeilen = $derived.by((): number[] => {
-    if (wurzel === null) return []
-    const gefiltert = filtere(basisZeilen, wurzel, spalten, filterText)
+    if (wurzel === null || ansichtZustand === null) return []
+    const karten = ansichtZustand.wertKarten
+    const gefiltert = filtereAngezeigt(basisZeilen, wurzel, angezeigteSpalten, filterText, karten)
     if (sortSpalte === null) return gefiltert
-    return sortiere(gefiltert, wurzel, sortSpalte, sortRichtung)
+    return sortiereAngezeigt(gefiltert, wurzel, sortSpalte, sortRichtung, karten)
   })
 
   /** Typ je Spalte (dominanter Werttyp) für das Kopf-Abzeichen. */
@@ -149,13 +193,6 @@
     setzeSelektion({ tabId: tab.id, pfad: kindPointer(zeilenPfad, spalte), quelle: 'tabelle' })
   }
 
-  function exportiere(): void {
-    if (wurzel === null) return
-    const text = alsCsv(sichtbareZeilen, wurzel, spalten)
-    const basis = (tab?.titel ?? 'tabelle').replace(/\.[^.]+$/, '')
-    ladeHerunter(`${basis}.csv`, text, 'text/csv;charset=utf-8')
-  }
-
   function zumBaum(): void {
     if (tab === null) return
     setzeAnsicht(tab.id, 'baum')
@@ -178,17 +215,157 @@
         return zeichen
     }
   }
+
+  // ----- Trenner wechseln (CSV neu parsen) ----------------------------------
+
+  /** Der erkannte Trenner aus der Vorermittlung (Dialekt), Basis der Vorauswahl. */
+  const erkannterTrenner = $derived(dialekt?.trennzeichen ?? null)
+
+  /** Aktuell gewählter Trenner; initial der erkannte, sonst Semikolon. */
+  let gewaehlterTrenner = $state<string | null>(null)
+
+  /** Der wirksame Trenner: die explizite Wahl, sonst der erkannte. */
+  const wirksamerTrenner = $derived(gewaehlterTrenner ?? erkannterTrenner ?? ';')
+
+  let trennerLaeuft = $state(false)
+
+  /**
+   * Neu-Parsen mit gewähltem Trenner und Übernahme in tab.analyse - analog zum
+   * analyseDienst, aber gezielt mit csv_trennzeichen. Die Anzeige-Einstellungen
+   * (Reihenfolge/Umbenennung/Werte) bleiben erhalten, weil der Spaltensatz gleich
+   * bleibt; nur die Zellwerte werden neu aufgeteilt.
+   */
+  async function wechsleTrenner(zeichen: string): Promise<void> {
+    if (tab === null || zeichen === wirksamerTrenner) return
+    gewaehlterTrenner = zeichen
+    trennerLaeuft = true
+    const zielTab = tab
+    try {
+      const antwort: ParseAntwort = await dokumentParsen({
+        inhalt_text: zielTab.inhalt,
+        format_id: 'csv',
+        dateiname: zielTab.titel,
+        parse_optionen: { csv_trennzeichen: zeichen },
+      })
+      // Nur übernehmen, wenn der Tab noch existiert und aktiv geblieben ist.
+      const aktuell = aktiverTab()
+      if (aktuell !== null && aktuell.id === zielTab.id) {
+        aktuell.analyse = antwort
+        aktuell.format = antwort.format_id
+        aktuell.analyseStand = 'frisch'
+        aktuell.analyseFehler = null
+      }
+    } catch (grund: unknown) {
+      console.error('Neu-Parsen mit gewähltem Trenner fehlgeschlagen:', grund)
+    } finally {
+      trennerLaeuft = false
+    }
+  }
+
+  function beiTrennerWahl(ereignis: Event): void {
+    const wert = (ereignis.currentTarget as HTMLSelectElement).value
+    void wechsleTrenner(wert)
+  }
+
+  // ----- Modal "Spalten verwalten" ------------------------------------------
+
+  let spaltenModalOffen = $state(false)
+
+  // ----- Modal "Werte übersetzen" -------------------------------------------
+
+  let werteModalOffen = $state(false)
+  let werteSpalte = $state<string | null>(null)
+
+  /** Bei geöffnetem Modal ohne Wahl die erste Spalte vorbelegen. */
+  const werteSpalteWirksam = $derived(werteSpalte ?? spalten[0] ?? null)
+
+  /** Verschiedene Rohwerte der gewählten Spalte (bis 50), für die Eingabefelder. */
+  const rohwerteDerSpalte = $derived.by((): string[] => {
+    if (wurzel === null || werteSpalteWirksam === null) return []
+    return verschiedeneRohwerte(basisZeilen, wurzel, werteSpalteWirksam, 50)
+  })
+
+  function ersatzVon(spalte: string, rohwert: string): string {
+    if (ansichtZustand === null) return ''
+    return ansichtZustand.wertKarten[spalte]?.[rohwert] ?? ''
+  }
+
+  function beiErsatzEingabe(spalte: string, rohwert: string, ereignis: Event): void {
+    if (ansichtZustand === null) return
+    const wert = (ereignis.currentTarget as HTMLInputElement).value
+    setzeWertErsatz(ansichtZustand, spalte, rohwert, wert)
+  }
+
+  // ----- Modal "Exportieren" ------------------------------------------------
+
+  let exportModalOffen = $state(false)
+  let exportTrenner = $state(';')
+
+  /** Anzahl Felder, in denen der gewählte Export-Trenner vorkommt (Kollision). */
+  const exportKollisionen = $derived.by((): number => {
+    if (wurzel === null || ansichtZustand === null) return 0
+    return trennerKollisionen(
+      sichtbareZeilen,
+      wurzel,
+      angezeigteSpalten,
+      ansichtZustand.umbenennung,
+      ansichtZustand.wertKarten,
+      exportTrenner,
+    )
+  })
+
+  function oeffneExport(): void {
+    // Der Export-Trenner startet beim wirksamen Trenner, falls wählbar.
+    const passend = TRENNER_KANDIDATEN.some((k) => k.zeichen === wirksamerTrenner)
+    exportTrenner = passend ? wirksamerTrenner : ';'
+    exportModalOffen = true
+  }
+
+  function fuehreExportDurch(): void {
+    if (wurzel === null || ansichtZustand === null) return
+    const text = alsCsvAngezeigt(
+      sichtbareZeilen,
+      wurzel,
+      angezeigteSpalten,
+      ansichtZustand.umbenennung,
+      ansichtZustand.wertKarten,
+      exportTrenner,
+    )
+    const basis = (tab?.titel ?? 'tabelle').replace(/\.[^.]+$/, '')
+    ladeHerunter(`${basis}.csv`, text, 'text/csv;charset=utf-8')
+    exportModalOffen = false
+  }
 </script>
 
 {#if tab !== null}
   {#if tabellarisch}
-    {@const aktivesTabId = tab.id}
     <div class="werkzeugzeile">
       {#if dialekt !== null}
         <span class="beschriftung">
           <FachbegriffLink topic="dialekt">Dialekt</FachbegriffLink>:
         </span>
-        <span class="abzeichen">Trennzeichen: {trennzeichenName(dialekt.trennzeichen)}</span>
+        {#if istCsv}
+          <span class="beschriftung">Trenner:</span>
+          <select
+            class="feld"
+            style="width: 150px"
+            value={wirksamerTrenner}
+            disabled={trennerLaeuft}
+            onchange={beiTrennerWahl}
+          >
+            {#each TRENNER_KANDIDATEN as kandidat (kandidat.zeichen)}
+              <option value={kandidat.zeichen}>{kandidat.name}</option>
+            {/each}
+          </select>
+          {#if erkannterTrenner !== null}
+            <span class="beschriftung">erkannt: {trennzeichenName(erkannterTrenner)}</span>
+          {/if}
+          {#if trennerLaeuft}
+            <i class="fa-solid fa-spinner fa-spin" aria-label="Neu parsen ..."></i>
+          {/if}
+        {:else}
+          <span class="abzeichen">Trennzeichen: {trennzeichenName(dialekt.trennzeichen)}</span>
+        {/if}
         <span class="abzeichen">Kodierung: {dialekt.encoding}</span>
         <span class="abzeichen">Kopfzeile: {dialekt.hat_kopfzeile ? 'ja' : 'nein'}</span>
       {/if}
@@ -200,7 +377,13 @@
         style="width: 200px"
         bind:value={filterText}
       />
-      <button class="knopf klein" onclick={exportiere}>
+      <button class="knopf klein" onclick={() => (spaltenModalOffen = true)}>
+        <i class="fa-solid fa-table-columns"></i> Spalten
+      </button>
+      <button class="knopf klein" onclick={() => (werteModalOffen = true)}>
+        <i class="fa-solid fa-language"></i> Werte übersetzen
+      </button>
+      <button class="knopf klein" onclick={oeffneExport}>
         <i class="fa-solid fa-file-export"></i> Exportieren
       </button>
     </div>
@@ -209,14 +392,17 @@
       <table class="tabelle">
         <thead>
           <tr>
-            {#each spalten as spalte (spalte)}
+            {#each angezeigteSpalten as spalte (spalte)}
               {@const typ = spaltenTyp[spalte] ?? 'text'}
+              {@const kopf = ansichtZustand !== null
+                ? anzeigeName(spalte, ansichtZustand.umbenennung)
+                : spalte}
               <th
                 class:zahl={typ === 'zahl'}
                 onclick={() => sortiereNach(spalte)}
-                title="Nach {spalte} sortieren"
+                title="Nach {kopf} sortieren"
               >
-                {spalte}
+                {kopf}
                 <span class="abzeichen">{KOPF_TYP_NAME[typ] ?? 'Text'}</span>
                 {#if sortSpalte === spalte}
                   <i
@@ -233,7 +419,7 @@
         <tbody>
           {#if platzOben > 0}
             <tr class="abstand" style="height: {platzOben}px" aria-hidden="true">
-              <td colspan={spalten.length}></td>
+              <td colspan={angezeigteSpalten.length}></td>
             </tr>
           {/if}
           {#each fensterZeilen as zeile (zeile)}
@@ -241,23 +427,26 @@
               class:selektiert={auswahlZeile === zeile}
               style="height: {ZEILEN_HOEHE}px"
             >
-              {#each spalten as spalte (spalte)}
-                {@const wert = zellwert(wurzel, zeile, spalte)}
-                {@const leer = wert === undefined || wert === null}
-                {@const zahl = wert !== undefined && typVon(wert) === 'zahl'}
+              {#each angezeigteSpalten as spalte (spalte)}
+                {@const roh = zellwert(wurzel, zeile, spalte)}
+                {@const leer = roh === undefined || roh === null}
+                {@const zahl = roh !== undefined && typVon(roh) === 'zahl'}
+                {@const text = ansichtZustand !== null
+                  ? zellAnzeige(wurzel, zeile, spalte, ansichtZustand.wertKarten)
+                  : ''}
                 <td
                   class:zahl
-                  class:null-wert={leer}
+                  class:null-wert={leer && text === ''}
                   onclick={() => waehleZelle(zeile, spalte)}
                 >
-                  {#if leer}(leer){:else}{zellText(wert)}{/if}
+                  {#if leer && text === ''}(leer){:else}{text}{/if}
                 </td>
               {/each}
             </tr>
           {/each}
           {#if platzUnten > 0}
             <tr class="abstand" style="height: {platzUnten}px" aria-hidden="true">
-              <td colspan={spalten.length}></td>
+              <td colspan={angezeigteSpalten.length}></td>
             </tr>
           {/if}
         </tbody>
@@ -268,9 +457,132 @@
       {sichtbareZeilen.length}
       {sichtbareZeilen.length === 1 ? 'Zeile' : 'Zeilen'}{filterText.trim() !== ''
         ? ` (von ${basisZeilen.length})`
-        : ''}, {spalten.length}
-      {spalten.length === 1 ? 'Spalte' : 'Spalten'}
+        : ''}, {angezeigteSpalten.length}
+      {angezeigteSpalten.length === 1 ? 'Spalte' : 'Spalten'}{angezeigteSpalten.length <
+      spalten.length
+        ? ` (von ${spalten.length})`
+        : ''}
     </div>
+
+    <!-- Modal: Spalten verwalten (Reihenfolge, Sichtbarkeit, Umbenennung) -->
+    <Modal titel="Spalten verwalten" bind:offen={spaltenModalOffen}>
+      {#if ansichtZustand !== null}
+        <div class="spalten-liste">
+          {#each ansichtZustand.spaltenReihenfolge as spalte, index (spalte)}
+            {@const sichtbar = !ansichtZustand.versteckt.has(spalte)}
+            <div class="spalten-zeile">
+              <button
+                class="checkbox"
+                class:an={sichtbar}
+                role="checkbox"
+                aria-checked={sichtbar}
+                aria-label="{spalte} {sichtbar ? 'ausblenden' : 'einblenden'}"
+                onclick={() => schalteSichtbar(ansichtZustand, spalte)}
+              >
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <span class="spalten-roh" title={spalte}>{spalte}</span>
+              <input
+                class="feld"
+                type="text"
+                placeholder={spalte}
+                value={ansichtZustand.umbenennung[spalte] ?? ''}
+                oninput={(e) =>
+                  setzeAnzeigename(ansichtZustand, spalte, e.currentTarget.value)}
+              />
+              <button
+                class="icon-knopf"
+                title="Nach oben"
+                disabled={index === 0}
+                onclick={() => verschiebeSpalte(ansichtZustand, spalte, -1)}
+              >
+                <i class="fa-solid fa-arrow-up"></i>
+              </button>
+              <button
+                class="icon-knopf"
+                title="Nach unten"
+                disabled={index === ansichtZustand.spaltenReihenfolge.length - 1}
+                onclick={() => verschiebeSpalte(ansichtZustand, spalte, 1)}
+              >
+                <i class="fa-solid fa-arrow-down"></i>
+              </button>
+            </div>
+          {/each}
+        </div>
+      {/if}
+      {#snippet fuss()}
+        <button class="knopf primaer" onclick={() => (spaltenModalOffen = false)}>Fertig</button>
+      {/snippet}
+    </Modal>
+
+    <!-- Modal: Werte übersetzen (Rohwert -> Ersatz je Spalte) -->
+    <Modal titel="Werte übersetzen" bind:offen={werteModalOffen}>
+      <div class="werte-kopf">
+        <span class="beschriftung">Spalte:</span>
+        <select class="feld" bind:value={werteSpalte}>
+          {#each spalten as spalte (spalte)}
+            <option value={spalte}>
+              {ansichtZustand !== null ? anzeigeName(spalte, ansichtZustand.umbenennung) : spalte}
+            </option>
+          {/each}
+        </select>
+      </div>
+      {#if werteSpalteWirksam !== null}
+        {#if rohwerteDerSpalte.length === 0}
+          <p class="werte-leer">Diese Spalte enthält keine übersetzbaren Werte.</p>
+        {:else}
+          <div class="werte-liste">
+            {#each rohwerteDerSpalte as rohwert (rohwert)}
+              <div class="werte-zeile">
+                <span class="werte-roh" title={rohwert}>{rohwert}</span>
+                <i class="fa-solid fa-arrow-right werte-pfeil"></i>
+                <input
+                  class="feld"
+                  type="text"
+                  placeholder="(unverändert)"
+                  value={ersatzVon(werteSpalteWirksam, rohwert)}
+                  oninput={(e) => beiErsatzEingabe(werteSpalteWirksam, rohwert, e)}
+                />
+              </div>
+            {/each}
+          </div>
+          <p class="werte-hinweis">
+            Leeres Feld = unverändert. Es werden bis zu 50 verschiedene Werte gezeigt.
+          </p>
+        {/if}
+      {/if}
+      {#snippet fuss()}
+        <button class="knopf primaer" onclick={() => (werteModalOffen = false)}>Fertig</button>
+      {/snippet}
+    </Modal>
+
+    <!-- Modal: Exportieren (Zieltrenner mit Kollisionskontrolle) -->
+    <Modal titel="Exportieren" bind:offen={exportModalOffen}>
+      <div class="export-zeile">
+        <span class="beschriftung">Trenner:</span>
+        <select class="feld" bind:value={exportTrenner}>
+          {#each TRENNER_KANDIDATEN as kandidat (kandidat.zeichen)}
+            <option value={kandidat.zeichen}>{kandidat.name}</option>
+          {/each}
+        </select>
+      </div>
+      {#if exportKollisionen > 0}
+        <p class="export-warnung">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Der Trenner kommt in den Daten vor - Felder werden in Anführungszeichen gesetzt.
+        </p>
+      {/if}
+      <p class="export-hinweis">
+        Exportiert werden die aktuell sichtbaren, sortierten und gefilterten Zeilen mit
+        Anzeigenamen und übersetzten Werten.
+      </p>
+      {#snippet fuss()}
+        <button class="knopf" onclick={() => (exportModalOffen = false)}>Abbrechen</button>
+        <button class="knopf primaer" onclick={fuehreExportDurch}>
+          <i class="fa-solid fa-download"></i> Herunterladen
+        </button>
+      {/snippet}
+    </Modal>
   {:else}
     <div class="tabelle-leer">
       <i class="fa-solid fa-table"></i>
@@ -335,5 +647,114 @@
 
   .tabelle-leer > span {
     max-width: 420px;
+  }
+
+  /* ----- Modal "Spalten verwalten" ---------------------------------------- */
+
+  .spalten-liste {
+    display: flex;
+    flex-direction: column;
+    gap: var(--a2);
+  }
+
+  .spalten-zeile {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+  }
+
+  .spalten-roh {
+    width: 130px;
+    flex: none;
+    color: var(--text-2);
+    font-size: 0.82rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .spalten-zeile .feld {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ----- Modal "Werte übersetzen" ----------------------------------------- */
+
+  .werte-kopf {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+    margin-bottom: var(--a3);
+  }
+
+  .werte-kopf .feld {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .werte-liste {
+    display: flex;
+    flex-direction: column;
+    gap: var(--a2);
+  }
+
+  .werte-zeile {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+  }
+
+  .werte-roh {
+    width: 200px;
+    flex: none;
+    font-family: var(--schrift-mono);
+    font-size: 0.82rem;
+    color: var(--text-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .werte-pfeil {
+    flex: none;
+    color: var(--text-3);
+    font-size: 0.75rem;
+  }
+
+  .werte-zeile .feld {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .werte-leer,
+  .werte-hinweis,
+  .export-hinweis {
+    color: var(--text-2);
+    font-size: 0.82rem;
+    margin-top: var(--a3);
+  }
+
+  /* ----- Modal "Exportieren" ---------------------------------------------- */
+
+  .export-zeile {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+  }
+
+  .export-zeile .feld {
+    width: 180px;
+  }
+
+  .export-warnung {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+    margin-top: var(--a3);
+    padding: var(--a2) var(--a3);
+    border-radius: var(--radius-eingabe);
+    background: var(--zustand-warnung-weich);
+    color: var(--zustand-warnung);
+    font-size: 0.82rem;
   }
 </style>

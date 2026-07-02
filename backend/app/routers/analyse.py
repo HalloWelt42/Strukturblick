@@ -5,6 +5,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from app.analyzer.muster import erkenne_muster
+from app.analyzer.profil import erzeuge_profil
 from app.analyzer.schema_inferenz import leite_schema_ab
 from app.analyzer.statistik import berechne_statistik
 from app.analyzer.validierung import pruefe_gegen_json_schema, pruefe_gegen_xsd
@@ -13,6 +14,8 @@ from app.kern.cache import dokument_cache
 from app.modelle.analyse import (
     MusterAnfrage,
     MusterAntwort,
+    ProfilAnfrage,
+    ProfilAntwort,
     SchemaAnfrage,
     SchemaAntwort,
     StatistikAnfrage,
@@ -56,3 +59,9 @@ def statistik_berechnen(anfrage: StatistikAnfrage) -> StatistikAntwort:
 def muster_erkennen(anfrage: MusterAnfrage) -> MusterAntwort:
     _, dokument = parse_mit_cache(anfrage.dokument)
     return erkenne_muster(dokument, anfrage.max_beispiele)
+
+
+@router.post("/analyse/profil")
+def profil_erzeugen(anfrage: ProfilAnfrage) -> ProfilAntwort:
+    _, dokument = parse_mit_cache(anfrage.dokument)
+    return erzeuge_profil(dokument)

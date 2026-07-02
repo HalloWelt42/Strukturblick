@@ -297,5 +297,5 @@ def test_capabilities_enthaelt_die_analyzer(client: TestClient) -> None:
     assert antwort.status_code == 200
     analyzer = antwort.json()["analyzer"]
     ids = {eintrag["id"] for eintrag in analyzer}
-    assert ids == {"muster", "schema_inferenz", "statistik", "validierung"}
+    assert ids == {"muster", "profil", "schema_inferenz", "statistik", "validierung"}
     assert all(eintrag["name"] for eintrag in analyzer)

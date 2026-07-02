@@ -3,15 +3,22 @@
   // berechnen, Dauer, Mustererkennung einbeziehen), Kennzahl-Kacheln und
   // Karten (Typverteilung, Häufigste Schlüssel, Histogramme, Muster).
   // Die CSS-Balken des Mockups SIND die Diagramm-Darstellung - bewusst
-  // keine Diagramm-Bibliothek.
-  import type { MusterFund, SchluesselStat } from '../../api/typen'
+  // keine Diagramm-Bibliothek. Darunter das Feld-Profil: eine vollständige
+  // Tabelle aller Pfade mit Kennzahlen (Vorkommen, Breite, Bereich usw.).
+  import type { FeldProfil, MusterFund, SchluesselStat } from '../../api/typen'
   import { menschenlesbareGroesse } from '../../dienste/groessenFormat'
   import { MUSTER_NAME } from '../../dienste/musterZuordnung'
   import { segmenteAusPointer } from '../../dienste/pfade'
-  import { TYP_NAME } from '../../dienste/wertDarstellung'
+  import { TYP_NAME, WERT_KLASSE } from '../../dienste/wertDarstellung'
   import type { WertTyp } from '../../dienste/wertZugriff'
   import FachbegriffLink from '../../lexikon/FachbegriffLink.svelte'
-  import { extrasFuer, ladeMuster, ladeStatistik } from '../../zustand/analyseExtras.svelte'
+  import {
+    extrasFuer,
+    ladeMuster,
+    ladeProfil,
+    ladeStatistik,
+  } from '../../zustand/analyseExtras.svelte'
+  import { setzeSelektion } from '../../zustand/selektion.svelte'
   import { aktiverTab } from '../../zustand/tabs.svelte'
 
   /** Höchstens so viele Histogramm-Karten anzeigen. */
@@ -28,12 +35,16 @@
   /** Breiten der Skelett-Zeilen während des Ladens. */
   const SKELETT_BREITEN = [240, 320, 280, 360, 300, 260, 340, 220]
 
+  /** Container-Typen: nur für sie sind Unterelement-Kennzahlen sinnvoll. */
+  const CONTAINER_TYPEN = new Set<string>(['objekt', 'liste'])
+
   const tab = $derived(aktiverTab())
   const eintrag = $derived(
     tab !== null && tab.analyse !== null ? extrasFuer(tab.analyse.dokument_hash) : undefined,
   )
   const statistik = $derived(eintrag?.statistik)
   const muster = $derived(eintrag?.muster)
+  const profil = $derived(eintrag?.profil)
 
   let musterEinbeziehen = $state(true)
 
@@ -67,6 +78,7 @@
     const extras = extrasFuer(aktuell.analyse.dokument_hash)
     if (extras !== undefined && extras.fehler !== null) return
     if (extras?.statistik === undefined) void ladeStatistik(aktuell)
+    if (extras?.profil === undefined) void ladeProfil(aktuell)
     if (musterEinbeziehen && extras?.muster === undefined) void ladeMuster(aktuell)
   })
 
@@ -74,6 +86,7 @@
     const aktuell = tab
     if (aktuell === null || aktuell.analyse === null) return
     void ladeStatistik(aktuell, true)
+    void ladeProfil(aktuell, true)
     if (musterEinbeziehen) void ladeMuster(aktuell, true)
   }
 
@@ -102,6 +115,155 @@
   /** Anzahl der Werte, die dem Muster entsprechen (aus der Abdeckung). */
   function trefferAnzahl(fund: MusterFund): number {
     return Math.round(fund.abdeckung * fund.anzahl_werte)
+  }
+
+  // ----- Feld-Profil ---------------------------------------------------------
+
+  type ProfilSpalte =
+    | 'feld'
+    | 'vorkommen'
+    | 'verschiedene'
+    | 'breite'
+    | 'bereich'
+    | 'unterelemente'
+    | 'leer'
+  type SortRichtung = 'auf' | 'ab'
+
+  interface SpaltenKopf {
+    id: ProfilSpalte
+    beschriftung: string
+    /** Rechtsbündige Zahlenspalte. */
+    zahl: boolean
+  }
+
+  const PROFIL_SPALTEN: SpaltenKopf[] = [
+    { id: 'feld', beschriftung: 'Feld', zahl: false },
+    { id: 'vorkommen', beschriftung: 'Vorkommen', zahl: true },
+    { id: 'verschiedene', beschriftung: 'Verschiedene', zahl: true },
+    { id: 'breite', beschriftung: 'Breite', zahl: true },
+    { id: 'bereich', beschriftung: 'Bereich', zahl: true },
+    { id: 'unterelemente', beschriftung: 'Unterelemente', zahl: true },
+    { id: 'leer', beschriftung: 'Leer-Anteil', zahl: true },
+  ]
+
+  let sortSpalte = $state<ProfilSpalte>('vorkommen')
+  let sortRichtung = $state<SortRichtung>('ab')
+
+  /** Kompakter Pfad des Feldes; die Wurzel ("") wird zu "(Wurzel)". */
+  function feldPfad(pfadMuster: string): string {
+    if (pfadMuster === '') return '(Wurzel)'
+    return segmenteAusPointer(pfadMuster).join('/')
+  }
+
+  /** Dominanter Werttyp an einem Pfad (der mit den meisten Vorkommen). */
+  function dominanterTyp(feld: FeldProfil): string | null {
+    let bester: string | null = null
+    let hoechste = -1
+    for (const anteil of feld.typen) {
+      if (anteil.anzahl > hoechste) {
+        hoechste = anteil.anzahl
+        bester = anteil.typ
+      }
+    }
+    return bester
+  }
+
+  /** Anzeigename eines Typs als Abzeichen-Text (unbekannt -> roher Wert). */
+  function typName(typ: string): string {
+    return TYP_NAME[typ as WertTyp] ?? typ
+  }
+
+  /** Farbklasse eines Typs (unbekannt -> keine besondere Farbe). */
+  function typKlasse(typ: string): string {
+    return WERT_KLASSE[typ as WertTyp] ?? ''
+  }
+
+  /** true, wenn an einem Pfad Container-Werte vorkommen (Unterelemente sinnvoll). */
+  function hatContainer(feld: FeldProfil): boolean {
+    return feld.typen.some((anteil) => CONTAINER_TYPEN.has(anteil.typ))
+  }
+
+  /** Textbreite als "min-max" bzw. "n", nur wenn Textlängen vorliegen; sonst "-". */
+  function breiteText(feld: FeldProfil): string {
+    const { text_min_laenge: min, text_max_laenge: max } = feld
+    if (min === null || max === null) return '-'
+    return min === max ? zahlText(min) : `${zahlText(min)}-${zahlText(max)}`
+  }
+
+  /** Wertebereich als "min-max" bzw. "n", nur wenn Zahlenwerte vorliegen; sonst "-". */
+  function bereichText(feld: FeldProfil): string {
+    const { zahl_minimum: min, zahl_maximum: max } = feld
+    if (min === null || max === null) return '-'
+    return min === max ? zahlText(min) : `${zahlText(min)}-${zahlText(max)}`
+  }
+
+  /** Anzahl Unterelemente als "min-max" bzw. "n", nur bei Containern; sonst "-". */
+  function unterelementeText(feld: FeldProfil): string {
+    if (!hatContainer(feld)) return '-'
+    const { kind_min: min, kind_max: max } = feld
+    if (min === null || max === null) return '-'
+    return min === max ? zahlText(min) : `${zahlText(min)}-${zahlText(max)}`
+  }
+
+  /** Leer-Anteil (null/fehlend) als Prozent mit einer Nachkommastelle. */
+  function leerText(feld: FeldProfil): string {
+    return `${(feld.null_anteil * 100).toLocaleString('de-DE', { maximumFractionDigits: 1 })} %`
+  }
+
+  /** Sortierschlüssel je Spalte: Zahl (fehlend als -Infinity) oder Pfad-Text. */
+  function sortWert(feld: FeldProfil, spalte: ProfilSpalte): number | string {
+    switch (spalte) {
+      case 'feld':
+        return feld.pfad_muster
+      case 'vorkommen':
+        return feld.vorkommen
+      case 'verschiedene':
+        return feld.verschiedene
+      case 'breite':
+        return feld.text_max_laenge ?? Number.NEGATIVE_INFINITY
+      case 'bereich':
+        return feld.zahl_maximum ?? Number.NEGATIVE_INFINITY
+      case 'unterelemente':
+        return hatContainer(feld) ? (feld.kind_max ?? Number.NEGATIVE_INFINITY) : Number.NEGATIVE_INFINITY
+      case 'leer':
+        return feld.null_anteil
+    }
+  }
+
+  const sortierteFelder = $derived.by((): FeldProfil[] => {
+    if (profil === undefined) return []
+    const richtung = sortRichtung === 'auf' ? 1 : -1
+    return [...profil.felder].sort((links, rechts) => {
+      const a = sortWert(links, sortSpalte)
+      const b = sortWert(rechts, sortSpalte)
+      let vergleich: number
+      if (typeof a === 'string' && typeof b === 'string') {
+        vergleich = a.localeCompare(b, 'de-DE')
+      } else {
+        vergleich = (a as number) - (b as number)
+      }
+      // Stabiler Nebenschlüssel: bei Gleichstand nach Pfad-Muster.
+      if (vergleich === 0) vergleich = links.pfad_muster.localeCompare(rechts.pfad_muster, 'de-DE')
+      return vergleich * richtung
+    })
+  })
+
+  function sortiereNach(spalte: ProfilSpalte): void {
+    if (sortSpalte === spalte) {
+      sortRichtung = sortRichtung === 'auf' ? 'ab' : 'auf'
+    } else {
+      sortSpalte = spalte
+      // Textspalte aufsteigend, Zahlenspalten absteigend (größte zuerst).
+      sortRichtung = spalte === 'feld' ? 'auf' : 'ab'
+    }
+  }
+
+  /** Klick auf eine Feld-Zeile: Pfad selektieren, "*" wird zum ersten Treffer (0). */
+  function waehleFeld(feld: FeldProfil): void {
+    const aktuell = tab
+    if (aktuell === null) return
+    const pfad = feld.pfad_muster.replaceAll('/*', '/0')
+    setzeSelektion({ tabId: aktuell.id, pfad, quelle: 'statistik' })
   }
 </script>
 
@@ -261,6 +423,81 @@
           </div>
         {/if}
       </div>
+
+      <div class="karte statx-profil">
+        <div class="karte-kopf"><i class="fa-solid fa-table-list"></i> Feld-Profil</div>
+        {#if profil === undefined}
+          <div class="karte-inhalt">
+            {#each SKELETT_BREITEN as breite, index (index)}
+              <span class="skelett" style="width: {breite}px"></span>
+            {/each}
+          </div>
+        {:else if profil.felder.length === 0}
+          <div class="karte-inhalt">
+            <span class="hinweis-text">Das Dokument enthält keine auswertbaren Felder.</span>
+          </div>
+        {:else}
+          <div class="statx-profil-tabelle">
+            <table class="tabelle">
+              <thead>
+                <tr>
+                  {#each PROFIL_SPALTEN as spalte (spalte.id)}
+                    <th
+                      class:zahl={spalte.zahl}
+                      onclick={() => sortiereNach(spalte.id)}
+                      title="Nach {spalte.beschriftung} sortieren"
+                    >
+                      {spalte.beschriftung}
+                      {#if sortSpalte === spalte.id}
+                        <i
+                          class="fa-solid sortier-pfeil {sortRichtung === 'auf'
+                            ? 'fa-arrow-up-short-wide'
+                            : 'fa-arrow-down-wide-short'}"
+                          title={sortRichtung === 'auf'
+                            ? 'Aufsteigend sortiert'
+                            : 'Absteigend sortiert'}
+                        ></i>
+                      {/if}
+                    </th>
+                  {/each}
+                </tr>
+              </thead>
+              <tbody>
+                {#each sortierteFelder as feld (feld.pfad_muster)}
+                  {@const dominant = dominanterTyp(feld)}
+                  <tr
+                    class="statx-profil-zeile"
+                    onclick={() => waehleFeld(feld)}
+                    title="Pfad {feldPfad(feld.pfad_muster)} im Baum auswählen"
+                  >
+                    <td class="statx-feld-zelle">
+                      <code>{feldPfad(feld.pfad_muster)}</code>
+                    </td>
+                    <td class="statx-typ-zelle">
+                      <span class="statx-typen">
+                        {#each feld.typen as anteil (anteil.typ)}
+                          <span
+                            class="abzeichen {typKlasse(anteil.typ)}"
+                            class:dominant={anteil.typ === dominant && feld.typen.length > 1}
+                          >
+                            {typName(anteil.typ)}
+                          </span>
+                        {/each}
+                      </span>
+                    </td>
+                    <td class="zahl">{zahlText(feld.vorkommen)}</td>
+                    <td class="zahl">{zahlText(feld.verschiedene)}</td>
+                    <td class="zahl">{breiteText(feld)}</td>
+                    <td class="zahl">{bereichText(feld)}</td>
+                    <td class="zahl">{unterelementeText(feld)}</td>
+                    <td class="zahl">{leerText(feld)}</td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        {/if}
+      </div>
     </div>
   {:else if tab.analyseStand === 'fehler'}
     <div class="statx-inhalt">
@@ -306,6 +543,48 @@
     display: flex;
     justify-content: space-between;
     margin-top: var(--a1);
+  }
+
+  /* Feld-Profil: volle Breite, Tabelle scrollt bei Bedarf horizontal. */
+  .statx-profil {
+    overflow: hidden;
+  }
+
+  .statx-profil-tabelle {
+    overflow-x: auto;
+  }
+
+  .statx-profil-zeile {
+    cursor: pointer;
+  }
+
+  /* Pfad- und Typspalte dürfen breiter werden und (Typen) umbrechen; die
+     .tabelle-Vorgaben (max-width, nowrap, ellipsis) hier bewusst lockern. */
+  .statx-profil-tabelle .tabelle td.statx-feld-zelle {
+    max-width: none;
+  }
+
+  .statx-feld-zelle code {
+    font-family: var(--schrift-mono);
+    font-size: 0.8rem;
+  }
+
+  .statx-profil-tabelle .tabelle td.statx-typ-zelle {
+    max-width: none;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .statx-typen {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--a1);
+  }
+
+  /* Dominanter Typ bei gemischten Feldern kräftiger hervorheben. */
+  .statx-typen .abzeichen.dominant {
+    font-weight: 600;
+    border-color: var(--akzent);
   }
 
   /* Echte (unsichtbare) Checkbox hinter dem Mockup-Kästchen .checkbox. */
