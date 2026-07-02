@@ -11,7 +11,7 @@
     alsZeiger,
   } from '../dienste/pfade'
   import { TYP_NAME, WERT_KLASSE } from '../dienste/wertDarstellung'
-  import { kurzVorschau, typVon, wertAnPfad, type WertTyp } from '../dienste/wertZugriff'
+  import { typVon, wertAnPfad, type WertTyp } from '../dienste/wertZugriff'
   import { selektion } from '../zustand/selektion.svelte'
   import { aktiverTab } from '../zustand/tabs.svelte'
   import { zeige } from '../zustand/toaster.svelte'
@@ -82,6 +82,30 @@
       zeige('Der Pfad konnte nicht kopiert werden.', 'fehler')
     }
   }
+
+  // Der Baum zeigt nur eine einzeilige Kurzvorschau - hier steht der Wert
+  // VOLLSTÄNDIG (Texte roh, Container als eingerücktes JSON). Nur die Anzeige
+  // ist bei sehr großen Teilbäumen gedeckelt; "Wert kopieren" liefert immer alles.
+  const ANZEIGE_GRENZE = 20_000
+
+  const wertVoll = $derived.by((): string => {
+    if (daten === null) return ''
+    if (typeof daten.wert === 'string') return daten.wert
+    return JSON.stringify(daten.wert, null, 2) ?? 'null'
+  })
+
+  const wertAnzeige = $derived(
+    wertVoll.length > ANZEIGE_GRENZE ? wertVoll.slice(0, ANZEIGE_GRENZE) : wertVoll,
+  )
+
+  async function kopiereWert(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(wertVoll)
+      zeige('Wert vollständig kopiert.', 'erfolg')
+    } catch {
+      zeige('Der Wert konnte nicht kopiert werden.', 'fehler')
+    }
+  }
 </script>
 
 <aside class="seite-rechts">
@@ -92,8 +116,6 @@
       <dl>
         <dt>Typ</dt>
         <dd><span class="{WERT_KLASSE[daten.typ]} mono">{TYP_NAME[daten.typ]}</span></dd>
-        <dt>Wert</dt>
-        <dd class="mono">{kurzVorschau(daten.wert)}</dd>
         {#if laengeText !== null}
           <dt>Länge</dt>
           <dd>{laengeText}</dd>
@@ -103,6 +125,19 @@
           <dd>{positionsText}</dd>
         {/if}
       </dl>
+      <div class="wert-kopf">
+        <span class="beschriftung">Wert (vollständig)</span>
+        <span class="luecke"></span>
+        <button class="icon-knopf" title="Wert vollständig kopieren" onclick={() => void kopiereWert()}>
+          <i class="fa-solid fa-copy"></i>
+        </button>
+      </div>
+      <code class="wert-voll">{wertAnzeige}</code>
+      {#if wertVoll.length > ANZEIGE_GRENZE}
+        <div class="hinweis-text" style="margin-top: 4px">
+          Anzeige nach {ANZEIGE_GRENZE.toLocaleString('de-DE')} Zeichen gekürzt - "Wert kopieren" liefert alles.
+        </div>
+      {/if}
     </div>
     <div class="inspektor-block">
       <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
@@ -151,3 +186,25 @@
     <span>Die KI-Anbindung folgt in einer späteren Ausbaustufe.</span>
   </div>
 </aside>
+
+<style>
+  .wert-kopf {
+    display: flex;
+    align-items: center;
+    margin-top: var(--a2);
+  }
+
+  .wert-voll {
+    display: block;
+    font-family: var(--schrift-mono);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    background: var(--flaeche-eingabe);
+    border: 1px solid var(--rand-1);
+    padding: var(--a2);
+    max-height: 200px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>
