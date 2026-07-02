@@ -1,13 +1,13 @@
 <script lang="ts">
   // Linke Seitenleiste nach Mockup: gespeicherte Dokumente aus der Bibliothek,
   // Werkzeuge, Nachschlagen und der Leisten-Fuß mit der Versionsnummer.
-  import { sofortAnalysieren } from '../dienste/analyseDienst'
+  import { oeffneGespeichertesDokument } from '../dienste/dokumenteLaden'
   import { formatKuerzel, iconFuerFormat } from '../dienste/formatDarstellung'
   import Bestaetigung from '../hilfsteile/Bestaetigung.svelte'
   import { lexikon } from '../lexikon/lexikon.svelte'
   import { loescheDokument, type SpeicherDokument } from '../speicher/dokumente'
   import { dokumentListe, ladeNeu } from '../zustand/dokumentListe.svelte'
-  import { aktiverTab, oeffneTab, setzeAktiv, tabs } from '../zustand/tabs.svelte'
+  import { aktiverTab } from '../zustand/tabs.svelte'
   import { zeige } from '../zustand/toaster.svelte'
   import { oeffneWerkzeug, schliesseWerkzeug, werkzeug } from '../zustand/werkzeug.svelte'
 
@@ -51,22 +51,6 @@
     zeige(`"${name}" folgt in einer späteren Ausbaustufe.`, 'info')
   }
 
-  /** Öffnet das Dokument als Tab; ist es schon offen, wird sein Tab aktiv. */
-  function oeffneDokument(dokument: SpeicherDokument): void {
-    const vorhanden = tabs.liste.find((tab) => tab.dokumentId === dokument.id)
-    if (vorhanden !== undefined) {
-      setzeAktiv(vorhanden.id)
-      return
-    }
-    const tabId = oeffneTab({
-      titel: dokument.titel,
-      inhalt: dokument.inhalt,
-      format: dokument.format,
-      dokumentId: dokument.id,
-    })
-    void sofortAnalysieren(tabId)
-  }
-
   function frageLoeschen(dokument: SpeicherDokument, ereignis: MouseEvent): void {
     ereignis.stopPropagation()
     loeschKandidat = dokument
@@ -92,8 +76,10 @@
     Dokumente
     <button
       class="icon-knopf"
+      class:aktiv={werkzeug.aktiv === 'dokumente'}
       aria-label="Dokumente verwalten"
-      onclick={() => folgtSpaeter('Dokumente verwalten')}
+      onclick={() =>
+        werkzeug.aktiv === 'dokumente' ? schliesseWerkzeug() : oeffneWerkzeug('dokumente')}
     >
       <i class="fa-solid fa-folder-open"></i>
     </button>
@@ -109,11 +95,11 @@
         class:aktiv={dokument.id === aktiveDokumentId}
         role="button"
         tabindex="0"
-        onclick={() => oeffneDokument(dokument)}
+        onclick={() => oeffneGespeichertesDokument(dokument)}
         onkeydown={(ereignis) => {
           if (ereignis.key === 'Enter' || ereignis.key === ' ') {
             ereignis.preventDefault()
-            oeffneDokument(dokument)
+            oeffneGespeichertesDokument(dokument)
           }
         }}
       >

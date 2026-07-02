@@ -5,6 +5,7 @@
 import type { Component } from 'svelte'
 
 import CodegenWerkzeug from './CodegenWerkzeug.svelte'
+import DokumenteVerwaltung from './DokumenteVerwaltung.svelte'
 import KonvertierenWerkzeug from './KonvertierenWerkzeug.svelte'
 import ReparaturWerkzeug from './ReparaturWerkzeug.svelte'
 import ValidierenWerkzeug from './ValidierenWerkzeug.svelte'
@@ -29,3 +30,8 @@ registriereWerkzeug({ id: 'konvertieren', titel: 'Konvertieren', komponente: Kon
 registriereWerkzeug({ id: 'validieren', titel: 'Validieren', komponente: ValidierenWerkzeug })
 registriereWerkzeug({ id: 'reparatur', titel: 'Reparatur', komponente: ReparaturWerkzeug })
 registriereWerkzeug({ id: 'codegen', titel: 'Code erzeugen', komponente: CodegenWerkzeug })
+registriereWerkzeug({
+  id: 'dokumente',
+  titel: 'Dokumente verwalten',
+  komponente: DokumenteVerwaltung,
+})

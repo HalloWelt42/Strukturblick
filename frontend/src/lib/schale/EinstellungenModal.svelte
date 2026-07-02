@@ -4,6 +4,7 @@
   // (Theme-Kacheln) und Arbeitsstand (Export/Import, Speicherverbrauch). Alle
   // Werte werden sofort in IndexedDB bzw. localStorage persistiert.
   import { menschenlesbareGroesse } from '../dienste/groessenFormat'
+  import ArbeitsstandEinspielen from '../hilfsteile/ArbeitsstandEinspielen.svelte'
   import KiEinstellungenFelder from '../ki/KiEinstellungenFelder.svelte'
   import Modal from '../hilfsteile/Modal.svelte'
   import {
@@ -17,8 +18,6 @@
     exportiereAlsText,
     lesePaket,
     speicherSchaetzung,
-    spieleEin,
-    type EinspielModus,
     type SpeicherSchaetzung,
     type TransferPaket,
   } from '../speicher/transfer'
@@ -101,24 +100,9 @@
     }
   }
 
-  async function spieleEinMit(modus: EinspielModus): Promise<void> {
-    const paket = einspielPaket
-    if (paket === null) return
-    einspielPaket = null
-    try {
-      await spieleEin(paket, modus)
-    } catch {
-      zeige('Der Arbeitsstand konnte nicht eingespielt werden.', 'fehler')
-      return
-    }
-    if (modus === 'ersetzen') {
-      // Sauberer Neustart, damit Tabs und Einstellungen frisch geladen werden.
-      window.location.reload()
-      return
-    }
+  async function nachEinspielen(): Promise<void> {
     await ladeNeu()
     verbrauch = await speicherSchaetzung()
-    zeige(`${paket.dokumente.length} Dokument(e) zusammengeführt.`, 'erfolg')
   }
 
   const verbrauchText = $derived(
@@ -247,29 +231,11 @@
 </Modal>
 
 <!-- Einspiel-Modus wählen (kein Auto-Ersetzen). -->
-<Modal
-  titel="Arbeitsstand einspielen"
-  offen={einspielPaket !== null}
+<ArbeitsstandEinspielen
+  paket={einspielPaket}
   onSchliessen={() => (einspielPaket = null)}
->
-  <p class="einspiel-frage">
-    Wie soll der Arbeitsstand aus der Datei eingespielt werden?
-  </p>
-  <ul class="einspiel-liste">
-    <li>
-      <strong>Ersetzen</strong> - der aktuelle Stand wird verworfen und durch die Datei ersetzt.
-    </li>
-    <li>
-      <strong>Zusammenführen</strong> - nur die Dokumente aus der Datei werden mit neuen Kennungen
-      ergänzt.
-    </li>
-  </ul>
-  {#snippet fuss()}
-    <button class="knopf" onclick={() => (einspielPaket = null)}>Abbrechen</button>
-    <button class="knopf" onclick={() => void spieleEinMit('zusammenfuehren')}>Zusammenführen</button>
-    <button class="knopf primaer" onclick={() => void spieleEinMit('ersetzen')}>Ersetzen</button>
-  {/snippet}
-</Modal>
+  onEingespielt={nachEinspielen}
+/>
 
 <style>
   .theme-reihe {
@@ -288,18 +254,5 @@
 
   .versteckt-feld {
     display: none;
-  }
-
-  .einspiel-frage {
-    margin: 0 0 var(--a2);
-  }
-
-  .einspiel-liste {
-    margin: 0;
-    padding-left: var(--a4);
-    display: flex;
-    flex-direction: column;
-    gap: var(--a2);
-    color: var(--text-2);
   }
 </style>

@@ -5,22 +5,16 @@
   // Komponente der aktiven Ansicht aus der Registry.
   import { komponenteFuer } from '../ansichten/registry'
   import type { FormatFaehigkeiten } from '../api/typen'
-  import { sofortAnalysieren } from '../dienste/analyseDienst'
   import {
-    groessenUrteil,
-    liesDatei,
-    oeffneDateien,
-    type GeleseneDatei,
-  } from '../dienste/dateiEinAusgabe'
-  import { formatAusDateiname } from '../dienste/formatErkennung'
-  import { alsMbText, menschenlesbareGroesse } from '../dienste/groessenFormat'
+    ausZwischenablageOeffnen,
+    oeffneUeberDialog,
+    verarbeiteAbgelegte,
+  } from '../dienste/dokumenteLaden'
   import Bestaetigung from '../hilfsteile/Bestaetigung.svelte'
   import LeererZustand from '../hilfsteile/LeererZustand.svelte'
-  import { ablehnungAbBytes } from '../speicher/einstellungenSpeicher'
   import { werkzeugKomponente } from '../werkzeuge/registry'
   import { capabilities } from '../zustand/capabilities.svelte'
-  import { aktiverTab, oeffneTab } from '../zustand/tabs.svelte'
-  import { zeige } from '../zustand/toaster.svelte'
+  import { aktiverTab } from '../zustand/tabs.svelte'
   import { werkzeug } from '../zustand/werkzeug.svelte'
 
   // Breiten der Skelett-Platzhalter, angelehnt an die Abzeichen im Mockup.
@@ -60,57 +54,6 @@
     ladeDialogAufloeser = null
   }
 
-  /** Prüft die Größe je Datei, öffnet Tabs und stößt die Analyse an. */
-  async function verarbeiteDateien(dateien: GeleseneDatei[]): Promise<void> {
-    for (const datei of dateien) {
-      const urteil = await groessenUrteil(datei.groesse)
-      if (urteil === 'ablehnen') {
-        const grenze = await ablehnungAbBytes()
-        zeige(
-          `"${datei.name}" ist zu groß - die Grenze liegt bei ${menschenlesbareGroesse(grenze)}.`,
-          'fehler',
-        )
-        continue
-      }
-      if (urteil === 'warnen') {
-        const laden = await frageNach(
-          `Die Datei ist ${alsMbText(datei.groesse)} MB groß. Trotzdem laden?`,
-        )
-        if (!laden) continue
-      }
-      const base64 = datei.base64
-      const tabId = oeffneTab({
-        titel: datei.name,
-        // Bei binären Dokumenten trägt der Inhalt die Base64-Zeichenkette.
-        inhalt: base64 !== undefined ? base64 : datei.text,
-        format: formatAusDateiname(datei.name),
-        istBinaer: base64 !== undefined,
-      })
-      void sofortAnalysieren(tabId)
-    }
-  }
-
-  async function oeffneDateiDialog(): Promise<void> {
-    const dateien = await oeffneDateien()
-    await verarbeiteDateien(dateien)
-  }
-
-  async function ausZwischenablage(): Promise<void> {
-    let inhalt = ''
-    try {
-      inhalt = await navigator.clipboard.readText()
-    } catch {
-      zeige('Die Zwischenablage konnte nicht gelesen werden.', 'fehler')
-      return
-    }
-    if (inhalt === '') {
-      zeige('Die Zwischenablage ist leer.', 'info')
-      return
-    }
-    const tabId = oeffneTab({ titel: 'zwischenablage', inhalt })
-    void sofortAnalysieren(tabId)
-  }
-
   function beiDragOver(ereignis: DragEvent): void {
     ereignis.preventDefault()
     ziehAktiv = true
@@ -131,10 +74,7 @@
   async function beiDrop(ereignis: DragEvent): Promise<void> {
     ereignis.preventDefault()
     ziehAktiv = false
-    const dateien = Array.from(ereignis.dataTransfer?.files ?? [])
-    if (dateien.length === 0) return
-    const gelesen = await Promise.all(dateien.map(liesDatei))
-    await verarbeiteDateien(gelesen)
+    await verarbeiteAbgelegte(ereignis.dataTransfer?.files ?? [], frageNach)
   }
 </script>
 
@@ -158,10 +98,10 @@
     >
       {#snippet aktionen()}
         <div class="willk-aktionen">
-          <button class="knopf primaer" onclick={() => void oeffneDateiDialog()}>
+          <button class="knopf primaer" onclick={() => void oeffneUeberDialog(frageNach)}>
             <i class="fa-solid fa-folder-open"></i> Datei öffnen
           </button>
-          <button class="knopf" onclick={() => void ausZwischenablage()}>
+          <button class="knopf" onclick={() => void ausZwischenablageOeffnen()}>
             <i class="fa-solid fa-clipboard"></i> Aus Zwischenablage einfügen
           </button>
         </div>
