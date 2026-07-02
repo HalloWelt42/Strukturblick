@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Testdaten</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+    <style>
+      /* Seiten-spezifisch */
+      .testx-inhalt {
+        padding: var(--a4);
+        display: flex;
+        flex-direction: column;
+        gap: var(--a3);
+        max-width: 880px;
+      }
+      .testx-fortschritt-zeile {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--a2);
+        margin-top: var(--a2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag aktiv" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <button class="knopf klein"><i class="fa-solid fa-wand-magic-sparkles"></i> Spezifikation von KI vorschlagen lassen</button>
+            <span class="beschriftung">Basis: bestellungen.json</span>
+            <span class="luecke"></span>
+            <span class="abzeichen info">Deterministisch</span>
+          </div>
+
+          <!-- Testdaten-Generator -->
+          <div class="testx-inhalt">
+            <div class="karte">
+              <div class="karte-kopf"><i class="fa-solid fa-cubes"></i> Generator-Spezifikation</div>
+              <table class="tabelle">
+                <thead>
+                  <tr>
+                    <th>Feld</th>
+                    <th>Erzeuger</th>
+                    <th>Parameter</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">kunde.name</td>
+                    <td>Personenname</td>
+                    <td>Deutsch</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">kunde.email</td>
+                    <td>E-Mail</td>
+                    <td>aus Name abgeleitet</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">summe</td>
+                    <td>Dezimalzahl</td>
+                    <td>5,00 bis 500,00</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">kundeSeit</td>
+                    <td>Datum</td>
+                    <td>2015-01-01 bis 2026-07-01</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">nummer</td>
+                    <td>Muster</td>
+                    <td class="mono">"B-2026-####"</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="feld-zeile">
+              <span class="beschriftung">Anzahl</span>
+              <input class="feld mono" type="text" value="1000" style="width: 90px" />
+              <span class="beschriftung"><span class="fachbegriff">Seed</span></span>
+              <input class="feld mono" type="text" value="42" style="width: 70px" />
+              <span class="beschriftung">Zielformat</span>
+              <select class="feld">
+                <option selected>NDJSON</option>
+                <option>JSON</option>
+                <option>CSV</option>
+                <option>YAML</option>
+              </select>
+              <span class="luecke"></span>
+              <button class="knopf primaer"><i class="fa-solid fa-play"></i> Erzeugen</button>
+            </div>
+
+            <div class="karte">
+              <div class="karte-kopf"><i class="fa-solid fa-gears"></i> Erzeugung läuft</div>
+              <div class="karte-inhalt">
+                <div class="fortschritt"><i style="width: 64%"></i></div>
+                <div class="testx-fortschritt-zeile">
+                  <span class="hinweis-text">Block 7 von 10 - 640 von 1000 Datensätzen</span>
+                  <span class="hinweis-text mono">64 %</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="karte">
+              <div class="karte-kopf"><i class="fa-solid fa-eye"></i> Vorschau (erste Zeilen, <span class="fachbegriff">NDJSON</span>)</div>
+              <div class="karte-inhalt">
+                <div class="code-block">{"nummer": "B-2026-0001", "kunde": {"name": "Lena Hartmann", "email": "lena.hartmann@beispiel.de", "kundeSeit": "2017-04-22"}, "summe": 184.35}
+{"nummer": "B-2026-0002", "kunde": {"name": "Jonas Weber", "email": "jonas.weber@beispiel.de", "kundeSeit": "2021-09-08"}, "summe": 47.90}
+{"nummer": "B-2026-0003", "kunde": {"name": "Mia Schröder", "email": "mia.schroeder@beispiel.de", "kundeSeit": "2016-02-17"}, "summe": 312.60}</div>
+              </div>
+            </div>
+
+            <div class="karte">
+              <div class="karte-kopf"><i class="fa-solid fa-circle-info"></i> Hinweis</div>
+              <div class="karte-inhalt hinweis-text">
+                Die Spezifikation kann von der KI vorgeschlagen werden - die Erzeugung selbst läuft deterministisch mit festem <span class="fachbegriff">Seed</span> (gleicher Seed, gleiche Daten).
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">kunde.email</code>
+          <dl>
+            <dt>Erzeuger</dt>
+            <dd>E-Mail</dd>
+            <dt>Parameter</dt>
+            <dd>aus Name abgeleitet</dd>
+            <dt>Beispiel</dt>
+            <dd class="mono">lena.hartmann@beispiel.de</dd>
+            <dt>Eindeutig</dt>
+            <dd>ja</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <span class="aktuell">Testdaten-Generator</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">NDJSON</span>
+          <span>1000 Datensätze geplant</span>
+          <span class="diag-zaehler"><i class="fa-solid fa-hourglass-half"></i> Erzeugung läuft ...</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

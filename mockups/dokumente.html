@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Dokumente verwalten</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+    <style>
+      /* Seiten-spezifisch */
+      .dokm-inhalt {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        padding: var(--a3);
+        display: flex;
+        flex-direction: column;
+        gap: var(--a3);
+      }
+      .dokm-ablagezone {
+        border: 1px dashed var(--rand-2);
+        padding: var(--a5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--a2);
+        color: var(--text-3);
+      }
+      .dokm-ablagezone i {
+        font-size: 1.6rem;
+        color: var(--rand-2);
+      }
+      .dokm-arbeitsstand p {
+        margin: 0 0 var(--a3);
+        font-size: 0.86rem;
+      }
+      .dokm-arbeitsstand .feld-zeile {
+        margin-bottom: var(--a3);
+      }
+      .dokm-arbeitsstand .beschriftung {
+        display: block;
+        margin-bottom: var(--a1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf aktiv" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <button class="knopf primaer"><i class="fa-solid fa-folder-open"></i> Datei öffnen</button>
+            <button class="knopf"><i class="fa-solid fa-clipboard"></i> Aus Zwischenablage</button>
+            <span class="luecke"></span>
+            <div class="feld-zeile">
+              <input class="feld" type="text" placeholder="Dokumente durchsuchen ..." style="width: 220px" />
+            </div>
+          </div>
+
+          <div class="dokm-inhalt">
+            <!-- Ablagezone -->
+            <div class="dokm-ablagezone">
+              <i class="fa-solid fa-file-arrow-up"></i>
+              <strong>Dateien hierher ziehen</strong>
+              <span class="hinweis-text">Format und <span class="fachbegriff">Dialekt</span> werden automatisch erkannt.</span>
+            </div>
+
+            <!-- Gespeicherte Dokumente -->
+            <div class="karte">
+              <div class="karte-kopf">
+                <i class="fa-solid fa-folder-open"></i> Gespeicherte Dokumente
+                <span class="luecke"></span>
+                <span class="abzeichen">5 Einträge</span>
+              </div>
+              <table class="tabelle">
+                <thead>
+                  <tr>
+                    <th>Name <i class="fa-solid fa-caret-up sortier-pfeil"></i></th>
+                    <th>Format</th>
+                    <th class="zahl">Größe</th>
+                    <th>Geändert am</th>
+                    <th>Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="selektiert">
+                    <td><i class="fa-solid fa-file-code"></i> bestellungen.json</td>
+                    <td><span class="abzeichen">JSON</span></td>
+                    <td class="zahl">12,4 KB</td>
+                    <td>02.07.2026, 09:41</td>
+                    <td>
+                      <button class="icon-knopf" title="Öffnen"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                      <button class="icon-knopf" title="Herunterladen"><i class="fa-solid fa-download"></i></button>
+                      <button class="icon-knopf gefahr" title="Löschen"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-table"></i> kunden.csv</td>
+                    <td><span class="abzeichen">CSV</span></td>
+                    <td class="zahl">2,1 KB</td>
+                    <td>30.06.2026, 16:05</td>
+                    <td>
+                      <button class="icon-knopf" title="Öffnen"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                      <button class="icon-knopf" title="Herunterladen"><i class="fa-solid fa-download"></i></button>
+                      <button class="icon-knopf gefahr" title="Löschen"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-file-lines"></i> konfiguration.yaml</td>
+                    <td><span class="abzeichen">YAML</span></td>
+                    <td class="zahl">0,8 KB</td>
+                    <td>28.06.2026, 11:22</td>
+                    <td>
+                      <button class="icon-knopf" title="Öffnen"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                      <button class="icon-knopf" title="Herunterladen"><i class="fa-solid fa-download"></i></button>
+                      <button class="icon-knopf gefahr" title="Löschen"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-file-code"></i> buecherei.xml</td>
+                    <td><span class="abzeichen">XML</span></td>
+                    <td class="zahl">4,6 KB</td>
+                    <td>19.06.2026, 08:47</td>
+                    <td>
+                      <button class="icon-knopf" title="Öffnen"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                      <button class="icon-knopf" title="Herunterladen"><i class="fa-solid fa-download"></i></button>
+                      <button class="icon-knopf gefahr" title="Löschen"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-file-lines"></i> bestellungen-gross.ndjson</td>
+                    <td><span class="abzeichen">NDJSON</span></td>
+                    <td class="zahl">48,2 MB</td>
+                    <td>15.06.2026, 18:03</td>
+                    <td>
+                      <button class="icon-knopf" title="Öffnen"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                      <button class="icon-knopf" title="Herunterladen"><i class="fa-solid fa-download"></i></button>
+                      <button class="icon-knopf gefahr" title="Löschen"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Arbeitsstand -->
+            <div class="karte dokm-arbeitsstand">
+              <div class="karte-kopf"><i class="fa-solid fa-box-archive"></i> Arbeitsstand</div>
+              <div class="karte-inhalt">
+                <p>Alle Dokumente, Ansichten und Einstellungen liegen nur in diesem Browser.</p>
+                <div class="feld-zeile">
+                  <button class="knopf"><i class="fa-solid fa-file-export"></i> Arbeitsstand exportieren</button>
+                  <button class="knopf"><i class="fa-solid fa-file-import"></i> Arbeitsstand importieren</button>
+                </div>
+                <span class="beschriftung">Speicherverbrauch: 18,2 MB</span>
+                <div class="fortschritt"><i style="width: 36%"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">bestellungen.json</code>
+          <dl>
+            <dt>Format</dt>
+            <dd>JSON</dd>
+            <dt>Größe</dt>
+            <dd>12,4 KB</dd>
+            <dt>Geändert am</dt>
+            <dd>02.07.2026, 09:41</dd>
+            <dt>Zustand</dt>
+            <dd>Ungespeicherte Änderungen</dd>
+          </dl>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <span>5 Dokumente gespeichert</span>
+        <div class="status-rechts">
+          <span>Speicherverbrauch: 18,2 MB</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

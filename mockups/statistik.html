@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Statistik</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+    <style>
+      /* Seiten-spezifisch */
+      .statx-inhalt {
+        padding: var(--a4);
+        display: flex;
+        flex-direction: column;
+        gap: var(--a3);
+      }
+      .statx-karten {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: var(--a3);
+      }
+      .statx-muster-zeile {
+        display: flex;
+        align-items: baseline;
+        gap: var(--a2);
+        padding: var(--a1) 0;
+        font-size: 0.84rem;
+      }
+      .statx-achsen {
+        display: flex;
+        justify-content: space-between;
+        margin-top: var(--a1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter aktiv" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <button class="knopf klein"><i class="fa-solid fa-rotate"></i> Neu berechnen</button>
+            <span class="beschriftung">Berechnet in 12 ms</span>
+            <span class="luecke"></span>
+            <label class="beschriftung"><span class="checkbox an"><i class="fa-solid fa-check"></i></span> Mustererkennung einbeziehen</label>
+          </div>
+
+          <!-- Statistik: bestellungen.json -->
+          <div class="statx-inhalt">
+            <div class="kennzahl-raster">
+              <div class="kennzahl">
+                <div class="kz-wert">214</div>
+                <div class="kz-name">Knoten gesamt</div>
+              </div>
+              <div class="kennzahl">
+                <div class="kz-wert">5</div>
+                <div class="kz-name">Maximale Tiefe</div>
+              </div>
+              <div class="kennzahl">
+                <div class="kz-wert">12,4 KB</div>
+                <div class="kz-name">Größe</div>
+              </div>
+              <div class="kennzahl">
+                <div class="kz-wert">38</div>
+                <div class="kz-name">Objekte</div>
+              </div>
+              <div class="kennzahl">
+                <div class="kz-wert">4</div>
+                <div class="kz-name">Listen</div>
+              </div>
+              <div class="kennzahl">
+                <div class="kz-wert">96</div>
+                <div class="kz-name">Textwerte</div>
+              </div>
+            </div>
+
+            <div class="statx-karten">
+              <div class="karte">
+                <div class="karte-kopf"><i class="fa-solid fa-chart-column"></i> Typverteilung</div>
+                <div class="karte-inhalt">
+                  <div class="balken-reihe">
+                    <span class="b-name">Objekt</span>
+                    <div class="balken"><i class="typ-objekt" style="width: 40%"></i></div>
+                    <span class="b-wert">38</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">Liste</span>
+                    <div class="balken"><i class="typ-liste" style="width: 5%"></i></div>
+                    <span class="b-wert">4</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">Text</span>
+                    <div class="balken"><i class="typ-text" style="width: 100%"></i></div>
+                    <span class="b-wert">96</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">Zahl</span>
+                    <div class="balken"><i class="typ-zahl" style="width: 43%"></i></div>
+                    <span class="b-wert">41</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">Wahrheitswert</span>
+                    <div class="balken"><i class="typ-bool" style="width: 21%"></i></div>
+                    <span class="b-wert">20</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">Null</span>
+                    <div class="balken"><i class="typ-null" style="width: 16%"></i></div>
+                    <span class="b-wert">15</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="karte">
+                <div class="karte-kopf"><i class="fa-solid fa-key"></i> Häufigste Schlüssel</div>
+                <div class="karte-inhalt">
+                  <div class="balken-reihe">
+                    <span class="b-name">artikel</span>
+                    <div class="balken"><i class="zweit" style="width: 100%"></i></div>
+                    <span class="b-wert">7</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">menge</span>
+                    <div class="balken"><i class="zweit" style="width: 100%"></i></div>
+                    <span class="b-wert">7</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">einzelpreis</span>
+                    <div class="balken"><i class="zweit" style="width: 100%"></i></div>
+                    <span class="b-wert">7</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">name</span>
+                    <div class="balken"><i class="zweit" style="width: 57%"></i></div>
+                    <span class="b-wert">4</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">id</span>
+                    <div class="balken"><i class="zweit" style="width: 43%"></i></div>
+                    <span class="b-wert">3</span>
+                  </div>
+                  <div class="balken-reihe">
+                    <span class="b-name">nummer</span>
+                    <div class="balken"><i class="zweit" style="width: 43%"></i></div>
+                    <span class="b-wert">3</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="karte">
+                <div class="karte-kopf"><i class="fa-solid fa-chart-simple"></i> Histogramm: summe</div>
+                <div class="karte-inhalt">
+                  <div class="histogramm">
+                    <i style="height: 12%"></i>
+                    <i style="height: 20%"></i>
+                    <i style="height: 34%"></i>
+                    <i style="height: 52%"></i>
+                    <i style="height: 78%"></i>
+                    <i style="height: 100%"></i>
+                    <i style="height: 88%"></i>
+                    <i style="height: 64%"></i>
+                    <i style="height: 47%"></i>
+                    <i style="height: 58%"></i>
+                    <i style="height: 36%"></i>
+                    <i style="height: 24%"></i>
+                    <i style="height: 14%"></i>
+                    <i style="height: 8%"></i>
+                  </div>
+                  <div class="statx-achsen">
+                    <span class="hinweis-text mono">12,50</span>
+                    <span class="hinweis-text mono">189,90</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="karte">
+                <div class="karte-kopf"><i class="fa-solid fa-fingerprint"></i> Mustererkennung</div>
+                <div class="karte-inhalt">
+                  <div class="statx-muster-zeile">
+                    <span class="abzeichen info">UUID</span>
+                    <span>Feld <code>id</code>: 3 von 3 Werten entsprechen dem Muster</span>
+                  </div>
+                  <div class="statx-muster-zeile">
+                    <span class="abzeichen info">E-Mail</span>
+                    <span>Feld <code>email</code>: 3 von 3 Werten entsprechen dem Muster</span>
+                  </div>
+                  <div class="statx-muster-zeile">
+                    <span class="abzeichen info">Datum</span>
+                    <span>Felder <code>kundeSeit</code> und <code>lieferdatum</code>: 6 von 6 Werten entsprechen dem Muster</span>
+                  </div>
+                  <div class="statx-muster-zeile">
+                    <span class="abzeichen gut">Enum-Kandidat</span>
+                    <span>Feld <code>status</code>: nur die Werte <code>offen</code>, <code>bezahlt</code>, <code>storniert</code> (fester Wertevorrat, <span class="fachbegriff">Enum</span>)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">$</code>
+          <dl>
+            <dt>Typ</dt>
+            <dd><span class="wert-objekt mono">Objekt</span></dd>
+            <dt>Schlüssel</dt>
+            <dd>2</dd>
+            <dt>Knoten</dt>
+            <dd>214</dd>
+            <dt>Tiefe</dt>
+            <dd>5 Ebenen</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <span class="aktuell">$</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">JSON</span>
+          <span>12,4 KB</span>
+          <span>214 Knoten</span>
+          <span class="diag-zaehler"><i class="fa-solid fa-circle-check"></i> Keine Fehler</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

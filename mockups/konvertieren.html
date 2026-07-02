@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Konvertieren</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+    <style>
+      /* Seiten-spezifisch */
+      .konv-warnkarte {
+        flex: none;
+        margin: var(--a3);
+      }
+      .konv-warnkarte ul {
+        margin: 0 0 var(--a3);
+        padding-left: var(--a5);
+        font-size: 0.86rem;
+      }
+      .konv-warnkarte li {
+        margin-bottom: var(--a1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag aktiv" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <span class="beschriftung">Von:</span>
+            <span class="abzeichen info">YAML</span>
+            <span class="beschriftung">Nach:</span>
+            <select class="feld">
+              <option selected>JSON</option>
+              <option>TOML</option>
+              <option>XML</option>
+              <option>CSV</option>
+            </select>
+            <span class="beschriftung">Einrückung:</span>
+            <input class="feld" type="text" value="2" style="width: 48px" />
+            <label class="beschriftung"><span class="checkbox"><i class="fa-solid fa-check"></i></span> Schlüssel sortieren</label>
+            <span class="luecke"></span>
+            <button class="knopf primaer"><i class="fa-solid fa-shuffle"></i> Konvertieren</button>
+            <button class="knopf"><i class="fa-solid fa-download"></i> Herunterladen</button>
+          </div>
+
+          <!-- Verlustwarnung -->
+          <div class="karte konv-warnkarte">
+            <div class="karte-kopf">
+              <i class="fa-solid fa-triangle-exclamation"></i> Verlustwarnung
+              <span class="abzeichen warnung">2 Verluste</span>
+            </div>
+            <div class="karte-inhalt">
+              <ul>
+                <li>2 Kommentare gehen verloren (Zeile 1, Zeile 7)</li>
+                <li><span class="fachbegriff">Anker/Alias</span> 'standard' wird aufgelöst (2 Verwendungen)</li>
+              </ul>
+              <div class="feld-zeile">
+                <button class="knopf primaer">Trotzdem konvertieren</button>
+                <button class="knopf">Abbrechen</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zweigeteilte Ansicht: Quelle und Ergebnis -->
+          <div class="diff-split">
+            <div class="diff-pane">
+              <div class="diff-pane-kopf">Quelle (YAML) <span class="luecke"></span> <span class="abzeichen">0,8 KB</span></div>
+              <div class="editor">
+                <div class="ed-zeile"><span class="zn">1</span><span class="ed-code"><span class="sx-kommentar"># Dienstkonfiguration Werkzeugkiste Nord</span></span></div>
+                <div class="ed-zeile"><span class="zn">2</span><span class="ed-code"><span class="sx-schluessel">standard:</span> <span class="sx-mark-treffer">&amp;standard</span></span></div>
+                <div class="ed-zeile"><span class="zn">3</span><span class="ed-code">  <span class="sx-schluessel">zeitlimit:</span> <span class="sx-zahl">30</span></span></div>
+                <div class="ed-zeile"><span class="zn">4</span><span class="ed-code">  <span class="sx-schluessel">wiederholungen:</span> <span class="sx-zahl">3</span></span></div>
+                <div class="ed-zeile"><span class="zn">5</span><span class="ed-code"></span></div>
+                <div class="ed-zeile"><span class="zn">6</span><span class="ed-code"><span class="sx-schluessel">dienste:</span></span></div>
+                <div class="ed-zeile"><span class="zn">7</span><span class="ed-code">  <span class="sx-kommentar"># Interne Dienste</span></span></div>
+                <div class="ed-zeile"><span class="zn">8</span><span class="ed-code">  <span class="sx-schluessel">lager:</span></span></div>
+                <div class="ed-zeile"><span class="zn">9</span><span class="ed-code">    <span class="sx-schluessel">&lt;&lt;:</span> <span class="sx-mark-treffer">*standard</span></span></div>
+                <div class="ed-zeile"><span class="zn">10</span><span class="ed-code">    <span class="sx-schluessel">port:</span> <span class="sx-zahl">8081</span></span></div>
+                <div class="ed-zeile"><span class="zn">11</span><span class="ed-code">  <span class="sx-schluessel">versand:</span></span></div>
+                <div class="ed-zeile"><span class="zn">12</span><span class="ed-code">    <span class="sx-schluessel">&lt;&lt;:</span> <span class="sx-mark-treffer">*standard</span></span></div>
+                <div class="ed-zeile"><span class="zn">13</span><span class="ed-code">    <span class="sx-schluessel">port:</span> <span class="sx-zahl">8082</span></span></div>
+                <div class="ed-zeile"><span class="zn">14</span><span class="ed-code">    <span class="sx-schluessel">wiederholungen:</span> <span class="sx-zahl">5</span></span></div>
+              </div>
+            </div>
+            <div class="diff-pane">
+              <div class="diff-pane-kopf">Ergebnis (JSON) <span class="luecke"></span> <span class="abzeichen">Vorschau</span></div>
+              <div class="editor">
+                <div class="ed-zeile"><span class="zn">1</span><span class="ed-code"><span class="sx-klammer">{</span></span></div>
+                <div class="ed-zeile"><span class="zn">2</span><span class="ed-code">  <span class="sx-schluessel">"standard"</span>: <span class="sx-klammer">{</span></span></div>
+                <div class="ed-zeile"><span class="zn">3</span><span class="ed-code">    <span class="sx-schluessel">"zeitlimit"</span>: <span class="sx-zahl">30</span>,</span></div>
+                <div class="ed-zeile"><span class="zn">4</span><span class="ed-code">    <span class="sx-schluessel">"wiederholungen"</span>: <span class="sx-zahl">3</span></span></div>
+                <div class="ed-zeile"><span class="zn">5</span><span class="ed-code">  <span class="sx-klammer">}</span>,</span></div>
+                <div class="ed-zeile"><span class="zn">6</span><span class="ed-code">  <span class="sx-schluessel">"dienste"</span>: <span class="sx-klammer">{</span></span></div>
+                <div class="ed-zeile"><span class="zn">7</span><span class="ed-code">    <span class="sx-schluessel">"lager"</span>: <span class="sx-klammer">{</span></span></div>
+                <div class="ed-zeile"><span class="zn">8</span><span class="ed-code">      <span class="sx-schluessel">"zeitlimit"</span>: <span class="sx-zahl">30</span>,</span></div>
+                <div class="ed-zeile"><span class="zn">9</span><span class="ed-code">      <span class="sx-schluessel">"wiederholungen"</span>: <span class="sx-zahl">3</span>,</span></div>
+                <div class="ed-zeile"><span class="zn">10</span><span class="ed-code">      <span class="sx-schluessel">"port"</span>: <span class="sx-zahl">8081</span></span></div>
+                <div class="ed-zeile"><span class="zn">11</span><span class="ed-code">    <span class="sx-klammer">}</span>,</span></div>
+                <div class="ed-zeile"><span class="zn">12</span><span class="ed-code">    <span class="sx-schluessel">"versand"</span>: <span class="sx-klammer">{</span></span></div>
+                <div class="ed-zeile"><span class="zn">13</span><span class="ed-code">      <span class="sx-schluessel">"zeitlimit"</span>: <span class="sx-zahl">30</span>,</span></div>
+                <div class="ed-zeile"><span class="zn">14</span><span class="ed-code">      <span class="sx-schluessel">"wiederholungen"</span>: <span class="sx-zahl">5</span>,</span></div>
+                <div class="ed-zeile"><span class="zn">15</span><span class="ed-code">      <span class="sx-schluessel">"port"</span>: <span class="sx-zahl">8082</span></span></div>
+                <div class="ed-zeile"><span class="zn">16</span><span class="ed-code">    <span class="sx-klammer">}</span></span></div>
+                <div class="ed-zeile"><span class="zn">17</span><span class="ed-code">  <span class="sx-klammer">}</span></span></div>
+                <div class="ed-zeile"><span class="zn">18</span><span class="ed-code"><span class="sx-klammer">}</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">/dienste/versand</code>
+          <dl>
+            <dt>Typ</dt>
+            <dd><span class="wert-objekt mono">Objekt</span></dd>
+            <dt>Schlüssel</dt>
+            <dd>3 (2 aus Alias)</dd>
+            <dt>Alias</dt>
+            <dd class="mono">*standard</dd>
+            <dt>Position</dt>
+            <dd>Zeile 11, Spalte 3</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <a>$</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>dienste</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="aktuell">versand</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">YAML</span>
+          <span>0,8 KB</span>
+          <span>Zeile 11, Spalte 3</span>
+          <span class="diag-zaehler warnung"><i class="fa-solid fa-triangle-exclamation"></i> 2 Warnungen</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

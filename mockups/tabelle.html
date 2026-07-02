@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Tabelle</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab aktiv">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter aktiv" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <span class="beschriftung"><span class="fachbegriff">Dialekt</span>:</span>
+            <span class="abzeichen">Trennzeichen: Semikolon</span>
+            <span class="abzeichen">Kodierung: ISO-8859-1</span>
+            <span class="abzeichen">Kopfzeile: ja</span>
+            <span class="luecke"></span>
+            <input class="feld" type="text" placeholder="Spalten filtern ..." style="width: 200px" />
+            <button class="knopf klein"><i class="fa-solid fa-file-export"></i> Exportieren</button>
+          </div>
+
+          <!-- Tabellenansicht: kunden.csv, sortiert nach umsatz absteigend -->
+          <table class="tabelle">
+            <thead>
+              <tr>
+                <th>kundennummer <span class="abzeichen">Text</span></th>
+                <th>name <span class="abzeichen">Text</span></th>
+                <th>email <span class="abzeichen">Text</span></th>
+                <th>stadt <span class="abzeichen">Text</span></th>
+                <th>kunde_seit <span class="abzeichen">Datum</span></th>
+                <th class="zahl">umsatz <span class="abzeichen">Zahl</span><i class="fa-solid fa-arrow-down-wide-short sortier-pfeil" title="Absteigend sortiert"></i></th>
+                <th>aktiv <span class="abzeichen">Boole</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">K-1010</td>
+                <td>Hauke Jensen</td>
+                <td class="mono">hauke@beispiel.de</td>
+                <td>Heide</td>
+                <td class="mono">2016-08-15</td>
+                <td class="zahl">7205,60</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1006</td>
+                <td>Jan Carstensen</td>
+                <td class="mono">jan@beispiel.de</td>
+                <td>Husum</td>
+                <td class="mono">2017-09-23</td>
+                <td class="zahl">5980,25</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1001</td>
+                <td>Erika Musterfrau</td>
+                <td class="mono">erika@beispiel.de</td>
+                <td>Hamburg</td>
+                <td class="mono">2019-03-14</td>
+                <td class="zahl">4820,50</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1008</td>
+                <td>Sönke Matthiesen</td>
+                <td class="mono">soenke@beispiel.de</td>
+                <td>Schleswig</td>
+                <td class="mono">2019-12-01</td>
+                <td class="zahl">3410,90</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1005</td>
+                <td>Frauke Hansen</td>
+                <td class="mono">frauke@beispiel.de</td>
+                <td>Rostock</td>
+                <td class="mono">2021-05-08</td>
+                <td class="zahl">2140,00</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1002</td>
+                <td>Max Mustermann</td>
+                <td class="mono">max@beispiel.de</td>
+                <td>Lübeck</td>
+                <td class="mono">2020-11-02</td>
+                <td class="zahl">1275,00</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1007</td>
+                <td>Meike Voss</td>
+                <td class="mono">meike@beispiel.de</td>
+                <td>Lüneburg</td>
+                <td class="mono">2022-02-11</td>
+                <td class="zahl">860,40</td>
+                <td>nein</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1004</td>
+                <td>Ole Petersen</td>
+                <td class="mono">ole@beispiel.de</td>
+                <td>Flensburg</td>
+                <td class="mono">2023-01-19</td>
+                <td class="zahl">310,75</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="mono">K-1009</td>
+                <td>Antje Brodersen</td>
+                <td class="mono">antje@beispiel.de</td>
+                <td>Eckernförde</td>
+                <td class="mono">2024-04-27</td>
+                <td class="zahl">145,20</td>
+                <td>ja</td>
+              </tr>
+              <tr class="selektiert">
+                <td class="mono">K-1003</td>
+                <td>Ines Beispiel</td>
+                <td class="mono">ines@beispiel.de</td>
+                <td>Kiel</td>
+                <td class="mono">2018-06-30</td>
+                <td class="zahl null-wert">(leer)</td>
+                <td>nein</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">/2/umsatz</code>
+          <dl>
+            <dt>Spalte</dt>
+            <dd class="mono">umsatz</dd>
+            <dt>Spaltentyp</dt>
+            <dd><span class="wert-zahl mono">Zahl</span></dd>
+            <dt>Wert</dt>
+            <dd class="mono">(leer)</dd>
+            <dt>Datensatz</dt>
+            <dd>K-1003, Ines Beispiel</dd>
+            <dt>Position</dt>
+            <dd>Zeile 4, Spalte 6</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <a>$</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>[2]</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="aktuell">umsatz</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">CSV</span>
+          <span>10 Zeilen, 7 Spalten</span>
+          <span>Zeile 4, Spalte 6</span>
+          <span class="diag-zaehler"><i class="fa-solid fa-circle-check"></i> Keine Fehler</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Validierung</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag aktiv" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <span class="beschriftung">Regelwerk:</span>
+            <select class="feld" style="width: 300px">
+              <option selected>bestellung.schema.json (JSON Schema)</option>
+              <option>XSD hochladen ...</option>
+            </select>
+            <button class="knopf primaer"><i class="fa-solid fa-clipboard-check"></i> Validieren</button>
+            <span class="abzeichen fehler">3 Fehler</span>
+            <span class="luecke"></span>
+            <span class="hinweis-text">JSON wird gegen <span class="fachbegriff">JSON Schema</span> geprüft, XML gegen eine <span class="fachbegriff">XSD</span>-Datei.</span>
+          </div>
+
+          <!-- Editor-Ausschnitt mit Fundstellen -->
+          <div class="editor">
+            <div class="ed-zeile"><span class="zn">20</span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+            <div class="ed-zeile"><span class="zn">21</span><span class="ed-code">      <span class="sx-schluessel">"id"</span>: <span class="sx-text">"8c2d1e90-4a6f-4b3c-8d21-7e5a9c0b4f88"</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">22</span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span>: <span class="sx-text">"B-2026-0413"</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">23</span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span>: <span class="sx-klammer">{</span></span></div>
+            <div class="ed-zeile"><span class="zn">24</span><span class="ed-code">        <span class="sx-schluessel">"name"</span>: <span class="sx-text">"Max Mustermann"</span>,</span></div>
+            <div class="ed-zeile hat-fehler"><span class="zn">25</span><span class="ed-code">        <span class="sx-schluessel">"email"</span>: <span class="sx-text sx-mark-fehler">"max(at)beispiel.de"</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">26</span><span class="ed-code">        <span class="sx-schluessel">"kundeSeit"</span>: <span class="sx-text">"2020-11-02"</span></span></div>
+            <div class="ed-zeile"><span class="zn">27</span><span class="ed-code">      <span class="sx-klammer">}</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">28</span><span class="ed-code">      <span class="sx-schluessel">"positionen"</span>: <span class="sx-klammer">[</span></span></div>
+            <div class="ed-zeile"><span class="zn">29</span><span class="ed-code">        <span class="sx-klammer">{</span> <span class="sx-schluessel">"artikel"</span>: <span class="sx-text">"Bandmaß 5 m"</span>, <span class="sx-schluessel">"menge"</span>: <span class="sx-zahl">3</span>, <span class="sx-schluessel">"einzelpreis"</span>: <span class="sx-zahl">9.90</span> <span class="sx-klammer">}</span></span></div>
+            <div class="ed-zeile"><span class="zn">30</span><span class="ed-code">      <span class="sx-klammer">]</span>,</span></div>
+            <div class="ed-zeile hat-fehler"><span class="zn">31</span><span class="ed-code">      <span class="sx-schluessel">"summe"</span>: <span class="sx-text sx-mark-fehler">"112.40"</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">32</span><span class="ed-code">      <span class="sx-schluessel">"bezahlt"</span>: <span class="sx-bool">false</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">33</span><span class="ed-code">      <span class="sx-schluessel">"lieferdatum"</span>: <span class="sx-text">"2026-07-10"</span></span></div>
+            <div class="ed-zeile"><span class="zn">34</span><span class="ed-code">    <span class="sx-klammer">}</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">35</span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+            <div class="ed-zeile"><span class="zn">36</span><span class="ed-code">      <span class="sx-schluessel">"id"</span>: <span class="sx-text">"b74f0a3d-2c8e-47d1-9f6a-1e0c5b7d3a29"</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">37</span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span>: <span class="sx-text">"B-2026-0417"</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">38</span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span>: <span class="sx-klammer">{</span> <span class="falt-marke" title="Zugeklappter Block: 3 Schlüssel">... 3 Schlüssel ...</span> <span class="sx-klammer">}</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">39</span><span class="ed-code">      <span class="sx-schluessel">"positionen"</span>: <span class="sx-klammer">[</span></span></div>
+            <div class="ed-zeile hat-fehler"><span class="zn">40</span><span class="ed-code">        <span class="sx-klammer">{</span> <span class="sx-schluessel">"artikel"</span>: <span class="sx-text">"Hammer 300 g"</span>, <span class="sx-schluessel">"menge"</span>: <span class="sx-zahl sx-mark-fehler">0</span>, <span class="sx-schluessel">"einzelpreis"</span>: <span class="sx-zahl">12.40</span> <span class="sx-klammer">}</span></span></div>
+            <div class="ed-zeile"><span class="zn">41</span><span class="ed-code">      <span class="sx-klammer">]</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">42</span><span class="ed-code">      <span class="sx-schluessel">"summe"</span>: <span class="sx-zahl">245.10</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">43</span><span class="ed-code">      <span class="sx-schluessel">"bezahlt"</span>: <span class="sx-bool">true</span>,</span></div>
+            <div class="ed-zeile"><span class="zn">44</span><span class="ed-code">      <span class="sx-schluessel">"lieferdatum"</span>: <span class="sx-null">null</span></span></div>
+            <div class="ed-zeile"><span class="zn">45</span><span class="ed-code">    <span class="sx-klammer">}</span></span></div>
+            <div class="ed-zeile"><span class="zn">46</span><span class="ed-code">  <span class="sx-klammer">]</span></span></div>
+            <div class="ed-zeile"><span class="zn">47</span><span class="ed-code"><span class="sx-klammer">}</span></span></div>
+          </div>
+
+          <!-- Fehlerliste -->
+          <div class="karte" style="flex: none; margin: var(--a3)">
+            <div class="karte-kopf">
+              <i class="fa-solid fa-clipboard-check"></i> Ergebnis der Validierung
+              <span class="abzeichen fehler">3 Fehler</span>
+              <span class="luecke"></span>
+              <span class="hinweis-text">Klick springt zur Fundstelle</span>
+            </div>
+            <div class="diagnose-zeile">
+              <span class="schwere fehler"><i class="fa-solid fa-circle-xmark"></i></span>
+              <span class="d-pfad">/bestellungen/1/kunde/email</span>
+              <span>Format "email" verletzt - "max(at)beispiel.de" ist keine gültige E-Mail-Adresse</span>
+              <span class="d-position">Zeile 25, Spalte 18</span>
+            </div>
+            <div class="diagnose-zeile">
+              <span class="schwere fehler"><i class="fa-solid fa-circle-xmark"></i></span>
+              <span class="d-pfad">/bestellungen/1/summe</span>
+              <span>Zeichenkette gefunden, Zahl erwartet</span>
+              <span class="d-position">Zeile 31, Spalte 16</span>
+            </div>
+            <div class="diagnose-zeile">
+              <span class="schwere fehler"><i class="fa-solid fa-circle-xmark"></i></span>
+              <span class="d-pfad">/bestellungen/2/positionen/0/menge</span>
+              <span>Wert 0 unterschreitet das erlaubte Minimum 1</span>
+              <span class="d-position">Zeile 40, Spalte 47</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">/bestellungen/1/summe</code>
+          <dl>
+            <dt>Typ</dt>
+            <dd><span class="wert-text mono">Text</span></dd>
+            <dt>Wert</dt>
+            <dd class="mono">"112.40"</dd>
+            <dt>Erwartet</dt>
+            <dd><span class="wert-zahl mono">Zahl</span> (laut Schema)</dd>
+            <dt>Position</dt>
+            <dd>Zeile 31, Spalte 16</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <a>$</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>bestellungen</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>[1]</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="aktuell">summe</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">JSON</span>
+          <span>12,4 KB</span>
+          <span>Zeile 31, Spalte 16</span>
+          <span class="diag-zaehler fehler"><i class="fa-solid fa-circle-xmark"></i> 3 Fehler</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

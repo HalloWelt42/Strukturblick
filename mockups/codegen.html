@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Code erzeugen</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+    <style>
+      /* Seiten-spezifisch */
+      .codegen-inhalt {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        padding: var(--a3);
+        display: flex;
+        flex-direction: column;
+        gap: var(--a3);
+      }
+      .codegen-inhalt .code-block {
+        flex: none;
+      }
+      .codegen-hinweis {
+        display: flex;
+        gap: var(--a2);
+        padding: var(--a2) var(--a3);
+        background: var(--zustand-info-weich);
+        border: 1px solid var(--rand-1);
+        font-size: 0.8rem;
+        color: var(--text-2);
+      }
+      .codegen-hinweis i {
+        color: var(--zustand-info);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag aktiv" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <span class="beschriftung">Ziel:</span>
+            <select class="feld">
+              <option selected>TypeScript-Interfaces</option>
+              <option>Pydantic v2</option>
+              <option>dataclasses</option>
+            </select>
+            <span class="beschriftung">Wurzelname:</span>
+            <input class="feld mono" type="text" value="Bestellungen" style="width: 160px" />
+            <span class="luecke"></span>
+            <button class="knopf primaer"><i class="fa-solid fa-code"></i> Erzeugen</button>
+            <button class="knopf"><i class="fa-solid fa-copy"></i> Kopieren</button>
+            <button class="knopf"><i class="fa-solid fa-download"></i> Herunterladen</button>
+          </div>
+
+          <div class="codegen-inhalt">
+            <div class="code-block"><span class="sx-kommentar">// Erzeugt aus bestellungen.json - Ziel: TypeScript-Interfaces</span>
+<span class="sx-kommentar">// aus 3 Beispielen abgeleitet</span>
+
+<span class="sx-bool">export interface</span> Bestellungen {
+  geschaeft: <span class="sx-text">Geschaeft</span>;
+  bestellungen: <span class="sx-text">Bestellung</span>[];
+}
+
+<span class="sx-bool">export interface</span> Geschaeft {
+  name: <span class="sx-text">string</span>;
+  kundennummernkreis: <span class="sx-text">string</span>;
+  filialen: <span class="sx-text">string</span>[];
+}
+
+<span class="sx-bool">export interface</span> Bestellung {
+  id: <span class="sx-text">string</span>;              <span class="sx-kommentar">// UUID</span>
+  nummer: <span class="sx-text">string</span>;          <span class="sx-kommentar">// Muster: B-JJJJ-NNNN</span>
+  kunde: <span class="sx-text">Kunde</span>;
+  positionen: <span class="sx-text">Position</span>[];
+  summe: <span class="sx-text">number</span>;
+  bezahlt: <span class="sx-text">boolean</span>;
+  lieferdatum: <span class="sx-text">string</span> | <span class="sx-null">null</span>;
+}
+
+<span class="sx-bool">export interface</span> Kunde {
+  name: <span class="sx-text">string</span>;
+  email: <span class="sx-text">string</span>;           <span class="sx-kommentar">// E-Mail-Adresse</span>
+  kundeSeit: <span class="sx-text">string</span>;       <span class="sx-kommentar">// Datum (ISO 8601)</span>
+}
+
+<span class="sx-bool">export interface</span> Position {
+  artikel: <span class="sx-text">string</span>;
+  menge: <span class="sx-text">number</span>;
+  einzelpreis: <span class="sx-text">number</span>;
+}</div>
+
+            <div class="codegen-hinweis">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Erzeugt aus dem abgeleiteten <span class="fachbegriff">JSON Schema</span> - Felder, die nur teilweise vorkommen, werden optional.</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">bestellungen.json</code>
+          <dl>
+            <dt>Beispiele</dt>
+            <dd>3 Bestellungen</dd>
+            <dt>Typen</dt>
+            <dd>5 Interfaces</dd>
+            <dt>Optional</dt>
+            <dd>0 Felder</dd>
+            <dt>Nullbar</dt>
+            <dd class="mono">lieferdatum</dd>
+          </dl>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <span class="aktuell">$</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">JSON</span>
+          <span>12,4 KB</span>
+          <span>5 Interfaces erzeugt</span>
+          <span class="diag-zaehler"><i class="fa-solid fa-circle-check"></i> Keine Fehler</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

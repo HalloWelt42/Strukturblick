@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Mockup-Viewer</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+    <style>
+      /* Seiten-spezifisch: Viewer-Rahmen */
+      body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+      .vleiste {
+        display: flex; align-items: center; gap: var(--a3);
+        padding: var(--a2) var(--a4); background: var(--flaeche-panel);
+        border-bottom: 1px solid var(--rand-2); flex: none;
+      }
+      .vleiste .marke { font-size: 1.05rem; }
+      .vleiste select.feld { width: auto; min-width: 240px; height: 34px; }
+      .vleiste label { display: flex; align-items: center; gap: var(--a2); color: var(--text-2); font-size: 0.85rem; }
+      .vleiste .luecke { flex: 1; }
+      .vhinweis { color: var(--text-3); font-size: 0.82rem; }
+      .buehne { flex: 1; position: relative; overflow: hidden; background: var(--flaeche-seite); }
+      iframe { width: 100%; height: 100%; border: none; display: block; background: var(--flaeche-seite); }
+      .overlay { position: absolute; inset: 0; pointer-events: none; }
+      .feldchen {
+        position: absolute; pointer-events: none;
+        outline: 1px dashed color-mix(in srgb, var(--akzent) 45%, transparent);
+        outline-offset: -1px;
+      }
+      .feldchen.aktiv {
+        background: color-mix(in srgb, var(--akzent) 12%, transparent);
+        outline: 1.5px solid var(--akzent);
+        z-index: 5;
+      }
+      .nr {
+        position: absolute; top: 0; left: 0;
+        min-width: 16px; height: 16px; padding: 0 3px;
+        background: var(--akzent); color: var(--auf-akzent);
+        font-size: 0.62rem; font-weight: 600; line-height: 16px; text-align: center;
+      }
+      .feldchen.aktiv .nr { background: var(--akzent-stark); }
+      .etikett {
+        position: fixed; z-index: 100; pointer-events: none;
+        background: var(--text-1); color: var(--flaeche-panel);
+        padding: 3px 8px; font-size: 0.78rem;
+        box-shadow: var(--schatten-2); white-space: nowrap; display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vleiste">
+      <div class="marke"><i class="fa-solid fa-vector-square"></i> Mockup-Viewer</div>
+      <button class="icon-knopf" id="zurueck" title="Zurück (Pfeil links)"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="feld" id="wahl"></select>
+      <button class="icon-knopf" id="weiter" title="Weiter (Pfeil rechts)"><i class="fa-solid fa-chevron-right"></i></button>
+      <label><input type="checkbox" id="zeigen" checked /> Nummern und Namen</label>
+      <span class="vhinweis" id="zaehler"></span>
+      <span class="luecke"></span>
+      <a class="vhinweis" href="index.html"><i class="fa-solid fa-table-cells-large"></i> Galerie</a>
+      <span class="vhinweis">Zeigen mit der Maus nennt das Element</span>
+      <button class="icon-knopf" id="thema" title="Thema umschalten"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <div class="buehne">
+      <iframe id="rahmen" src="/mockups/baum.html"></iframe>
+      <div class="overlay" id="overlay"></div>
+    </div>
+    <div class="etikett" id="etikett"></div>
+
+    <script>
+      // Mockup-Seiten (in Reihenfolge der Galerie).
+      const SEITEN = [
+        ["willkommen.html", "01 Willkommen / Leer"],
+        ["baum.html", "02 Strukturbaum"],
+        ["editor.html", "03 Editor"],
+        ["validierung.html", "04 Validierung"],
+        ["tabelle.html", "05 Tabelle"],
+        ["statistik.html", "06 Statistik"],
+        ["schema.html", "07 Schema-Diagramm"],
+        ["diff.html", "08 Vergleich"],
+        ["graph.html", "09 Graph"],
+        ["lexikon.html", "10 Lexikon"],
+        ["abfrage.html", "11 Abfrage"],
+        ["konvertieren.html", "12 Konvertieren"],
+        ["reparatur.html", "13 Reparatur"],
+        ["codegen.html", "14 Code erzeugen"],
+        ["ki-vorschau.html", "15 KI-Vorschau"],
+        ["ki-aus.html", "16 KI nicht erreichbar"],
+        ["testdaten.html", "17 Testdaten"],
+        ["einstellungen.html", "18 Einstellungen"],
+        ["dokumente.html", "19 Dokumente verwalten"],
+        ["laden.html", "20 Große Datei laden"],
+      ];
+
+      // Selektor -> Name. Spezifisch zuerst, damit jedes Element den treffendsten
+      // Namen bekommt (jedes Element wird nur einmal benannt).
+      const NAMEN = [
+        // Lexikon-Panel
+        [".lex-aktionen", "Lexikon-Fensteraktionen"],
+        [".lex-suche", "Lexikon-Suche"],
+        [".lex-treffer-zaehler", "Treffer-Zähler"],
+        [".lex-titel", "Lexikon-Titel"],
+        [".lex-kopf", "Lexikon-Kopf (verschiebbar)"],
+        [".lex-leiste", "Themen- und Suchleiste"],
+        [".lex-inhalt mark.aktiv", "Aktiver Suchtreffer"],
+        [".lex-inhalt mark", "Suchtreffer-Markierung"],
+        [".lex-inhalt", "Lexikon-Inhalt"],
+        [".lex-panel", "Lexikon-Panel (schwebend)"],
+        [".fachbegriff", "Fachbegriff (öffnet Lexikon)"],
+        // Modal / Einstellungen
+        [".modal-kopf", "Modal-Kopfzeile"],
+        [".modal-fuss", "Modal-Fußzeile"],
+        [".theme-kachel", "Theme-Kachel"],
+        [".einst-zeile", "Einstellungszeile"],
+        [".einst-gruppe", "Einstellungsgruppe"],
+        [".modal-inhalt", "Modal-Inhalt"],
+        [".modal", "Modal-Dialog"],
+        [".modal-hintergrund", "Modal-Hintergrund"],
+        // KI
+        [".ki-vorschau-zeile", "KI-Vorschau-Zeile (Checkbox je Feld)"],
+        [".bereich-ausgegraut", "Ausgegrauter KI-Bereich"],
+        [".ki-hinweis", "KI-Hinweis"],
+        [".ki-aktion", "KI-Aktion"],
+        [".ki-kopfzeile", "KI-Kopfzeile mit Status"],
+        [".status-punkt.aus", "Status: nicht erreichbar"],
+        [".status-punkt", "Status: erreichbar"],
+        // Diagramme
+        [".flow-steuer", "Zoom-Steuerung"],
+        [".flow-feld.pflicht", "Pflichtfeld"],
+        [".flow-feld", "Feldzeile im Knoten"],
+        [".flow-titel", "Knotentitel"],
+        [".flow-knoten.selektiert", "Selektierter Knoten"],
+        [".flow-knoten", "Diagrammknoten"],
+        [".flow-kanten", "Kanten mit Kardinalität"],
+        [".flow-flaeche", "Diagrammfläche"],
+        // Vergleich / Editor
+        [".diff-pane-kopf", "Spaltenkopf mit Dateiname"],
+        [".diff-pane", "Vergleichs-Spalte"],
+        [".diff-split", "Zweigeteilte Ansicht"],
+        [".diff-art", "Unterschieds-Symbol"],
+        [".ed-zeile.diff-hinzu", "Hinzugefügte Zeile"],
+        [".ed-zeile.diff-weg", "Entfernte Zeile"],
+        [".ed-zeile.diff-geaendert", "Geänderte Zeile"],
+        [".ed-zeile.hat-fehler", "Zeile mit Fehler"],
+        [".ed-zeile.markiert", "Markierte Zeile"],
+        [".falt-marke", "Faltungs-Marke"],
+        [".editor", "Roh-Editor"],
+        [".diagnose-zeile", "Diagnose-Eintrag (Sprungziel)"],
+        // Konsole
+        [".treffer-zeile", "Abfrage-Treffer (Sprungziel)"],
+        [".konsole-zeile", "Abfrage-Eingabezeile"],
+        [".konsole-kopf", "Konsolen-Kopf"],
+        [".konsole-ergebnis", "Trefferliste"],
+        [".konsole", "Abfragekonsole"],
+        // Baum
+        [".baum-zeile.selektiert", "Selektierte Baumzeile"],
+        [".baum-zeile", "Baumzeile"],
+        [".baum", "Strukturbaum"],
+        // Tabelle / Statistik
+        [".tabelle", "Tabelle"],
+        [".kennzahl", "Kennzahl-Kachel"],
+        [".kennzahl-raster", "Kennzahlen"],
+        [".balken-reihe", "Balken-Zeile"],
+        [".histogramm", "Histogramm"],
+        // Inspektor
+        [".pfad-code", "Pfad des selektierten Knotens"],
+        [".inspektor-block", "Inspektor-Block"],
+        // Schale
+        [".tab.aktiv", "Aktiver Dokument-Tab"],
+        [".tab-neu", "Neues Dokument"],
+        [".tab", "Dokument-Tab"],
+        [".tabs", "Dokument-Tabs"],
+        [".marke", "Marke / Logo"],
+        [".kopf-rechts", "Kopf-Aktionen"],
+        [".kopf", "Kopfleiste"],
+        [".reiter.aktiv", "Aktive Ansicht"],
+        [".reiter.deaktiviert", "Ansicht (nicht verfügbar)"],
+        [".reiter", "Ansichts-Reiter"],
+        [".ansichtswahl", "Ansichtswahl"],
+        [".dok-eintrag", "Dokument-Eintrag"],
+        [".werkzeug-eintrag", "Werkzeug-Eintrag"],
+        [".leisten-titel", "Leisten-Titel"],
+        [".leisten-fuss", "Versions-Fuß"],
+        [".seite-links", "Linke Seitenleiste"],
+        [".seite-rechts", "Rechte Seitenleiste (Inspektor + KI)"],
+        [".werkzeugzeile", "Werkzeugzeile"],
+        [".brotkrumen", "Pfad-Brotkrumen (klickbar)"],
+        [".diag-zaehler", "Diagnose-Zähler"],
+        [".status-rechts", "Status-Angaben"],
+        [".status", "Statusleiste"],
+        // Allgemein
+        [".leer-zustand", "Leerer Zustand"],
+        [".skelett", "Lade-Skelett"],
+        [".fortschritt", "Fortschrittsbalken"],
+        [".karte-kopf", "Kartenkopf"],
+        [".karte", "Karte"],
+        [".abzeichen.warnung", "Warnung"],
+        [".abzeichen.fehler", "Fehler-Abzeichen"],
+        [".abzeichen", "Abzeichen"],
+        [".schalter", "Schalter"],
+        [".checkbox", "Kontrollkästchen"],
+        [".knopf.primaer", "Primärknopf"],
+        [".knopf", "Knopf"],
+        [".icon-knopf", "Symbol-Knopf"],
+        [".feld", "Eingabefeld"],
+        [".code-block", "Code-Block"],
+        [".hinweis-text", "Hinweistext"],
+        [".ansicht-flaeche", "Ansichtsfläche"],
+        [".haupt", "Hauptbereich"],
+        [".app", "App-Raster"],
+      ];
+
+      const rahmen = document.getElementById("rahmen");
+      const overlay = document.getElementById("overlay");
+      const etikett = document.getElementById("etikett");
+      const wahl = document.getElementById("wahl");
+      const zeigen = document.getElementById("zeigen");
+      const zaehler = document.getElementById("zaehler");
+
+      for (const [datei, titel] of SEITEN) {
+        const o = document.createElement("option");
+        o.value = "/mockups/" + datei;
+        o.textContent = titel;
+        if (datei === "baum.html") o.selected = true;
+        wahl.appendChild(o);
+      }
+      wahl.onchange = () => (rahmen.src = wahl.value);
+
+      function gehe(delta) {
+        const n = wahl.options.length;
+        wahl.selectedIndex = (wahl.selectedIndex + delta + n) % n;
+        rahmen.src = wahl.value;
+      }
+      document.getElementById("zurueck").onclick = () => gehe(-1);
+      document.getElementById("weiter").onclick = () => gehe(1);
+      window.addEventListener("keydown", (e) => {
+        const t = e.target.tagName;
+        if (t === "INPUT" || t === "SELECT" || t === "TEXTAREA") return;
+        if (e.key === "ArrowLeft") gehe(-1);
+        else if (e.key === "ArrowRight") gehe(1);
+      });
+
+      function thema() {
+        return document.documentElement.dataset.theme;
+      }
+
+      let boxen = new Map(); // Element -> { box, text }
+
+      function baue() {
+        overlay.innerHTML = "";
+        boxen = new Map();
+        if (!zeigen.checked) {
+          zaehler.textContent = "";
+          return;
+        }
+        let doc;
+        try {
+          doc = rahmen.contentDocument;
+        } catch (e) {
+          return;
+        }
+        if (!doc || !doc.body) return;
+        // Thema des Rahmens an den Viewer angleichen.
+        doc.documentElement.dataset.theme = thema();
+
+        const benannt = new Map();
+        for (const el of doc.querySelectorAll("*")) {
+          if (benannt.has(el)) continue;
+          for (const [sel, name] of NAMEN) {
+            if (el.matches(sel)) {
+              benannt.set(el, name);
+              break;
+            }
+          }
+        }
+        let n = 0;
+        for (const [el, name] of benannt) {
+          const r = el.getBoundingClientRect();
+          if (r.width < 6 || r.height < 6) continue;
+          n++;
+          const box = document.createElement("div");
+          box.className = "feldchen";
+          box.style.left = r.left + "px";
+          box.style.top = r.top + "px";
+          box.style.width = r.width + "px";
+          box.style.height = r.height + "px";
+          const nr = document.createElement("div");
+          nr.className = "nr";
+          nr.textContent = n;
+          box.appendChild(nr);
+          overlay.appendChild(box);
+          boxen.set(el, { box, text: n + " - " + name });
+        }
+        zaehler.textContent = n + " benannte Elemente";
+      }
+
+      // Zeigen wird IM Rahmen erkannt (das Overlay blockiert nichts), damit
+      // Tooltips und die Bedienelemente des Mockups normal funktionieren.
+      function aufRahmenHover(ev) {
+        for (const { box } of boxen.values()) box.classList.remove("aktiv");
+        let el = ev.target;
+        while (el && !boxen.has(el)) el = el.parentElement;
+        if (!el) {
+          etikett.style.display = "none";
+          return;
+        }
+        const eintrag = boxen.get(el);
+        eintrag.box.classList.add("aktiv");
+        const ir = rahmen.getBoundingClientRect();
+        etikett.textContent = eintrag.text;
+        etikett.style.display = "block";
+        const x = ir.left + ev.clientX + 12;
+        etikett.style.left = Math.min(x, window.innerWidth - etikett.offsetWidth - 8) + "px";
+        etikett.style.top = ir.top + ev.clientY + 16 + "px";
+      }
+      function aufRahmenRaus() {
+        etikett.style.display = "none";
+        for (const { box } of boxen.values()) box.classList.remove("aktiv");
+      }
+
+      // Der Viewer ist der einzige Thema-Schalter: Thema des Rahmens angleichen
+      // und die mock-leiste im eingebetteten Mockup ausblenden, damit das
+      // Umschalten nicht doppelt vorkommt. Direkt geöffnete Seiten behalten sie.
+      function richteRahmenEin() {
+        let doc;
+        try {
+          doc = rahmen.contentDocument;
+        } catch (e) {
+          return;
+        }
+        if (!doc || !doc.documentElement) return;
+        doc.documentElement.dataset.theme = thema();
+        const leiste = doc.querySelector(".mock-leiste");
+        if (leiste) leiste.style.display = "none";
+      }
+
+      function aktualisiereThemaKnopf() {
+        const i = document.querySelector("#thema i");
+        if (i) i.className = "fa-solid " + (thema() === "mittelton" ? "fa-moon" : "fa-circle-half-stroke");
+      }
+
+      rahmen.addEventListener("load", () => {
+        richteRahmenEin();
+        baue();
+        try {
+          const doc = rahmen.contentDocument;
+          doc.addEventListener("mousemove", aufRahmenHover);
+          doc.addEventListener("mouseleave", aufRahmenRaus);
+          rahmen.contentWindow.addEventListener("scroll", baue, { passive: true });
+          rahmen.contentWindow.addEventListener("resize", baue);
+        } catch (e) {}
+      });
+      window.addEventListener("resize", baue);
+      zeigen.onchange = baue;
+
+      document.getElementById("thema").onclick = () => {
+        const neu = thema() === "mittelton" ? "dunkel" : "mittelton";
+        document.documentElement.dataset.theme = neu;
+        aktualisiereThemaKnopf();
+        richteRahmenEin();
+        baue();
+      };
+      aktualisiereThemaKnopf();
+    </script>
+  </body>
+</html>

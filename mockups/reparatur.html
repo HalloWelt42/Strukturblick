@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Reparatur</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-circle-exclamation"></i> antwort-kaputt.json
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-circle-exclamation"></i> antwort-kaputt.json <span class="abzeichen dok-format">JSON</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag aktiv" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <button class="knopf"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur vorschlagen</button>
+            <span class="abzeichen info">2 Änderungen</span>
+            <span class="luecke"></span>
+            <button class="knopf primaer"><i class="fa-solid fa-check"></i> Übernehmen</button>
+            <button class="knopf"><i class="fa-solid fa-xmark"></i> Verwerfen</button>
+          </div>
+
+          <!-- Geteilte Ansicht: Original und Vorschlag -->
+          <div class="diff-split">
+            <div class="diff-pane">
+              <div class="diff-pane-kopf">
+                <i class="fa-solid fa-file-circle-exclamation"></i> Original (kaputt)
+                <span class="luecke"></span>
+                <span class="abzeichen fehler">unvollständig</span>
+              </div>
+              <div class="ed-zeile"><span class="zn">1</span><span class="ed-code"><span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">2</span><span class="ed-code">  <span class="sx-schluessel">"status"</span>: <span class="sx-text">"ok"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">3</span><span class="ed-code">  <span class="sx-schluessel">"abgerufen"</span>: <span class="sx-text">"2026-07-02T09:41:12"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">4</span><span class="ed-code">  <span class="sx-schluessel">"quelle"</span>: <span class="sx-text">"lagerdienst"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">5</span><span class="ed-code">  <span class="sx-schluessel">"bestellungen"</span>: <span class="sx-klammer">[</span></span></div>
+              <div class="ed-zeile"><span class="zn">6</span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">7</span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span>: <span class="sx-text">"B-2026-0412"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">8</span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span>: <span class="sx-text">"Erika Musterfrau"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">9</span><span class="ed-code">      <span class="sx-schluessel">"summe"</span>: <span class="sx-zahl">68.30</span></span></div>
+              <div class="ed-zeile"><span class="zn">10</span><span class="ed-code">    <span class="sx-klammer">}</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">11</span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">12</span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span>: <span class="sx-text">"B-2026-0413"</span>,</span></div>
+              <div class="ed-zeile hat-fehler"><span class="zn">13</span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span>: <span class="sx-text sx-mark-fehler">"Max Mus</span></span></div>
+              <div class="ed-zeile diff-leer"><span class="zn"></span><span class="ed-code"></span></div>
+              <div class="ed-zeile diff-leer"><span class="zn"></span><span class="ed-code"></span></div>
+              <div class="ed-zeile diff-leer"><span class="zn"></span><span class="ed-code"></span></div>
+            </div>
+            <div class="diff-pane">
+              <div class="diff-pane-kopf">
+                <i class="fa-solid fa-screwdriver-wrench"></i> Vorschlag
+                <span class="luecke"></span>
+                <span class="abzeichen gut">wieder gültig</span>
+              </div>
+              <div class="ed-zeile"><span class="zn">1</span><span class="diff-art"></span><span class="ed-code"><span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">2</span><span class="diff-art"></span><span class="ed-code">  <span class="sx-schluessel">"status"</span>: <span class="sx-text">"ok"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">3</span><span class="diff-art"></span><span class="ed-code">  <span class="sx-schluessel">"abgerufen"</span>: <span class="sx-text">"2026-07-02T09:41:12"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">4</span><span class="diff-art"></span><span class="ed-code">  <span class="sx-schluessel">"quelle"</span>: <span class="sx-text">"lagerdienst"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">5</span><span class="diff-art"></span><span class="ed-code">  <span class="sx-schluessel">"bestellungen"</span>: <span class="sx-klammer">[</span></span></div>
+              <div class="ed-zeile"><span class="zn">6</span><span class="diff-art"></span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">7</span><span class="diff-art"></span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span>: <span class="sx-text">"B-2026-0412"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">8</span><span class="diff-art"></span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span>: <span class="sx-text">"Erika Musterfrau"</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">9</span><span class="diff-art"></span><span class="ed-code">      <span class="sx-schluessel">"summe"</span>: <span class="sx-zahl">68.30</span></span></div>
+              <div class="ed-zeile"><span class="zn">10</span><span class="diff-art"></span><span class="ed-code">    <span class="sx-klammer">}</span>,</span></div>
+              <div class="ed-zeile"><span class="zn">11</span><span class="diff-art"></span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">12</span><span class="diff-art"></span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span>: <span class="sx-text">"B-2026-0413"</span>,</span></div>
+              <div class="ed-zeile diff-hinzu"><span class="zn">13</span><span class="diff-art hinzu">+</span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span>: <span class="sx-text">"Max Mus"</span></span></div>
+              <div class="ed-zeile diff-hinzu"><span class="zn">14</span><span class="diff-art hinzu">+</span><span class="ed-code">    <span class="sx-klammer">}</span></span></div>
+              <div class="ed-zeile diff-hinzu"><span class="zn">15</span><span class="diff-art hinzu">+</span><span class="ed-code">  <span class="sx-klammer">]</span></span></div>
+              <div class="ed-zeile diff-hinzu"><span class="zn">16</span><span class="diff-art hinzu">+</span><span class="ed-code"><span class="sx-klammer">}</span></span></div>
+            </div>
+          </div>
+
+          <!-- Hinweis-Karte -->
+          <div class="karte" style="flex: none; margin: var(--a3)">
+            <div class="karte-kopf"><i class="fa-solid fa-circle-info"></i> Deterministische Reparatur</div>
+            <div class="karte-inhalt">
+              <p style="margin: 0 0 var(--a2)">Die Reparatur arbeitet regelbasiert und deterministisch, ganz ohne KI: gleiches Dokument, gleicher Vorschlag. Für dieses Dokument werden 2 Änderungen vorgeschlagen: die offene Zeichenkette in Zeile 13 wird geschlossen, und die drei fehlenden schließenden Klammern werden ergänzt.</p>
+              <p style="margin: 0" class="hinweis-text">Der Vorschlag ist immer nur eine Vorschau. Erst der Knopf "Übernehmen" schreibt die Änderungen in das Dokument, "Verwerfen" lässt das Original unangetastet.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">/bestellungen/1/kunde</code>
+          <dl>
+            <dt>Typ</dt>
+            <dd><span class="wert-text mono">Text</span> (unvollständig)</dd>
+            <dt>Wert</dt>
+            <dd class="mono">"Max Mus</dd>
+            <dt>Position</dt>
+            <dd>Zeile 13, Spalte 16</dd>
+            <dt>Diagnose</dt>
+            <dd>Dokument bricht hier ab</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <a>$</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>bestellungen</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>[1]</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="aktuell">kunde</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">JSON</span>
+          <span>0,4 KB</span>
+          <span>Zeile 13, Spalte 16</span>
+          <span class="diag-zaehler fehler"><i class="fa-solid fa-circle-xmark"></i> 1 Fehler</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

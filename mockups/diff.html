@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Vergleich</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter aktiv" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <span class="beschriftung">Links:</span>
+            <span class="abzeichen">bestellungen.json (Tab)</span>
+            <span class="beschriftung">Rechts:</span>
+            <select class="feld">
+              <option selected>bestellungen_2026-06.json (gespeichert)</option>
+              <option>bestellungen_2026-05.json (gespeichert)</option>
+              <option>buecherei.xml (gespeichert)</option>
+            </select>
+            <div class="feld-zeile">
+              <span class="schalter an"></span>
+              <span class="beschriftung">Listen-Reihenfolge ignorieren</span>
+            </div>
+            <span class="luecke"></span>
+            <button class="knopf primaer"><i class="fa-solid fa-code-compare"></i> Vergleichen</button>
+          </div>
+
+          <!-- Strukturvergleich: zwei Fassungen nebeneinander -->
+          <div class="diff-split">
+            <div class="diff-pane">
+              <div class="diff-pane-kopf"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen">Tab</span></div>
+              <div class="ed-zeile"><span class="zn">1</span><span class="ed-code"><span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">2</span><span class="ed-code">  <span class="sx-schluessel">"geschaeft"</span><span class="sx-klammer">: {</span></span></div>
+              <div class="ed-zeile"><span class="zn">3</span><span class="ed-code">    <span class="sx-schluessel">"name"</span><span class="sx-klammer">:</span> <span class="sx-text">"Werkzeugkiste Nord"</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">4</span><span class="ed-code">    <span class="sx-schluessel">"kundennummernkreis"</span><span class="sx-klammer">:</span> <span class="sx-text">"K-2026"</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">5</span><span class="ed-code">    <span class="sx-schluessel">"filialen"</span><span class="sx-klammer">: [</span></span></div>
+              <div class="ed-zeile"><span class="zn">6</span><span class="ed-code">      <span class="sx-text">"Hamburg"</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile diff-weg"><span class="zn">7</span><span class="ed-code">      <span class="sx-text">"Lübeck"</span></span></div>
+              <div class="ed-zeile"><span class="zn">8</span><span class="ed-code">    <span class="sx-klammer">]</span></span></div>
+              <div class="ed-zeile"><span class="zn">9</span><span class="ed-code">  <span class="sx-klammer">},</span></span></div>
+              <div class="ed-zeile"><span class="zn">10</span><span class="ed-code">  <span class="sx-schluessel">"bestellungen"</span><span class="sx-klammer">: [</span></span></div>
+              <div class="ed-zeile"><span class="zn">11</span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">12</span><span class="ed-code">      <span class="sx-schluessel">"id"</span><span class="sx-klammer">:</span> <span class="sx-text">"3f9a2c74-5b1e-4c2a-..."</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">13</span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span><span class="sx-klammer">:</span> <span class="sx-text">"B-2026-0412"</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">14</span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span><span class="sx-klammer">: {</span> <span class="sx-schluessel">"name"</span><span class="sx-klammer">:</span> <span class="sx-text">"Erika Musterfrau"</span><span class="sx-klammer">, ... },</span></span></div>
+              <div class="ed-zeile diff-geaendert"><span class="zn">15</span><span class="ed-code">      <span class="sx-schluessel">"summe"</span><span class="sx-klammer">:</span> <span class="sx-zahl">68.30</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">16</span><span class="ed-code">      <span class="sx-schluessel">"bezahlt"</span><span class="sx-klammer">:</span> <span class="sx-bool">true</span></span></div>
+              <div class="ed-zeile"><span class="zn">17</span><span class="ed-code">    <span class="sx-klammer">},</span></span></div>
+              <div class="ed-zeile"><span class="zn">18</span><span class="ed-code">    <span class="sx-klammer">{</span> <span class="sx-schluessel">"nummer"</span><span class="sx-klammer">:</span> <span class="sx-text">"B-2026-0413"</span><span class="sx-klammer">, ... },</span></span></div>
+              <div class="ed-zeile diff-leer"><span class="zn"></span><span class="ed-code"></span></div>
+            </div>
+            <div class="diff-pane">
+              <div class="diff-pane-kopf"><i class="fa-solid fa-file-code"></i> bestellungen_2026-06.json <span class="abzeichen">gespeichert</span></div>
+              <div class="ed-zeile"><span class="zn">1</span><span class="ed-code"><span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">2</span><span class="ed-code">  <span class="sx-schluessel">"geschaeft"</span><span class="sx-klammer">: {</span></span></div>
+              <div class="ed-zeile"><span class="zn">3</span><span class="ed-code">    <span class="sx-schluessel">"name"</span><span class="sx-klammer">:</span> <span class="sx-text">"Werkzeugkiste Nord"</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">4</span><span class="ed-code">    <span class="sx-schluessel">"kundennummernkreis"</span><span class="sx-klammer">:</span> <span class="sx-text">"K-2026"</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">5</span><span class="ed-code">    <span class="sx-schluessel">"filialen"</span><span class="sx-klammer">: [</span></span></div>
+              <div class="ed-zeile"><span class="zn">6</span><span class="ed-code">      <span class="sx-text">"Hamburg"</span></span></div>
+              <div class="ed-zeile diff-leer"><span class="zn"></span><span class="ed-code"></span></div>
+              <div class="ed-zeile"><span class="zn">7</span><span class="ed-code">    <span class="sx-klammer">]</span></span></div>
+              <div class="ed-zeile"><span class="zn">8</span><span class="ed-code">  <span class="sx-klammer">},</span></span></div>
+              <div class="ed-zeile"><span class="zn">9</span><span class="ed-code">  <span class="sx-schluessel">"bestellungen"</span><span class="sx-klammer">: [</span></span></div>
+              <div class="ed-zeile"><span class="zn">10</span><span class="ed-code">    <span class="sx-klammer">{</span></span></div>
+              <div class="ed-zeile"><span class="zn">11</span><span class="ed-code">      <span class="sx-schluessel">"id"</span><span class="sx-klammer">:</span> <span class="sx-text">"3f9a2c74-5b1e-4c2a-..."</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">12</span><span class="ed-code">      <span class="sx-schluessel">"nummer"</span><span class="sx-klammer">:</span> <span class="sx-text">"B-2026-0412"</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">13</span><span class="ed-code">      <span class="sx-schluessel">"kunde"</span><span class="sx-klammer">: {</span> <span class="sx-schluessel">"name"</span><span class="sx-klammer">:</span> <span class="sx-text">"Erika Musterfrau"</span><span class="sx-klammer">, ... },</span></span></div>
+              <div class="ed-zeile diff-geaendert"><span class="zn">14</span><span class="ed-code">      <span class="sx-schluessel">"summe"</span><span class="sx-klammer">:</span> <span class="sx-zahl">74.10</span><span class="sx-klammer">,</span></span></div>
+              <div class="ed-zeile"><span class="zn">15</span><span class="ed-code">      <span class="sx-schluessel">"bezahlt"</span><span class="sx-klammer">:</span> <span class="sx-bool">true</span></span></div>
+              <div class="ed-zeile"><span class="zn">16</span><span class="ed-code">    <span class="sx-klammer">},</span></span></div>
+              <div class="ed-zeile"><span class="zn">17</span><span class="ed-code">    <span class="sx-klammer">{</span> <span class="sx-schluessel">"nummer"</span><span class="sx-klammer">:</span> <span class="sx-text">"B-2026-0413"</span><span class="sx-klammer">, ... },</span></span></div>
+              <div class="ed-zeile diff-hinzu"><span class="zn">18</span><span class="ed-code">    <span class="sx-klammer">{</span> <span class="sx-schluessel">"nummer"</span><span class="sx-klammer">:</span> <span class="sx-text">"B-2026-0421"</span><span class="sx-klammer">, ... },</span></span></div>
+            </div>
+          </div>
+
+          <!-- Liste aller Unterschiede -->
+          <div>
+            <div class="leisten-titel">Unterschiede (4)</div>
+            <div class="diagnose-zeile">
+              <span class="diff-art geaendert">~</span>
+              <span>geändert</span>
+              <span class="d-pfad">/bestellungen/0/summe</span>
+              <span class="mono">68.30 -> 74.10</span>
+              <span class="d-position">Zeile 15 / 14</span>
+            </div>
+            <div class="diagnose-zeile">
+              <span class="diff-art hinzu">+</span>
+              <span>hinzugefügt</span>
+              <span class="d-pfad">/bestellungen/3</span>
+              <span class="mono">(B-2026-0421)</span>
+              <span class="d-position">rechts Zeile 18</span>
+            </div>
+            <div class="diagnose-zeile">
+              <span class="diff-art weg">-</span>
+              <span>entfernt</span>
+              <span class="d-pfad">/geschaeft/filialen/1</span>
+              <span class="mono">("Lübeck")</span>
+              <span class="d-position">links Zeile 7</span>
+            </div>
+            <div class="diagnose-zeile">
+              <span class="diff-art geaendert">~</span>
+              <span>verschoben</span>
+              <span class="d-pfad">/bestellungen/2</span>
+              <span class="mono">(B-2026-0417), Position 2 -> 3</span>
+              <span class="d-position">rechts Zeile 19</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">/bestellungen/0/summe</code>
+          <dl>
+            <dt>Art</dt>
+            <dd>geändert</dd>
+            <dt>Typ</dt>
+            <dd><span class="wert-zahl mono">Zahl</span></dd>
+            <dt>Links</dt>
+            <dd class="mono">68.30</dd>
+            <dt>Rechts</dt>
+            <dd class="mono">74.10</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <a>$</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>bestellungen</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>[0]</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="aktuell">summe</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">JSON</span>
+          <span>Links 12,4 KB, Rechts 13,1 KB</span>
+          <span class="diag-zaehler warnung"><i class="fa-solid fa-code-compare"></i> 4 Unterschiede</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>
