@@ -1,7 +1,7 @@
 {
   "name": "strukturblick-frontend",
   "private": true,
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Frontend des Strukturdaten-Assistenten (Svelte 5 + TypeScript + Vite)",
   "type": "module",
   "scripts": {

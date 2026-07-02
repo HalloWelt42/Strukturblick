@@ -21,6 +21,19 @@
     name: string
   }
 
+  // Kopier-Knöpfe: der title zeigt beim Zeigen die fertige Schreibweise als Vorschau.
+  interface PfadSchreibweise {
+    name: string
+    wandler: (pfad: string) => string
+  }
+
+  const PFAD_SCHREIBWEISEN: PfadSchreibweise[] = [
+    { name: 'Zeiger', wandler: alsZeiger },
+    { name: 'JSONPath', wandler: alsJsonPath },
+    { name: 'Python', wandler: (pfad) => alsPythonZugriff(pfad) },
+    { name: 'TypeScript', wandler: (pfad) => alsTypescriptZugriff(pfad) },
+  ]
+
   const KI_AKTIONEN: KiAktion[] = [
     { icon: 'fa-comment-dots', name: 'Daten erklären' },
     { icon: 'fa-magnifying-glass', name: 'Frage in Abfrage übersetzen' },
@@ -142,24 +155,15 @@
     <div class="inspektor-block">
       <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
       <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
-        <button class="knopf klein" onclick={() => void kopiere('Zeiger', alsZeiger)}>
-          Zeiger
-        </button>
-        <button class="knopf klein" onclick={() => void kopiere('JSONPath', alsJsonPath)}>
-          <span class="fachbegriff">JSONPath</span>
-        </button>
-        <button
-          class="knopf klein"
-          onclick={() => void kopiere('Python', (pfad) => alsPythonZugriff(pfad))}
-        >
-          Python
-        </button>
-        <button
-          class="knopf klein"
-          onclick={() => void kopiere('TypeScript', (pfad) => alsTypescriptZugriff(pfad))}
-        >
-          TypeScript
-        </button>
+        {#each PFAD_SCHREIBWEISEN as schreibweise (schreibweise.name)}
+          <button
+            class="knopf klein"
+            title={schreibweise.wandler(daten.pfad)}
+            onclick={() => void kopiere(schreibweise.name, schreibweise.wandler)}
+          >
+            {schreibweise.name}
+          </button>
+        {/each}
       </div>
     </div>
   {:else}
