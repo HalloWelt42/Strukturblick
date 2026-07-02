@@ -42,6 +42,31 @@ export function oeffne(): void {
   konsole.offen = true
 }
 
+/** Die Abfragesprachen, die die Konsole tatsächlich ausführen kann. */
+const KONSOLE_SPRACHEN: readonly AbfrageSprache[] = ['jsonpath', 'xpath', 'volltext', 'regex']
+
+function alsAbfrageSprache(sprache: string): AbfrageSprache {
+  const klein = sprache.trim().toLowerCase()
+  return (KONSOLE_SPRACHEN as readonly string[]).includes(klein)
+    ? (klein as AbfrageSprache)
+    : 'jsonpath'
+}
+
+/**
+ * Übernimmt einen KI-Abfrage-Vorschlag: setzt Sprache und Ausdruck und klappt
+ * die Konsole auf. Kennt die Konsole die Sprache nicht (z. B. "spaltenfilter"),
+ * fällt sie auf JSONPath zurück. Das Ergebnis wird verworfen, damit der Nutzer
+ * die Abfrage selbst startet (nie Auto-Apply).
+ */
+export function setzeAbfrage(sprache: string, ausdruck: string): void {
+  konsole.sprache = alsAbfrageSprache(sprache)
+  konsole.ausdruck = ausdruck
+  konsole.ergebnis = null
+  konsole.fehler = null
+  konsole.tabId = null
+  konsole.offen = true
+}
+
 /** Ruft die Abfrage mit dem Hash auf; bei 410 einmal mit vollem Inhalt. */
 async function mitCacheWiederholung(
   tab: DokumentTab,

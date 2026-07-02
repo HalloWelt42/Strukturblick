@@ -43,3 +43,9 @@ FRONTEND_URSPRUENGE: tuple[str, ...] = (
     "http://localhost:6001",
     "http://127.0.0.1:6001",
 )
+
+# KI-Anbindung an ein lokales, OpenAI-kompatibles Sprachmodell
+# Zeitgrenze einer KI-Anfrage in Sekunden (Modelle brauchen mitunter lange).
+KI_TIMEOUT_S: int = _env_int("STRUKTURBLICK_KI_TIMEOUT_S", 120)
+# Maximale Zeichenzahl des Dokument-Auszugs (Skelett + Stichprobe), der an die KI geht.
+KI_SKELETT_ZEICHEN: int = _env_int("STRUKTURBLICK_KI_SKELETT_ZEICHEN", 20000)

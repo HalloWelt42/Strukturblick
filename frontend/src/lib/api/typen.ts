@@ -456,6 +456,88 @@ export interface BeispieldatenAntwort {
   dokumente: JsonWert[]
 }
 
+// ----- KI (backend/app/modelle/ki.py) -------------------------------------
+
+/** Ziel-Abfragesprache eines Vorschlags. "auto" überlässt der KI die Wahl. */
+export type KiZielSprache = 'jsonpath' | 'xpath' | 'spaltenfilter' | 'auto'
+
+/** Verbindungs- und Modelldaten - Pflichtteil jeder KI-Anfrage. */
+export interface KiKontext {
+  /** Basis-URL des OpenAI-kompatiblen Servers, z. B. http://localhost:1234 */
+  basis_url: string
+  /** Modell-Id aus /v1/models; null = automatisch. */
+  modell: string | null
+  temperatur: number
+}
+
+/** Erreichbarkeit und verfügbare Modelle eines KI-Servers. */
+export interface KiStatus {
+  erreichbar: boolean
+  basis_url: string
+  modelle: string[]
+  fehler: string | null
+}
+
+export interface AbfrageVorschlagAnfrage {
+  ki: KiKontext
+  dokument: DokumentReferenz
+  frage: string
+  ziel_sprache?: KiZielSprache
+}
+
+export interface AbfrageVorschlag {
+  sprache: string
+  ausdruck: string
+  erklaerung: string
+  probelauf_treffer: number | null
+}
+
+export interface ErklaerenAnfrage {
+  ki: KiKontext
+  dokument: DokumentReferenz
+  schwerpunkt?: string | null
+}
+
+export interface ErklaerenAbschnitt {
+  titel: string
+  text: string
+}
+
+export interface Erklaerung {
+  zusammenfassung: string
+  abschnitte: ErklaerenAbschnitt[]
+}
+
+export interface SchemaAusTextAnfrage {
+  ki: KiKontext
+  beschreibung: string
+}
+
+export interface SchemaAusText {
+  /** Über die API heißt das Feld "schema" (intern schema_wert). */
+  schema: JsonWert
+  annahmen: string[]
+}
+
+export interface TextAusSchemaAnfrage {
+  ki: KiKontext
+  dokument: DokumentReferenz
+}
+
+export interface TextAusSchema {
+  beschreibung: string
+}
+
+export interface TestdatenAnfrage {
+  ki: KiKontext
+  dokument: DokumentReferenz
+  anzahl?: number
+}
+
+export interface Testdaten {
+  dokumente: JsonWert[]
+}
+
 /** Einheitliches Fehlermodell aller Endpunkte. */
 export interface FehlerDetail {
   code: string

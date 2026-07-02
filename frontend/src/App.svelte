@@ -16,6 +16,8 @@
   import StatusLeiste from './lib/schale/StatusLeiste.svelte'
   import { starteBackendUeberwachung } from './lib/zustand/backendStatus.svelte'
   import { ladeCapabilities } from './lib/zustand/capabilities.svelte'
+  import { ladeKiEinstellungen } from './lib/zustand/kiEinstellungen.svelte'
+  import { starteKiUeberwachung } from './lib/zustand/kiStatus.svelte'
   import { stelleWieder, tabs } from './lib/zustand/tabs.svelte'
 
   starteBackendUeberwachung()
@@ -23,6 +25,9 @@
 
   onMount(() => {
     void (async () => {
+      // KI-Adresse und -Modell laden, dann die Erreichbarkeit überwachen.
+      await ladeKiEinstellungen()
+      starteKiUeberwachung()
       await stelleWieder()
       if (tabs.aktiveTabId !== null) {
         void sofortAnalysieren(tabs.aktiveTabId)

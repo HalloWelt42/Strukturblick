@@ -1,8 +1,10 @@
 <script lang="ts">
   // Rechte Seitenleiste nach Mockup: Inspektor zur aktuellen Selektion
   // (Pfad, Typ, Wert, Länge, Position, "Pfad kopieren als") und der
-  // KI-Bereich. Die KI-Anbindung fehlt in dieser Ausbaustufe - die Aktionen
-  // sind ausgegraut, der Status-Punkt steht auf "aus".
+  // KI-Bereich. Der KI-Bereich ist an ein lokales Sprachmodell angebunden: der
+  // Status-Punkt spiegelt die Erreichbarkeit, die Aktionen sind nur bei
+  // erreichbarem Modell aktiv. Jedes Ergebnis erscheint als Vorschau (KiVorschau)
+  // und wird erst nach Bestätigung übernommen.
   import type { JsonWert, KnotenSpannen } from '../api/typen'
   import {
     alsJsonPath,
@@ -12,13 +14,28 @@
   } from '../dienste/pfade'
   import { TYP_NAME, WERT_KLASSE } from '../dienste/wertDarstellung'
   import { typVon, wertAnPfad, type WertTyp } from '../dienste/wertZugriff'
+  import KiEingabeModal from '../ki/KiEingabeModal.svelte'
+  import KiEinstellungenModal from '../ki/KiEinstellungenModal.svelte'
+  import KiVorschau from '../ki/KiVorschau.svelte'
+  import {
+    kiAufgabe,
+    starteAbfrage,
+    starteErklaeren,
+    starteSchemaAusText,
+    starteTestdaten,
+    starteTextAusSchema,
+  } from '../ki/kiAufgaben.svelte'
   import { selektion } from '../zustand/selektion.svelte'
+  import { kiStatus, pruefe as pruefeKi } from '../zustand/kiStatus.svelte'
   import { aktiverTab } from '../zustand/tabs.svelte'
   import { zeige } from '../zustand/toaster.svelte'
 
   interface KiAktion {
     icon: string
     name: string
+    /** true, wenn die Aktion ein offenes Dokument braucht (alle ausser Schema). */
+    brauchtDokument: boolean
+    starte: () => void
   }
 
   // Kopier-Knöpfe: der title zeigt beim Zeigen die fertige Schreibweise als Vorschau.
@@ -34,13 +51,76 @@
     { name: 'TypeScript', wandler: (pfad) => alsTypescriptZugriff(pfad) },
   ]
 
+  // Modale für Aktionen, die zuerst eine Texteingabe verlangen.
+  let abfrageModalOffen = $state(false)
+  let schemaModalOffen = $state(false)
+  let einstellungenOffen = $state(false)
+
   const KI_AKTIONEN: KiAktion[] = [
-    { icon: 'fa-comment-dots', name: 'Daten erklären' },
-    { icon: 'fa-magnifying-glass', name: 'Frage in Abfrage übersetzen' },
-    { icon: 'fa-diagram-project', name: 'Schema aus Beschreibung' },
-    { icon: 'fa-file-lines', name: 'Beschreibung aus Schema' },
-    { icon: 'fa-cubes', name: 'Testdaten vorschlagen' },
+    {
+      icon: 'fa-comment-dots',
+      name: 'Daten erklären',
+      brauchtDokument: true,
+      starte: starteErklaeren,
+    },
+    {
+      icon: 'fa-magnifying-glass',
+      name: 'Frage in Abfrage übersetzen',
+      brauchtDokument: true,
+      starte: () => {
+        abfrageModalOffen = true
+      },
+    },
+    {
+      icon: 'fa-diagram-project',
+      name: 'Schema aus Beschreibung',
+      brauchtDokument: false,
+      starte: () => {
+        schemaModalOffen = true
+      },
+    },
+    {
+      icon: 'fa-file-lines',
+      name: 'Beschreibung aus Schema',
+      brauchtDokument: true,
+      starte: starteTextAusSchema,
+    },
+    {
+      icon: 'fa-cubes',
+      name: 'Testdaten vorschlagen',
+      brauchtDokument: true,
+      starte: starteTestdaten,
+    },
   ]
+
+  // Aktiv, wenn das Modell erreichbar ist. erreichbar === null (erste Prüfung)
+  // gilt noch nicht als erreichbar - die Aktionen bleiben bis dahin ausgegraut.
+  const kiAktiv = $derived(kiStatus.erreichbar === true)
+
+  const statusKlasse = $derived(kiStatus.erreichbar === false ? 'aus' : '')
+
+  const statusTitel = $derived.by((): string => {
+    if (kiStatus.erreichbar === true) return 'Lokales Sprachmodell erreichbar'
+    if (kiStatus.erreichbar === false) return 'Kein lokales Sprachmodell erreichbar'
+    return 'Erreichbarkeit wird geprüft'
+  })
+
+  function fuehreAktionAus(aktion: KiAktion): void {
+    if (!kiAktiv || kiAufgabe.laeuft) return
+    if (aktion.brauchtDokument && aktiverTab() === null) {
+      zeige('Zuerst ein Dokument öffnen.', 'info')
+      return
+    }
+    aktion.starte()
+  }
+
+  function bestaetigeAbfrage(frage: string): void {
+    starteAbfrage(frage)
+  }
+
+  function bestaetigeSchema(beschreibung: string): void {
+    starteSchemaAusText(beschreibung)
+  }
 
   interface InspektorDaten {
     pfad: string
@@ -182,21 +262,94 @@
   <div class="ki-kopfzeile">
     <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
     <span class="luecke"></span>
-    <span class="status-punkt aus"></span>
+    <button
+      class="icon-knopf"
+      title="KI-Einstellungen"
+      aria-label="KI-Einstellungen"
+      onclick={() => (einstellungenOffen = true)}
+    >
+      <i class="fa-solid fa-gear"></i>
+    </button>
+    <span
+      class="status-punkt {statusKlasse} {kiStatus.erreichbar === null ? 'wird-geprueft' : ''}"
+      title={statusTitel}
+    ></span>
   </div>
-  <div class="bereich-ausgegraut">
+
+  <!-- Ergebnis-Vorschau der laufenden Aufgabe (nie Auto-Apply). -->
+  <KiVorschau />
+
+  <div class={kiAktiv ? '' : 'bereich-ausgegraut'}>
     {#each KI_AKTIONEN as aktion (aktion.name)}
-      <button class="ki-aktion">
+      <button
+        class="ki-aktion"
+        disabled={!kiAktiv || kiAufgabe.laeuft}
+        title={kiAktiv ? aktion.name : 'Kein lokales Sprachmodell erreichbar'}
+        onclick={() => fuehreAktionAus(aktion)}
+      >
         <i class="fa-solid {aktion.icon}"></i>
         {aktion.name}
       </button>
     {/each}
   </div>
-  <div class="ki-hinweis">
-    <i class="fa-solid fa-circle-info"></i>
-    <span>Die KI-Anbindung folgt in einer späteren Ausbaustufe.</span>
-  </div>
+
+  {#if kiAufgabe.laeuft}
+    <div class="ki-hinweis">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <span>Das Sprachmodell arbeitet an der Anfrage …</span>
+    </div>
+  {:else if kiAufgabe.fehler !== null}
+    <div class="ki-hinweis ki-hinweis-fehler">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>{kiAufgabe.fehler}</span>
+    </div>
+  {/if}
+
+  {#if kiStatus.erreichbar === false}
+    <div class="ki-hinweis">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Kein lokales Sprachmodell erreichbar. Prüfe die Adresse in den Einstellungen.</span>
+    </div>
+    <div class="feld-zeile ki-fuss-zeile">
+      <button class="knopf klein" onclick={() => void pruefeKi()}>
+        <i class="fa-solid fa-rotate"></i> Erneut prüfen
+      </button>
+      <button class="knopf klein" onclick={() => (einstellungenOffen = true)}>
+        <i class="fa-solid fa-gear"></i> Zu den Einstellungen
+      </button>
+    </div>
+  {:else}
+    <div class="ki-hinweis">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+    </div>
+  {/if}
 </aside>
+
+<KiEingabeModal
+  bind:offen={abfrageModalOffen}
+  titel="Frage in Abfrage übersetzen"
+  beschriftung="Was soll gefunden werden? (Alltagssprache)"
+  platzhalter="z. B. alle Summen über 50"
+  knopfText="Vorschlagen"
+  onBestaetige={bestaetigeAbfrage}
+  onSchliessen={() => (abfrageModalOffen = false)}
+/>
+
+<KiEingabeModal
+  bind:offen={schemaModalOffen}
+  titel="Schema aus Beschreibung"
+  beschriftung="Beschreibe die gewünschte Struktur (Alltagssprache)"
+  platzhalter="z. B. eine Bestellung mit Nummer, Kunde und Positionen"
+  knopfText="Schema erzeugen"
+  onBestaetige={bestaetigeSchema}
+  onSchliessen={() => (schemaModalOffen = false)}
+/>
+
+<KiEinstellungenModal
+  bind:offen={einstellungenOffen}
+  onSchliessen={() => (einstellungenOffen = false)}
+/>
 
 <style>
   .wert-kopf {
@@ -217,5 +370,36 @@
     overflow: auto;
     white-space: pre-wrap;
     word-break: break-word;
+  }
+
+  /* Ausgegraute Aktionen dürfen keinen Klick auslösen (zusätzlich zu disabled). */
+  .ki-aktion:disabled {
+    cursor: not-allowed;
+  }
+
+  /* Neutraler, dezent pulsierender Punkt, solange die erste Prüfung läuft. */
+  .status-punkt.wird-geprueft {
+    background: var(--text-3);
+    animation: ki-puls 1.4s ease-in-out infinite;
+  }
+
+  @keyframes ki-puls {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .ki-hinweis-fehler {
+    background: var(--zustand-fehler-weich);
+    color: var(--text-1);
+  }
+
+  .ki-fuss-zeile {
+    margin: 0 var(--a3) var(--a3);
+    flex-wrap: wrap;
   }
 </style>

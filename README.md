@@ -4,7 +4,14 @@ Lokaler, webbasierter Assistent für Strukturdokumente: JSON, XML, CSV, YAML, TO
 
 ## Aktueller Stand
 
-Das Grundgerüst läuft: FastAPI-Backend mit Format-Engine-Registry (JSON inkl. JSON5/JSONC-Toleranz, CSV mit Trennzeichen- und Encoding-Erkennung), Dokument-Endpunkten (erkennen, parsen mit Positionskarte, Cache-Status) und Capabilities-Endpunkt; dazu die Svelte-5-Schale exakt nach den Mockups (Kopfleiste, Seitenleisten, Ansichtswahl, Statusleiste, Theme-Umschalter Mittelton/Dunkel). Die Ansichten (Baum, Editor, Tabelle, ...) folgen in den nächsten Ausbaustufen; alle Ansichten liegen als klickbare Mockups vor und sind der verbindliche Design-Leitfaden.
+Die Anwendung ist weitgehend fertig. Verfügbar sind:
+
+- Format-Engines: JSON (inklusive JSON5/JSONC-Toleranz), NDJSON, YAML, TOML, XML, CSV (mit Trennzeichen- und Encoding-Erkennung), XLSX-Import sowie Markdown- und HTML-Tabellen. Jedes Dokument wird auf einen einheitlichen Wertebaum mit Positionskarte abgebildet.
+- Ansichten: Baum, Roh-Editor (Syntax, Diagnosen als Sprungziele, Format manuell wählbar), Tabelle (sortieren, filtern, Spalten verwalten, Werte übersetzen), Statistik mit Feld-Profil, Schema-Diagramm, Vergleich, Graph und ein schwebendes Lexikon.
+- Werkzeuge: Abfrage (JSONPath, XPath, Volltext, regulärer Ausdruck), Schema ableiten und validieren (JSON Schema, XSD), Konvertieren mit Verlustbericht, Reparatur als Vorschau, Code erzeugen (TypeScript, Pydantic, Dataclasses, PHP 8.4+) und Testdaten.
+- KI-Funktionen über ein lokales, OpenAI-kompatibles Sprachmodell (optional, Basis-URL in der App wählbar): Daten erklären, Frage in eine Abfrage übersetzen, Schema aus einer Beschreibung, Beschreibung aus einem Schema und Testdaten vorschlagen. Jedes Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen; ist kein Modell erreichbar, ist der Bereich ausgegraut, der Rest der App bleibt voll nutzbar.
+
+Leitprinzip bleibt die Kopplung: jeder Fehler, Suchtreffer und Vergleichseintrag ist ein klickbares Sprungziel im Editor. Die Oberfläche folgt exakt den Mockups (Kopfleiste, Seitenleisten, Ansichtswahl, Statusleiste, Themes Mittelton und Dunkel); die Mockups bleiben der verbindliche Design-Leitfaden.
 
 ## Starten
 

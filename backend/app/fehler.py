@@ -73,6 +73,20 @@ class KonvertierungUnmoeglich(StrukturblickFehler):
     status = 400
 
 
+class KiNichtErreichbar(StrukturblickFehler):
+    """Das lokale Sprachmodell antwortet nicht (Verbindungs- oder Netzwerkfehler)."""
+
+    code = "ki_nicht_erreichbar"
+    status = 502
+
+
+class KiAntwortUngueltig(StrukturblickFehler):
+    """Die Antwort des Sprachmodells ließ sich auch nach Wiederholungen nicht auswerten."""
+
+    code = "ki_antwort_ungueltig"
+    status = 502
+
+
 def _request_id(request: Request) -> UUID:
     kennung = getattr(request.state, "request_id", None)
     return kennung if isinstance(kennung, UUID) else uuid4()
