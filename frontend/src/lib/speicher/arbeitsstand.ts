@@ -10,6 +10,8 @@ export interface TabPersist {
   id: string
   titel: string
   format: FormatId | null
+  /** Vom Nutzer festgelegtes Format (null/fehlend = automatische Erkennung). */
+  formatGewaehlt?: FormatId | null
   inhalt: string
   dokumentId: string | null
   aktiveAnsicht: string

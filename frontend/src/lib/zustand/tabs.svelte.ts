@@ -14,7 +14,11 @@ export type AnalyseStand = 'frisch' | 'laeuft' | 'veraltet' | 'fehler'
 export interface DokumentTab {
   id: string
   titel: string
+  /** Das (zuletzt tatsächlich geparste) Format - vom Backend erkannt oder erzwungen. */
   format: FormatId | null
+  /** Vom Nutzer festgelegtes Format; null = automatische Erkennung. Erzwingt beim
+   *  Parsen dieses Format, damit Syntax und Prüfung im Editor dazu passen. */
+  formatGewaehlt: FormatId | null
   /** Bei binären Dokumenten (istBinaer) die Base64-Zeichenkette, sonst der Text. */
   inhalt: string
   /** true bei binären Formaten (z. B. XLSX); dann trägt inhalt Base64. */
@@ -45,6 +49,7 @@ function alsPersist(tab: DokumentTab): TabPersist {
     id: tab.id,
     titel: tab.titel,
     format: tab.format,
+    formatGewaehlt: tab.formatGewaehlt,
     inhalt: tab.inhalt,
     dokumentId: tab.dokumentId,
     aktiveAnsicht: tab.aktiveAnsicht,
@@ -83,6 +88,7 @@ export function oeffneTab(eingabe: {
     id,
     titel: eingabe.titel,
     format: eingabe.format ?? null,
+    formatGewaehlt: null,
     inhalt: eingabe.inhalt,
     istBinaer: eingabe.istBinaer ?? false,
     geaendert: false,
@@ -132,6 +138,15 @@ export function setzeAnsicht(id: string, ansichtId: string): void {
   planeArbeitsstandSicherung()
 }
 
+/** Legt das Format manuell fest (null = automatische Erkennung); Analyse wird veraltet. */
+export function setzeFormat(id: string, format: FormatId | null): void {
+  const tab = holeTab(id)
+  if (tab === null || tab.formatGewaehlt === format) return
+  tab.formatGewaehlt = format
+  tab.analyseStand = 'veraltet'
+  planeArbeitsstandSicherung()
+}
+
 export function aktiverTab(): DokumentTab | null {
   if (tabs.aktiveTabId === null) return null
   return holeTab(tabs.aktiveTabId)
@@ -156,6 +171,7 @@ export async function stelleWieder(): Promise<void> {
       id: tab.id,
       titel: tab.titel,
       format: tab.format,
+      formatGewaehlt: tab.formatGewaehlt ?? null,
       inhalt: tab.inhalt,
       istBinaer: tab.istBinaer ?? false,
       geaendert: tab.geaendert,

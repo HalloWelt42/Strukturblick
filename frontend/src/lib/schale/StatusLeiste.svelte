@@ -61,8 +61,13 @@
   </nav>
   <div class="status-rechts">
     {#if tab !== null}
-      {#if tab.format !== null}
-        <span class="abzeichen info">{tab.format.toUpperCase()}</span>
+      {#if (tab.formatGewaehlt ?? tab.format) !== null}
+        <span
+          class="abzeichen info"
+          title={tab.formatGewaehlt !== null ? 'Format manuell festgelegt' : 'Format automatisch erkannt'}
+        >
+          {(tab.formatGewaehlt ?? tab.format)?.toUpperCase()}{tab.formatGewaehlt !== null ? ' *' : ''}
+        </span>
       {/if}
       <span>{menschenlesbareGroesse(groesseBytes)}</span>
       <span>Zeile {statusInfo.zeile}, Spalte {statusInfo.spalte}</span>

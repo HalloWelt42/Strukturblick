@@ -49,13 +49,15 @@ async function fuehreAnalyseDurch(tabId: string): Promise<void> {
   laufJeTab.set(tabId, lauf)
   tab.analyseStand = 'laeuft'
   try {
-    // format_id bewusst nicht mitsenden - die Backend-Erkennung entscheidet.
-    // Der Dateiname dient ihr nur als Hinweis. Binäre Dokumente (XLSX) tragen
-    // ihren Inhalt als Base64.
+    // Hat der Nutzer ein Format festgelegt, wird es erzwungen (format_id gesetzt),
+    // damit Syntax und Prüfung dazu passen. Sonst entscheidet die Backend-
+    // Erkennung; der Dateiname dient ihr nur als Hinweis. Binäre Dokumente (XLSX)
+    // tragen ihren Inhalt als Base64.
+    const erzwungen = tab.formatGewaehlt ?? undefined
     const antwort = await dokumentParsen(
       tab.istBinaer
-        ? { inhalt_base64: tab.inhalt, dateiname: tab.titel }
-        : { inhalt_text: tab.inhalt, dateiname: tab.titel },
+        ? { inhalt_base64: tab.inhalt, dateiname: tab.titel, format_id: erzwungen }
+        : { inhalt_text: tab.inhalt, dateiname: tab.titel, format_id: erzwungen },
     )
     if (laufJeTab.get(tabId) !== lauf) return
     const aktuell = holeTab(tabId)

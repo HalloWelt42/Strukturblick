@@ -7,8 +7,8 @@
   import type { EditorView } from '@codemirror/view'
   import { untrack } from 'svelte'
 
-  import type { QuellSpanne } from '../../api/typen'
-  import { analysiere } from '../../dienste/analyseDienst'
+  import type { FormatFaehigkeiten, FormatId, QuellSpanne } from '../../api/typen'
+  import { analysiere, sofortAnalysieren } from '../../dienste/analyseDienst'
   import {
     baueIndex,
     pfadAnOffset,
@@ -17,10 +17,17 @@
   } from '../../dienste/pfadIndex'
   import { ebenenAnzahl } from '../../dienste/tiefe'
   import { aktualisiereDokument, speichereDokument } from '../../speicher/dokumente'
+  import { capabilities } from '../../zustand/capabilities.svelte'
   import { ladeNeu } from '../../zustand/dokumentListe.svelte'
   import { selektion, setzeSelektion } from '../../zustand/selektion.svelte'
   import { setzeCursor } from '../../zustand/statusInfo.svelte'
-  import { aktiverTab, markiereGespeichert, setzeInhalt, tabs } from '../../zustand/tabs.svelte'
+  import {
+    aktiverTab,
+    markiereGespeichert,
+    setzeFormat,
+    setzeInhalt,
+    tabs,
+  } from '../../zustand/tabs.svelte'
   import { zeige } from '../../zustand/toaster.svelte'
   import {
     alsOffsetBereich,
@@ -64,6 +71,27 @@
     if (tab === null || tab.analyse === null) return 1
     return ebenenAnzahl(tab.analyse.wurzel)
   })
+
+  // Waehlbare Formate fuer die manuelle Festlegung: alle Textformate aus den
+  // Capabilities (binaere wie XLSX blieben ohne editierbaren Text und entfallen).
+  const waehlbareFormate = $derived.by((): FormatFaehigkeiten[] =>
+    (capabilities.daten?.formate ?? []).filter((format) => !format.ist_binaer),
+  )
+
+  /** Kurzer Anzeigename fuers Format-Menue. */
+  function formatName(format: FormatFaehigkeiten): string {
+    if (format.format_id === 'md_tabelle') return 'Markdown-Tabelle'
+    if (format.format_id === 'html_tabelle') return 'HTML-Tabelle'
+    return format.format_id.toUpperCase()
+  }
+
+  /** Manuelle Format-Wahl: festlegen (oder auf automatisch zuruecksetzen) und neu pruefen. */
+  function waehleFormat(wert: string): void {
+    const tab = aktiverTab()
+    if (tab === null) return
+    setzeFormat(tab.id, wert === '' ? null : (wert as FormatId))
+    void sofortAnalysieren(tab.id)
+  }
 
   // Editor-Lebenszyklus: bei Tab-Wechsel neu aufbauen.
   $effect(() => {
@@ -120,11 +148,13 @@
     }
   })
 
-  // Sprache folgt dem (vom Backend erkannten) Format des Tabs.
+  // Sprache folgt dem gewählten Format (falls festgelegt), sonst dem vom Backend
+  // erkannten - so passt die Syntaxfarbe auch, wenn das erzwungene Format (noch)
+  // nicht sauber parst.
   $effect(() => {
     const tab = aktiverTab()
     if (tab === null || view === null || tab.id !== angezeigteTabId) return
-    setzeSprache(view, tab.format)
+    setzeSprache(view, tab.formatGewaehlt ?? tab.format)
   })
 
   // Diagnosen aus Analysefehler und Warnungen in die Lint-Anzeige einspeisen.
@@ -281,6 +311,18 @@
   </div>
 {:else}
   <div class="werkzeugzeile">
+    <span class="beschriftung">Format:</span>
+    <select
+      class="feld ed-format"
+      value={aktiverTab()?.formatGewaehlt ?? ''}
+      onchange={(ereignis) => waehleFormat(ereignis.currentTarget.value)}
+    >
+      <option value="">Automatisch{aktiverTab()?.format ? ` (${aktiverTab()?.format?.toUpperCase()})` : ''}</option>
+      {#each waehlbareFormate as format (format.format_id)}
+        <option value={format.format_id}>{formatName(format)}</option>
+      {/each}
+    </select>
+    <span class="trenner-v"></span>
     <button class="knopf klein" onclick={transformationFolgt}>
       <i class="fa-solid fa-indent"></i> Formatieren
     </button>
@@ -365,6 +407,13 @@
     overflow: hidden;
     background: var(--flaeche-eingabe);
     padding: var(--a2) 0;
+  }
+
+  /* Kompakte Format-Auswahl in der Werkzeugzeile (Höhe wie die kleinen Knöpfe). */
+  .ed-format {
+    height: 24px;
+    padding: 0 var(--a1);
+    font-size: 0.8rem;
   }
 
   .diagnose-karte {
