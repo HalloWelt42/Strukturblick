@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Strukturbaum</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/chakra-petch/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab aktiv">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.0</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter aktiv" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Schema</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <button class="knopf klein"><i class="fa-solid fa-angles-down"></i> Alles aufklappen</button>
+            <button class="knopf klein"><i class="fa-solid fa-angles-up"></i> Alles zuklappen</button>
+            <span class="beschriftung">Ebene:</span>
+            <button class="knopf klein">1</button>
+            <button class="knopf klein">2</button>
+            <button class="knopf klein">3</button>
+            <span class="luecke"></span>
+            <div class="feld-zeile">
+              <input class="feld" type="text" placeholder="Im Baum suchen ..." style="width: 220px" />
+              <label class="beschriftung"><span class="checkbox an"><i class="fa-solid fa-check"></i></span> Nur Treffer zeigen</label>
+            </div>
+          </div>
+
+          <!-- Strukturbaum: bestellungen.json -->
+          <div class="baum">
+            <div class="baum-zeile" style="--tiefe: 0">
+              <span class="pfeil"><i class="fa-solid fa-caret-down"></i></span>
+              <span class="wert-objekt">{ }</span><span class="baum-vorschau">Wurzel</span>
+              <span class="baum-anzahl">2 Schlüssel</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 1">
+              <span class="pfeil"><i class="fa-solid fa-caret-down"></i></span>
+              <span class="k-name">geschaeft</span><span class="wert-objekt">{ }</span>
+              <span class="baum-anzahl">3 Schlüssel</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 2">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">name</span>
+              <span class="wert-text">"Werkzeugkiste Nord"</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 2">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">kundennummernkreis</span>
+              <span class="wert-text">"K-2026"</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 2">
+              <span class="pfeil"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">filialen</span><span class="wert-liste">[ ]</span>
+              <span class="baum-anzahl">2 Einträge</span>
+              <span class="baum-vorschau">["Hamburg", "Lübeck"]</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 1">
+              <span class="pfeil"><i class="fa-solid fa-caret-down"></i></span>
+              <span class="k-name">bestellungen</span><span class="wert-liste">[ ]</span>
+              <span class="baum-anzahl">3 Einträge</span>
+              <span class="zeilen-marke abzeichen info" title="Mustererkennung: gleichförmige Objektliste">Liste erkannt</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 2">
+              <span class="pfeil"><i class="fa-solid fa-caret-down"></i></span>
+              <span class="k-index">[0]</span><span class="wert-objekt">{ }</span>
+              <span class="baum-anzahl">7 Schlüssel</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 3">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">id</span>
+              <span class="wert-text">"3f9a2c74-5b1e-4c2a-9e77-d41b8a6c0f12"</span>
+              <span class="zeilen-marke abzeichen" title="Mustererkennung">UUID</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 3">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">nummer</span>
+              <span class="wert-text">"B-2026-0412"</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 3">
+              <span class="pfeil"><i class="fa-solid fa-caret-down"></i></span>
+              <span class="k-name">kunde</span><span class="wert-objekt">{ }</span>
+              <span class="baum-anzahl">3 Schlüssel</span>
+            </div>
+            <div class="baum-zeile selektiert" style="--tiefe: 4">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">name</span>
+              <span class="wert-text">"Erika Musterfrau"</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 4">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">email</span>
+              <span class="wert-text">"erika@beispiel.de"</span>
+              <span class="zeilen-marke abzeichen" title="Mustererkennung">E-Mail</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 4">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">kundeSeit</span>
+              <span class="wert-text">"2019-03-14"</span>
+              <span class="zeilen-marke abzeichen" title="Mustererkennung">Datum</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 3">
+              <span class="pfeil"><i class="fa-solid fa-caret-down"></i></span>
+              <span class="k-name">positionen</span><span class="wert-liste">[ ]</span>
+              <span class="baum-anzahl">2 Einträge</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 4">
+              <span class="pfeil"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-index">[0]</span><span class="wert-objekt">{ }</span>
+              <span class="baum-vorschau">{"artikel": "Schraubendreher-Set", "menge": 2, ...}</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 4">
+              <span class="pfeil"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-index">[1]</span><span class="wert-objekt">{ }</span>
+              <span class="baum-vorschau">{"artikel": "Wasserwaage 60 cm", "menge": 1, ...}</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 3">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">summe</span>
+              <span class="wert-zahl">68.30</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 3">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">bezahlt</span>
+              <span class="wert-bool">true</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 3">
+              <span class="pfeil blatt"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-name">lieferdatum</span>
+              <span class="wert-null">null</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 2">
+              <span class="pfeil"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-index">[1]</span><span class="wert-objekt">{ }</span>
+              <span class="baum-vorschau">{"id": "8c2d1e90-...", "nummer": "B-2026-0413", ...}</span>
+            </div>
+            <div class="baum-zeile" style="--tiefe: 2">
+              <span class="pfeil"><i class="fa-solid fa-caret-right"></i></span>
+              <span class="k-index">[2]</span><span class="wert-objekt">{ }</span>
+              <span class="baum-vorschau">{"id": "b74f0a3d-...", "nummer": "B-2026-0417", ...}</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">/bestellungen/0/kunde/name</code>
+          <dl>
+            <dt>Typ</dt>
+            <dd><span class="wert-text mono">Text</span></dd>
+            <dt>Wert</dt>
+            <dd class="mono">"Erika Musterfrau"</dd>
+            <dt>Länge</dt>
+            <dd>16 Zeichen</dd>
+            <dt>Position</dt>
+            <dd>Zeile 14, Spalte 17</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein">Zeiger</button>
+            <button class="knopf klein"><span class="fachbegriff">JSONPath</span></button>
+            <button class="knopf klein">Python</button>
+            <button class="knopf klein">TypeScript</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <a>$</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>bestellungen</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>[0]</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>kunde</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="aktuell">name</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">JSON</span>
+          <span>12,4 KB</span>
+          <span>Zeile 14, Spalte 17</span>
+          <span class="diag-zaehler"><i class="fa-solid fa-circle-check"></i> Keine Fehler</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>

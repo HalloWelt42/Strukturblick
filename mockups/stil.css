@@ -1,0 +1,1897 @@
+/* ============================================================================
+   Strukturblick - Mockup-Stil
+   Zentrale Datei für alle Mockup-Seiten. Der Token-Block (Abschnitt 1) ist
+   verbindlich und wandert bei der Umsetzung unverändert in das Frontend.
+   Gestaltung: kantig (Radius 0), Ausnahme Knöpfe (3px). Keine border-left/
+   border-right als Akzent, kein !important.
+   ========================================================================== */
+
+/* ----- 1. Token ----------------------------------------------------------- */
+
+:root {
+  /* Rohpalette (nur hier referenzieren, nie direkt in Komponenten) */
+  --rohfarbe-anthrazit: #4a4a4a;
+  --rohfarbe-silber: #cbcbcb;
+  --rohfarbe-creme: #ffffe3;
+  --rohfarbe-blaugrau: #6d8196;
+  /* Komplementäre der Palette */
+  --rohfarbe-ocker: #96826d;      /* Komplement zu Blaugrau */
+  --rohfarbe-lavendel: #e3e3ff;   /* Komplement zu Creme */
+  /* Zustands-Ableitungen in gedeckter Sättigungslage */
+  --rohfarbe-gruen: #6d9678;
+  --rohfarbe-rot: #9c5f5a;
+  --rohfarbe-amber: #a8894f;
+
+  /* Schrift */
+  --schrift-anzeige: "Chakra Petch", system-ui, -apple-system, sans-serif;
+  --schrift-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Kanten: alles eckig, nur Knöpfe leicht gerundet */
+  --radius-panel: 0;
+  --radius-eingabe: 0;
+  --radius-tab: 0;
+  --radius-knopf: 3px;
+
+  /* Abstände */
+  --a1: 4px;
+  --a2: 8px;
+  --a3: 12px;
+  --a4: 16px;
+  --a5: 24px;
+  --a6: 32px;
+
+  --zeile-h: 28px;
+  --schnell: 0.12s ease;
+}
+
+/* Mittelton (Standard): weder hell noch dunkel */
+:root,
+:root[data-theme="mittelton"] {
+  --flaeche-seite: #a6a6a6;
+  --flaeche-leiste: #979797;
+  --flaeche-panel: var(--rohfarbe-silber);
+  --flaeche-panel-2: #bdbdbd;
+  --flaeche-eingabe: #d8d8d1;
+  --flaeche-hervorhebung: var(--rohfarbe-creme);
+  --flaeche-zeile-wechsel: rgba(0, 0, 0, 0.03);
+
+  --text-1: #262626;
+  --text-2: var(--rohfarbe-anthrazit);
+  --text-3: #616161;
+  --text-invers: #ececec;
+
+  --rand-1: rgba(20, 20, 20, 0.22);
+  --rand-2: rgba(20, 20, 20, 0.38);
+
+  --akzent: #4e6379;
+  --akzent-stark: #3d4f62;
+  --akzent-weich: rgba(109, 129, 150, 0.22);
+  --auf-akzent: #f2f4f6;
+  --zweitakzent: #7a684f;
+  --zweitakzent-weich: rgba(150, 130, 109, 0.22);
+
+  --zustand-erfolg: #3f6b4e;
+  --zustand-erfolg-weich: rgba(109, 150, 120, 0.22);
+  --zustand-warnung: #7d6233;
+  --zustand-warnung-weich: rgba(168, 137, 79, 0.22);
+  --zustand-fehler: #7e403c;
+  --zustand-fehler-weich: rgba(156, 95, 90, 0.22);
+  --zustand-info: #4e6379;
+  --zustand-info-weich: rgba(109, 129, 150, 0.18);
+
+  /* Typfarben: Strukturbaum und Syntax */
+  --typ-objekt: #46607a;
+  --typ-liste: #64517f;
+  --typ-text: #4a6b3f;
+  --typ-zahl: #7a5a34;
+  --typ-bool: #7d4260;
+  --typ-null: #666666;
+  --typ-schluessel: #262626;
+  --typ-kommentar: #6e6e64;
+
+  --diff-hinzu: rgba(109, 150, 120, 0.30);
+  --diff-weg: rgba(156, 95, 90, 0.30);
+  --diff-geaendert: rgba(168, 137, 79, 0.30);
+
+  --schatten-1: 0 1px 2px rgba(20, 20, 20, 0.14);
+  --schatten-2: 0 8px 28px rgba(20, 20, 20, 0.28);
+}
+
+/* Dunkel: aus Anthrazit abgeleitet, Akzente aufgehellt */
+:root[data-theme="dunkel"] {
+  --flaeche-seite: #262626;
+  --flaeche-leiste: #2e2e2e;
+  --flaeche-panel: #383838;
+  --flaeche-panel-2: #424242;
+  --flaeche-eingabe: #2c2c2c;
+  --flaeche-hervorhebung: rgba(255, 255, 227, 0.16);
+  --flaeche-zeile-wechsel: rgba(255, 255, 255, 0.025);
+
+  --text-1: #e6e6e6;
+  --text-2: var(--rohfarbe-silber);
+  --text-3: #9a9a9a;
+  --text-invers: #262626;
+
+  --rand-1: rgba(255, 255, 255, 0.12);
+  --rand-2: rgba(255, 255, 255, 0.24);
+
+  --akzent: #93a9be;
+  --akzent-stark: #b0c3d5;
+  --akzent-weich: rgba(109, 129, 150, 0.30);
+  --auf-akzent: #20262c;
+  --zweitakzent: #bda98d;
+  --zweitakzent-weich: rgba(150, 130, 109, 0.28);
+
+  --zustand-erfolg: #8fbf9d;
+  --zustand-erfolg-weich: rgba(109, 150, 120, 0.26);
+  --zustand-warnung: #c9a96b;
+  --zustand-warnung-weich: rgba(168, 137, 79, 0.26);
+  --zustand-fehler: #c98883;
+  --zustand-fehler-weich: rgba(156, 95, 90, 0.28);
+  --zustand-info: #93a9be;
+  --zustand-info-weich: rgba(109, 129, 150, 0.24);
+
+  --typ-objekt: #92a9c0;
+  --typ-liste: #a794bf;
+  --typ-text: #9bbb8e;
+  --typ-zahl: #c0a585;
+  --typ-bool: #bf93a5;
+  --typ-null: #8e8e8e;
+  --typ-schluessel: #e6e6e6;
+  --typ-kommentar: #8f8f83;
+
+  --diff-hinzu: rgba(109, 150, 120, 0.28);
+  --diff-weg: rgba(156, 95, 90, 0.28);
+  --diff-geaendert: rgba(168, 137, 79, 0.26);
+
+  --schatten-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --schatten-2: 0 8px 28px rgba(0, 0, 0, 0.55);
+}
+
+/* ----- 2. Grundlagen ------------------------------------------------------ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--schrift-anzeige);
+  font-size: 14px;
+  color: var(--text-1);
+  background: var(--flaeche-seite);
+}
+
+code,
+pre,
+.mono {
+  font-family: var(--schrift-mono);
+  font-size: 0.86em;
+}
+
+a {
+  color: var(--akzent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--akzent-weich);
+}
+
+.luecke {
+  flex: 1;
+}
+
+/* ----- 3. App-Raster ------------------------------------------------------ */
+
+.app {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 232px 1fr 304px;
+  grid-template-rows: 44px 1fr auto 28px;
+  grid-template-areas:
+    "kopf kopf kopf"
+    "links haupt rechts"
+    "links konsole rechts"
+    "status status status";
+}
+
+.app.ohne-rechts {
+  grid-template-columns: 232px 1fr 0;
+}
+
+.haupt {
+  grid-area: haupt;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--flaeche-panel);
+}
+
+/* ----- 4. Kopfleiste (Marke, Dokument-Tabs, Aktionen) --------------------- */
+
+.kopf {
+  grid-area: kopf;
+  display: flex;
+  align-items: stretch;
+  gap: var(--a3);
+  background: var(--flaeche-leiste);
+  border-bottom: 1px solid var(--rand-2);
+  padding: 0 var(--a3);
+  min-width: 0;
+}
+
+.marke {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.marke i {
+  color: var(--akzent);
+}
+
+.tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  height: 34px;
+  padding: 0 var(--a3);
+  background: var(--flaeche-panel-2);
+  border: 1px solid var(--rand-1);
+  border-bottom: none;
+  border-radius: var(--radius-tab);
+  color: var(--text-2);
+  font-size: 0.88rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tab.aktiv {
+  background: var(--flaeche-panel);
+  color: var(--text-1);
+  box-shadow: inset 0 2px 0 var(--akzent);
+}
+
+.tab .punkt {
+  width: 7px;
+  height: 7px;
+  background: var(--zweitakzent);
+  border-radius: 50%;
+}
+
+.tab .tab-zu {
+  border: none;
+  background: none;
+  color: var(--text-3);
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 0.8rem;
+}
+
+.tab-neu {
+  height: 34px;
+  padding: 0 var(--a2);
+  border: 1px dashed var(--rand-1);
+  border-bottom: none;
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.kopf-rechts {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin-left: auto;
+}
+
+/* ----- 5. Seitenleisten --------------------------------------------------- */
+
+.seite-links {
+  grid-area: links;
+  background: var(--flaeche-panel-2);
+  border-right: 1px solid var(--rand-1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.seite-rechts {
+  grid-area: rechts;
+  background: var(--flaeche-panel-2);
+  border-left: 1px solid var(--rand-1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.leisten-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a3) var(--a3) var(--a1);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+
+.leisten-titel .icon-knopf {
+  margin-left: auto;
+}
+
+.dok-eintrag,
+.werkzeug-eintrag {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: 0 var(--a3);
+  height: var(--zeile-h);
+  color: var(--text-2);
+  font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.dok-eintrag i,
+.werkzeug-eintrag i {
+  width: 16px;
+  text-align: center;
+  color: var(--text-3);
+}
+
+.dok-eintrag:hover,
+.werkzeug-eintrag:hover {
+  background: var(--akzent-weich);
+}
+
+.dok-eintrag.aktiv,
+.werkzeug-eintrag.aktiv {
+  background: var(--akzent);
+  color: var(--auf-akzent);
+}
+
+.dok-eintrag.aktiv i,
+.werkzeug-eintrag.aktiv i {
+  color: var(--auf-akzent);
+}
+
+.dok-eintrag .dok-format {
+  margin-left: auto;
+}
+
+.leisten-fuss {
+  margin-top: auto;
+  padding: var(--a3);
+  font-size: 0.78rem;
+  color: var(--text-3);
+  border-top: 1px solid var(--rand-1);
+}
+
+/* ----- 6. Ansichtswahl (Reiter, in Mockups echte Links) ------------------- */
+
+.ansichtswahl {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 0 var(--a2);
+  background: var(--flaeche-panel-2);
+  border-bottom: 1px solid var(--rand-1);
+  height: 36px;
+  overflow-x: auto;
+}
+
+.reiter {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: 0 var(--a3);
+  color: var(--text-2);
+  font-size: 0.88rem;
+  white-space: nowrap;
+  border-radius: var(--radius-tab);
+}
+
+.reiter:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+
+.reiter.aktiv {
+  background: var(--flaeche-panel);
+  color: var(--text-1);
+  box-shadow: inset 0 -2px 0 var(--akzent);
+  font-weight: 500;
+}
+
+.reiter.deaktiviert {
+  color: var(--text-3);
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ----- 7. Ansichtsfläche und Werkzeugzeile -------------------------------- */
+
+.ansicht-flaeche {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.werkzeugzeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+  background: var(--flaeche-panel);
+  flex: none;
+  flex-wrap: wrap;
+}
+
+/* ----- 8. Knöpfe, Felder, Schalter ---------------------------------------- */
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  height: 30px;
+  padding: 0 var(--a3);
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-knopf);
+  background: var(--flaeche-panel);
+  color: var(--text-1);
+  font-family: var(--schrift-anzeige);
+  font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--schnell);
+}
+
+.knopf:hover {
+  background: var(--akzent-weich);
+}
+
+.knopf.primaer {
+  background: var(--akzent);
+  border-color: var(--akzent-stark);
+  color: var(--auf-akzent);
+}
+
+.knopf.primaer:hover {
+  background: var(--akzent-stark);
+}
+
+.knopf.gefahr {
+  color: var(--zustand-fehler);
+  border-color: var(--zustand-fehler);
+}
+
+.knopf.klein {
+  height: 24px;
+  padding: 0 var(--a2);
+  font-size: 0.8rem;
+}
+
+.knopf:disabled,
+.knopf.deaktiviert {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-knopf);
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.icon-knopf:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+
+.icon-knopf.aktiv {
+  background: var(--akzent);
+  color: var(--auf-akzent);
+}
+
+.icon-knopf.gefahr:hover {
+  background: var(--zustand-fehler-weich);
+  color: var(--zustand-fehler);
+}
+
+.feld {
+  height: 30px;
+  padding: 0 var(--a2);
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-eingabe);
+  background: var(--flaeche-eingabe);
+  color: var(--text-1);
+  font-family: var(--schrift-anzeige);
+  font-size: 0.88rem;
+}
+
+.feld:focus {
+  outline: 2px solid var(--akzent);
+  outline-offset: -1px;
+}
+
+.feld.mono {
+  font-family: var(--schrift-mono);
+}
+
+textarea.feld {
+  height: auto;
+  padding: var(--a2);
+  resize: vertical;
+}
+
+.feld-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+
+.beschriftung {
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-eingabe);
+  background: var(--flaeche-eingabe);
+  color: transparent;
+  font-size: 0.65rem;
+  flex: none;
+  cursor: pointer;
+}
+
+.checkbox.an {
+  background: var(--akzent);
+  border-color: var(--akzent-stark);
+  color: var(--auf-akzent);
+}
+
+.schalter {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border: 1px solid var(--rand-2);
+  background: var(--flaeche-eingabe);
+  border-radius: 9px;
+  cursor: pointer;
+  flex: none;
+}
+
+.schalter::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text-3);
+  transition: left var(--schnell);
+}
+
+.schalter.an {
+  background: var(--akzent);
+  border-color: var(--akzent-stark);
+}
+
+.schalter.an::after {
+  left: 18px;
+  background: var(--auf-akzent);
+}
+
+/* ----- 9. Abzeichen und Status-Punkte ------------------------------------- */
+
+.abzeichen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  padding: 1px 7px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-eingabe);
+  background: var(--flaeche-panel-2);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.abzeichen.gut {
+  background: var(--zustand-erfolg-weich);
+  color: var(--zustand-erfolg);
+  border-color: var(--zustand-erfolg);
+}
+
+.abzeichen.warnung {
+  background: var(--zustand-warnung-weich);
+  color: var(--zustand-warnung);
+  border-color: var(--zustand-warnung);
+}
+
+.abzeichen.fehler {
+  background: var(--zustand-fehler-weich);
+  color: var(--zustand-fehler);
+  border-color: var(--zustand-fehler);
+}
+
+.abzeichen.info {
+  background: var(--zustand-info-weich);
+  color: var(--zustand-info);
+  border-color: var(--zustand-info);
+}
+
+.status-punkt {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--zustand-erfolg);
+  flex: none;
+}
+
+.status-punkt.aus {
+  background: var(--zustand-fehler);
+}
+
+/* ----- 10. Strukturbaum ---------------------------------------------------- */
+
+.baum {
+  font-family: var(--schrift-mono);
+  font-size: 0.82rem;
+  padding: var(--a2) 0;
+}
+
+.baum-zeile {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding-left: calc(var(--a3) + var(--tiefe, 0) * 18px);
+  padding-right: var(--a3);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.baum-zeile:hover {
+  background: var(--akzent-weich);
+}
+
+.baum-zeile.selektiert {
+  background: var(--flaeche-hervorhebung);
+  box-shadow: inset 2px 0 0 var(--akzent);
+}
+
+:root[data-theme="dunkel"] .baum-zeile.selektiert {
+  color: var(--text-1);
+}
+
+.baum-zeile .pfeil {
+  width: 14px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 0.68rem;
+  flex: none;
+}
+
+.baum-zeile .pfeil.blatt {
+  visibility: hidden;
+}
+
+.k-name {
+  color: var(--typ-schluessel);
+  font-weight: 500;
+}
+
+.k-index {
+  color: var(--text-3);
+}
+
+.wert-objekt { color: var(--typ-objekt); }
+.wert-liste { color: var(--typ-liste); }
+.wert-text { color: var(--typ-text); }
+.wert-zahl { color: var(--typ-zahl); }
+.wert-bool { color: var(--typ-bool); }
+.wert-null { color: var(--typ-null); font-style: italic; }
+
+.baum-vorschau {
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.baum-anzahl {
+  color: var(--text-3);
+  font-size: 0.75rem;
+}
+
+.baum-zeile .zeilen-marke {
+  margin-left: auto;
+  flex: none;
+}
+
+/* ----- 11. Editor (statische Nachbildung) ---------------------------------- */
+
+.editor {
+  font-family: var(--schrift-mono);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  background: var(--flaeche-eingabe);
+  flex: 1;
+  overflow: auto;
+  padding: var(--a2) 0;
+}
+
+.ed-zeile {
+  display: flex;
+  min-height: 20px;
+  white-space: pre;
+}
+
+.ed-zeile:hover {
+  background: var(--flaeche-zeile-wechsel);
+}
+
+.ed-zeile .zn {
+  flex: none;
+  width: 44px;
+  padding-right: var(--a2);
+  text-align: right;
+  color: var(--text-3);
+  background: var(--flaeche-panel-2);
+  border-right: 1px solid var(--rand-1);
+  user-select: none;
+}
+
+.ed-zeile .ed-code {
+  padding-left: var(--a3);
+}
+
+.ed-zeile.hat-fehler {
+  background: var(--zustand-fehler-weich);
+}
+
+.ed-zeile.hat-fehler .zn {
+  color: var(--zustand-fehler);
+  font-weight: 600;
+}
+
+.ed-zeile.hat-warnung {
+  background: var(--zustand-warnung-weich);
+}
+
+.ed-zeile.markiert {
+  background: var(--flaeche-hervorhebung);
+}
+
+:root[data-theme="dunkel"] .ed-zeile.markiert {
+  background: var(--flaeche-hervorhebung);
+}
+
+.sx-schluessel { color: var(--typ-objekt); }
+.sx-text { color: var(--typ-text); }
+.sx-zahl { color: var(--typ-zahl); }
+.sx-bool { color: var(--typ-bool); }
+.sx-null { color: var(--typ-null); font-style: italic; }
+.sx-klammer { color: var(--text-2); }
+.sx-kommentar { color: var(--typ-kommentar); font-style: italic; }
+.sx-tag { color: var(--typ-objekt); }
+.sx-attr { color: var(--typ-zahl); }
+
+.sx-mark-fehler {
+  text-decoration: underline wavy var(--zustand-fehler);
+  text-underline-offset: 3px;
+}
+
+.sx-mark-treffer {
+  background: var(--flaeche-hervorhebung);
+  outline: 1px solid var(--zweitakzent);
+}
+
+:root[data-theme="dunkel"] .sx-mark-treffer {
+  background: rgba(255, 255, 227, 0.22);
+}
+
+.falt-marke {
+  color: var(--text-3);
+  background: var(--flaeche-panel-2);
+  padding: 0 var(--a1);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+/* ----- 12. Tabelle ---------------------------------------------------------- */
+
+.tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.tabelle th {
+  position: sticky;
+  top: 0;
+  background: var(--flaeche-panel-2);
+  border-bottom: 1px solid var(--rand-2);
+  padding: var(--a2) var(--a3);
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tabelle th .sortier-pfeil {
+  color: var(--akzent);
+  margin-left: var(--a1);
+}
+
+.tabelle td {
+  padding: 5px var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.tabelle tbody tr:nth-child(even) {
+  background: var(--flaeche-zeile-wechsel);
+}
+
+.tabelle tbody tr:hover {
+  background: var(--akzent-weich);
+}
+
+.tabelle tbody tr.selektiert {
+  background: var(--flaeche-hervorhebung);
+  box-shadow: inset 2px 0 0 var(--akzent);
+}
+
+:root[data-theme="dunkel"] .tabelle tbody tr.selektiert {
+  color: var(--text-1);
+}
+
+.tabelle td.zahl,
+.tabelle th.zahl {
+  text-align: right;
+  font-family: var(--schrift-mono);
+  font-size: 0.8rem;
+}
+
+.tabelle td.null-wert {
+  color: var(--typ-null);
+  font-style: italic;
+}
+
+/* ----- 13. Karten und Panels ------------------------------------------------ */
+
+.karte {
+  background: var(--flaeche-panel);
+  border: 1px solid var(--rand-1);
+  border-radius: var(--radius-panel);
+}
+
+.karte-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.karte-inhalt {
+  padding: var(--a3);
+}
+
+/* ----- 14. Inspektor (rechte Leiste) ---------------------------------------- */
+
+.inspektor-block {
+  padding: var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+}
+
+.inspektor-block dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: var(--a1) var(--a2);
+  font-size: 0.82rem;
+}
+
+.inspektor-block dt {
+  color: var(--text-3);
+}
+
+.inspektor-block dd {
+  margin: 0;
+  color: var(--text-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pfad-code {
+  display: block;
+  font-family: var(--schrift-mono);
+  font-size: 0.78rem;
+  padding: var(--a2);
+  background: var(--flaeche-eingabe);
+  border: 1px solid var(--rand-1);
+  color: var(--typ-objekt);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* ----- 15. KI-Bereich -------------------------------------------------------- */
+
+.ki-kopfzeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.ki-aktion {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  width: 100%;
+  padding: var(--a2) var(--a3);
+  border: none;
+  background: none;
+  color: var(--text-2);
+  font-family: var(--schrift-anzeige);
+  font-size: 0.86rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ki-aktion i {
+  width: 16px;
+  text-align: center;
+  color: var(--akzent);
+}
+
+.ki-aktion:hover {
+  background: var(--akzent-weich);
+}
+
+.bereich-ausgegraut {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+
+.ki-hinweis {
+  display: flex;
+  gap: var(--a2);
+  margin: var(--a3);
+  padding: var(--a2) var(--a3);
+  background: var(--zustand-info-weich);
+  border: 1px solid var(--rand-1);
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+.ki-vorschau-zeile {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+  font-size: 0.84rem;
+}
+
+.ki-vorschau-zeile .checkbox {
+  align-self: center;
+}
+
+.ki-vorschau-zeile .vorschau-feld {
+  color: var(--text-3);
+  font-family: var(--schrift-mono);
+  font-size: 0.76rem;
+  flex: none;
+  width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ki-vorschau-zeile .vorschau-wert {
+  font-family: var(--schrift-mono);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ----- 16. Statusleiste ------------------------------------------------------ */
+
+.status {
+  grid-area: status;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: 0 var(--a3);
+  background: var(--flaeche-leiste);
+  border-top: 1px solid var(--rand-2);
+  font-size: 0.78rem;
+  color: var(--text-2);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.brotkrumen {
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+  font-family: var(--schrift-mono);
+  font-size: 0.76rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.brotkrumen a {
+  color: var(--text-2);
+  padding: 1px 3px;
+}
+
+.brotkrumen a:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+
+.brotkrumen .aktuell {
+  color: var(--text-1);
+  font-weight: 600;
+  padding: 1px 3px;
+}
+
+.brotkrumen i {
+  font-size: 0.6rem;
+  color: var(--text-3);
+}
+
+.status-rechts {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  margin-left: auto;
+}
+
+.status .diag-zaehler {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  cursor: pointer;
+}
+
+.status .diag-zaehler.fehler {
+  color: var(--zustand-fehler);
+}
+
+.status .diag-zaehler.warnung {
+  color: var(--zustand-warnung);
+}
+
+/* ----- 17. Abfragekonsole ---------------------------------------------------- */
+
+.konsole {
+  grid-area: konsole;
+  background: var(--flaeche-panel-2);
+  border-top: 1px solid var(--rand-2);
+  display: flex;
+  flex-direction: column;
+  max-height: 260px;
+  min-width: 0;
+}
+
+.konsole-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a1) var(--a3);
+  font-size: 0.78rem;
+  color: var(--text-3);
+}
+
+.konsole-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a1) var(--a3) var(--a2);
+}
+
+.konsole-zeile .feld.ausdruck {
+  flex: 1;
+  font-family: var(--schrift-mono);
+}
+
+.konsole-ergebnis {
+  overflow-y: auto;
+  border-top: 1px solid var(--rand-1);
+  background: var(--flaeche-panel);
+}
+
+.treffer-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: 3px var(--a3);
+  font-family: var(--schrift-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.treffer-zeile:hover {
+  background: var(--akzent-weich);
+}
+
+.treffer-zeile.selektiert {
+  background: var(--flaeche-hervorhebung);
+  box-shadow: inset 2px 0 0 var(--akzent);
+}
+
+.treffer-zeile .t-pfad {
+  color: var(--typ-objekt);
+  flex: none;
+}
+
+.treffer-zeile .t-wert {
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.treffer-zeile .t-position {
+  margin-left: auto;
+  color: var(--text-3);
+  flex: none;
+}
+
+/* ----- 18. Diagnose-Listen --------------------------------------------------- */
+
+.diagnose-zeile {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a2);
+  padding: var(--a1) var(--a3);
+  font-size: 0.82rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--rand-1);
+}
+
+.diagnose-zeile:hover {
+  background: var(--akzent-weich);
+}
+
+.diagnose-zeile .schwere {
+  flex: none;
+  width: 14px;
+  text-align: center;
+}
+
+.diagnose-zeile .schwere.fehler { color: var(--zustand-fehler); }
+.diagnose-zeile .schwere.warnung { color: var(--zustand-warnung); }
+.diagnose-zeile .schwere.hinweis { color: var(--zustand-info); }
+
+.diagnose-zeile .d-pfad {
+  font-family: var(--schrift-mono);
+  font-size: 0.76rem;
+  color: var(--typ-objekt);
+  flex: none;
+}
+
+.diagnose-zeile .d-position {
+  margin-left: auto;
+  color: var(--text-3);
+  font-family: var(--schrift-mono);
+  font-size: 0.74rem;
+  flex: none;
+}
+
+/* ----- 19. Diff -------------------------------------------------------------- */
+
+.diff-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--rand-2);
+  flex: 1;
+  min-height: 0;
+}
+
+.diff-pane {
+  background: var(--flaeche-eingabe);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.diff-pane-kopf {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a1) var(--a3);
+  background: var(--flaeche-panel-2);
+  border-bottom: 1px solid var(--rand-1);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ed-zeile.diff-hinzu { background: var(--diff-hinzu); }
+.ed-zeile.diff-weg { background: var(--diff-weg); }
+.ed-zeile.diff-geaendert { background: var(--diff-geaendert); }
+.ed-zeile.diff-leer { background: var(--flaeche-zeile-wechsel); }
+
+.diff-art {
+  flex: none;
+  width: 16px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.diff-art.hinzu { color: var(--zustand-erfolg); }
+.diff-art.weg { color: var(--zustand-fehler); }
+.diff-art.geaendert { color: var(--zustand-warnung); }
+
+/* ----- 20. Fortschritt und Skelett ------------------------------------------- */
+
+.fortschritt {
+  height: 6px;
+  background: var(--flaeche-eingabe);
+  border: 1px solid var(--rand-1);
+  overflow: hidden;
+}
+
+.fortschritt > i {
+  display: block;
+  height: 100%;
+  background: var(--akzent);
+}
+
+.skelett {
+  height: 12px;
+  background: linear-gradient(
+    90deg,
+    var(--flaeche-panel-2) 25%,
+    var(--flaeche-panel) 50%,
+    var(--flaeche-panel-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: schimmer 1.4s infinite linear;
+}
+
+@keyframes schimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* ----- 21. Modal -------------------------------------------------------------- */
+
+.modal-hintergrund {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  width: min(640px, 92vw);
+  max-height: 84vh;
+  background: var(--flaeche-panel);
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--schatten-2);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal.breit {
+  width: min(880px, 94vw);
+}
+
+.modal-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a3) var(--a4);
+  border-bottom: 1px solid var(--rand-1);
+  font-weight: 600;
+}
+
+.modal-kopf .icon-knopf {
+  margin-left: auto;
+}
+
+.modal-inhalt {
+  padding: var(--a4);
+  overflow-y: auto;
+}
+
+.modal-fuss {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--a2);
+  padding: var(--a3) var(--a4);
+  border-top: 1px solid var(--rand-1);
+}
+
+/* ----- 22. Statistik ----------------------------------------------------------- */
+
+.kennzahl-raster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--a3);
+}
+
+.kennzahl {
+  background: var(--flaeche-panel-2);
+  border: 1px solid var(--rand-1);
+  padding: var(--a3);
+}
+
+.kennzahl .kz-wert {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: var(--schrift-mono);
+}
+
+.kennzahl .kz-name {
+  font-size: 0.78rem;
+  color: var(--text-3);
+  margin-top: var(--a1);
+}
+
+.balken-reihe {
+  display: grid;
+  grid-template-columns: 150px 1fr 64px;
+  align-items: center;
+  gap: var(--a2);
+  padding: 3px 0;
+  font-size: 0.82rem;
+}
+
+.balken-reihe .b-name {
+  font-family: var(--schrift-mono);
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.balken-reihe .b-wert {
+  text-align: right;
+  font-family: var(--schrift-mono);
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+.balken {
+  height: 14px;
+  background: var(--flaeche-eingabe);
+  border: 1px solid var(--rand-1);
+}
+
+.balken > i {
+  display: block;
+  height: 100%;
+  background: var(--akzent);
+}
+
+.balken > i.typ-objekt { background: var(--typ-objekt); }
+.balken > i.typ-liste { background: var(--typ-liste); }
+.balken > i.typ-text { background: var(--typ-text); }
+.balken > i.typ-zahl { background: var(--typ-zahl); }
+.balken > i.typ-bool { background: var(--typ-bool); }
+.balken > i.typ-null { background: var(--typ-null); }
+.balken > i.zweit { background: var(--zweitakzent); }
+
+.histogramm {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 90px;
+  padding: var(--a2);
+  background: var(--flaeche-eingabe);
+  border: 1px solid var(--rand-1);
+}
+
+.histogramm > i {
+  flex: 1;
+  background: var(--akzent);
+  min-height: 2px;
+}
+
+.histogramm > i:hover {
+  background: var(--akzent-stark);
+}
+
+/* ----- 23. Diagramm-Flächen (Schema, Graph) ------------------------------------ */
+
+.flow-flaeche {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background-color: var(--flaeche-eingabe);
+  background-image:
+    linear-gradient(var(--rand-1) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rand-1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.flow-kanten {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.flow-kanten path,
+.flow-kanten line {
+  stroke: var(--text-3);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.flow-kanten text {
+  fill: var(--text-2);
+  font-size: 11px;
+  font-family: var(--schrift-mono);
+}
+
+.flow-knoten {
+  position: absolute;
+  min-width: 150px;
+  background: var(--flaeche-panel);
+  border: 1px solid var(--rand-2);
+  box-shadow: var(--schatten-1);
+  font-size: 0.8rem;
+}
+
+.flow-knoten.selektiert {
+  outline: 2px solid var(--akzent);
+}
+
+.flow-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a1) var(--a2);
+  background: var(--flaeche-panel-2);
+  border-bottom: 1px solid var(--rand-1);
+  font-weight: 600;
+}
+
+.flow-titel i {
+  color: var(--akzent);
+}
+
+.flow-feld {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--a3);
+  padding: 2px var(--a2);
+  font-family: var(--schrift-mono);
+  font-size: 0.74rem;
+}
+
+.flow-feld .f-typ {
+  color: var(--text-3);
+}
+
+.flow-feld.pflicht .f-name::after {
+  content: " *";
+  color: var(--zustand-fehler);
+}
+
+.flow-steuer {
+  position: absolute;
+  right: var(--a3);
+  bottom: var(--a3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 5;
+}
+
+.flow-steuer .icon-knopf {
+  background: var(--flaeche-panel);
+  border: 1px solid var(--rand-2);
+}
+
+/* ----- 24. Lexikon-Panel (schwebend) -------------------------------------------- */
+
+.lex-panel {
+  position: fixed;
+  right: 340px;
+  bottom: 48px;
+  width: 440px;
+  height: 500px;
+  background: var(--flaeche-panel);
+  border: 1px solid var(--rand-2);
+  box-shadow: var(--schatten-2);
+  display: flex;
+  flex-direction: column;
+  z-index: 40;
+}
+
+.lex-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  background: var(--flaeche-leiste);
+  border-bottom: 1px solid var(--rand-2);
+  cursor: grab;
+}
+
+.lex-kopf .lex-titel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lex-kopf .lex-titel strong {
+  font-size: 0.9rem;
+}
+
+.lex-kopf .lex-titel span {
+  font-size: 0.74rem;
+  color: var(--text-3);
+}
+
+.lex-kopf .lex-aktionen {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+
+.lex-leiste {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+}
+
+.lex-leiste select.feld {
+  max-width: 180px;
+}
+
+.lex-suche {
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+  flex: 1;
+}
+
+.lex-suche .feld {
+  flex: 1;
+  height: 26px;
+}
+
+.lex-treffer-zaehler {
+  font-size: 0.74rem;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.lex-inhalt {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--a3) var(--a4);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.lex-inhalt h3 {
+  margin: var(--a3) 0 var(--a2);
+  font-size: 0.95rem;
+}
+
+.lex-inhalt p {
+  margin: 0 0 var(--a2);
+}
+
+.lex-inhalt table {
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: var(--a2) 0;
+}
+
+.lex-inhalt th,
+.lex-inhalt td {
+  border: 1px solid var(--rand-1);
+  padding: 3px var(--a2);
+  text-align: left;
+}
+
+.lex-inhalt pre {
+  background: var(--flaeche-eingabe);
+  border: 1px solid var(--rand-1);
+  padding: var(--a2);
+  overflow-x: auto;
+  font-size: 0.78rem;
+}
+
+.lex-inhalt mark {
+  background: var(--flaeche-hervorhebung);
+  color: inherit;
+  outline: 1px solid var(--zweitakzent);
+}
+
+:root[data-theme="dunkel"] .lex-inhalt mark {
+  background: rgba(255, 255, 227, 0.22);
+}
+
+.lex-inhalt mark.aktiv {
+  outline: 2px solid var(--zweitakzent);
+}
+
+.fachbegriff {
+  color: var(--akzent);
+  border-bottom: 1px dotted var(--akzent);
+  cursor: help;
+}
+
+/* ----- 25. Leerer Zustand -------------------------------------------------------- */
+
+.leer-zustand {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--a3);
+  color: var(--text-3);
+  padding: var(--a6);
+  text-align: center;
+}
+
+.leer-zustand i {
+  font-size: 2.6rem;
+  color: var(--rand-2);
+}
+
+.leer-zustand strong {
+  color: var(--text-2);
+  font-size: 1.05rem;
+}
+
+/* ----- 26. Einstellungen ----------------------------------------------------------- */
+
+.einst-gruppe {
+  margin-bottom: var(--a4);
+}
+
+.einst-gruppe h3 {
+  margin: 0 0 var(--a2);
+  font-size: 0.9rem;
+}
+
+.einst-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: var(--a2) 0;
+  border-bottom: 1px solid var(--rand-1);
+  font-size: 0.86rem;
+}
+
+.einst-zeile .einst-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.einst-zeile .einst-text span {
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+.einst-zeile .einst-steuer {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+
+.theme-kachel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+  padding: var(--a2);
+  border: 1px solid var(--rand-2);
+  background: var(--flaeche-panel-2);
+  cursor: pointer;
+  width: 120px;
+}
+
+.theme-kachel.aktiv {
+  outline: 2px solid var(--akzent);
+}
+
+.theme-kachel .tk-vorschau {
+  display: flex;
+  height: 34px;
+}
+
+.theme-kachel .tk-vorschau i {
+  flex: 1;
+}
+
+.theme-kachel .tk-name {
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+/* ----- 27. Galerie (index.html) ------------------------------------------------------ */
+
+.galerie-kopf {
+  padding: var(--a5) var(--a5) var(--a3);
+}
+
+.galerie-kopf h1 {
+  margin: 0 0 var(--a1);
+  font-size: 1.4rem;
+}
+
+.galerie-kopf p {
+  margin: 0;
+  color: var(--text-2);
+}
+
+.galerie {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--a3);
+  padding: var(--a3) var(--a5) var(--a6);
+}
+
+.g-karte {
+  display: flex;
+  gap: var(--a3);
+  padding: var(--a3);
+  background: var(--flaeche-panel);
+  border: 1px solid var(--rand-1);
+  color: var(--text-1);
+  transition: background var(--schnell);
+}
+
+.g-karte:hover {
+  background: var(--flaeche-panel-2);
+  border-color: var(--akzent);
+}
+
+.g-karte .g-nr {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--akzent);
+  color: var(--auf-akzent);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.g-karte .g-text strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.g-karte .g-text span {
+  font-size: 0.8rem;
+  color: var(--text-3);
+}
+
+/* ----- 28. Mockup-Leiste (Theme-Umschalter unten rechts) ------------------------------ */
+
+.mock-leiste {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 1000;
+}
+
+.mock-leiste button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--rand-2);
+  background: var(--flaeche-panel);
+  color: var(--text-1);
+  border-radius: var(--radius-knopf);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--schnell);
+}
+
+.mock-leiste button.aktiv {
+  opacity: 1;
+  border-color: var(--akzent);
+}
+
+/* ----- 29. Kleinkram ------------------------------------------------------------------- */
+
+.hinweis-text {
+  font-size: 0.78rem;
+  color: var(--text-3);
+}
+
+.trenner-v {
+  width: 1px;
+  align-self: stretch;
+  background: var(--rand-1);
+}
+
+.code-block {
+  font-family: var(--schrift-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  background: var(--flaeche-eingabe);
+  border: 1px solid var(--rand-1);
+  padding: var(--a3);
+  overflow: auto;
+  white-space: pre;
+}
