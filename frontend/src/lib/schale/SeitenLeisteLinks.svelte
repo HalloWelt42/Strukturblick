@@ -4,24 +4,41 @@
   import { sofortAnalysieren } from '../dienste/analyseDienst'
   import { formatKuerzel, iconFuerFormat } from '../dienste/formatDarstellung'
   import Bestaetigung from '../hilfsteile/Bestaetigung.svelte'
+  import { lexikon } from '../lexikon/lexikon.svelte'
   import { loescheDokument, type SpeicherDokument } from '../speicher/dokumente'
   import { dokumentListe, ladeNeu } from '../zustand/dokumentListe.svelte'
   import { aktiverTab, oeffneTab, setzeAktiv, tabs } from '../zustand/tabs.svelte'
   import { zeige } from '../zustand/toaster.svelte'
+  import { oeffneWerkzeug, schliesseWerkzeug, werkzeug } from '../zustand/werkzeug.svelte'
 
   interface Werkzeug {
     icon: string
     name: string
+    // Gesetzt, sobald das Werkzeug umgesetzt ist; sonst folgt ein Hinweis.
+    werkzeugId?: string
   }
 
   const WERKZEUGE: Werkzeug[] = [
     { icon: 'fa-magnifying-glass', name: 'Abfrage' },
     { icon: 'fa-shuffle', name: 'Konvertieren' },
-    { icon: 'fa-clipboard-check', name: 'Validieren' },
+    { icon: 'fa-clipboard-check', name: 'Validieren', werkzeugId: 'validieren' },
     { icon: 'fa-screwdriver-wrench', name: 'Reparatur' },
     { icon: 'fa-code', name: 'Code erzeugen' },
     { icon: 'fa-cubes', name: 'Testdaten' },
   ]
+
+  /** Klick auf einen Werkzeug-Eintrag: umgesetztes Werkzeug umschalten, sonst Hinweis. */
+  function beiWerkzeug(eintrag: Werkzeug): void {
+    if (eintrag.werkzeugId === undefined) {
+      folgtSpaeter(eintrag.name)
+      return
+    }
+    if (werkzeug.aktiv === eintrag.werkzeugId) {
+      schliesseWerkzeug()
+    } else {
+      oeffneWerkzeug(eintrag.werkzeugId)
+    }
+  }
 
   void ladeNeu()
 
@@ -117,15 +134,19 @@
   {/if}
 
   <div class="leisten-titel">Werkzeuge</div>
-  {#each WERKZEUGE as werkzeug (werkzeug.name)}
-    <button class="werkzeug-eintrag" onclick={() => folgtSpaeter(werkzeug.name)}>
-      <i class="fa-solid {werkzeug.icon}"></i>
-      {werkzeug.name}
+  {#each WERKZEUGE as eintrag (eintrag.name)}
+    <button
+      class="werkzeug-eintrag"
+      class:aktiv={eintrag.werkzeugId !== undefined && werkzeug.aktiv === eintrag.werkzeugId}
+      onclick={() => beiWerkzeug(eintrag)}
+    >
+      <i class="fa-solid {eintrag.icon}"></i>
+      {eintrag.name}
     </button>
   {/each}
 
   <div class="leisten-titel">Nachschlagen</div>
-  <button class="werkzeug-eintrag" onclick={() => folgtSpaeter('Lexikon')}>
+  <button class="werkzeug-eintrag" onclick={() => lexikon.oeffne()}>
     <i class="fa-solid fa-book-open"></i> Lexikon
   </button>
 

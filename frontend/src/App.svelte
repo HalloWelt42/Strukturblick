@@ -6,6 +6,7 @@
 
   import { sofortAnalysieren } from './lib/dienste/analyseDienst'
   import Toast from './lib/hilfsteile/Toast.svelte'
+  import LexikonPanel from './lib/lexikon/LexikonPanel.svelte'
   import AnsichtsWahl from './lib/schale/AnsichtsWahl.svelte'
   import HauptBereich from './lib/schale/HauptBereich.svelte'
   import Konsole from './lib/schale/Konsole.svelte'
@@ -42,4 +43,5 @@
   <StatusLeiste />
 </div>
 
+<LexikonPanel />
 <Toast />

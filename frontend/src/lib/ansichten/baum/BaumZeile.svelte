@@ -17,9 +17,11 @@
     /** Suchbegriff (getrimmt, kleingeschrieben) für die Treffer-Hervorhebung. */
     begriff: string
     selektiert: boolean
+    /** Kurzname des erkannten Wertemusters (UUID, E-Mail, ...) oder null. */
+    marke?: string | null
   }
 
-  const { zeile, tabId, positionen, begriff, selektiert }: Props = $props()
+  const { zeile, tabId, positionen, begriff, selektiert, marke = null }: Props = $props()
 
   interface TrefferTeile {
     vor: string
@@ -109,5 +111,13 @@
           >{wertTeile.nach}{:else}{zeile.vorschau}{/if}</span
       >
     {/if}
+  {/if}
+  {#if zeile.liste_erkannt}
+    <span class="zeilen-marke abzeichen info" title="Mustererkennung: gleichförmige Objektliste"
+      >Liste erkannt</span
+    >
+  {/if}
+  {#if marke !== null}
+    <span class="zeilen-marke abzeichen" title="Mustererkennung">{marke}</span>
   {/if}
 </div>

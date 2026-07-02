@@ -27,6 +27,13 @@ class FormatFaehigkeiten(BaseModel):
     traegt: frozenset[Verlustaspekt] = frozenset()
 
 
+class ModulInfo(BaseModel):
+    """Selbstauskunft eines Analyse-Moduls - wird im Capabilities-Endpunkt ausgeliefert."""
+
+    id: str
+    name: str
+
+
 class KonvertierungsPaar(BaseModel):
     von: FormatId
     nach: FormatId
@@ -42,4 +49,5 @@ class CapabilitiesAntwort(BaseModel):
     version: str
     formate: list[FormatFaehigkeiten]
     konvertierungsmatrix: list[KonvertierungsPaar]
+    analyzer: list[ModulInfo] = Field(default_factory=list)
     limits: Limits

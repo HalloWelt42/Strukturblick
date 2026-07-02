@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import config, registry
 from app.fehler import registriere_fehler_handler
-from app.routers import dokumente, system
+from app.routers import analyse, dokumente, system
 
 
 def create_app() -> FastAPI:
@@ -53,6 +53,7 @@ def create_app() -> FastAPI:
 
     app.include_router(system.router, prefix="/api")
     app.include_router(dokumente.router, prefix="/api")
+    app.include_router(analyse.router, prefix="/api")
     return app
 
 

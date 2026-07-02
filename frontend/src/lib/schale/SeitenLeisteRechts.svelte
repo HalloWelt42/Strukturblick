@@ -85,12 +85,19 @@
     return `Zeile ${start.zeile}, Spalte ${start.spalte}`
   })
 
+  /** Kürzt einen kopierten Wert für die Toast-Vorschau (der Zwischenablage-Inhalt bleibt vollständig). */
+  function fuerVorschau(text: string): string {
+    const eine_zeile = text.replace(/\s+/g, ' ').trim()
+    return eine_zeile.length > 160 ? `${eine_zeile.slice(0, 160)} …` : eine_zeile
+  }
+
   /** Kopiert den Pfad in der gewünschten Schreibweise in die Zwischenablage. */
   async function kopiere(name: string, wandler: (pfad: string) => string): Promise<void> {
     if (daten === null) return
+    const wert = wandler(daten.pfad)
     try {
-      await navigator.clipboard.writeText(wandler(daten.pfad))
-      zeige(`Pfad als ${name} kopiert.`, 'erfolg')
+      await navigator.clipboard.writeText(wert)
+      zeige(`Pfad als ${name} kopiert.`, 'erfolg', wert)
     } catch {
       zeige('Der Pfad konnte nicht kopiert werden.', 'fehler')
     }
@@ -114,7 +121,7 @@
   async function kopiereWert(): Promise<void> {
     try {
       await navigator.clipboard.writeText(wertVoll)
-      zeige('Wert vollständig kopiert.', 'erfolg')
+      zeige('Wert vollständig kopiert.', 'erfolg', fuerVorschau(wertVoll))
     } catch {
       zeige('Der Wert konnte nicht kopiert werden.', 'fehler')
     }

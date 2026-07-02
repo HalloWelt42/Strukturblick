@@ -2,10 +2,19 @@
   // Ansichtswahl (Reiterzeile über der Ansichtsfläche) in Mockup-Reihenfolge.
   // Registrierte Ansichten sind echte Reiter (Klick wechselt die Ansicht des
   // aktiven Tabs), künftige Ansichten erscheinen deaktiviert mit Tooltip.
-  // Ohne Tab sind alle Reiter deaktiviert.
+  // Ohne Tab sind alle Reiter deaktiviert. Sonderfall Lexikon: der Reiter
+  // öffnet das schwebende Panel, wechselt aber keine Ansicht und wird nie aktiv.
   import { ansichten } from '../ansichten/registry'
   import Tooltip from '../hilfsteile/Tooltip.svelte'
+  import { lexikon } from '../lexikon/lexikon.svelte'
   import { aktiverTab, setzeAnsicht } from '../zustand/tabs.svelte'
+  import { schliesseWerkzeug, werkzeug } from '../zustand/werkzeug.svelte'
+
+  /** Wechselt die Ansicht und schließt ein etwaig aktives Werkzeug. */
+  function waehleAnsicht(tabId: string, ansichtId: string): void {
+    schliesseWerkzeug()
+    setzeAnsicht(tabId, ansichtId)
+  }
 
   interface ReiterDefinition {
     id: string
@@ -31,12 +40,17 @@
 
 <div class="ansichtswahl">
   {#each MOCKUP_REITER as reiter (reiter.id)}
-    {#if registrierteIds.has(reiter.id) && tab !== null}
+    {#if reiter.id === 'lexikon'}
+      <button class="reiter" onclick={() => lexikon.oeffne()}>
+        <i class={reiter.icon}></i>
+        {reiter.titel}
+      </button>
+    {:else if registrierteIds.has(reiter.id) && tab !== null}
       {@const aktivesTabId = tab.id}
       <button
         class="reiter"
-        class:aktiv={tab.aktiveAnsicht === reiter.id}
-        onclick={() => setzeAnsicht(aktivesTabId, reiter.id)}
+        class:aktiv={werkzeug.aktiv === null && tab.aktiveAnsicht === reiter.id}
+        onclick={() => waehleAnsicht(aktivesTabId, reiter.id)}
       >
         <i class={reiter.icon}></i>
         {reiter.titel}

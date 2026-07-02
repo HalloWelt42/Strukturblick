@@ -13,7 +13,8 @@ import pkgutil
 from app import config
 from app.fehler import ModulUnbekannt
 from app.modelle.gemeinsam import FormatId
-from app.modelle.system import CapabilitiesAntwort, KonvertierungsPaar, Limits
+from app.modelle.system import CapabilitiesAntwort, KonvertierungsPaar, Limits, ModulInfo
+from app.schnittstellen.analyzer import Analyzer
 from app.schnittstellen.format_engine import FormatEngine
 
 
@@ -46,6 +47,7 @@ class Registry[T]:
 
 
 engines: Registry[FormatEngine] = Registry("FormatEngine")
+analyzers: Registry[Analyzer] = Registry("Analyzer")
 
 
 def format_engine[E: FormatEngine](cls: type[E]) -> type[E]:
@@ -54,7 +56,13 @@ def format_engine[E: FormatEngine](cls: type[E]) -> type[E]:
     return cls
 
 
-_MODUL_PAKETE = ("app.engines",)
+def analyzer[A: Analyzer](cls: type[A]) -> type[A]:
+    """Klassen-Dekorator: registriert eine Instanz des Analyzers unter seiner Id."""
+    analyzers.registriere(cls.analyzer_id, cls())
+    return cls
+
+
+_MODUL_PAKETE = ("app.engines", "app.analyzer")
 _entdeckt = False
 
 
@@ -87,10 +95,15 @@ def capabilities() -> CapabilitiesAntwort:
             matrix.append(
                 KonvertierungsPaar(von=quelle.format_id, nach=ziel.format_id, moegliche_verluste=verluste)
             )
+    analyzer_infos = [
+        ModulInfo(id=eintrag.analyzer_id, name=eintrag.name)
+        for eintrag in sorted(analyzers.alle(), key=lambda a: a.analyzer_id)
+    ]
     return CapabilitiesAntwort(
         version=config.APP_VERSION,
         formate=sorted(formate, key=lambda f: f.format_id.value),
         konvertierungsmatrix=matrix,
+        analyzer=analyzer_infos,
         limits=Limits(
             max_dokument_bytes=config.MAX_DOKUMENT_BYTES,
             cache_ttl_sekunden=config.CACHE_TTL_SEKUNDEN,

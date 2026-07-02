@@ -17,14 +17,22 @@
   import Bestaetigung from '../hilfsteile/Bestaetigung.svelte'
   import LeererZustand from '../hilfsteile/LeererZustand.svelte'
   import { ablehnungAbBytes } from '../speicher/einstellungenSpeicher'
+  import { werkzeugKomponente } from '../werkzeuge/registry'
   import { capabilities } from '../zustand/capabilities.svelte'
   import { aktiverTab, oeffneTab } from '../zustand/tabs.svelte'
   import { zeige } from '../zustand/toaster.svelte'
+  import { werkzeug } from '../zustand/werkzeug.svelte'
 
   // Breiten der Skelett-Platzhalter, angelehnt an die Abzeichen im Mockup.
   const SKELETT_BREITEN = [44, 40, 38, 44, 44, 56, 42, 118, 96]
 
   const tab = $derived(aktiverTab())
+
+  // Ein aktives Werkzeug hat Vorrang vor der Ansicht des Tabs; die
+  // Ansichtswahl darüber bleibt sichtbar und schließt es beim Reiter-Klick.
+  const aktivesWerkzeug = $derived(
+    werkzeug.aktiv !== null ? werkzeugKomponente(werkzeug.aktiv) : undefined,
+  )
 
   let ziehAktiv = $state(false)
   let ladeDialogOffen = $state(false)
@@ -136,7 +144,10 @@
   ondragleave={beiDragLeave}
   ondrop={beiDrop}
 >
-  {#if tab === null}
+  {#if aktivesWerkzeug !== undefined}
+    {@const Werkzeug = aktivesWerkzeug}
+    <Werkzeug />
+  {:else if tab === null}
     <LeererZustand
       icon="fa-sitemap"
       titel="Noch kein Dokument geöffnet"

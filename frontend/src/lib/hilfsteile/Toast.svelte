@@ -15,7 +15,12 @@
     {#each toaster.meldungen as meldung (meldung.id)}
       <div class="toast-karte {meldung.art}">
         <i class="fa-solid {ICONS[meldung.art]}"></i>
-        <span class="toast-text">{meldung.text}</span>
+        <div class="toast-inhalt">
+          <span class="toast-text">{meldung.text}</span>
+          {#if meldung.detail}
+            <code class="toast-detail">{meldung.detail}</code>
+          {/if}
+        </div>
         <button class="icon-knopf" aria-label="Meldung schließen" onclick={() => entferne(meldung.id)}>
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -38,7 +43,7 @@
 
   .toast-karte {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--a2);
     max-width: 380px;
     padding: var(--a2) var(--a2) var(--a2) var(--a3);
@@ -48,6 +53,31 @@
     box-shadow: var(--schatten-2);
     color: var(--text-1);
     font-size: 0.86rem;
+  }
+
+  .toast-karte > i {
+    margin-top: 2px;
+  }
+
+  .toast-inhalt {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .toast-detail {
+    font-family: var(--schrift-mono);
+    font-size: 0.76rem;
+    color: var(--text-2);
+    background: var(--flaeche-eingabe);
+    border: 1px solid var(--rand-1);
+    padding: 2px 6px;
+    max-height: 3.4em;
+    overflow: hidden;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
 
   .toast-karte.info {

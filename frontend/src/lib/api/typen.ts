@@ -142,6 +142,108 @@ export interface CapabilitiesAntwort {
   limits: Limits
 }
 
+// ----- Analyse (backend/app/modelle/analyse.py) ---------------------------
+
+export type SchemaArt = 'json_schema' | 'table_schema'
+export type SchemaQuellArt = 'json_schema' | 'xsd'
+export type MusterArt =
+  | 'uuid'
+  | 'email'
+  | 'url'
+  | 'iso_datum'
+  | 'iso_zeitstempel'
+  | 'base64'
+  | 'enum_kandidat'
+
+export interface SchemaAnfrage {
+  dokument: DokumentReferenz
+  art?: SchemaArt
+}
+
+export interface SchemaAntwort {
+  art: SchemaArt
+  /** Im Backend intern schema_wert, ueber die API heisst das Feld "schema". */
+  schema: JsonWert
+  hinweise: string[]
+}
+
+export interface ValidierungsAnfrage {
+  dokument: DokumentReferenz
+  schema_art: SchemaQuellArt
+  schema_dokument?: DokumentReferenz | null
+  xsd_text?: string | null
+}
+
+export interface ValidierungsFehler {
+  meldung: string
+  pfad: string | null
+  position: QuellSpanne | null
+  schema_pfad: string | null
+}
+
+export interface ValidierungsAntwort {
+  gueltig: boolean
+  fehler: ValidierungsFehler[]
+}
+
+export interface StatistikAnfrage {
+  dokument: DokumentReferenz
+}
+
+export interface SchluesselStat {
+  schluessel: string
+  anzahl: number
+}
+
+export interface HistogrammEimer {
+  von: number
+  bis: number
+  anzahl: number
+}
+
+/** Histogramm der Zahlwerte eines Pfad-Musters (Listenindizes als *). */
+export interface ZahlenHistogramm {
+  pfad_muster: string
+  minimum: number
+  maximum: number
+  eimer: HistogrammEimer[]
+}
+
+export interface TeilbaumGroesse {
+  pfad: string
+  knoten: number
+  prozent: number
+}
+
+export interface StatistikAntwort {
+  knoten_gesamt: number
+  max_tiefe: number
+  groesse_bytes: number
+  typverteilung: Record<string, number>
+  schluessel_haeufigkeit: SchluesselStat[]
+  zahlen_histogramme: ZahlenHistogramm[]
+  groessenanteile: TeilbaumGroesse[]
+  dauer_ms: number
+}
+
+export interface MusterAnfrage {
+  dokument: DokumentReferenz
+  max_beispiele?: number
+}
+
+export interface MusterFund {
+  pfad_muster: string
+  muster: MusterArt
+  abdeckung: number
+  anzahl_werte: number
+  beispiele: string[]
+  enum_werte: string[] | null
+}
+
+export interface MusterAntwort {
+  funde: MusterFund[]
+}
+
 /** Einheitliches Fehlermodell aller Endpunkte. */
 export interface FehlerDetail {
   code: string

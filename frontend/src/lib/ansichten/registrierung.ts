@@ -6,6 +6,7 @@
 import BaumAnsicht from './baum/BaumAnsicht.svelte'
 import EditorAnsicht from './editor/EditorAnsicht.svelte'
 import { registriereAnsicht } from './registry'
+import StatistikAnsicht from './statistik/StatistikAnsicht.svelte'
 
 registriereAnsicht({
   id: 'baum',
@@ -25,4 +26,14 @@ registriereAnsicht({
   brauchtAnalyse: false,
   eignung: () => 'geeignet',
   komponente: EditorAnsicht,
+})
+
+registriereAnsicht({
+  id: 'statistik',
+  titel: 'Statistik',
+  icon: 'fa-solid fa-chart-column',
+  reihenfolge: 40,
+  brauchtAnalyse: true,
+  eignung: () => 'geeignet',
+  komponente: StatistikAnsicht,
 })

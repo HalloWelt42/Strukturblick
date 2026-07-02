@@ -6,8 +6,10 @@
   import { tick, untrack } from 'svelte'
 
   import { baueSichtbareZeilen, type BaumZeileDaten } from '../../dienste/baumZeilen'
+  import { markeFuerPfad } from '../../dienste/musterZuordnung'
   import LeererZustand from '../../hilfsteile/LeererZustand.svelte'
   import VirtuelleListe from '../../hilfsteile/VirtuelleListe.svelte'
+  import { extrasFuer, ladeMuster } from '../../zustand/analyseExtras.svelte'
   import {
     klappeAlleAuf,
     klappeAlleZu,
@@ -44,6 +46,12 @@
     return baueSichtbareZeilen(tab.analyse.wurzel, tab.analyse.positionen, zustand)
   })
   const begriff = $derived(zustand?.suchbegriff.trim().toLowerCase() ?? '')
+  /** Muster-Funde zum Dokument (leer, solange nichts geladen ist). */
+  const musterFunde = $derived(
+    tab !== null && tab.analyse !== null
+      ? (extrasFuer(tab.analyse.dokument_hash)?.muster?.funde ?? [])
+      : [],
+  )
   const auswahlPfad = $derived(
     selektion.aktuell !== null && tab !== null && selektion.aktuell.tabId === tab.id
       ? selektion.aktuell.pfad
@@ -58,6 +66,16 @@
   let liste = $state<{ scrollZuIndex: (index: number) => void }>()
   let suchText = $state('')
   let suchTimer: ReturnType<typeof setTimeout> | null = null
+
+  // Muster leise im Hintergrund laden, sobald die Analyse frisch ist - die
+  // Abzeichen erscheinen dann, ohne dass der Baum darauf warten muss.
+  $effect(() => {
+    const aktuell = tab
+    if (aktuell === null || aktuell.analyse === null || aktuell.analyseStand !== 'frisch') return
+    const extras = extrasFuer(aktuell.analyse.dokument_hash)
+    if (extras !== undefined && extras.fehler !== null) return
+    if (extras?.muster === undefined) void ladeMuster(aktuell)
+  })
 
   // Tab-Wechsel: Suchfeld aus dem (je Tab gemerkten) Baum-Zustand befüllen.
   $effect(() => {
@@ -174,6 +192,7 @@
               {positionen}
               {begriff}
               selektiert={auswahlPfad === zeile.pfad}
+              marke={markeFuerPfad(zeile.pfad, musterFunde)}
             />
           {/if}
         {/snippet}

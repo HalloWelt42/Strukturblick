@@ -28,12 +28,28 @@ export interface BaumZeileDaten {
   aufgeklappt: boolean
   hatPosition: boolean
   treffer: boolean
+  /** Listen-Container mit >= 2 gleichförmigen Objekten (gleiche Schlüsselmenge). */
+  liste_erkannt: boolean
 }
 
 function kindAnzahlVon(wert: JsonWert): number {
   if (Array.isArray(wert)) return wert.length
   if (wert !== null && typeof wert === 'object') return Object.keys(wert).length
   return 0
+}
+
+/** Sortierte Schlüsselmenge als Vergleichsschlüssel, null für Nicht-Objekte. */
+function schluesselSignatur(wert: JsonWert): string | null {
+  if (wert === null || typeof wert !== 'object' || Array.isArray(wert)) return null
+  return JSON.stringify(Object.keys(wert).sort())
+}
+
+/** Liste mit mindestens zwei Objekten, die alle dieselbe Schlüsselmenge haben. */
+function istGleichfoermigeObjektListe(wert: JsonWert): boolean {
+  if (!Array.isArray(wert) || wert.length < 2) return false
+  const referenz = schluesselSignatur(wert[0] as JsonWert)
+  if (referenz === null) return false
+  return wert.every((eintrag) => schluesselSignatur(eintrag as JsonWert) === referenz)
 }
 
 /** Prüft Schlüssel ODER Wertvorschau auf den Suchbegriff (case-insensitiv). */
@@ -85,6 +101,7 @@ export function baueSichtbareZeilen(
       aufgeklappt,
       hatPosition: Object.prototype.hasOwnProperty.call(positionen, pfad),
       treffer: istTreffer(begriff, schluessel, vorschau),
+      liste_erkannt: typ === 'liste' && istGleichfoermigeObjektListe(wert),
     })
     // Im Filter-Modus vollstaendig absteigen, damit auch Treffer in
     // zugeklappten Teilbaeumen gefunden werden.
