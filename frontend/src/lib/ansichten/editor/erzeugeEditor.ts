@@ -35,7 +35,7 @@ export interface EditorArgs {
   inhalt: string
   format: FormatId | null
   anInhaltGeaendert: (text: string) => void
-  anCursor: (zeile: number, spalte: number) => void
+  anCursor: (zeile: number, spalte: number, offset: number) => void
 }
 
 /** Schweregrad einer Diagnose im Editor (entspricht @codemirror/lint). */
@@ -87,7 +87,7 @@ export function erzeugeEditor(elternElement: HTMLElement, args: EditorArgs): Edi
         if (update.selectionSet) {
           const kopf = update.state.selection.main.head
           const zeile = update.state.doc.lineAt(kopf)
-          args.anCursor(zeile.number, kopf - zeile.from + 1)
+          args.anCursor(zeile.number, kopf - zeile.from + 1, kopf)
         }
       }),
     ],

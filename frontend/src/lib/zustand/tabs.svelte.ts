@@ -84,7 +84,7 @@ export function oeffneTab(eingabe: {
     analyse: null,
     analyseStand: 'veraltet',
     analyseFehler: null,
-    aktiveAnsicht: 'editor',
+    aktiveAnsicht: 'baum',
   })
   tabs.aktiveTabId = id
   planeArbeitsstandSicherung()

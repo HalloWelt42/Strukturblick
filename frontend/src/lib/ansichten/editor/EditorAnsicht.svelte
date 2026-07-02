@@ -11,8 +11,15 @@
 
   import type { QuellSpanne } from '../../api/typen'
   import { analysiere } from '../../dienste/analyseDienst'
+  import {
+    baueIndex,
+    pfadAnOffset,
+    pfadZuSpanne,
+    type PfadIndex,
+  } from '../../dienste/pfadIndex'
   import { aktualisiereDokument, speichereDokument } from '../../speicher/dokumente'
   import { ladeNeu } from '../../zustand/dokumentListe.svelte'
+  import { selektion, setzeSelektion } from '../../zustand/selektion.svelte'
   import { setzeCursor } from '../../zustand/statusInfo.svelte'
   import { aktiverTab, markiereGespeichert, setzeInhalt, tabs } from '../../zustand/tabs.svelte'
   import { zeige } from '../../zustand/toaster.svelte'
@@ -37,6 +44,13 @@
   let view: EditorView | null = null
   let angezeigteTabId: string | null = null
 
+  /** Flacher Positions-Index des aktiven Tabs für die Baum-Kopplung. */
+  const pfadIndex = $derived.by((): PfadIndex => {
+    const tab = aktiverTab()
+    if (tab === null || tab.analyse === null) return []
+    return baueIndex(tab.analyse.positionen)
+  })
+
   // Editor-Lebenszyklus: bei Tab-Wechsel neu aufbauen.
   $effect(() => {
     const tabId = tabs.aktiveTabId
@@ -52,10 +66,22 @@
       inhalt: tab.inhalt,
       format: tab.format,
       anInhaltGeaendert: (text) => uebernimmAenderung(tabId, text),
-      anCursor: setzeCursor,
+      anCursor: (zeile, spalte, offset) => {
+        setzeCursor(zeile, spalte)
+        meldeCursorPfad(tabId, offset)
+      },
     })
     setzeCursor(1, 1)
   })
+
+  /** Editor -> Baum: Pfad am Cursor als Selektion (Quelle "editor") melden. */
+  function meldeCursorPfad(tabId: string, offset: number): void {
+    const eintrag = pfadAnOffset(pfadIndex, offset)
+    if (eintrag === null) return
+    const aktuelle = selektion.aktuell
+    if (aktuelle !== null && aktuelle.tabId === tabId && aktuelle.pfad === eintrag.pfad) return
+    setzeSelektion({ tabId, pfad: eintrag.pfad, quelle: 'editor' })
+  }
 
   // Aufräumen beim Verlassen der Ansicht.
   $effect(() => () => {
@@ -96,6 +122,21 @@
       eintraege.push({ schwere: 'info', meldung: warnung, position: null })
     }
     setzeDiagnosen(view, eintraege)
+  })
+
+  // Baum/Diagnose/Brotkrumen -> Editor: fremde Selektionen anspringen.
+  // Getrackt wird nur die Selektion selbst - Analyse-Updates lösen keinen
+  // erneuten Sprung aus (deshalb untrack um den Positions-Index).
+  $effect(() => {
+    const auswahl = selektion.aktuell
+    if (auswahl === null || auswahl.pfad === null || auswahl.quelle === 'editor') return
+    const pfad = auswahl.pfad
+    untrack(() => {
+      if (view === null || angezeigteTabId !== auswahl.tabId) return
+      const eintrag = pfadZuSpanne(pfadIndex, pfad)
+      if (eintrag === null) return
+      springeZuPosition(view, eintrag.von, eintrag.bis)
+    })
   })
 
   const anzeigeDiagnosen = $derived.by((): AnzeigeDiagnose[] => {
@@ -207,6 +248,10 @@
     if (view === null) return
     const bereich = alsOffsetBereich(view.state.doc, diagnose.position)
     springeZuPosition(view, bereich.from, bereich.to)
+    // Trägt der Fehler einen Pfad, gilt der Klick auch als Selektion.
+    if (diagnose.pfad !== '' && angezeigteTabId !== null) {
+      setzeSelektion({ tabId: angezeigteTabId, pfad: diagnose.pfad, quelle: 'diagnose' })
+    }
   }
 
   function positionsText(position: QuellSpanne | null): string {

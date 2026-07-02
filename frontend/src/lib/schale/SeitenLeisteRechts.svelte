@@ -1,7 +1,21 @@
 <script lang="ts">
-  // Rechte Seitenleiste nach Mockup: Inspektor (noch ohne Auswahl) und der
+  // Rechte Seitenleiste nach Mockup: Inspektor zur aktuellen Selektion
+  // (Pfad, Typ, Wert, Länge, Position, "Pfad kopieren als") und der
   // KI-Bereich. Die KI-Anbindung fehlt in dieser Ausbaustufe - die Aktionen
   // sind ausgegraut, der Status-Punkt steht auf "aus".
+  import type { JsonWert, KnotenSpannen } from '../api/typen'
+  import {
+    alsJsonPath,
+    alsPythonZugriff,
+    alsTypescriptZugriff,
+    alsZeiger,
+  } from '../dienste/pfade'
+  import { TYP_NAME, WERT_KLASSE } from '../dienste/wertDarstellung'
+  import { kurzVorschau, typVon, wertAnPfad, type WertTyp } from '../dienste/wertZugriff'
+  import { selektion } from '../zustand/selektion.svelte'
+  import { aktiverTab } from '../zustand/tabs.svelte'
+  import { zeige } from '../zustand/toaster.svelte'
+
   interface KiAktion {
     icon: string
     name: string
@@ -14,13 +28,110 @@
     { icon: 'fa-file-lines', name: 'Beschreibung aus Schema' },
     { icon: 'fa-cubes', name: 'Testdaten vorschlagen' },
   ]
+
+  interface InspektorDaten {
+    pfad: string
+    typ: WertTyp
+    wert: JsonWert
+    spanne: KnotenSpannen | null
+  }
+
+  const daten = $derived.by((): InspektorDaten | null => {
+    const auswahl = selektion.aktuell
+    const tab = aktiverTab()
+    if (auswahl === null || auswahl.pfad === null || tab === null) return null
+    if (auswahl.tabId !== tab.id || tab.analyse === null) return null
+    const wert = wertAnPfad(tab.analyse.wurzel, auswahl.pfad)
+    if (wert === undefined) return null
+    return {
+      pfad: auswahl.pfad,
+      typ: typVon(wert),
+      wert,
+      spanne: tab.analyse.positionen[auswahl.pfad] ?? null,
+    }
+  })
+
+  const laengeText = $derived.by((): string | null => {
+    if (daten === null) return null
+    const wert = daten.wert
+    if (typeof wert === 'string') return `${wert.length} Zeichen`
+    if (Array.isArray(wert)) {
+      return wert.length === 1 ? '1 Eintrag' : `${wert.length} Einträge`
+    }
+    if (wert !== null && typeof wert === 'object') {
+      return `${Object.keys(wert).length} Schlüssel`
+    }
+    return null
+  })
+
+  const positionsText = $derived.by((): string | null => {
+    if (daten === null || daten.spanne === null) return null
+    const start = daten.spanne.wert.start
+    if (start.zeile < 1) return null
+    if (start.spalte < 1) return `Zeile ${start.zeile}`
+    return `Zeile ${start.zeile}, Spalte ${start.spalte}`
+  })
+
+  /** Kopiert den Pfad in der gewünschten Schreibweise in die Zwischenablage. */
+  async function kopiere(name: string, wandler: (pfad: string) => string): Promise<void> {
+    if (daten === null) return
+    try {
+      await navigator.clipboard.writeText(wandler(daten.pfad))
+      zeige(`Pfad als ${name} kopiert.`, 'erfolg')
+    } catch {
+      zeige('Der Pfad konnte nicht kopiert werden.', 'fehler')
+    }
+  }
 </script>
 
 <aside class="seite-rechts">
   <div class="leisten-titel">Inspektor</div>
-  <div class="inspektor-block">
-    <div class="hinweis-text">Kein Element ausgewählt.</div>
-  </div>
+  {#if daten !== null}
+    <div class="inspektor-block">
+      <code class="pfad-code">{daten.pfad}</code>
+      <dl>
+        <dt>Typ</dt>
+        <dd><span class="{WERT_KLASSE[daten.typ]} mono">{TYP_NAME[daten.typ]}</span></dd>
+        <dt>Wert</dt>
+        <dd class="mono">{kurzVorschau(daten.wert)}</dd>
+        {#if laengeText !== null}
+          <dt>Länge</dt>
+          <dd>{laengeText}</dd>
+        {/if}
+        {#if positionsText !== null}
+          <dt>Position</dt>
+          <dd>{positionsText}</dd>
+        {/if}
+      </dl>
+    </div>
+    <div class="inspektor-block">
+      <div class="beschriftung" style="margin-bottom: 6px">Pfad kopieren als</div>
+      <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+        <button class="knopf klein" onclick={() => void kopiere('Zeiger', alsZeiger)}>
+          Zeiger
+        </button>
+        <button class="knopf klein" onclick={() => void kopiere('JSONPath', alsJsonPath)}>
+          <span class="fachbegriff">JSONPath</span>
+        </button>
+        <button
+          class="knopf klein"
+          onclick={() => void kopiere('Python', (pfad) => alsPythonZugriff(pfad))}
+        >
+          Python
+        </button>
+        <button
+          class="knopf klein"
+          onclick={() => void kopiere('TypeScript', (pfad) => alsTypescriptZugriff(pfad))}
+        >
+          TypeScript
+        </button>
+      </div>
+    </div>
+  {:else}
+    <div class="inspektor-block">
+      <div class="hinweis-text">Kein Element ausgewählt.</div>
+    </div>
+  {/if}
 
   <div class="ki-kopfzeile">
     <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
