@@ -26,6 +26,8 @@
     starteTextAusSchema,
   } from '../ki/kiAufgaben.svelte'
   import { selektion } from '../zustand/selektion.svelte'
+  import { oeffneEinstellungen } from '../zustand/einstellungenModal.svelte'
+  import { kiEinstellungen } from '../zustand/kiEinstellungen.svelte'
   import { kiStatus, pruefe as pruefeKi } from '../zustand/kiStatus.svelte'
   import { aktiverTab } from '../zustand/tabs.svelte'
   import { zeige } from '../zustand/toaster.svelte'
@@ -93,16 +95,25 @@
     },
   ]
 
-  // Aktiv, wenn das Modell erreichbar ist. erreichbar === null (erste Prüfung)
-  // gilt noch nicht als erreichbar - die Aktionen bleiben bis dahin ausgegraut.
-  const kiAktiv = $derived(kiStatus.erreichbar === true)
+  // Aktiv, wenn das Modell erreichbar ist UND die KI-Funktionen angeboten werden.
+  // erreichbar === null (erste Prüfung) gilt noch nicht als erreichbar - die
+  // Aktionen bleiben bis dahin ausgegraut.
+  const kiAktiv = $derived(kiStatus.erreichbar === true && kiEinstellungen.angeboten)
 
-  const statusKlasse = $derived(kiStatus.erreichbar === false ? 'aus' : '')
+  const statusKlasse = $derived(
+    kiStatus.erreichbar === false || !kiEinstellungen.angeboten ? 'aus' : '',
+  )
 
   const statusTitel = $derived.by((): string => {
+    if (!kiEinstellungen.angeboten) return 'KI-Funktionen sind in den Einstellungen abgeschaltet'
     if (kiStatus.erreichbar === true) return 'Lokales Sprachmodell erreichbar'
     if (kiStatus.erreichbar === false) return 'Kein lokales Sprachmodell erreichbar'
     return 'Erreichbarkeit wird geprüft'
+  })
+
+  const aktionsTitel = $derived.by((): string => {
+    if (!kiEinstellungen.angeboten) return 'KI-Funktionen sind abgeschaltet'
+    return 'Kein lokales Sprachmodell erreichbar'
   })
 
   function fuehreAktionAus(aktion: KiAktion): void {
@@ -284,7 +295,7 @@
       <button
         class="ki-aktion"
         disabled={!kiAktiv || kiAufgabe.laeuft}
-        title={kiAktiv ? aktion.name : 'Kein lokales Sprachmodell erreichbar'}
+        title={kiAktiv ? aktion.name : aktionsTitel}
         onclick={() => fuehreAktionAus(aktion)}
       >
         <i class="fa-solid {aktion.icon}"></i>
@@ -305,7 +316,17 @@
     </div>
   {/if}
 
-  {#if kiStatus.erreichbar === false}
+  {#if !kiEinstellungen.angeboten}
+    <div class="ki-hinweis">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Die KI-Funktionen sind abgeschaltet. In den Einstellungen wieder aktivieren.</span>
+    </div>
+    <div class="feld-zeile ki-fuss-zeile">
+      <button class="knopf klein" onclick={oeffneEinstellungen}>
+        <i class="fa-solid fa-gear"></i> Zu den Einstellungen
+      </button>
+    </div>
+  {:else if kiStatus.erreichbar === false}
     <div class="ki-hinweis">
       <i class="fa-solid fa-circle-info"></i>
       <span>Kein lokales Sprachmodell erreichbar. Prüfe die Adresse in den Einstellungen.</span>

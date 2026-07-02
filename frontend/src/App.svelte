@@ -8,6 +8,7 @@
   import Toast from './lib/hilfsteile/Toast.svelte'
   import LexikonPanel from './lib/lexikon/LexikonPanel.svelte'
   import AnsichtsWahl from './lib/schale/AnsichtsWahl.svelte'
+  import EinstellungenModal from './lib/schale/EinstellungenModal.svelte'
   import HauptBereich from './lib/schale/HauptBereich.svelte'
   import Konsole from './lib/schale/Konsole.svelte'
   import KopfLeiste from './lib/schale/KopfLeiste.svelte'
@@ -16,6 +17,7 @@
   import StatusLeiste from './lib/schale/StatusLeiste.svelte'
   import { starteBackendUeberwachung } from './lib/zustand/backendStatus.svelte'
   import { ladeCapabilities } from './lib/zustand/capabilities.svelte'
+  import { einstellungenModal, schliesseEinstellungen } from './lib/zustand/einstellungenModal.svelte'
   import { ladeKiEinstellungen } from './lib/zustand/kiEinstellungen.svelte'
   import { starteKiUeberwachung } from './lib/zustand/kiStatus.svelte'
   import { stelleWieder, tabs } from './lib/zustand/tabs.svelte'
@@ -48,5 +50,6 @@
   <StatusLeiste />
 </div>
 
+<EinstellungenModal offen={einstellungenModal.offen} onSchliessen={schliesseEinstellungen} />
 <LexikonPanel />
 <Toast />

@@ -2,7 +2,7 @@
   // Kopfleiste nach Mockup: Marke, Dokument-Tabs, rechts Theme- und
   // Einstellungen-Knopf.
   import { naechstes } from '../theme/theme.svelte'
-  import { zeige } from '../zustand/toaster.svelte'
+  import { oeffneEinstellungen } from '../zustand/einstellungenModal.svelte'
   import TabLeiste from './TabLeiste.svelte'
 </script>
 
@@ -13,11 +13,7 @@
     <button class="icon-knopf" aria-label="Thema wechseln" onclick={() => naechstes()}>
       <i class="fa-solid fa-circle-half-stroke"></i>
     </button>
-    <button
-      class="icon-knopf"
-      aria-label="Einstellungen"
-      onclick={() => zeige('Die Einstellungen folgen in einer späteren Ausbaustufe.', 'info')}
-    >
+    <button class="icon-knopf" aria-label="Einstellungen" onclick={oeffneEinstellungen}>
       <i class="fa-solid fa-gear"></i>
     </button>
   </div>

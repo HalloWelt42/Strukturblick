@@ -7,13 +7,16 @@
   interface Props {
     titel: string
     offen?: boolean
+    /** Breite Variante (mehr Platz, etwa für die Einstellungen). */
+    breit?: boolean
     /** Wird gerufen, wenn das Modal sich selbst schließt (Escape, Hintergrund, Kreuz). */
     onSchliessen?: () => void
     children: Snippet
     fuss?: Snippet
   }
 
-  let { titel, offen = $bindable(false), onSchliessen, children, fuss }: Props = $props()
+  let { titel, offen = $bindable(false), breit = false, onSchliessen, children, fuss }: Props =
+    $props()
 
   function schliesse(): void {
     offen = false
@@ -33,7 +36,7 @@
 
 {#if offen}
   <div class="modal-hintergrund" role="presentation" onclick={beiHintergrundKlick}>
-    <div class="modal" role="dialog" aria-modal="true" aria-label={titel}>
+    <div class="modal" class:breit role="dialog" aria-modal="true" aria-label={titel}>
       <div class="modal-kopf">
         {titel}
         <button class="icon-knopf" aria-label="Schließen" onclick={schliesse}>
