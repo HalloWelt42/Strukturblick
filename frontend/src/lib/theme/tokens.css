@@ -1,0 +1,147 @@
+/* ============================================================================
+   Strukturblick - Design-Token
+   Quelle ist mockups/stil.css (Abschnitt 1. Token). Änderungen zuerst dort
+   vornehmen und anschließend hierher übernehmen - die Blöcke bleiben identisch.
+   ========================================================================== */
+
+/* ----- 1. Token ----------------------------------------------------------- */
+
+:root {
+  /* Rohpalette (nur hier referenzieren, nie direkt in Komponenten) */
+  --rohfarbe-anthrazit: #4a4a4a;
+  --rohfarbe-silber: #cbcbcb;
+  --rohfarbe-creme: #ffffe3;
+  --rohfarbe-blaugrau: #6d8196;
+  /* Komplementäre der Palette */
+  --rohfarbe-ocker: #96826d;      /* Komplement zu Blaugrau */
+  --rohfarbe-lavendel: #e3e3ff;   /* Komplement zu Creme */
+  /* Zustands-Ableitungen in gedeckter Sättigungslage */
+  --rohfarbe-gruen: #6d9678;
+  --rohfarbe-rot: #9c5f5a;
+  --rohfarbe-amber: #a8894f;
+
+  /* Schrift */
+  --schrift-anzeige: "Barlow", system-ui, -apple-system, sans-serif;
+  --schrift-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Kanten: alles eckig, nur Knöpfe leicht gerundet */
+  --radius-panel: 0;
+  --radius-eingabe: 0;
+  --radius-tab: 0;
+  --radius-knopf: 3px;
+
+  /* Abstände */
+  --a1: 4px;
+  --a2: 8px;
+  --a3: 12px;
+  --a4: 16px;
+  --a5: 24px;
+  --a6: 32px;
+
+  --zeile-h: 28px;
+  --schnell: 0.12s ease;
+}
+
+/* Mittelton (Standard): weder hell noch dunkel */
+:root,
+:root[data-theme="mittelton"] {
+  --flaeche-seite: #a6a6a6;
+  --flaeche-leiste: #979797;
+  --flaeche-panel: var(--rohfarbe-silber);
+  --flaeche-panel-2: #bdbdbd;
+  --flaeche-eingabe: #d8d8d1;
+  --flaeche-hervorhebung: var(--rohfarbe-creme);
+  --flaeche-zeile-wechsel: rgba(0, 0, 0, 0.03);
+
+  --text-1: #262626;
+  --text-2: var(--rohfarbe-anthrazit);
+  --text-3: #616161;
+  --text-invers: #ececec;
+
+  --rand-1: rgba(20, 20, 20, 0.22);
+  --rand-2: rgba(20, 20, 20, 0.38);
+
+  --akzent: #4e6379;
+  --akzent-stark: #3d4f62;
+  --akzent-weich: rgba(109, 129, 150, 0.22);
+  --auf-akzent: #f2f4f6;
+  --zweitakzent: #7a684f;
+  --zweitakzent-weich: rgba(150, 130, 109, 0.22);
+
+  --zustand-erfolg: #3f6b4e;
+  --zustand-erfolg-weich: rgba(109, 150, 120, 0.22);
+  --zustand-warnung: #7d6233;
+  --zustand-warnung-weich: rgba(168, 137, 79, 0.22);
+  --zustand-fehler: #7e403c;
+  --zustand-fehler-weich: rgba(156, 95, 90, 0.22);
+  --zustand-info: #4e6379;
+  --zustand-info-weich: rgba(109, 129, 150, 0.18);
+
+  /* Typfarben: Strukturbaum und Syntax */
+  --typ-objekt: #46607a;
+  --typ-liste: #64517f;
+  --typ-text: #4a6b3f;
+  --typ-zahl: #7a5a34;
+  --typ-bool: #7d4260;
+  --typ-null: #666666;
+  --typ-schluessel: #262626;
+  --typ-kommentar: #6e6e64;
+
+  --diff-hinzu: rgba(109, 150, 120, 0.30);
+  --diff-weg: rgba(156, 95, 90, 0.30);
+  --diff-geaendert: rgba(168, 137, 79, 0.30);
+
+  --schatten-1: 0 1px 2px rgba(20, 20, 20, 0.14);
+  --schatten-2: 0 8px 28px rgba(20, 20, 20, 0.28);
+}
+
+/* Dunkel: aus Anthrazit abgeleitet, Akzente aufgehellt */
+:root[data-theme="dunkel"] {
+  --flaeche-seite: #262626;
+  --flaeche-leiste: #2e2e2e;
+  --flaeche-panel: #383838;
+  --flaeche-panel-2: #424242;
+  --flaeche-eingabe: #2c2c2c;
+  --flaeche-hervorhebung: rgba(255, 255, 227, 0.16);
+  --flaeche-zeile-wechsel: rgba(255, 255, 255, 0.025);
+
+  --text-1: #e6e6e6;
+  --text-2: var(--rohfarbe-silber);
+  --text-3: #9a9a9a;
+  --text-invers: #262626;
+
+  --rand-1: rgba(255, 255, 255, 0.12);
+  --rand-2: rgba(255, 255, 255, 0.24);
+
+  --akzent: #93a9be;
+  --akzent-stark: #b0c3d5;
+  --akzent-weich: rgba(109, 129, 150, 0.30);
+  --auf-akzent: #20262c;
+  --zweitakzent: #bda98d;
+  --zweitakzent-weich: rgba(150, 130, 109, 0.28);
+
+  --zustand-erfolg: #8fbf9d;
+  --zustand-erfolg-weich: rgba(109, 150, 120, 0.26);
+  --zustand-warnung: #c9a96b;
+  --zustand-warnung-weich: rgba(168, 137, 79, 0.26);
+  --zustand-fehler: #c98883;
+  --zustand-fehler-weich: rgba(156, 95, 90, 0.28);
+  --zustand-info: #93a9be;
+  --zustand-info-weich: rgba(109, 129, 150, 0.24);
+
+  --typ-objekt: #92a9c0;
+  --typ-liste: #a794bf;
+  --typ-text: #9bbb8e;
+  --typ-zahl: #c0a585;
+  --typ-bool: #bf93a5;
+  --typ-null: #8e8e8e;
+  --typ-schluessel: #e6e6e6;
+  --typ-kommentar: #8f8f83;
+
+  --diff-hinzu: rgba(109, 150, 120, 0.28);
+  --diff-weg: rgba(156, 95, 90, 0.28);
+  --diff-geaendert: rgba(168, 137, 79, 0.26);
+
+  --schatten-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --schatten-2: 0 8px 28px rgba(0, 0, 0, 0.55);
+}

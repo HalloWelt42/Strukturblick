@@ -1,0 +1,57 @@
+{
+  "geschaeft": {
+    "name": "Werkzeugkiste Nord",
+    "kundennummernkreis": "KD-2026",
+    "filialen": ["Hamburg", "Lübeck"]
+  },
+  "bestellungen": [
+    {
+      "id": "7f0c2a4e-9b31-4c5d-8e2f-1a6b3c9d0e42",
+      "nummer": "B-2026-0412",
+      "kunde": {
+        "name": "Erika Musterfrau",
+        "email": "erika.musterfrau@beispiel.de",
+        "kundeSeit": "2019-03-14"
+      },
+      "positionen": [
+        { "artikel": "Schraubendreher-Set", "menge": 1, "einzelpreis": 24.90 },
+        { "artikel": "Hammer 300 g", "menge": 2, "einzelpreis": 12.50 },
+        { "artikel": "Wasserwaage 40 cm", "menge": 1, "einzelpreis": 18.40 }
+      ],
+      "summe": 68.30,
+      "bezahlt": true,
+      "lieferdatum": null
+    },
+    {
+      "id": "3c9d5b7a-0e2f-4d18-9a6c-b41e8f27d503",
+      "nummer": "B-2026-0413",
+      "kunde": {
+        "name": "Jürgen Schäfer",
+        "email": "juergen.schaefer@beispiel.de",
+        "kundeSeit": "2021-11-02"
+      },
+      "positionen": [
+        { "artikel": "Akkuschrauber 18 V", "menge": 1, "einzelpreis": 129.00 }
+      ],
+      "summe": 129.00,
+      "bezahlt": false,
+      "lieferdatum": "2026-07-10"
+    },
+    {
+      "id": "d2b64f80-5a3e-47c1-8f9d-6e0a1c53b7e2",
+      "nummer": "B-2026-0414",
+      "kunde": {
+        "name": "Käthe Größner",
+        "email": "kaethe.groessner@beispiel.de",
+        "kundeSeit": "2018-06-27"
+      },
+      "positionen": [
+        { "artikel": "Stichsäge", "menge": 1, "einzelpreis": 89.90 },
+        { "artikel": "Sägeblätter-Set", "menge": 2, "einzelpreis": 9.95 }
+      ],
+      "summe": 109.80,
+      "bezahlt": true,
+      "lieferdatum": null
+    }
+  ]
+}

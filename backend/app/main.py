@@ -44,7 +44,7 @@ def create_app() -> FastAPI:
                     request_id=request.state.request_id,
                 )
                 return JSONResponse(status_code=413, content=FehlerAntwort(fehler=detail).model_dump(mode="json"))
-        antwort = await call_next(request)
+        antwort: Response = await call_next(request)
         antwort.headers.setdefault("X-Request-Id", str(request.state.request_id))
         return antwort
 

@@ -48,7 +48,7 @@ class Registry[T]:
 engines: Registry[FormatEngine] = Registry("FormatEngine")
 
 
-def format_engine[T: type](cls: T) -> T:
+def format_engine[E: FormatEngine](cls: type[E]) -> type[E]:
     """Klassen-Dekorator: registriert eine Instanz der Engine unter ihrer FormatId."""
     engines.registriere(cls.faehigkeiten.format_id.value, cls())
     return cls

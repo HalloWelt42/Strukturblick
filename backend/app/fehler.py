@@ -10,6 +10,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
@@ -100,7 +101,10 @@ def registriere_fehler_handler(app: FastAPI) -> None:
 
     @app.exception_handler(RequestValidationError)
     async def eingabe_fehler(request: Request, exc: RequestValidationError) -> JSONResponse:
-        einzelheiten: dict[str, Any] = {"felder": exc.errors()}
+        # exc.errors() kann rohe Exception-Objekte tragen (ctx.error bei model_validator) -
+        # erst JSON-fähig machen, sonst scheitert der Bau des FehlerDetail-Modells.
+        felder = jsonable_encoder(exc.errors(), custom_encoder={Exception: str})
+        einzelheiten: dict[str, Any] = {"felder": felder}
         detail = FehlerDetail(
             code="eingabe_ungueltig",
             meldung="Die Anfrage ist ungültig - Details unter 'felder'.",

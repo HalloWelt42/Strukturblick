@@ -1,0 +1,7 @@
+kundennummer;name;email;stadt;kunde_seit;umsatz;aktiv
+K-1001;Erika Musterfrau;erika@example.com;Kiel;2020-01-15;4820,50;ja
+K-1002;Sönke Matthiesen;soenke@example.com;Flensburg;2019-06-03;12750,00;ja
+K-1003;Jürgen Möller;juergen@example.com;Lübeck;2021-11-22;;ja
+K-1004;Änne Großmann;aenne@example.com;München;2018-02-01;980,25;ja
+K-1005;Hans Weiß;hans@example.com;Köln;2022-09-30;15600,75;ja
+K-1006;Grete Süßmilch;grete@example.com;Osnabrück;2020-04-08;7040,10;ja

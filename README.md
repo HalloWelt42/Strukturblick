@@ -4,7 +4,20 @@ Lokaler, webbasierter Assistent für Strukturdokumente: JSON, XML, CSV, YAML, TO
 
 ## Aktueller Stand
 
-Das Projekt befindet sich in der Mockup-Phase: Alle Ansichten liegen als klickbare HTML-Seiten mit dem echten Design-Token-System vor. Die Umsetzung (Python/FastAPI-Backend + Svelte-5-Frontend) folgt auf Basis dieser Mockups.
+Das Grundgerüst läuft: FastAPI-Backend mit Format-Engine-Registry (JSON inkl. JSON5/JSONC-Toleranz, CSV mit Trennzeichen- und Encoding-Erkennung), Dokument-Endpunkten (erkennen, parsen mit Positionskarte, Cache-Status) und Capabilities-Endpunkt; dazu die Svelte-5-Schale exakt nach den Mockups (Kopfleiste, Seitenleisten, Ansichtswahl, Statusleiste, Theme-Umschalter Mittelton/Dunkel). Die Ansichten (Baum, Editor, Tabelle, ...) folgen in den nächsten Ausbaustufen; alle Ansichten liegen als klickbare Mockups vor und sind der verbindliche Design-Leitfaden.
+
+## Starten
+
+```bash
+./start.sh              # Backend (6000) + Frontend (6001), richtet beim ersten Mal alles ein
+./start.sh status
+./start.sh stop
+```
+
+- App: http://localhost:6001
+- API-Doku (über den Proxy): http://localhost:6001/docs
+
+Tests: `cd backend && .venv/bin/python -m pytest`
 
 ## Mockups ansehen
 
