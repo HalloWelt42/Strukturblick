@@ -7,6 +7,7 @@
   import { lexikon } from '../lexikon/lexikon.svelte'
   import { loescheDokument, type SpeicherDokument } from '../speicher/dokumente'
   import { dokumentListe, ladeNeu } from '../zustand/dokumentListe.svelte'
+  import { konsole, umschalten as umschaltenKonsole } from '../zustand/konsole.svelte'
   import { aktiverTab } from '../zustand/tabs.svelte'
   import { zeige } from '../zustand/toaster.svelte'
   import { oeffneWerkzeug, schliesseWerkzeug, werkzeug } from '../zustand/werkzeug.svelte'
@@ -16,10 +17,12 @@
     name: string
     // Gesetzt, sobald das Werkzeug umgesetzt ist; sonst folgt ein Hinweis.
     werkzeugId?: string
+    // Abfrage klappt die Abfragekonsole auf/zu statt ein Ansichts-Werkzeug.
+    oeffnetKonsole?: boolean
   }
 
   const WERKZEUGE: Werkzeug[] = [
-    { icon: 'fa-magnifying-glass', name: 'Abfrage' },
+    { icon: 'fa-magnifying-glass', name: 'Abfrage', oeffnetKonsole: true },
     { icon: 'fa-shuffle', name: 'Konvertieren', werkzeugId: 'konvertieren' },
     { icon: 'fa-clipboard-check', name: 'Validieren', werkzeugId: 'validieren' },
     { icon: 'fa-screwdriver-wrench', name: 'Reparatur', werkzeugId: 'reparatur' },
@@ -27,8 +30,18 @@
     { icon: 'fa-cubes', name: 'Testdaten' },
   ]
 
-  /** Klick auf einen Werkzeug-Eintrag: umgesetztes Werkzeug umschalten, sonst Hinweis. */
+  /** true, wenn der Werkzeug-Eintrag gerade aktiv ist (Werkzeug offen oder Konsole auf). */
+  function istAktiv(eintrag: Werkzeug): boolean {
+    if (eintrag.oeffnetKonsole) return konsole.offen
+    return eintrag.werkzeugId !== undefined && werkzeug.aktiv === eintrag.werkzeugId
+  }
+
+  /** Klick auf einen Werkzeug-Eintrag: Konsole/Werkzeug umschalten, sonst Hinweis. */
   function beiWerkzeug(eintrag: Werkzeug): void {
+    if (eintrag.oeffnetKonsole) {
+      umschaltenKonsole()
+      return
+    }
     if (eintrag.werkzeugId === undefined) {
       folgtSpaeter(eintrag.name)
       return
@@ -123,7 +136,7 @@
   {#each WERKZEUGE as eintrag (eintrag.name)}
     <button
       class="werkzeug-eintrag"
-      class:aktiv={eintrag.werkzeugId !== undefined && werkzeug.aktiv === eintrag.werkzeugId}
+      class:aktiv={istAktiv(eintrag)}
       onclick={() => beiWerkzeug(eintrag)}
     >
       <i class="fa-solid {eintrag.icon}"></i>
