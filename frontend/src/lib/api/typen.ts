@@ -135,10 +135,19 @@ export interface Limits {
   cache_ttl_sekunden: number
 }
 
+/** Selbstauskunft eines Codegen-Ziels aus dem Capabilities-Endpunkt. */
+export interface CodegenZielInfo {
+  id: CodegenZiel
+  name: string
+  /** Dateiendung ohne führenden Punkt, zum Beispiel "ts" oder "php". */
+  dateiendung: string
+}
+
 export interface CapabilitiesAntwort {
   version: string
   formate: FormatFaehigkeiten[]
   konvertierungsmatrix: KonvertierungsPaar[]
+  codegen_ziele: CodegenZielInfo[]
   limits: Limits
 }
 
@@ -338,6 +347,36 @@ export interface ReparaturAntwort {
   ergebnis_text: string
   diff_unified: string
   aenderungen: string[]
+}
+
+// ----- Generierung (backend/app/modelle/generieren.py) ---------------------
+
+/** Zielsystem der Codegenerierung. */
+export type CodegenZiel = 'typescript' | 'pydantic_v2' | 'dataclasses' | 'php_84'
+
+export interface CodegenAnfrage {
+  dokument: DokumentReferenz
+  ziel: CodegenZiel
+  wurzelname: string
+}
+
+export interface CodegenAntwort {
+  ziel: CodegenZiel
+  code: string
+  /** Dateiendung ohne führenden Punkt, zum Beispiel "ts" oder "php". */
+  dateiendung: string
+  warnungen: string[]
+}
+
+export interface BeispieldatenAnfrage {
+  /** Im Backend intern schema_wert, über die API heißt das Feld "schema". */
+  schema: JsonWert
+  anzahl?: number
+  seed?: number
+}
+
+export interface BeispieldatenAntwort {
+  dokumente: JsonWert[]
 }
 
 /** Einheitliches Fehlermodell aller Endpunkte. */

@@ -47,6 +47,14 @@ from app.modelle.gemeinsam import (
     QuellSpanne,
     Verlustaspekt,
 )
+from app.modelle.generieren import (
+    BeispieldatenAnfrage,
+    BeispieldatenAntwort,
+    CodegenAnfrage,
+    CodegenAntwort,
+    CodegenZiel,
+    CodegenZielInfo,
+)
 from app.modelle.system import (
     CapabilitiesAntwort,
     FormatFaehigkeiten,
@@ -71,8 +79,14 @@ __all__ = [
     "AbfrageAnfrage",
     "AbfrageAntwort",
     "AbfrageSprache",
+    "BeispieldatenAnfrage",
+    "BeispieldatenAntwort",
     "CacheStatusAntwort",
     "CapabilitiesAntwort",
+    "CodegenAnfrage",
+    "CodegenAntwort",
+    "CodegenZiel",
+    "CodegenZielInfo",
     "DialektInfo",
     "DiffAnfrage",
     "DiffAntwort",

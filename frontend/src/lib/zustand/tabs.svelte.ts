@@ -15,7 +15,10 @@ export interface DokumentTab {
   id: string
   titel: string
   format: FormatId | null
+  /** Bei binären Dokumenten (istBinaer) die Base64-Zeichenkette, sonst der Text. */
   inhalt: string
+  /** true bei binären Formaten (z. B. XLSX); dann trägt inhalt Base64. */
+  istBinaer: boolean
   geaendert: boolean
   dokumentId: string | null
   analyse: ParseAntwort | null
@@ -46,6 +49,7 @@ function alsPersist(tab: DokumentTab): TabPersist {
     dokumentId: tab.dokumentId,
     aktiveAnsicht: tab.aktiveAnsicht,
     geaendert: tab.geaendert,
+    istBinaer: tab.istBinaer,
   }
 }
 
@@ -72,6 +76,7 @@ export function oeffneTab(eingabe: {
   inhalt: string
   format?: FormatId | null
   dokumentId?: string | null
+  istBinaer?: boolean
 }): string {
   const id = crypto.randomUUID()
   tabs.liste.push({
@@ -79,6 +84,7 @@ export function oeffneTab(eingabe: {
     titel: eingabe.titel,
     format: eingabe.format ?? null,
     inhalt: eingabe.inhalt,
+    istBinaer: eingabe.istBinaer ?? false,
     geaendert: false,
     dokumentId: eingabe.dokumentId ?? null,
     analyse: null,
@@ -151,6 +157,7 @@ export async function stelleWieder(): Promise<void> {
       titel: tab.titel,
       format: tab.format,
       inhalt: tab.inhalt,
+      istBinaer: tab.istBinaer ?? false,
       geaendert: tab.geaendert,
       dokumentId: tab.dokumentId,
       analyse: null,

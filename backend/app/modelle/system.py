@@ -5,6 +5,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from app.modelle.gemeinsam import FormatId, Positionsgenauigkeit, Verlustaspekt
+from app.modelle.generieren import CodegenZielInfo
 
 
 class HealthAntwort(BaseModel):
@@ -50,4 +51,5 @@ class CapabilitiesAntwort(BaseModel):
     formate: list[FormatFaehigkeiten]
     konvertierungsmatrix: list[KonvertierungsPaar]
     analyzer: list[ModulInfo] = Field(default_factory=list)
+    codegen_ziele: list[CodegenZielInfo] = Field(default_factory=list)
     limits: Limits

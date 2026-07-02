@@ -14,6 +14,8 @@ export interface TabPersist {
   dokumentId: string | null
   aktiveAnsicht: string
   geaendert: boolean
+  /** true, wenn inhalt eine Base64-Zeichenkette eines binären Dokuments ist. */
+  istBinaer?: boolean
 }
 
 export interface Arbeitsstand {

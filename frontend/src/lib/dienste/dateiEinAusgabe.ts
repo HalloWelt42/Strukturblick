@@ -8,11 +8,41 @@ export interface GeleseneDatei {
   name: string
   text: string
   groesse: number
+  /** Bei binären Formaten (z. B. XLSX) der Inhalt als Base64; sonst nicht gesetzt. */
+  base64?: string
 }
 
 export type GroessenUrteil = 'ok' | 'warnen' | 'ablehnen'
 
+/** Endungen, die als binär gelten und deshalb Base64-kodiert eingelesen werden. */
+const BINAER_ENDUNGEN = new Set(['xlsx'])
+
+function endungVon(name: string): string {
+  const punkt = name.lastIndexOf('.')
+  return punkt === -1 ? '' : name.slice(punkt + 1).toLowerCase()
+}
+
+function istBinaereDatei(name: string): boolean {
+  return BINAER_ENDUNGEN.has(endungVon(name))
+}
+
+/** Wandelt Bytes chunkweise in Base64, ohne den Aufruf-Stack zu sprengen. */
+function bytesZuBase64(bytes: Uint8Array): string {
+  let binaer = ''
+  const schrittweite = 0x8000
+  for (let i = 0; i < bytes.length; i += schrittweite) {
+    const teil = bytes.subarray(i, i + schrittweite)
+    binaer += String.fromCharCode(...teil)
+  }
+  return btoa(binaer)
+}
+
 export async function liesDatei(datei: File): Promise<GeleseneDatei> {
+  if (istBinaereDatei(datei.name)) {
+    const puffer = await datei.arrayBuffer()
+    const base64 = bytesZuBase64(new Uint8Array(puffer))
+    return { name: datei.name, text: '', groesse: datei.size, base64 }
+  }
   return { name: datei.name, text: await datei.text(), groesse: datei.size }
 }
 

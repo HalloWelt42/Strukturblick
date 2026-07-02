@@ -4,6 +4,7 @@
 // kommen in späteren Ausbaustufen einfach dazu.
 import type { Component } from 'svelte'
 
+import CodegenWerkzeug from './CodegenWerkzeug.svelte'
 import KonvertierenWerkzeug from './KonvertierenWerkzeug.svelte'
 import ReparaturWerkzeug from './ReparaturWerkzeug.svelte'
 import ValidierenWerkzeug from './ValidierenWerkzeug.svelte'
@@ -27,3 +28,4 @@ export function werkzeugKomponente(id: string): Component | undefined {
 registriereWerkzeug({ id: 'konvertieren', titel: 'Konvertieren', komponente: KonvertierenWerkzeug })
 registriereWerkzeug({ id: 'validieren', titel: 'Validieren', komponente: ValidierenWerkzeug })
 registriereWerkzeug({ id: 'reparatur', titel: 'Reparatur', komponente: ReparaturWerkzeug })
+registriereWerkzeug({ id: 'codegen', titel: 'Code erzeugen', komponente: CodegenWerkzeug })

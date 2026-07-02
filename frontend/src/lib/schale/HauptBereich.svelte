@@ -78,10 +78,13 @@
         )
         if (!laden) continue
       }
+      const base64 = datei.base64
       const tabId = oeffneTab({
         titel: datei.name,
-        inhalt: datei.text,
+        // Bei binären Dokumenten trägt der Inhalt die Base64-Zeichenkette.
+        inhalt: base64 !== undefined ? base64 : datei.text,
         format: formatAusDateiname(datei.name),
+        istBinaer: base64 !== undefined,
       })
       void sofortAnalysieren(tabId)
     }

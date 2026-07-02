@@ -11,6 +11,7 @@ export function iconFuerFormat(format: FormatId | null): string {
     case 'xml':
       return 'fa-file-code'
     case 'csv':
+    case 'xlsx':
       return 'fa-table'
     case 'yaml':
     case 'toml':

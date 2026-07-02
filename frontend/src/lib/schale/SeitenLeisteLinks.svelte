@@ -23,7 +23,7 @@
     { icon: 'fa-shuffle', name: 'Konvertieren', werkzeugId: 'konvertieren' },
     { icon: 'fa-clipboard-check', name: 'Validieren', werkzeugId: 'validieren' },
     { icon: 'fa-screwdriver-wrench', name: 'Reparatur', werkzeugId: 'reparatur' },
-    { icon: 'fa-code', name: 'Code erzeugen' },
+    { icon: 'fa-code', name: 'Code erzeugen', werkzeugId: 'codegen' },
     { icon: 'fa-cubes', name: 'Testdaten' },
   ]
 

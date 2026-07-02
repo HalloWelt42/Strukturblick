@@ -44,6 +44,10 @@
   let view: EditorView | null = null
   let angezeigteTabId: string | null = null
 
+  // Binäre Dokumente (XLSX) haben keinen editierbaren Text - statt des Editors
+  // erscheint dann ein Hinweis auf die Tabellen- bzw. Baum-Ansicht.
+  const istBinaer = $derived(aktiverTab()?.istBinaer ?? false)
+
   /** Flacher Positions-Index des aktiven Tabs für die Baum-Kopplung. */
   const pfadIndex = $derived.by((): PfadIndex => {
     const tab = aktiverTab()
@@ -55,6 +59,13 @@
   $effect(() => {
     const tabId = tabs.aktiveTabId
     const ziel = wirt
+    // Binäre Dokumente bekommen keinen Editor; eine offene Ansicht wird beendet.
+    if (istBinaer) {
+      view?.destroy()
+      view = null
+      angezeigteTabId = null
+      return
+    }
     if (tabId === null || ziel === undefined) return
     if (view !== null && angezeigteTabId === tabId) return
     view?.destroy()
@@ -263,32 +274,39 @@
   }
 </script>
 
-<div class="werkzeugzeile">
-  <button class="knopf klein" onclick={transformationFolgt}>
-    <i class="fa-solid fa-indent"></i> Formatieren
-  </button>
-  <button class="knopf klein" onclick={transformationFolgt}>
-    <i class="fa-solid fa-compress"></i> Minify
-  </button>
-  <button class="knopf klein" onclick={transformationFolgt}>
-    <i class="fa-solid fa-arrow-down-a-z"></i> Schlüssel sortieren
-  </button>
-  <span class="beschriftung">Falten:</span>
-  <button class="knopf klein" onclick={() => falteAbEbene(1)}>Ebene 1</button>
-  <button class="knopf klein" onclick={() => falteAbEbene(2)}>Ebene 2</button>
-  <button class="knopf klein" onclick={() => falteAbEbene(3)}>Ebene 3</button>
-  <span class="luecke"></span>
-  <button class="knopf klein" onclick={oeffneSuche}>
-    <i class="fa-solid fa-magnifying-glass"></i> Suchen
-  </button>
-  <button class="knopf klein primaer" onclick={() => void speichere()}>
-    <i class="fa-solid fa-floppy-disk"></i> Speichern
-  </button>
-</div>
+{#if istBinaer}
+  <div class="binaer-hinweis">
+    <i class="fa-solid fa-file-excel"></i>
+    <span>Binäres Dokument (XLSX) - nutze die Tabellen- oder Baum-Ansicht.</span>
+  </div>
+{:else}
+  <div class="werkzeugzeile">
+    <button class="knopf klein" onclick={transformationFolgt}>
+      <i class="fa-solid fa-indent"></i> Formatieren
+    </button>
+    <button class="knopf klein" onclick={transformationFolgt}>
+      <i class="fa-solid fa-compress"></i> Minify
+    </button>
+    <button class="knopf klein" onclick={transformationFolgt}>
+      <i class="fa-solid fa-arrow-down-a-z"></i> Schlüssel sortieren
+    </button>
+    <span class="beschriftung">Falten:</span>
+    <button class="knopf klein" onclick={() => falteAbEbene(1)}>Ebene 1</button>
+    <button class="knopf klein" onclick={() => falteAbEbene(2)}>Ebene 2</button>
+    <button class="knopf klein" onclick={() => falteAbEbene(3)}>Ebene 3</button>
+    <span class="luecke"></span>
+    <button class="knopf klein" onclick={oeffneSuche}>
+      <i class="fa-solid fa-magnifying-glass"></i> Suchen
+    </button>
+    <button class="knopf klein primaer" onclick={() => void speichere()}>
+      <i class="fa-solid fa-floppy-disk"></i> Speichern
+    </button>
+  </div>
 
-<div class="editor-wirt" bind:this={wirt}></div>
+  <div class="editor-wirt" bind:this={wirt}></div>
+{/if}
 
-{#if anzeigeDiagnosen.length > 0}
+{#if !istBinaer && anzeigeDiagnosen.length > 0}
   <div class="karte diagnose-karte">
     <div class="karte-kopf">
       <i class="fa-solid fa-stethoscope"></i> Diagnose
@@ -348,5 +366,24 @@
     margin: var(--a3);
     max-height: 200px;
     overflow-y: auto;
+  }
+
+  /* Platzhalter statt Editor bei binären Dokumenten. */
+  .binaer-hinweis {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--a2);
+    padding: var(--a5);
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  .binaer-hinweis i {
+    font-size: 2rem;
+    color: var(--text-4, var(--text-3));
   }
 </style>

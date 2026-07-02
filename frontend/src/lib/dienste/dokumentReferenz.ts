@@ -11,14 +11,25 @@ import type { DokumentReferenz } from '../api/typen'
 import type { DokumentTab } from '../zustand/tabs.svelte'
 
 /**
+ * Baut aus dem Tab-Inhalt eine Volltext-Referenz. Binäre Dokumente (XLSX)
+ * tragen ihren Inhalt als Base64, alle anderen als Text.
+ */
+function volleReferenz(tab: DokumentTab): DokumentReferenz {
+  if (tab.istBinaer) {
+    return { inhalt_base64: tab.inhalt, dateiname: tab.titel }
+  }
+  return { inhalt_text: tab.inhalt, dateiname: tab.titel }
+}
+
+/**
  * Bevorzugt den im Tab hinterlegten Inhalts-Hash (spart die erneute
- * Übertragung des Textes); ist noch kein Hash da, wird der volle Text mit
- * Dateiname gesendet.
+ * Übertragung des Inhalts); ist noch kein Hash da, wird der volle Inhalt mit
+ * Dateiname gesendet (Text bzw. Base64 bei binären Dokumenten).
  */
 export function baueReferenz(tab: DokumentTab): DokumentReferenz {
   const hash = tab.analyse?.dokument_hash
   if (hash === undefined) {
-    return { inhalt_text: tab.inhalt, dateiname: tab.titel }
+    return volleReferenz(tab)
   }
   return { dokument_hash: hash }
 }
@@ -40,7 +51,7 @@ export async function mitRetry<T>(
     return await rufe(referenz)
   } catch (grund: unknown) {
     if (grund instanceof ApiError && grund.code === 'dokument_nicht_im_cache') {
-      return rufe({ inhalt_text: tab.inhalt, dateiname: tab.titel })
+      return rufe(volleReferenz(tab))
     }
     throw grund
   }

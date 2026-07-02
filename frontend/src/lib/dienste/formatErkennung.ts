@@ -15,6 +15,7 @@ const ENDUNG_ZU_FORMAT: Record<string, FormatId> = {
   xml: 'xml',
   csv: 'csv',
   tsv: 'csv',
+  xlsx: 'xlsx',
 }
 
 export function formatAusDateiname(name: string): FormatId | null {

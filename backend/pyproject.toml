@@ -24,6 +24,9 @@ dependencies = [
     "jsonpath-rfc9535>=0.1",
     "json-repair>=0.30",
     "deepdiff>=8.0",
+    "openpyxl>=3.1",
+    "jsf>=0.11",
+    "faker>=25.0",
 ]
 
 [project.optional-dependencies]

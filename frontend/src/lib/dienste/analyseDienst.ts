@@ -50,8 +50,13 @@ async function fuehreAnalyseDurch(tabId: string): Promise<void> {
   tab.analyseStand = 'laeuft'
   try {
     // format_id bewusst nicht mitsenden - die Backend-Erkennung entscheidet.
-    // Der Dateiname dient ihr nur als Hinweis.
-    const antwort = await dokumentParsen({ inhalt_text: tab.inhalt, dateiname: tab.titel })
+    // Der Dateiname dient ihr nur als Hinweis. Binäre Dokumente (XLSX) tragen
+    // ihren Inhalt als Base64.
+    const antwort = await dokumentParsen(
+      tab.istBinaer
+        ? { inhalt_base64: tab.inhalt, dateiname: tab.titel }
+        : { inhalt_text: tab.inhalt, dateiname: tab.titel },
+    )
     if (laufJeTab.get(tabId) !== lauf) return
     const aktuell = holeTab(tabId)
     if (aktuell === null) return
