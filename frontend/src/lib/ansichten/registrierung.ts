@@ -3,10 +3,13 @@
 // registriereAnsicht() aus lib/ansichten/registry.ts an, sobald es sie gibt.
 // Der Import in main.ts lädt diese Datei als Seiteneffekt.
 
+import { istTabellarisch } from '../dienste/tabellenModell'
+import { aktiverTab } from '../zustand/tabs.svelte'
 import BaumAnsicht from './baum/BaumAnsicht.svelte'
 import EditorAnsicht from './editor/EditorAnsicht.svelte'
 import { registriereAnsicht } from './registry'
 import StatistikAnsicht from './statistik/StatistikAnsicht.svelte'
+import TabellenAnsicht from './tabelle/TabellenAnsicht.svelte'
 
 registriereAnsicht({
   id: 'baum',
@@ -26,6 +29,20 @@ registriereAnsicht({
   brauchtAnalyse: false,
   eignung: () => 'geeignet',
   komponente: EditorAnsicht,
+})
+
+registriereAnsicht({
+  id: 'tabelle',
+  titel: 'Tabelle',
+  icon: 'fa-solid fa-table',
+  reihenfolge: 30,
+  brauchtAnalyse: true,
+  eignung: () => {
+    const tab = aktiverTab()
+    if (tab?.analyse == null) return 'ungeeignet'
+    return istTabellarisch(tab.analyse.wurzel) ? 'geeignet' : 'ungeeignet'
+  },
+  komponente: TabellenAnsicht,
 })
 
 registriereAnsicht({

@@ -10,3 +10,4 @@ dist/
 .ruff_cache/
 .vite/
 *.egg-info/
+.claude/

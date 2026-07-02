@@ -1,5 +1,11 @@
 """Pydantic-Modelle der API - nichts geht als rohes Dict über die Leitung."""
 
+from app.modelle.abfrage import (
+    AbfrageAnfrage,
+    AbfrageAntwort,
+    AbfrageSprache,
+    Treffer,
+)
 from app.modelle.analyse import (
     HistogrammEimer,
     MusterAnfrage,
@@ -51,6 +57,9 @@ from app.modelle.system import (
 )
 
 __all__ = [
+    "AbfrageAnfrage",
+    "AbfrageAntwort",
+    "AbfrageSprache",
     "CacheStatusAntwort",
     "CapabilitiesAntwort",
     "DialektInfo",
@@ -87,6 +96,7 @@ __all__ = [
     "StatistikAnfrage",
     "StatistikAntwort",
     "TeilbaumGroesse",
+    "Treffer",
     "ValidierungsAnfrage",
     "ValidierungsAntwort",
     "ValidierungsFehler",

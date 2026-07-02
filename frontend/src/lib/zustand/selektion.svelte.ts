@@ -9,7 +9,14 @@
 // derselbe Pfad erneut angeklickt wird (zum Beispiel erneutes Zentrieren im
 // Editor).
 
-export type SelektionsQuelle = 'baum' | 'editor' | 'diagnose' | 'brotkrumen' | 'inspektor'
+export type SelektionsQuelle =
+  | 'baum'
+  | 'editor'
+  | 'diagnose'
+  | 'brotkrumen'
+  | 'inspektor'
+  | 'tabelle'
+  | 'suche'
 
 export interface PfadSelektion {
   tabId: string

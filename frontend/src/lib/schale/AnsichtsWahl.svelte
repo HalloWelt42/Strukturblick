@@ -4,7 +4,7 @@
   // aktiven Tabs), künftige Ansichten erscheinen deaktiviert mit Tooltip.
   // Ohne Tab sind alle Reiter deaktiviert. Sonderfall Lexikon: der Reiter
   // öffnet das schwebende Panel, wechselt aber keine Ansicht und wird nie aktiv.
-  import { ansichten } from '../ansichten/registry'
+  import { ansichten, type Eignung } from '../ansichten/registry'
   import Tooltip from '../hilfsteile/Tooltip.svelte'
   import { lexikon } from '../lexikon/lexikon.svelte'
   import { aktiverTab, setzeAnsicht } from '../zustand/tabs.svelte'
@@ -36,6 +36,24 @@
 
   const registrierteIds = new Set(ansichten().map((modul) => modul.id))
   const tab = $derived(aktiverTab())
+
+  // Eignung je registrierter Ansicht. eignung() liest den aktiven Tab selbst;
+  // die Abhängigkeit von tab und dessen Analyse erzwingt die Neuberechnung
+  // beim Tab-Wechsel und nach frischer Analyse (z. B. CSV wird tabellarisch).
+  const eignungKarte = $derived.by((): Record<string, Eignung> => {
+    void tab?.id
+    void tab?.analyse
+    const karte: Record<string, Eignung> = {}
+    for (const modul of ansichten()) {
+      karte[modul.id] = modul.eignung()
+    }
+    return karte
+  })
+
+  /** Hinweis für einen wegen fehlender Eignung deaktivierten Reiter. */
+  const EIGNUNGS_HINWEIS: Record<string, string> = {
+    tabelle: 'Nur für tabellarische Daten',
+  }
 </script>
 
 <div class="ansichtswahl">
@@ -45,6 +63,13 @@
         <i class={reiter.icon}></i>
         {reiter.titel}
       </button>
+    {:else if registrierteIds.has(reiter.id) && tab !== null && eignungKarte[reiter.id] === 'ungeeignet'}
+      <Tooltip text={EIGNUNGS_HINWEIS[reiter.id] ?? 'Für dieses Dokument nicht verfügbar'}>
+        <span class="reiter deaktiviert">
+          <i class={reiter.icon}></i>
+          {reiter.titel}
+        </span>
+      </Tooltip>
     {:else if registrierteIds.has(reiter.id) && tab !== null}
       {@const aktivesTabId = tab.id}
       <button

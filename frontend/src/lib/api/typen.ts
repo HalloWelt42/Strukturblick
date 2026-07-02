@@ -244,6 +244,33 @@ export interface MusterAntwort {
   funde: MusterFund[]
 }
 
+// ----- Abfrage (backend/app/modelle/abfrage.py) ---------------------------
+
+export type AbfrageSprache = 'jsonpath' | 'xpath' | 'volltext' | 'regex'
+
+export interface AbfrageAnfrage {
+  dokument: DokumentReferenz
+  sprache: AbfrageSprache
+  ausdruck: string
+  max_treffer?: number
+  nur_schluessel?: boolean
+}
+
+/** Ein einzelner Fundort: JSON-Pointer, Quelltext-Position, Wert und Kurztext. */
+export interface Treffer {
+  pfad: string
+  position: QuellSpanne | null
+  wert: JsonWert
+  kontext: string
+}
+
+export interface AbfrageAntwort {
+  treffer: Treffer[]
+  anzahl: number
+  abgeschnitten: boolean
+  sprache: AbfrageSprache
+}
+
 /** Einheitliches Fehlermodell aller Endpunkte. */
 export interface FehlerDetail {
   code: string
