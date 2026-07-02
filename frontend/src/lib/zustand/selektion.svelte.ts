@@ -19,6 +19,8 @@ export type SelektionsQuelle =
   | 'suche'
   | 'diff'
   | 'statistik'
+  | 'schema'
+  | 'graph'
 
 export interface PfadSelektion {
   tabId: string

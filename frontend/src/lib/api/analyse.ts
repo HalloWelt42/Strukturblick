@@ -10,6 +10,8 @@ import type {
   SchemaAntwort,
   StatistikAnfrage,
   StatistikAntwort,
+  TypModellAnfrage,
+  TypModellAntwort,
   ValidierungsAnfrage,
   ValidierungsAntwort,
 } from './typen'
@@ -44,6 +46,13 @@ export function musterErkennen(anfrage: MusterAnfrage): Promise<MusterAntwort> {
 
 export function profilLaden(anfrage: ProfilAnfrage): Promise<ProfilAntwort> {
   return requestJson<ProfilAntwort>('/api/analyse/profil', {
+    method: 'POST',
+    body: JSON.stringify(anfrage),
+  })
+}
+
+export function typmodellLaden(anfrage: TypModellAnfrage): Promise<TypModellAntwort> {
+  return requestJson<TypModellAntwort>('/api/analyse/typmodell', {
     method: 'POST',
     body: JSON.stringify(anfrage),
   })

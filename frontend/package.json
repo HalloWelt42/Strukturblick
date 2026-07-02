@@ -1,7 +1,7 @@
 {
   "name": "strukturblick-frontend",
   "private": true,
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Frontend des Strukturdaten-Assistenten (Svelte 5 + TypeScript + Vite)",
   "type": "module",
   "scripts": {
@@ -26,7 +26,9 @@
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fortawesome/fontawesome-free": "^7.2.0",
     "@lezer/highlight": "^1.2.3",
+    "@xyflow/svelte": "^1.6.1",
     "chart.js": "^4.5.1",
+    "elkjs": "^0.11.1",
     "idb": "^8.0.3",
     "marked": "^18.0.5"
   },

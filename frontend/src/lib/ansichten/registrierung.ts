@@ -7,7 +7,9 @@ import { istTabellarisch } from '../dienste/tabellenModell'
 import { aktiverTab } from '../zustand/tabs.svelte'
 import BaumAnsicht from './baum/BaumAnsicht.svelte'
 import EditorAnsicht from './editor/EditorAnsicht.svelte'
+import GraphAnsicht from './graph/GraphAnsicht.svelte'
 import { registriereAnsicht } from './registry'
+import SchemaAnsicht from './schemaDiagramm/SchemaAnsicht.svelte'
 import StatistikAnsicht from './statistik/StatistikAnsicht.svelte'
 import TabellenAnsicht from './tabelle/TabellenAnsicht.svelte'
 import VergleichAnsicht from './vergleich/VergleichAnsicht.svelte'
@@ -57,6 +59,16 @@ registriereAnsicht({
 })
 
 registriereAnsicht({
+  id: 'schema',
+  titel: 'Schema',
+  icon: 'fa-solid fa-diagram-project',
+  reihenfolge: 60,
+  brauchtAnalyse: true,
+  eignung: () => 'geeignet',
+  komponente: SchemaAnsicht,
+})
+
+registriereAnsicht({
   id: 'vergleich',
   titel: 'Vergleich',
   icon: 'fa-solid fa-code-compare',
@@ -64,4 +76,14 @@ registriereAnsicht({
   brauchtAnalyse: true,
   eignung: () => 'geeignet',
   komponente: VergleichAnsicht,
+})
+
+registriereAnsicht({
+  id: 'graph',
+  titel: 'Graph',
+  icon: 'fa-solid fa-circle-nodes',
+  reihenfolge: 70,
+  brauchtAnalyse: true,
+  eignung: () => 'geeignet',
+  komponente: GraphAnsicht,
 })

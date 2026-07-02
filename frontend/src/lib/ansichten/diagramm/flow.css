@@ -1,0 +1,75 @@
+/* Angleichung der Svelte-Flow-Grundfarben an unsere Token-Palette. Diese
+   Datei importieren Schema- und Graph-Ansicht gemeinsam. Sie faerbt Kanten,
+   Steuerung und Hintergrund-Raster ueber die --xy-*-Variablen des Pakets, die
+   ihrerseits auf unsere Theme-Token zeigen. So folgen die Diagramme dem
+   Theme-Wechsel automatisch, ohne dass wir Inline-Styles setzen muessen.
+
+   Die Klasse .flow-buehne umschliesst den <SvelteFlow>; sie uebernimmt die
+   Rasteroptik der .flow-flaeche aus app.css, damit die Diagramme wie im
+   Mockup auf demselben Untergrund liegen. */
+
+.flow-buehne {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+
+  /* Kanten in gedaempftem Text-Ton, Auswahl im Akzent. */
+  --xy-edge-stroke: var(--text-3);
+  --xy-edge-stroke-selected: var(--akzent);
+  --xy-edge-stroke-width: 1.5;
+  --xy-connectionline-stroke: var(--text-3);
+
+  /* Hintergrund traegt die .flow-flaeche darunter; Svelte-Flow selbst
+     bleibt durchsichtig, damit das App-Raster durchscheint. */
+  --xy-background-color: transparent;
+  --xy-background-pattern-lines-color: var(--rand-1);
+  --xy-background-pattern-dots-color: var(--rand-1);
+  --xy-background-pattern-cross-color: var(--rand-1);
+
+  /* Kanten-Beschriftungen (Kardinalitaet) in Panel-Ton. */
+  --xy-edge-label-background-color: var(--flaeche-panel);
+  --xy-edge-label-color: var(--text-2);
+
+  /* Zoom-Steuerung in Token-Farben (Optik wie .flow-steuer aus app.css). */
+  --xy-controls-button-background-color: var(--flaeche-panel);
+  --xy-controls-button-background-color-hover: var(--flaeche-panel-2);
+  --xy-controls-button-color: var(--text-2);
+  --xy-controls-button-color-hover: var(--text-1);
+  --xy-controls-button-border-color: var(--rand-2);
+  --xy-controls-box-shadow: var(--schatten-1);
+}
+
+/* Die eigenen Knoten-Karten bringen ihre Optik selbst mit (.flow-knoten aus
+   app.css). Svelte-Flow legt sonst Rahmen und Radius um jeden Knoten - das
+   entfernen wir, damit nur unsere Karten-Optik sichtbar ist. */
+.flow-buehne :global(.svelte-flow__node) {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  width: auto;
+}
+
+/* Kardinalitaets-Label als kleine mono-Plakette wie im Mockup. */
+.flow-buehne :global(.svelte-flow__edge-textbg) {
+  fill: var(--flaeche-panel);
+}
+
+.flow-buehne :global(.svelte-flow__edge-text) {
+  fill: var(--text-2);
+  font-family: var(--schrift-mono);
+  font-size: 11px;
+}
+
+/* Die eingebauten Handles dezent halten - sie sind nur Kanten-Anker, keine
+   interaktiven Verbindungspunkte in unseren rein lesenden Diagrammen. */
+.flow-buehne :global(.svelte-flow__handle) {
+  width: 6px;
+  height: 6px;
+  min-width: 0;
+  min-height: 0;
+  background: var(--rand-2);
+  border: none;
+}

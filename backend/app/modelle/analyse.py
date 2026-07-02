@@ -147,3 +147,40 @@ class FeldProfil(BaseModel):
 class ProfilAntwort(BaseModel):
     felder: list[FeldProfil]
     anzahl_felder: int
+
+
+class TypFeld(BaseModel):
+    """Ein Feld eines benannten Typs, aufbereitet für das Schema-Diagramm.
+
+    typ_anzeige ist eine menschenlesbare Beschreibung des Feldtyps auf Deutsch
+    (z. B. "Text", "Zahl", "Liste (Text)", "Objekt (Kunde)"). referenz nennt den
+    Namen des referenzierten benannten Typs (bei einer Liste benannter Typen der
+    Elementtyp), sonst null - daraus lassen sich die Kanten des Diagramms bilden.
+    """
+
+    name: str
+    typ_anzeige: str
+    referenz: str | None = None
+    ist_liste: bool = False
+    optional: bool = False
+
+
+class TypDefinition(BaseModel):
+    """Ein benannter Typ des neutralen Typmodells mit seinen Feldern."""
+
+    name: str
+    felder: list[TypFeld] = Field(default_factory=list)
+
+
+class TypModellAnfrage(BaseModel):
+    """Anfrage für das neutrale Typmodell eines Dokuments (Schema-Diagramm)."""
+
+    dokument: DokumentReferenz
+    wurzelname: str = "Wurzel"
+
+
+class TypModellAntwort(BaseModel):
+    """Das neutrale Typmodell: der Wurzeltyp und alle benannten Typen."""
+
+    wurzel_name: str
+    typen: list[TypDefinition] = Field(default_factory=list)

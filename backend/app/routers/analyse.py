@@ -20,12 +20,44 @@ from app.modelle.analyse import (
     SchemaAntwort,
     StatistikAnfrage,
     StatistikAntwort,
+    TypDefinition,
+    TypFeld,
+    TypModellAnfrage,
+    TypModellAntwort,
     ValidierungsAnfrage,
     ValidierungsAntwort,
 )
 from app.routers.dokumente import parse_mit_cache
+from app.transformer.codegen.schema_modell import FeldTyp, baue_schema_modell
 
 router = APIRouter(tags=["Analyse"])
+
+# Menschenlesbare Anzeigenamen der primitiven Typen des neutralen Modells.
+_PRIMITIV_ANZEIGE: dict[str, str] = {
+    "string": "Text",
+    "number": "Zahl",
+    "integer": "Ganzzahl",
+    "boolean": "Wahrheitswert",
+    "null": "Nichts",
+    "any": "Beliebig",
+}
+
+
+def _basis_anzeige(typ: FeldTyp) -> str:
+    """Anzeigename des Grundtyps (ohne Listen-Hülle): Referenz oder Primitiv."""
+    if typ.referenz is not None:
+        return f"Objekt ({typ.referenz})"
+    return _PRIMITIV_ANZEIGE.get(typ.primitiv or "any", "Beliebig")
+
+
+def _typ_anzeige(typ: FeldTyp) -> str:
+    """Vollständiger, menschenlesbarer Anzeigename eines Feldtyps auf Deutsch."""
+    if typ.ist_liste:
+        # Bei einer Liste benannter Typen genügt der Typname ("Liste (Bestellung)"),
+        # nicht die verschachtelte Objekt-Hülle.
+        element = typ.referenz if typ.referenz is not None else _basis_anzeige(typ)
+        return f"Liste ({element})"
+    return _basis_anzeige(typ)
 
 
 @router.post("/analyse/schema")
@@ -65,3 +97,34 @@ def muster_erkennen(anfrage: MusterAnfrage) -> MusterAntwort:
 def profil_erzeugen(anfrage: ProfilAnfrage) -> ProfilAntwort:
     _, dokument = parse_mit_cache(anfrage.dokument)
     return erzeuge_profil(dokument)
+
+
+@router.post("/analyse/typmodell")
+def typmodell_ableiten(anfrage: TypModellAnfrage) -> TypModellAntwort:
+    """Leitet das neutrale Typmodell für ein Schema-Diagramm ab.
+
+    Nutzt dieselbe Ableitung wie die Codegenerierung (baue_schema_modell) und
+    übersetzt jeden benannten Typ in eine TypDefinition mit menschenlesbaren
+    Feldbeschreibungen. Aus den referenz-Feldern lassen sich die Diagramm-Kanten
+    zwischen den Typen bilden.
+    """
+    _, dokument = parse_mit_cache(anfrage.dokument)
+    modell = baue_schema_modell(dokument.wurzel, anfrage.wurzelname)
+    typen = [
+        TypDefinition(
+            name=typ.name,
+            felder=[
+                TypFeld(
+                    name=feld.name,
+                    typ_anzeige=_typ_anzeige(feld.typ),
+                    referenz=feld.typ.referenz,
+                    ist_liste=feld.typ.ist_liste,
+                    optional=feld.optional,
+                )
+                for feld in typ.felder
+            ],
+        )
+        for typ in modell.typen
+    ]
+    wurzel_name = typen[0].name if typen else ""
+    return TypModellAntwort(wurzel_name=wurzel_name, typen=typen)

@@ -297,6 +297,39 @@ export interface ProfilAntwort {
   anzahl_felder: number
 }
 
+/**
+ * Ein Feld eines benannten Typs, aufbereitet für das Schema-Diagramm.
+ * typ_anzeige ist eine menschenlesbare Beschreibung des Feldtyps auf Deutsch
+ * (z. B. "Text", "Zahl", "Liste (Text)", "Objekt (Kunde)"). referenz nennt den
+ * Namen des referenzierten benannten Typs (bei einer Liste benannter Typen der
+ * Elementtyp), sonst null - daraus lassen sich die Kanten des Diagramms bilden.
+ */
+export interface TypFeld {
+  name: string
+  typ_anzeige: string
+  referenz: string | null
+  ist_liste: boolean
+  optional: boolean
+}
+
+/** Ein benannter Typ des neutralen Typmodells mit seinen Feldern. */
+export interface TypDefinition {
+  name: string
+  felder: TypFeld[]
+}
+
+/** Anfrage für das neutrale Typmodell eines Dokuments (Schema-Diagramm). */
+export interface TypModellAnfrage {
+  dokument: DokumentReferenz
+  wurzelname?: string
+}
+
+/** Das neutrale Typmodell: der Wurzeltyp und alle benannten Typen. */
+export interface TypModellAntwort {
+  wurzel_name: string
+  typen: TypDefinition[]
+}
+
 // ----- Abfrage (backend/app/modelle/abfrage.py) ---------------------------
 
 export type AbfrageSprache = 'jsonpath' | 'xpath' | 'volltext' | 'regex'
