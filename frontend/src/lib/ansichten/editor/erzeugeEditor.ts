@@ -149,33 +149,33 @@ function alsOffsetBereich(doc: Text, position: QuellSpanne | null): { from: numb
 
 // ----- Faltung ------------------------------------------------------------
 //
-// Obergrenzen, damit die Faltung auch bei sehr grossen Dokumenten (grosse
-// NDJSON-/JSON-Baeume) zuegig bleibt und weder haengt noch fehlschlaegt:
-// - PARSE_ZEITBUDGET_MS begrenzt, wie lange der Parser hoechstens laeuft, um
-//   den Syntaxbaum zu vervollstaendigen. Reicht die Zeit nicht, wird der
-//   bereits geparste (unvollstaendige) Baum verwendet - lieber die oberen
+// Obergrenzen, damit die Faltung auch bei sehr großen Dokumenten (große
+// NDJSON-/JSON-Bäume) zügig bleibt und weder hängt noch fehlschlägt:
+// - PARSE_ZEITBUDGET_MS begrenzt, wie lange der Parser höchstens läuft, um
+//   den Syntaxbaum zu vervollständigen. Reicht die Zeit nicht, wird der
+//   bereits geparste (unvollständige) Baum verwendet - lieber die oberen
 //   Ebenen falten als den Browser blockieren.
-// - MAX_KNOTEN kappt die Iteration; darueber hinaus werden keine weiteren
+// - MAX_KNOTEN kappt die Iteration; darüber hinaus werden keine weiteren
 //   Faltbereiche gesammelt. So bleibt der eine Sammel-Dispatch beschraenkt.
 const PARSE_ZEITBUDGET_MS = 150
 const MAX_KNOTEN = 200_000
 
 /**
  * Faltet alle faltbaren Container ab Tiefe `ebene` (1-basiert) zusammen und
- * klappt zuvor alles auf. Robust fuer grosse Dokumente: der Syntaxbaum wird
- * nur bis zu einem Zeitbudget vervollstaendigt, die Iteration bei MAX_KNOTEN
+ * klappt zuvor alles auf. Robust für große Dokumente: der Syntaxbaum wird
+ * nur bis zu einem Zeitbudget vervollständigt, die Iteration bei MAX_KNOTEN
  * gekappt, und alle Faltungen laufen in EINEM Dispatch.
  */
 export function falteAufEbene(view: EditorView, ebene: number): void {
   unfoldAll(view)
   const state = view.state
   // Parser bis zum Dokumentende laufen lassen, aber nur im Zeitbudget - liefert
-  // bei Zeitueberschreitung null, dann greifen wir auf den Teilbaum zurueck.
+  // bei Zeitüberschreitung null, dann greifen wir auf den Teilbaum zurück.
   const baum =
     ensureSyntaxTree(state, state.doc.length, PARSE_ZEITBUDGET_MS) ?? syntaxTree(state)
   const effekte: ReturnType<typeof foldEffect.of>[] = []
-  // Tiefenzaehler ueber einen Stapel: jeder betretene Knoten legt ab, ob er
-  // faltbar war, jeder verlassene raeumt entsprechend ab.
+  // Tiefenzähler über einen Stapel: jeder betretene Knoten legt ab, ob er
+  // faltbar war, jeder verlassene räumt entsprechend ab.
   const stapel: boolean[] = []
   let tiefe = 0
   let besucht = 0

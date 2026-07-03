@@ -1,11 +1,11 @@
 <script lang="ts">
   // Graph-Ansicht nach mockups/graph.html: die Werte des Dokuments als Karten,
-  // verbunden durch Eltern-Kind-Kanten. Grosse Dokumente werden nicht komplett
-  // gezeigt (das waere unlesbar), sondern im Fokus-Modus: ab der Wurzel bzw.
+  // verbunden durch Eltern-Kind-Kanten. Große Dokumente werden nicht komplett
+  // gezeigt (das wäre unlesbar), sondern im Fokus-Modus: ab der Wurzel bzw.
   // ab der aktuellen Auswahl breit-zuerst bis zu einer Knoten-Obergrenze.
   // Werkzeugzeile mit Warn-Abzeichen (nur wenn gekappt), Fokus-Pfad und dem
   // Knopf "Ganzes Dokument zeigen". Klick auf einen Knoten koppelt Baum,
-  // Editor und Brotkrumen ueber die Selektion.
+  // Editor und Brotkrumen über die Selektion.
   import { untrack } from 'svelte'
 
   import {
@@ -34,9 +34,9 @@
 
   const nodeTypes: NodeTypes = { graph: GraphKnoten }
 
-  /** Hoechstzahl gleichzeitig gezeigter Knoten (Fokus-Modus). */
+  /** Höchstzahl gleichzeitig gezeigter Knoten (Fokus-Modus). */
   const KNOTEN_GRENZE = 60
-  /** Geschaetzte Kartengroesse fuer die ELK-Eingabe. */
+  /** Geschätzte Kartengröße für die ELK-Eingabe. */
   const KARTE_BREITE = 200
   const KARTE_HOEHE = 56
 
@@ -45,7 +45,7 @@
 
   // Der Startpfad des Fokus. null bedeutet: ab der Wurzel. Wird per Klick oder
   // durch fremde Selektionen gesetzt und durch "Ganzes Dokument zeigen"
-  // wieder auf die Wurzel zurueckgenommen.
+  // wieder auf die Wurzel zurückgenommen.
   let fokusPfad = $state<string | null>(null)
 
   let nodes = $state.raw<Node[]>([])
@@ -54,7 +54,7 @@
 
   const startPfad = $derived(fokusPfad ?? '')
 
-  // Tab-Wechsel: Fokus zuruecksetzen, damit nicht ein Pfad aus einem anderen
+  // Tab-Wechsel: Fokus zurücksetzen, damit nicht ein Pfad aus einem anderen
   // Dokument stehen bleibt.
   $effect(() => {
     void tab?.id
@@ -65,7 +65,7 @@
 
   // Fremde Selektion (Baum, Editor, Brotkrumen, ...): Fokus um den Pfad neu
   // aufbauen. Eigene Klicks (quelle === "graph") werden ignoriert, um keine
-  // Rueckkopplung auszuloesen.
+  // Rückkopplung auszulösen.
   $effect(() => {
     const auswahl = selektion.aktuell
     if (auswahl === null || auswahl.pfad === null || auswahl.quelle === 'graph') return
@@ -78,7 +78,7 @@
   })
 
   // Graph-Modell bauen und via ELK anordnen. Neu bei Dokument- oder
-  // Fokus-Wechsel sowie beim Theme-Wechsel (fuer die Kantenfarbe).
+  // Fokus-Wechsel sowie beim Theme-Wechsel (für die Kantenfarbe).
   $effect(() => {
     const baum = wurzel
     const start = startPfad
@@ -102,7 +102,7 @@
     }
   })
 
-  /** Aktuelle Kantenfarbe aus dem Theme (fuer Inline-Stroke und Pfeilspitze). */
+  /** Aktuelle Kantenfarbe aus dem Theme (für Inline-Stroke und Pfeilspitze). */
   function kantenFarbe(): string {
     return getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#888'
   }
@@ -147,7 +147,7 @@
     return { nodes: flowNodes, edges: flowEdges }
   }
 
-  /** Fokus-Pfad als lesbare Adresse ("$" fuer die Wurzel). */
+  /** Fokus-Pfad als lesbare Adresse ("$" für die Wurzel). */
   const fokusText = $derived(startPfad === '' ? '$' : startPfad)
 
   /** Klick auf einen Knoten: Auswahl setzen (koppelt Baum/Editor/Brotkrumen). */

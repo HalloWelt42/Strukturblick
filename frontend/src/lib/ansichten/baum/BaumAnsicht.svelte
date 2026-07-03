@@ -47,7 +47,7 @@
     return baueSichtbareZeilen(tab.analyse.wurzel, tab.analyse.positionen, zustand)
   })
   const begriff = $derived(zustand?.suchbegriff.trim().toLowerCase() ?? '')
-  // Anzahl sinnvoller Ebenen-Knoepfe aus der tatsaechlichen Verschachtelungs-
+  // Anzahl sinnvoller Ebenen-Knöpfe aus der tatsächlichen Verschachtelungs-
   // tiefe des Dokuments (mind. 1, gedeckelt bei 9). Ein flaches Dokument zeigt
   // so nur den Knopf "1", tiefere Strukturen entsprechend mehr.
   const ebenen = $derived(

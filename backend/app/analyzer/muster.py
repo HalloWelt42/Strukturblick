@@ -21,10 +21,10 @@ from app.registry import analyzer
 
 _MINDEST_ABDECKUNG = 0.9
 _MINDEST_WERTE = 2
-# Ein Aufzaehlungs-Kandidat verlangt WIEDERHOLUNG: eine kleine Menge verschiedener
-# Werte, die sich ueber genuegend Vorkommen wiederholen. Ohne die Wiederholungs-
-# Bedingung wuerden z. B. sechs unterschiedliche Artikelnamen faelschlich als
-# Aufzaehlung gemeldet (jeder Wert genau einmal - keine Aufzaehlung).
+# Ein Aufzählungs-Kandidat verlangt WIEDERHOLUNG: eine kleine Menge verschiedener
+# Werte, die sich über genügend Vorkommen wiederholen. Ohne die Wiederholungs-
+# Bedingung würden z. B. sechs unterschiedliche Artikelnamen fälschlich als
+# Aufzählung gemeldet (jeder Wert genau einmal - keine Aufzählung).
 _ENUM_MINDEST_WERTE = 8
 _ENUM_MIN_VERSCHIEDEN = 2
 _ENUM_MAX_VERSCHIEDEN = 12
@@ -123,12 +123,12 @@ def _enum_fund(pfad_muster: str, werte: list[str], max_beispiele: int) -> Muster
     verschiedene = sorted(set(werte))
     if not _ENUM_MIN_VERSCHIEDEN <= len(verschiedene) <= _ENUM_MAX_VERSCHIEDEN:
         return None
-    # Entscheidend: die verschiedenen Werte muessen sich wiederholen. Sind fast
-    # alle Werte einzigartig, ist es keine Aufzaehlung, sondern ein freies Feld.
+    # Entscheidend: die verschiedenen Werte müssen sich wiederholen. Sind fast
+    # alle Werte einzigartig, ist es keine Aufzählung, sondern ein freies Feld.
     if len(verschiedene) > len(werte) * _ENUM_MAX_ANTEIL_VERSCHIEDEN:
         return None
-    # Abdeckung = mittlere Haeufigkeit je verschiedenem Wert, normiert auf 0..1
-    # (viele Wiederholungen -> nahe 1). Nur informativ fuer die Anzeige.
+    # Abdeckung = mittlere Häufigkeit je verschiedenem Wert, normiert auf 0..1
+    # (viele Wiederholungen -> nahe 1). Nur informativ für die Anzeige.
     abdeckung = round(1.0 - len(verschiedene) / len(werte), 3)
     return MusterFund(
         pfad_muster=pfad_muster,

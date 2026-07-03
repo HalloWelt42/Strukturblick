@@ -90,8 +90,8 @@ const basisTheme = EditorView.theme({
   '.cm-panels.cm-panels-bottom': {
     borderTop: '1px solid var(--rand-2)',
   },
-  // Such-Panel im App-Look: bequeme Innenabstaende, umbruchfaehige Zeile,
-  // Platz fuer das Schliessen-Kreuz oben rechts.
+  // Such-Panel im App-Look: bequeme Innenabstände, umbruchfähige Zeile,
+  // Platz für das Schließen-Kreuz oben rechts.
   '.cm-panel.cm-search': {
     fontFamily: 'var(--schrift-anzeige)',
     fontSize: '0.82rem',
@@ -102,7 +102,7 @@ const basisTheme = EditorView.theme({
     padding: 'var(--a2) var(--a5) var(--a2) var(--a3)',
     position: 'relative',
   },
-  // Eingabefelder deutlich groesser und breiter; das Suchfeld extra breit.
+  // Eingabefelder deutlich größer und breiter; das Suchfeld extra breit.
   '.cm-textfield': {
     backgroundColor: 'var(--flaeche-eingabe)',
     border: '1px solid var(--rand-2)',
@@ -149,7 +149,7 @@ const basisTheme = EditorView.theme({
     outline: '2px solid var(--akzent)',
     outlineOffset: '-1px',
   },
-  // Checkbox-Labels ("match case", "regexp", "by word") kompakt und gedaempft.
+  // Checkbox-Labels ("match case", "regexp", "by word") kompakt und gedämpft.
   '.cm-panel.cm-search label': {
     display: 'inline-flex',
     alignItems: 'center',
@@ -164,7 +164,7 @@ const basisTheme = EditorView.theme({
     margin: '0',
     cursor: 'pointer',
   },
-  // Schliessen-Kreuz: ordentliche Klickflaeche, gut sichtbar, oben rechts.
+  // Schließen-Kreuz: ordentliche Klickfläche, gut sichtbar, oben rechts.
   '.cm-panel.cm-search [name="close"]': {
     position: 'absolute',
     top: '50%',
@@ -192,7 +192,7 @@ const basisTheme = EditorView.theme({
     outline: '2px solid var(--akzent)',
     outlineOffset: '-1px',
   },
-  // Trefferzaehler-Zeile unter dem Such-Panel.
+  // Trefferzähler-Zeile unter dem Such-Panel.
   '.cm-treffer-zaehler': {
     padding: 'var(--a1) var(--a3)',
     fontFamily: 'var(--schrift-anzeige)',

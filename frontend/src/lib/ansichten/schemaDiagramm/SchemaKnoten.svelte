@@ -14,7 +14,7 @@
     [schluessel: string]: unknown
   }
 
-  // Svelte-Flow reicht die Knotendaten als data-Prop herein; die uebrigen
+  // Svelte-Flow reicht die Knotendaten als data-Prop herein; die übrigen
   // NodeProps (id, position ...) brauchen wir in der Darstellung nicht.
   let { data }: NodeProps = $props()
   const daten = $derived(data as KnotenDaten)
@@ -33,7 +33,7 @@
 </div>
 
 <style>
-  /* Die Optik kommt vollstaendig aus .flow-knoten in app.css. Hier nur die
+  /* Die Optik kommt vollständig aus .flow-knoten in app.css. Hier nur die
      Mindestbreite, damit lange Feldtypen nicht zu eng stehen. */
   .schema-karte {
     position: static;

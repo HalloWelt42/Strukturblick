@@ -1,9 +1,9 @@
 // Verschachtelungstiefe eines JSON-Wertebaums, gemessen in Container-Ebenen.
-// Reine Funktion ohne DOM-Bezug, direkt testbar. Die Tiefe zaehlt genau wie
+// Reine Funktion ohne DOM-Bezug, direkt testbar. Die Tiefe zählt genau wie
 // klappeBisEbene in baumZustand.svelte.ts: die Wurzel (Objekt oder Liste) hat
 // Tiefe 0, ihre direkten Container-Kinder Tiefe 1, deren Container-Kinder
 // Tiefe 2 und so fort. Nicht-Container (Text, Zahl, Wahrheitswert, null)
-// zaehlen nicht als eigene Ebene.
+// zählen nicht als eigene Ebene.
 
 import type { JsonWert } from '../api/typen'
 
@@ -15,7 +15,7 @@ function istContainer(wert: JsonWert): boolean {
 /**
  * Maximale Container-Tiefe des Wertebaums. Ein Wert ohne Container-Kinder hat
  * Tiefe 0 (ein flaches Objekt oder eine flache Liste ebenso). Jede weitere
- * Verschachtelungsstufe erhoeht die Tiefe um 1. Ist die Wurzel selbst kein
+ * Verschachtelungsstufe erhöht die Tiefe um 1. Ist die Wurzel selbst kein
  * Container, ist die Tiefe 0.
  *
  * Iterativ statt rekursiv, damit sehr tief verschachtelte Dokumente den
@@ -39,13 +39,13 @@ export function maxContainerTiefe(wurzel: JsonWert): number {
   return maximum
 }
 
-/** Kleinste und groesste sinnvolle Ebenen-Zahl fuer die Falt-Knoepfe. */
+/** Kleinste und größte sinnvolle Ebenen-Zahl für die Falt-Knöpfe. */
 const MIN_EBENEN = 1
 const MAX_EBENEN = 9
 
 /**
- * Anzahl sinnvoller Ebenen-Knoepfe zu einem Wertebaum: die Container-Tiefe,
- * mindestens 1 und hoechstens 9. Ein flaches Objekt ergibt so genau einen
+ * Anzahl sinnvoller Ebenen-Knöpfe zu einem Wertebaum: die Container-Tiefe,
+ * mindestens 1 und höchstens 9. Ein flaches Objekt ergibt so genau einen
  * Knopf ("Ebene 1" = alles auf/zu), tiefere Strukturen entsprechend mehr.
  */
 export function ebenenAnzahl(wurzel: JsonWert): number {

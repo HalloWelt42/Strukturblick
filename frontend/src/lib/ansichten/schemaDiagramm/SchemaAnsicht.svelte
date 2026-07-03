@@ -1,9 +1,9 @@
 <script lang="ts">
   // Schema-Diagramm nach mockups/schema.html: die aus den Daten abgeleiteten
-  // Typen als .flow-knoten-Karten, verbunden durch Kanten mit Kardinalitaets-
+  // Typen als .flow-knoten-Karten, verbunden durch Kanten mit Kardinalitäts-
   // Beschriftung (1 bzw. 0..n). Werkzeugzeile mit Abzeichen "Aus den Daten
-  // abgeleitet", JSON-Schema-Export, "Neu ableiten" und dem Kardinalitaets-
-  // Hinweis. Anordnung automatisch ueber ELK, Pan/Zoom bringt Svelte-Flow mit.
+  // abgeleitet", JSON-Schema-Export, "Neu ableiten" und dem Kardinalitäts-
+  // Hinweis. Anordnung automatisch über ELK, Pan/Zoom bringt Svelte-Flow mit.
   import {
     Background,
     BackgroundVariant,
@@ -32,9 +32,9 @@
 
   const nodeTypes: NodeTypes = { schema: SchemaKnoten }
 
-  /** Geschaetzte Kartenbreite in Pixeln (deckt lange Feldtypen ab). */
+  /** Geschätzte Kartenbreite in Pixeln (deckt lange Feldtypen ab). */
   const KARTE_BREITE = 220
-  /** Hoehe der Titelzeile plus je Feld eine Zeile - fuer die ELK-Eingabe. */
+  /** Höhe der Titelzeile plus je Feld eine Zeile - für die ELK-Eingabe. */
   const TITEL_HOEHE = 30
   const FELD_HOEHE = 20
 
@@ -81,7 +81,7 @@
     }
   })
 
-  /** Vollstaendige Icon-Klasse fuer die Pfeilspitze in Kantenfarbe. */
+  /** Vollständige Icon-Klasse für die Pfeilspitze in Kantenfarbe. */
   function kantenFarbe(): string {
     return getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#888'
   }
@@ -191,8 +191,8 @@
     }
   }
 
-  /** Klick auf einen Typ-Knoten: nur die Wurzel laesst sich eindeutig einem
-   *  Pfad zuordnen ("") und wird gekoppelt. Benannte Typen koennen an mehreren
+  /** Klick auf einen Typ-Knoten: nur die Wurzel lässt sich eindeutig einem
+   *  Pfad zuordnen ("") und wird gekoppelt. Benannte Typen können an mehreren
    *  Stellen vorkommen, sind also nicht eindeutig - dort passiert nichts. */
   function beiKnotenKlick({ node }: { node: Node }): void {
     const aktuell = tab
@@ -269,7 +269,7 @@
     <LeererZustand
       icon="fa-diagram-project"
       titel="Keine benannten Typen"
-      text="Aus diesem Dokument liessen sich keine Typen ableiten."
+      text="Aus diesem Dokument ließen sich keine Typen ableiten."
     />
   {:else}
     <div class="flow-buehne schema-laedt">
@@ -292,7 +292,7 @@
     font-size: 0.84rem;
   }
 
-  /* Skelett waehrend des Ladens: ein paar angedeutete Karten auf dem Raster. */
+  /* Skelett während des Ladens: ein paar angedeutete Karten auf dem Raster. */
   .schema-laedt {
     display: flex;
     align-items: flex-start;

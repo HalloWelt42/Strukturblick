@@ -1,6 +1,6 @@
 // Aufbau des Graph-Teilbaums aus einem JSON-Wertebaum. Reine Funktionen ohne
 // DOM-Bezug, direkt testbar. Die Graph-Ansicht zeigt Werte als Knoten und
-// Eltern-Kind-Beziehungen als Kanten. Bei grossen Dokumenten waere der volle
+// Eltern-Kind-Beziehungen als Kanten. Bei großen Dokumenten wäre der volle
 // Graph unlesbar, darum arbeitet die Ansicht im Fokus-Modus: ausgehend von
 // einem Startpfad wird breit-zuerst gesammelt, bis eine Knoten-Obergrenze
 // erreicht ist. So bleibt das Bild handhabbar und die Auswahl im Zentrum.
@@ -13,10 +13,10 @@ import { kurzVorschau, typVon, wertAnPfad, type WertTyp } from '../../dienste/we
 export interface GraphKnotenModell {
   /** JSON-Pointer des Knotens (die Wurzel ist ""). */
   pfad: string
-  /** Titel-Beschriftung: Schluessel, Index[n] oder "$" fuer die Wurzel. */
+  /** Titel-Beschriftung: Schlüssel, Index[n] oder "$" für die Wurzel. */
   beschriftung: string
   typ: WertTyp
-  /** Kurzvorschau des Werts fuer die Karten-Zeile. */
+  /** Kurzvorschau des Werts für die Karten-Zeile. */
   vorschau: string
   /** Zusatz rechts (z. B. "7 Schlüssel", "2 Einträge"); leer bei Skalaren. */
   zusatz: string
@@ -28,7 +28,7 @@ export interface GraphKanteModell {
   ziel: string
 }
 
-/** Ergebnis des Aufbaus samt Zaehlern fuer den Kapp-Hinweis. */
+/** Ergebnis des Aufbaus samt Zählern für den Kapp-Hinweis. */
 export interface GraphModell {
   knoten: GraphKnotenModell[]
   kanten: GraphKanteModell[]
@@ -43,11 +43,11 @@ function beschriftungAus(pfad: string): string {
   if (pfad === '') return '$'
   const segmente = segmenteAusPointer(pfad)
   const letztes = segmente[segmente.length - 1] ?? ''
-  // Reine Zahl = Listen-Index -> "[n]", sonst der Schluesselname.
+  // Reine Zahl = Listen-Index -> "[n]", sonst der Schlüsselname.
   return /^(0|[1-9][0-9]*)$/.test(letztes) ? `[${letztes}]` : letztes
 }
 
-/** Direkte Kind-Pfade eines Container-Werts (Objekt-Schluessel bzw. Indizes). */
+/** Direkte Kind-Pfade eines Container-Werts (Objekt-Schlüssel bzw. Indizes). */
 function kindPfade(pfad: string, wert: JsonWert): string[] {
   if (Array.isArray(wert)) {
     return wert.map((_, index) => kindPointer(pfad, index))
@@ -78,7 +78,7 @@ function zusatzFuer(wert: JsonWert): string {
   return ''
 }
 
-/** Baut ein Knoten-Modell fuer genau einen Pfad. */
+/** Baut ein Knoten-Modell für genau einen Pfad. */
 function knotenFuer(wurzel: JsonWert, pfad: string): GraphKnotenModell | null {
   const wert = wertAnPfad(wurzel, pfad)
   if (wert === undefined) return null
@@ -94,8 +94,8 @@ function knotenFuer(wurzel: JsonWert, pfad: string): GraphKnotenModell | null {
 }
 
 /**
- * Zaehlt alle Knoten im Teilbaum ab startPfad (der Startknoten inklusive).
- * Iterativ, damit sehr grosse oder tiefe Dokumente den Stack nicht sprengen.
+ * Zählt alle Knoten im Teilbaum ab startPfad (der Startknoten inklusive).
+ * Iterativ, damit sehr große oder tiefe Dokumente den Stack nicht sprengen.
  */
 function knotenImTeilbaum(wurzel: JsonWert, startPfad: string): number {
   const start = wertAnPfad(wurzel, startPfad)
@@ -115,7 +115,7 @@ function knotenImTeilbaum(wurzel: JsonWert, startPfad: string): number {
 
 /**
  * Sammelt breit-zuerst ab startPfad bis zur Obergrenze. Gibt die aufgenommenen
- * Pfade in Besuchsreihenfolge sowie die Gesamtzahl im Teilbaum zurueck.
+ * Pfade in Besuchsreihenfolge sowie die Gesamtzahl im Teilbaum zurück.
  */
 function sammleBreit(
   wurzel: JsonWert,
@@ -148,7 +148,7 @@ function sammleBreit(
  *
  * @param wurzel   Der komplette Wertebaum des Dokuments.
  * @param startPfad JSON-Pointer, ab dem fokussiert wird ("" = Wurzel).
- * @param grenze   Hoechstzahl gezeigter Knoten.
+ * @param grenze   Höchstzahl gezeigter Knoten.
  */
 export function baueGraphModell(
   wurzel: JsonWert,
@@ -168,7 +168,7 @@ export function baueGraphModell(
     lauf = elternPointer(lauf)
   }
 
-  // Fuer die Vorfahren-Kette bleibt weniger Budget fuer den Teilbaum.
+  // Für die Vorfahren-Kette bleibt weniger Budget für den Teilbaum.
   const teilbaumGrenze = Math.max(1, grenze - vorfahren.length)
   const { pfade: teilbaum, gesamt } = sammleBreit(wurzel, startPfad, teilbaumGrenze)
 
@@ -190,7 +190,7 @@ export function baueGraphModell(
     }
   }
 
-  // Gekappt, wenn der Teilbaum mehr Knoten enthaelt als aufgenommen wurden.
+  // Gekappt, wenn der Teilbaum mehr Knoten enthält als aufgenommen wurden.
   const gekappt = teilbaum.length < gesamt
   return { knoten, kanten, gesamt, gekappt }
 }

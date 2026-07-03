@@ -1,19 +1,19 @@
 // Treffer-Anzeige zum Such-Panel: eine kleine Zeile unter der Suchleiste, die
 // die Anzahl der aktuellen Suchtreffer im gesamten Dokument zeigt. Sie wird nur
 // eingeblendet, solange das Such-Panel offen ist, und aktualisiert sich bei
-// Dokument- und Sucheingaben. Bei sehr grossen Dokumenten wird die Zaehlung an
-// einer Obergrenze gekappt ("500+ Treffer"), damit das Zaehlen nie haengt.
+// Dokument- und Sucheingaben. Bei sehr großen Dokumenten wird die Zählung an
+// einer Obergrenze gekappt ("500+ Treffer"), damit das Zählen nie hängt.
 
 import { getSearchQuery, searchPanelOpen } from '@codemirror/search'
 import { StateField, type EditorState, type Extension } from '@codemirror/state'
 import { EditorView, showPanel, type Panel } from '@codemirror/view'
 
-/** Obergrenze der Zaehlung; darueber zeigen wir "N+ Treffer". */
+/** Obergrenze der Zählung; darüber zeigen wir "N+ Treffer". */
 const MAX_ZAEHLUNG = 500
 
 /**
- * Zaehlt die Treffer der aktuellen Suchanfrage im ganzen Dokument, gekappt bei
- * MAX_ZAEHLUNG. Liefert null, wenn keine gueltige Suche gesetzt ist.
+ * Zählt die Treffer der aktuellen Suchanfrage im ganzen Dokument, gekappt bei
+ * MAX_ZAEHLUNG. Liefert null, wenn keine gültige Suche gesetzt ist.
  */
 function zaehleTreffer(state: EditorState): number | null {
   const query = getSearchQuery(state)
@@ -29,7 +29,7 @@ function zaehleTreffer(state: EditorState): number | null {
   return anzahl
 }
 
-/** Formuliert den Anzeigetext zur (moeglicherweise gekappten) Trefferzahl. */
+/** Formuliert den Anzeigetext zur (möglicherweise gekappten) Trefferzahl. */
 function trefferText(state: EditorState): string {
   const anzahl = zaehleTreffer(state)
   if (anzahl === null) return ''
@@ -38,7 +38,7 @@ function trefferText(state: EditorState): string {
   return `${anzahl} Treffer`
 }
 
-/** Baut das schmale Trefferzaehler-Panel; es rendert unter dem Such-Panel. */
+/** Baut das schmale Trefferzähler-Panel; es rendert unter dem Such-Panel. */
 function trefferPanel(view: EditorView): Panel {
   const wurzel = document.createElement('div')
   wurzel.className = 'cm-treffer-zaehler'
@@ -62,5 +62,5 @@ const zaehlerFeld = StateField.define<boolean>({
     showPanel.from(feld, (offen) => (offen ? trefferPanel : null)),
 })
 
-/** Trefferzaehler als eine Extension fuer den Editor. */
+/** Trefferzähler als eine Extension für den Editor. */
 export const suchZaehlung: Extension = [zaehlerFeld]

@@ -64,7 +64,7 @@
     return baueIndex(tab.analyse.positionen)
   })
 
-  // Anzahl sinnvoller Ebenen-Knoepfe aus der tatsaechlichen Verschachtelungs-
+  // Anzahl sinnvoller Ebenen-Knöpfe aus der tatsächlichen Verschachtelungs-
   // tiefe des Dokuments - genau wie beim Baum (mind. 1, gedeckelt bei 9).
   const ebenen = $derived.by((): number => {
     const tab = aktiverTab()
@@ -72,20 +72,20 @@
     return ebenenAnzahl(tab.analyse.wurzel)
   })
 
-  // Waehlbare Formate fuer die manuelle Festlegung: alle Textformate aus den
-  // Capabilities (binaere wie XLSX blieben ohne editierbaren Text und entfallen).
+  // Wählbare Formate für die manuelle Festlegung: alle Textformate aus den
+  // Capabilities (binäre wie XLSX blieben ohne editierbaren Text und entfallen).
   const waehlbareFormate = $derived.by((): FormatFaehigkeiten[] =>
     (capabilities.daten?.formate ?? []).filter((format) => !format.ist_binaer),
   )
 
-  /** Kurzer Anzeigename fuers Format-Menue. */
+  /** Kurzer Anzeigename fürs Format-Menü. */
   function formatName(format: FormatFaehigkeiten): string {
     if (format.format_id === 'md_tabelle') return 'Markdown-Tabelle'
     if (format.format_id === 'html_tabelle') return 'HTML-Tabelle'
     return format.format_id.toUpperCase()
   }
 
-  /** Manuelle Format-Wahl: festlegen (oder auf automatisch zuruecksetzen) und neu pruefen. */
+  /** Manuelle Format-Wahl: festlegen (oder auf automatisch zurücksetzen) und neu prüfen. */
   function waehleFormat(wert: string): void {
     const tab = aktiverTab()
     if (tab === null) return
@@ -227,7 +227,7 @@
     zeige('Folgt in der Ausbaustufe Transformation.', 'info')
   }
 
-  /** Faltet alle faltbaren Knoten ab Tiefe N (robust auch bei grossen Dateien). */
+  /** Faltet alle faltbaren Knoten ab Tiefe N (robust auch bei großen Dateien). */
   function zeigeEbene(ebene: number): void {
     if (view === null) return
     falteAufEbene(view, ebene)

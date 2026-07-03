@@ -1,12 +1,12 @@
 // Automatisches Diagramm-Layout mit ELK (Eclipse Layout Kernel) im Browser.
 // Rein gehalten und ohne DOM-Bezug, damit Schema- und Graph-Ansicht dieselbe
-// Anordnung nutzen koennen. Der "layered"-Algorithmus ordnet die Knoten in
-// Ebenen von links nach rechts (bzw. der gewuenschten Richtung) und zieht die
+// Anordnung nutzen können. Der "layered"-Algorithmus ordnet die Knoten in
+// Ebenen von links nach rechts (bzw. der gewünschten Richtung) und zieht die
 // Kanten orthogonal - passend zum Fluss-Charakter beider Ansichten.
 
 import ELK, { type ElkNode, type LayoutOptions } from 'elkjs/lib/elk.bundled.js'
 
-/** Eingabe-Knoten: nur Kennung und die (geschaetzte) Kartengroesse. */
+/** Eingabe-Knoten: nur Kennung und die (geschätzte) Kartengröße. */
 export interface LayoutKnoten {
   id: string
   breite: number
@@ -31,7 +31,7 @@ export type LayoutRichtung = 'RIGHT' | 'DOWN'
 
 const elk = new ELK()
 
-/** Basis-Optionen des layered-Layouts mit grosszuegigen, ruhigen Abstaenden. */
+/** Basis-Optionen des layered-Layouts mit großzügigen, ruhigen Abständen. */
 function basisOptionen(richtung: LayoutRichtung): LayoutOptions {
   return {
     'elk.algorithm': 'layered',
@@ -40,21 +40,21 @@ function basisOptionen(richtung: LayoutRichtung): LayoutOptions {
     'elk.layered.spacing.nodeNodeBetweenLayers': '80',
     // Abstand zwischen Knoten derselben Ebene.
     'elk.spacing.nodeNode': '32',
-    // Kanten sauber orthogonal fuehren, wie in den Mockups.
+    // Kanten sauber orthogonal führen, wie in den Mockups.
     'elk.edgeRouting': 'ORTHOGONAL',
     'elk.layered.spacing.edgeNodeBetweenLayers': '24',
-    // Ueberkreuzungen reduzieren fuer ein aufgeraeumtes Bild.
+    // Überkreuzungen reduzieren für ein aufgeräumtes Bild.
     'elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
     'elk.layered.nodePlacement.strategy': 'BRANDES_KOEPF',
   }
 }
 
 /**
- * Layoutet die uebergebenen Knoten und Kanten und gibt je Knoten-Kennung die
- * linke obere Ecke zurueck. Die Knotengroessen (Breite/Hoehe) fliessen als
+ * Layoutet die übergebenen Knoten und Kanten und gibt je Knoten-Kennung die
+ * linke obere Ecke zurück. Die Knotengrößen (Breite/Höhe) fließen als
  * Eingabe ein, damit ELK genug Platz einplant. Fehlt ein Knoten im Ergebnis,
  * wird er nicht in die Karte aufgenommen; die aufrufende Ansicht sollte dann
- * auf eine Standardposition (0, 0) zurueckfallen.
+ * auf eine Standardposition (0, 0) zurückfallen.
  */
 export async function layoute(
   knoten: LayoutKnoten[],
