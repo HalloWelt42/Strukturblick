@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick - Tabelle bearbeiten</title>
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/barlow/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/barlow/500.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/barlow/600.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fontsource/jetbrains-mono/400.css" />
+    <link rel="stylesheet" href="/frontend/node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/mockups/stil.css" />
+    <style>
+      /* Seiten-spezifisch: die Bearbeiten-Erweiterung der Tabelle. */
+
+      /* Zweite Leiste unter der Werkzeugzeile - erscheint nur bei
+         ungespeicherten Aenderungen. Aenderungen sind eine Vorschau. */
+      .bearb-leiste {
+        display: flex;
+        align-items: center;
+        gap: var(--a2);
+        padding: var(--a2) var(--a3);
+        background: var(--zustand-info-weich);
+        border-bottom: 1px solid var(--rand-1);
+      }
+      .bearb-leiste .hinweis-text {
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Schmale Aktionsspalte ganz links (Griff bzw. Zeilen-Aktionen). */
+      .tabelle-bearb th.bearb-aktionsspalte,
+      .tabelle-bearb td.bearb-aktionsspalte {
+        width: 42px;
+        text-align: center;
+        padding-left: var(--a1);
+        padding-right: var(--a1);
+        color: var(--text-3);
+      }
+      .bearb-griff {
+        color: var(--rand-2);
+        cursor: grab;
+      }
+      .bearb-zeilen-aktionen {
+        display: inline-flex;
+        gap: 2px;
+      }
+      .bearb-zeilen-aktionen button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--text-2);
+        padding: 2px 3px;
+        font-size: 0.74rem;
+      }
+      .bearb-zeilen-aktionen button.gefahr {
+        color: var(--zustand-fehler);
+      }
+
+      /* Zelle bzw. Kopf im Bearbeiten-Modus (Klick oeffnet ein Feld). */
+      .bearb-zelle-aktiv {
+        padding: 2px 4px;
+        background: var(--flaeche-panel);
+        box-shadow: inset 0 0 0 2px var(--akzent);
+      }
+      .zellen-feld {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 3px 6px;
+      }
+
+      /* Geaenderte, noch nicht uebernommene Zelle (Vorschau). */
+      .bearb-geaendert {
+        background: var(--zustand-info-weich);
+      }
+      .bearb-punkt {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        margin-left: 5px;
+        border-radius: 50%;
+        background: var(--zustand-info);
+        vertical-align: middle;
+      }
+
+      /* Neu hinzugefuegte bzw. duplizierte Zeile (Vorschau). */
+      .bearb-neu td {
+        background: var(--zustand-info-weich);
+      }
+
+      /* Klickbare "Zeile hinzufuegen"-Zeile. */
+      .bearb-neu-zeile td {
+        color: var(--text-3);
+        cursor: pointer;
+        border-top: 1px dashed var(--rand-2);
+      }
+      .bearb-neu-zeile:hover td {
+        background: var(--akzent-weich);
+        color: var(--text-1);
+      }
+
+      /* Spalten-Menue am Kopf (umbenennen, duplizieren, ausblenden, loeschen). */
+      .bearb-kopf-menue-wirt {
+        position: relative;
+      }
+      .bearb-kopf-menue-knopf {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--text-3);
+        margin-left: 4px;
+        padding: 0 2px;
+      }
+      .bearb-menue {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 5;
+        min-width: 190px;
+        display: flex;
+        flex-direction: column;
+        background: var(--flaeche-panel);
+        border: 1px solid var(--rand-2);
+        box-shadow: var(--schatten-1);
+      }
+      .bearb-menue button {
+        border: none;
+        background: none;
+        text-align: left;
+        cursor: pointer;
+        padding: 7px 12px;
+        color: var(--text-2);
+        font-family: var(--schrift-anzeige);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+      }
+      .bearb-menue button:hover {
+        background: var(--akzent-weich);
+        color: var(--text-1);
+      }
+      .bearb-menue button.gefahr {
+        color: var(--zustand-fehler);
+      }
+
+      /* Vorher/Nachher-Zeile im Inspektor. */
+      .bearb-vorher {
+        color: var(--text-3);
+        text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopfleiste: Marke, Dokument-Tabs, Aktionen -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> Strukturblick</div>
+        <div class="tabs">
+          <div class="tab">
+            <i class="fa-solid fa-file-code"></i> bestellungen.json
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab aktiv">
+            <i class="fa-solid fa-table"></i> kunden.csv
+            <span class="punkt" title="Ungespeicherte Änderungen"></span>
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="tab">
+            <i class="fa-solid fa-file-lines"></i> konfiguration.yaml
+            <button class="tab-zu" title="Tab schließen"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <button class="tab-neu" title="Neues Dokument"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="kopf-rechts">
+          <button class="icon-knopf" title="Thema wechseln"><i class="fa-solid fa-circle-half-stroke"></i></button>
+          <a class="icon-knopf" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Seitenleiste: Dokumente und Werkzeuge -->
+      <nav class="seite-links">
+        <div class="leisten-titel">Dokumente <a class="icon-knopf" href="dokumente.html" title="Dokumente verwalten"><i class="fa-solid fa-folder-open"></i></a></div>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> bestellungen.json <span class="abzeichen dok-format">JSON</span></a>
+        <a class="dok-eintrag aktiv"><i class="fa-solid fa-table"></i> kunden.csv <span class="abzeichen dok-format">CSV</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-lines"></i> konfiguration.yaml <span class="abzeichen dok-format">YAML</span></a>
+        <a class="dok-eintrag"><i class="fa-solid fa-file-code"></i> buecherei.xml <span class="abzeichen dok-format">XML</span></a>
+
+        <div class="leisten-titel">Werkzeuge</div>
+        <a class="werkzeug-eintrag" href="abfrage.html"><i class="fa-solid fa-magnifying-glass"></i> Abfrage</a>
+        <a class="werkzeug-eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i> Konvertieren</a>
+        <a class="werkzeug-eintrag" href="validierung.html"><i class="fa-solid fa-clipboard-check"></i> Validieren</a>
+        <a class="werkzeug-eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i> Reparatur</a>
+        <a class="werkzeug-eintrag" href="codegen.html"><i class="fa-solid fa-code"></i> Code erzeugen</a>
+        <a class="werkzeug-eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i> Testdaten</a>
+
+        <div class="leisten-titel">Nachschlagen</div>
+        <a class="werkzeug-eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+
+        <div class="leisten-fuss">Strukturblick v0.1.1</div>
+      </nav>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansichtswahl">
+          <a class="reiter" href="baum.html"><i class="fa-solid fa-folder-tree"></i> Baum</a>
+          <a class="reiter" href="editor.html"><i class="fa-solid fa-code"></i> Editor</a>
+          <a class="reiter aktiv" href="tabelle.html"><i class="fa-solid fa-table"></i> Tabelle</a>
+          <a class="reiter" href="statistik.html"><i class="fa-solid fa-chart-column"></i> Statistik</a>
+          <a class="reiter" href="schema.html"><i class="fa-solid fa-diagram-project"></i> Struktur</a>
+          <a class="reiter" href="diff.html"><i class="fa-solid fa-code-compare"></i> Vergleich</a>
+          <a class="reiter" href="graph.html"><i class="fa-solid fa-circle-nodes"></i> Graph</a>
+          <a class="reiter" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Lexikon</a>
+        </div>
+
+        <div class="ansicht-flaeche">
+          <div class="werkzeugzeile">
+            <span class="beschriftung"><span class="fachbegriff">Dialekt</span>:</span>
+            <span class="abzeichen">Trennzeichen: Semikolon</span>
+            <span class="abzeichen">Kopfzeile: ja</span>
+            <span class="luecke"></span>
+            <input class="feld" type="text" placeholder="Spalten filtern ..." style="width: 150px" />
+            <button class="knopf klein"><i class="fa-solid fa-plus"></i> Spalte</button>
+            <button class="knopf klein"><i class="fa-solid fa-copy"></i> Dokument duplizieren</button>
+            <button class="knopf klein"><i class="fa-solid fa-file-export"></i> Exportieren</button>
+          </div>
+
+          <!-- Bearbeiten-Leiste: erscheint bei ungespeicherten Aenderungen.
+               Bearbeitungen sind eine Vorschau, bis sie uebernommen werden. -->
+          <div class="bearb-leiste">
+            <span class="abzeichen info"><i class="fa-solid fa-pen"></i> 3 Änderungen (Vorschau)</span>
+            <span class="hinweis-text">Kopf oder Zelle anklicken zum Bearbeiten - erst mit "Übernehmen" wird geschrieben.</span>
+            <button class="knopf klein"><i class="fa-solid fa-rotate-left"></i> Verwerfen</button>
+            <button class="knopf"><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>
+            <button class="knopf primaer"><i class="fa-solid fa-check"></i> Übernehmen</button>
+          </div>
+
+          <!-- Editierbare Tabelle: Köpfe und Zellen per Klick bearbeitbar. -->
+          <table class="tabelle tabelle-bearb">
+            <thead>
+              <tr>
+                <th class="bearb-aktionsspalte"></th>
+                <th>kundennummer <span class="abzeichen">Text</span></th>
+                <th>name <span class="abzeichen">Text</span></th>
+                <!-- Kopf mit geöffnetem Spalten-Menü -->
+                <th class="bearb-kopf-menue-wirt">
+                  email <span class="abzeichen">Text</span>
+                  <button class="bearb-kopf-menue-knopf" title="Spalte"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                  <div class="bearb-menue">
+                    <button><i class="fa-solid fa-pen"></i> Umbenennen</button>
+                    <button><i class="fa-solid fa-copy"></i> Spalte duplizieren</button>
+                    <button><i class="fa-solid fa-eye-slash"></i> Ausblenden</button>
+                    <button class="gefahr"><i class="fa-solid fa-trash"></i> Spalte löschen</button>
+                  </div>
+                </th>
+                <!-- Kopf im Umbenennen-Modus (stadt -> ort) -->
+                <th class="bearb-zelle-aktiv">
+                  <input class="feld zellen-feld" type="text" value="ort" />
+                </th>
+                <th>kunde_seit <span class="abzeichen">Datum</span></th>
+                <th class="zahl">umsatz <span class="abzeichen">Zahl</span><i class="fa-solid fa-arrow-down-wide-short sortier-pfeil" title="Absteigend sortiert"></i></th>
+                <th>aktiv <span class="abzeichen">Boole</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="bearb-aktionsspalte"><span class="bearb-griff"><i class="fa-solid fa-grip-vertical"></i></span></td>
+                <td class="mono">K-1010</td>
+                <td>Hauke Jensen</td>
+                <td class="mono">hauke@beispiel.de</td>
+                <td>Heide</td>
+                <td class="mono">2016-08-15</td>
+                <td class="zahl">7205,60</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="bearb-aktionsspalte"><span class="bearb-griff"><i class="fa-solid fa-grip-vertical"></i></span></td>
+                <td class="mono">K-1006</td>
+                <!-- Zelle im Bearbeiten-Modus -->
+                <td class="bearb-zelle-aktiv"><input class="feld zellen-feld" type="text" value="Jan Carstensen" /></td>
+                <td class="mono">jan@beispiel.de</td>
+                <td>Husum</td>
+                <td class="mono">2017-09-23</td>
+                <td class="zahl">5980,25</td>
+                <td>ja</td>
+              </tr>
+              <!-- Ausgewählte Zeile: zeigt die Zeilen-Aktionen -->
+              <tr class="selektiert">
+                <td class="bearb-aktionsspalte">
+                  <span class="bearb-zeilen-aktionen">
+                    <button title="Zeile duplizieren"><i class="fa-solid fa-copy"></i></button>
+                    <button class="gefahr" title="Zeile löschen"><i class="fa-solid fa-trash"></i></button>
+                  </span>
+                </td>
+                <td class="mono">K-1001</td>
+                <td>Erika Musterfrau</td>
+                <td class="mono">erika@beispiel.de</td>
+                <!-- geänderte Zelle (Vorschau) -->
+                <td class="bearb-geaendert">Hansestadt Hamburg <span class="bearb-punkt" title="Geändert"></span></td>
+                <td class="mono">2019-03-14</td>
+                <td class="zahl">4820,50</td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="bearb-aktionsspalte"><span class="bearb-griff"><i class="fa-solid fa-grip-vertical"></i></span></td>
+                <td class="mono">K-1008</td>
+                <td>Sönke Matthiesen</td>
+                <td class="mono">soenke@beispiel.de</td>
+                <td>Schleswig</td>
+                <td class="mono">2019-12-01</td>
+                <!-- geänderte Zelle (Vorschau) -->
+                <td class="zahl bearb-geaendert">3500,00 <span class="bearb-punkt" title="Geändert"></span></td>
+                <td>ja</td>
+              </tr>
+              <tr>
+                <td class="bearb-aktionsspalte"><span class="bearb-griff"><i class="fa-solid fa-grip-vertical"></i></span></td>
+                <td class="mono">K-1002</td>
+                <td>Max Mustermann</td>
+                <td class="mono">max@beispiel.de</td>
+                <td>Lübeck</td>
+                <td class="mono">2020-11-02</td>
+                <td class="zahl">1275,00</td>
+                <td>ja</td>
+              </tr>
+              <!-- neu duplizierte Zeile (Vorschau) -->
+              <tr class="bearb-neu">
+                <td class="bearb-aktionsspalte"><span class="bearb-griff"><i class="fa-solid fa-grip-vertical"></i></span></td>
+                <td class="mono">K-1002 <span class="bearb-punkt" title="Neue Zeile"></span></td>
+                <td>Max Mustermann</td>
+                <td class="mono">max@beispiel.de</td>
+                <td>Lübeck</td>
+                <td class="mono">2020-11-02</td>
+                <td class="zahl">1275,00</td>
+                <td>ja</td>
+              </tr>
+              <!-- Zeile hinzufügen -->
+              <tr class="bearb-neu-zeile">
+                <td class="bearb-aktionsspalte"><i class="fa-solid fa-plus"></i></td>
+                <td colspan="7">Zeile hinzufügen</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+
+      <!-- Rechte Seitenleiste: Inspektor und KI -->
+      <aside class="seite-rechts">
+        <div class="leisten-titel">Inspektor</div>
+        <div class="inspektor-block">
+          <code class="pfad-code">/2/stadt</code>
+          <dl>
+            <dt>Spalte</dt>
+            <dd class="mono">stadt</dd>
+            <dt>Spaltentyp</dt>
+            <dd><span class="wert-text mono">Text</span></dd>
+            <dt>Wert (Vorschau)</dt>
+            <dd class="mono">"Hansestadt Hamburg"</dd>
+            <dt>Original</dt>
+            <dd class="mono bearb-vorher">"Hamburg"</dd>
+            <dt>Datensatz</dt>
+            <dd>K-1001, Erika Musterfrau</dd>
+          </dl>
+        </div>
+        <div class="inspektor-block">
+          <div class="beschriftung" style="margin-bottom: 6px">Zelle</div>
+          <div class="feld-zeile" style="flex-wrap: wrap; gap: 4px">
+            <button class="knopf klein"><i class="fa-solid fa-pen"></i> Bearbeiten</button>
+            <button class="knopf klein"><i class="fa-solid fa-rotate-left"></i> Zurücksetzen</button>
+            <button class="knopf klein">Pfad kopieren</button>
+          </div>
+        </div>
+
+        <div class="ki-kopfzeile">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> KI-Werkzeuge
+          <span class="luecke"></span>
+          <span class="status-punkt" title="Lokales Sprachmodell erreichbar"></span>
+        </div>
+        <button class="ki-aktion"><i class="fa-solid fa-comment-dots"></i> Daten erklären</button>
+        <button class="ki-aktion"><i class="fa-solid fa-magnifying-glass"></i> Frage in Abfrage übersetzen</button>
+        <button class="ki-aktion"><i class="fa-solid fa-diagram-project"></i> Schema aus Beschreibung</button>
+        <button class="ki-aktion"><i class="fa-solid fa-file-lines"></i> Beschreibung aus Schema</button>
+        <button class="ki-aktion"><i class="fa-solid fa-cubes"></i> Testdaten vorschlagen</button>
+        <div class="ki-hinweis">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Jedes KI-Ergebnis erscheint als Vorschau und wird erst nach Bestätigung übernommen.</span>
+        </div>
+      </aside>
+
+      <!-- Abfragekonsole (eingeklappt) -->
+      <section class="konsole">
+        <div class="konsole-kopf">
+          <i class="fa-solid fa-terminal"></i> Abfrage
+          <span class="luecke"></span>
+          <button class="icon-knopf" title="Konsole ausklappen"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+      </section>
+
+      <!-- Statusleiste -->
+      <footer class="status">
+        <nav class="brotkrumen">
+          <a>$</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <a>[2]</a>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="aktuell">stadt</span>
+        </nav>
+        <div class="status-rechts">
+          <span class="abzeichen info">CSV</span>
+          <span>11 Zeilen, 7 Spalten</span>
+          <span class="diag-zaehler bearb"><i class="fa-solid fa-pen"></i> 3 Änderungen</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mockup-Leiste: Thema umschalten -->
+    <div class="mock-leiste">
+      <button data-theme-btn="mittelton" title="Mittelton"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button data-theme-btn="dunkel" title="Dunkel"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <script>
+      const setzeThema = (t) => {
+        document.documentElement.dataset.theme = t;
+        document.querySelectorAll("[data-theme-btn]").forEach((b) =>
+          b.classList.toggle("aktiv", b.dataset.themeBtn === t),
+        );
+      };
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => (b.onclick = () => setzeThema(b.dataset.themeBtn)));
+      setzeThema("mittelton");
+    </script>
+  </body>
+</html>
