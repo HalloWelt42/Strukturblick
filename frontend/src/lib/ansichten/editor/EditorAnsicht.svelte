@@ -7,6 +7,7 @@
   import type { EditorView } from '@codemirror/view'
   import { untrack } from 'svelte'
 
+  import { konvertiere } from '../../api/transform'
   import type { FormatFaehigkeiten, FormatId, QuellSpanne } from '../../api/typen'
   import { analysiere, sofortAnalysieren } from '../../dienste/analyseDienst'
   import {
@@ -223,8 +224,55 @@
     analysiere(tabId)
   }
 
-  function transformationFolgt(): void {
-    zeige('Folgt in der Ausbaustufe Transformation.', 'info')
+  type Transformation = 'formatieren' | 'minify' | 'sortieren'
+
+  const TRANSFORM_NAME: Record<Transformation, string> = {
+    formatieren: 'Formatiert',
+    minify: 'Minifiziert',
+    sortieren: 'Schlüssel sortiert',
+  }
+
+  /**
+   * Transformiert den Editor-Inhalt, indem er ihn im selben Format neu
+   * serialisiert: Formatieren rückt mit zwei Stufen ein, Minify verzichtet auf
+   * Einrückung, Schlüssel sortieren ordnet Objektschlüssel alphabetisch. Läuft
+   * über den vorhandenen Konvertieren-Endpunkt, damit jede Engine ihr Format
+   * korrekt schreibt (inklusive erkanntem CSV-Trennzeichen).
+   */
+  async function transformiere(art: Transformation): Promise<void> {
+    const tab = aktiverTab()
+    if (tab === null) return
+    const format = tab.formatGewaehlt ?? tab.format
+    if (!format) {
+      zeige('Zum Transformieren muss ein Format erkannt oder gewählt sein.', 'info')
+      return
+    }
+    try {
+      const antwort = await konvertiere({
+        dokument: { inhalt_text: tab.inhalt, format_id: format },
+        ziel_format: format,
+        optionen: {
+          einrueckung: art === 'minify' ? 0 : 2,
+          sortiere_schluessel: art === 'sortieren',
+          csv_trennzeichen: tab.analyse?.dialekt_info?.trennzeichen ?? ';',
+        },
+      })
+      const text = antwort.ergebnis.inhalt_text
+      if (text === null) {
+        zeige('Dieses Format lässt sich nicht als Text ausgeben.', 'fehler')
+        return
+      }
+      if (text === tab.inhalt) {
+        zeige('Der Inhalt liegt bereits in dieser Form vor.', 'info')
+        return
+      }
+      setzeInhalt(tab.id, text)
+      analysiere(tab.id)
+      zeige(`${TRANSFORM_NAME[art]}.`, 'erfolg')
+    } catch (grund: unknown) {
+      const meldung = grund instanceof Error ? grund.message : 'unbekannter Fehler'
+      zeige(`Transformation fehlgeschlagen: ${meldung}`, 'fehler')
+    }
   }
 
   /** Faltet alle faltbaren Knoten ab Tiefe N (robust auch bei großen Dateien). */
@@ -323,13 +371,13 @@
       {/each}
     </select>
     <span class="trenner-v"></span>
-    <button class="knopf klein" onclick={transformationFolgt}>
+    <button class="knopf klein" onclick={() => void transformiere('formatieren')}>
       <i class="fa-solid fa-indent"></i> Formatieren
     </button>
-    <button class="knopf klein" onclick={transformationFolgt}>
+    <button class="knopf klein" onclick={() => void transformiere('minify')}>
       <i class="fa-solid fa-compress"></i> Minify
     </button>
-    <button class="knopf klein" onclick={transformationFolgt}>
+    <button class="knopf klein" onclick={() => void transformiere('sortieren')}>
       <i class="fa-solid fa-arrow-down-a-z"></i> Schlüssel sortieren
     </button>
     <button class="knopf klein" onclick={allesAufklappen}>
