@@ -1328,8 +1328,8 @@ textarea.feld {
   overflow: hidden;
   background-color: var(--flaeche-eingabe);
   background-image:
-    linear-gradient(var(--rand-1) 1px, transparent 1px),
-    linear-gradient(90deg, var(--rand-1) 1px, transparent 1px);
+    linear-gradient(var(--raster-linie) 1px, transparent 1px),
+    linear-gradient(90deg, var(--raster-linie) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 

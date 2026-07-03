@@ -60,6 +60,8 @@
 
   --rand-1: rgba(20, 20, 20, 0.22);
   --rand-2: rgba(20, 20, 20, 0.38);
+  /* Sehr zurückhaltendes Raster für die Diagramm-Hintergründe (blasser als ein Rand). */
+  --raster-linie: rgba(20, 20, 20, 0.07);
 
   --akzent: #4e6379;
   --akzent-stark: #3d4f62;
@@ -112,6 +114,8 @@
 
   --rand-1: rgba(255, 255, 255, 0.12);
   --rand-2: rgba(255, 255, 255, 0.24);
+  /* Sehr zurückhaltendes Raster für die Diagramm-Hintergründe (blasser als ein Rand). */
+  --raster-linie: rgba(255, 255, 255, 0.038);
 
   --akzent: #93a9be;
   --akzent-stark: #b0c3d5;

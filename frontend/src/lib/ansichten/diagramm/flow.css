@@ -20,14 +20,12 @@
   --xy-edge-stroke-width: 1.5;
   --xy-connectionline-stroke: var(--text-3);
 
-  /* Hintergrund traegt die .flow-flaeche darunter; Svelte-Flow selbst
-     bleibt durchsichtig, damit das App-Raster durchscheint. */
+  /* Svelte-Flow selbst bleibt durchsichtig, die Rasterfarbe setzen wir unten
+     direkt am Pattern-Pfad (die --xy-Pattern-Variablen greifen in dieser
+     Paketfassung nicht). */
   --xy-background-color: transparent;
-  --xy-background-pattern-lines-color: var(--rand-1);
-  --xy-background-pattern-dots-color: var(--rand-1);
-  --xy-background-pattern-cross-color: var(--rand-1);
 
-  /* Kanten-Beschriftungen (Kardinalitaet) in Panel-Ton. */
+  /* Kanten-Beschriftungen (Kardinalität) in Panel-Ton. */
   --xy-edge-label-background-color: var(--flaeche-panel);
   --xy-edge-label-color: var(--text-2);
 
@@ -52,7 +50,15 @@
   width: auto;
 }
 
-/* Kardinalitaets-Label als kleine mono-Plakette wie im Mockup. */
+/* Hintergrund-Raster: Svelte-Flow zeichnet die Linien als <path> mit einer
+   festen Paketfarbe (#eee). Als CSS-Eigenschaft mit höherer Spezifität färben
+   wir sie in unseren blassen --raster-linie-Ton um - kein !important nötig.
+   Plain-Selektor (kein :global), da flow.css als globale Datei importiert wird. */
+.flow-buehne .svelte-flow__background path.svelte-flow__background-pattern {
+  stroke: var(--raster-linie);
+}
+
+/* Kardinalitäts-Label als kleine mono-Plakette wie im Mockup. */
 .flow-buehne :global(.svelte-flow__edge-textbg) {
   fill: var(--flaeche-panel);
 }
