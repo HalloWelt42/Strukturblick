@@ -57,7 +57,6 @@
     setzeBreite,
     setzeSpaltenlinien,
     tabellenZustandFuer,
-    verschiebeSpalte,
   } from './tabellenAnsichtZustand.svelte'
   import {
     anzahlAenderungen,
@@ -478,6 +477,48 @@
     if (zielPos === -1) return
     const neu = [...ohne.slice(0, zielPos), quelle, ...ohne.slice(zielPos)]
     spaltenReihenfolgeSetzen(bearbeitung, neu)
+  }
+
+  // ----- Reihenfolge im Modal "Spalten verwalten" per Drag umsortieren ------
+  // Ändert dieselbe (bearbeitung-)Reihenfolge wie der Kopf-Drag, damit die
+  // Tabelle wirklich folgt. Gleiches Window-Pointer-Muster; Ziel ist die Zeile
+  // unter dem Zeiger (data-modal-spalte).
+  let ziehModalSpalte = $state<string | null>(null)
+  let zielModalSpalte = $state<string | null>(null)
+
+  function beiModalGriffStart(ereignis: PointerEvent, spalte: string): void {
+    ereignis.preventDefault()
+    ziehModalSpalte = spalte
+    zielModalSpalte = spalte
+
+    function beiBewegung(ev: PointerEvent): void {
+      const treffer = document
+        .elementsFromPoint(ev.clientX, ev.clientY)
+        .find((el) => el instanceof HTMLElement && el.dataset.modalSpalte !== undefined) as
+        | HTMLElement
+        | undefined
+      if (treffer?.dataset.modalSpalte !== undefined) zielModalSpalte = treffer.dataset.modalSpalte
+    }
+
+    function beiEnde(): void {
+      window.removeEventListener('pointermove', beiBewegung)
+      window.removeEventListener('pointerup', beiEnde)
+      window.removeEventListener('pointercancel', beiEnde)
+      if (
+        bearbeitung !== null &&
+        ziehModalSpalte !== null &&
+        zielModalSpalte !== null &&
+        ziehModalSpalte !== zielModalSpalte
+      ) {
+        verschiebeVor(ziehModalSpalte, zielModalSpalte)
+      }
+      ziehModalSpalte = null
+      zielModalSpalte = null
+    }
+
+    window.addEventListener('pointermove', beiBewegung)
+    window.addEventListener('pointerup', beiEnde)
+    window.addEventListener('pointercancel', beiEnde)
   }
 
   // ----- Zeilen per Drag-and-Drop umsortieren -------------------------------
@@ -1190,11 +1231,29 @@
 
     <!-- Modal: Spalten verwalten (Reihenfolge, Sichtbarkeit, Umbenennung) -->
     <Modal titel="Spalten verwalten" bind:offen={spaltenModalOffen}>
-      {#if ansichtZustand !== null}
+      {#if ansichtZustand !== null && bearbeitung !== null}
+        <p class="spalten-hinweis">Am Griff ziehen, um die Reihenfolge zu ändern.</p>
         <div class="spalten-liste">
-          {#each ansichtZustand.spaltenReihenfolge as spalte, index (spalte)}
+          {#each bearbeitung.spaltenReihenfolge as spalte (spalte)}
             {@const sichtbar = !ansichtZustand.versteckt.has(spalte)}
-            <div class="spalten-zeile">
+            <div
+              class="spalten-zeile"
+              data-modal-spalte={spalte}
+              class:modal-gezogen={ziehModalSpalte === spalte}
+              class:modal-drop={ziehModalSpalte !== null &&
+                zielModalSpalte === spalte &&
+                ziehModalSpalte !== spalte}
+            >
+              <span
+                class="spalten-griff"
+                title="Ziehen zum Umsortieren"
+                role="button"
+                tabindex="-1"
+                aria-label="Spalte {spalte} ziehen"
+                onpointerdown={(e) => beiModalGriffStart(e, spalte)}
+              >
+                <i class="fa-solid fa-grip-vertical"></i>
+              </span>
               <button
                 class="checkbox"
                 class:an={sichtbar}
@@ -1214,22 +1273,6 @@
                 oninput={(e) =>
                   setzeAnzeigename(ansichtZustand, spalte, e.currentTarget.value)}
               />
-              <button
-                class="icon-knopf"
-                title="Nach oben"
-                disabled={index === 0}
-                onclick={() => verschiebeSpalte(ansichtZustand, spalte, -1)}
-              >
-                <i class="fa-solid fa-arrow-up"></i>
-              </button>
-              <button
-                class="icon-knopf"
-                title="Nach unten"
-                disabled={index === ansichtZustand.spaltenReihenfolge.length - 1}
-                onclick={() => verschiebeSpalte(ansichtZustand, spalte, 1)}
-              >
-                <i class="fa-solid fa-arrow-down"></i>
-              </button>
             </div>
           {/each}
         </div>
@@ -1691,6 +1734,33 @@
     display: flex;
     align-items: center;
     gap: var(--a2);
+  }
+
+  .spalten-hinweis {
+    margin: 0 0 var(--a2);
+    color: var(--text-3);
+    font-size: 0.8rem;
+  }
+
+  .spalten-griff {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 2px;
+    color: var(--rand-2);
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .spalten-zeile.modal-gezogen {
+    opacity: 0.55;
+    background: var(--akzent-weich);
+  }
+
+  /* Einfüge-Linie oben: hier landet die gezogene Spalte. */
+  .spalten-zeile.modal-drop {
+    box-shadow: inset 0 3px 0 var(--akzent);
   }
 
   .spalten-roh {
