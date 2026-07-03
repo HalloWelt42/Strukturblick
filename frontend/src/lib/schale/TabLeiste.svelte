@@ -20,6 +20,25 @@
     return id === vergleichStatus.linksTabId || id === vergleichStatus.rechtsTabId
   }
 
+  let listeEl = $state<HTMLDivElement>()
+
+  /** Mausrad über der Tab-Liste scrollt sie horizontal statt die Seite. */
+  function beiRad(ereignis: WheelEvent): void {
+    if (listeEl === undefined) return
+    if (Math.abs(ereignis.deltaY) > Math.abs(ereignis.deltaX)) {
+      listeEl.scrollLeft += ereignis.deltaY
+      ereignis.preventDefault()
+    }
+  }
+
+  // Aktiven Tab ins Sichtfeld rollen (etwa einen neu geöffneten Tab am Ende).
+  $effect(() => {
+    const id = tabs.aktiveTabId
+    if (id === null || listeEl === undefined) return
+    const el = listeEl.querySelector<HTMLElement>(`[data-tab-id="${id}"]`)
+    el?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
+  })
+
   let schliessDialogOffen = $state(false)
   let zuSchliessendeTabId: string | null = null
 
@@ -64,9 +83,11 @@
 </script>
 
 <div class="tabs">
-  {#each tabs.liste as tab (tab.id)}
+  <div class="tab-liste" bind:this={listeEl} onwheel={beiRad}>
+    {#each tabs.liste as tab (tab.id)}
     <div
       class="tab"
+      data-tab-id={tab.id}
       class:aktiv={tab.id === tabs.aktiveTabId}
       class:im-vergleich={imVergleich(tab.id)}
       role="button"
@@ -98,7 +119,8 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
-  {/each}
+    {/each}
+  </div>
   <button
     class="tab-neu"
     aria-label="Datei öffnen"
@@ -137,6 +159,19 @@
 />
 
 <style>
+  /* Scrollbare Tab-Liste: die Tabs rollen horizontal, die Aktionsknöpfe
+     (Öffnen/Zwischenablage/Neu) bleiben rechts daneben immer erreichbar. */
+  .tab-liste {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+
   /* Hervorhebung der beiden am aktiven Vergleich beteiligten Tabs. Wirkt
      zusätzlich zum aktiv-Zustand: aktiv trägt einen oberen --akzent-Streifen
      (app.css), diese Markierung legt einen weichen Zweitakzent-Hintergrund und
