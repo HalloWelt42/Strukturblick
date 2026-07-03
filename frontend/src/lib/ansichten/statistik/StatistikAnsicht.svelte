@@ -135,16 +135,43 @@
     beschriftung: string
     /** Rechtsbündige Zahlenspalte. */
     zahl: boolean
+    /** Erklärung der Bedeutung (als Kopf-Tooltip), falls nicht selbsterklärend. */
+    erklaerung?: string
   }
 
   const PROFIL_SPALTEN: SpaltenKopf[] = [
     { id: 'feld', beschriftung: 'Feld', zahl: false },
-    { id: 'vorkommen', beschriftung: 'Vorkommen', zahl: true },
-    { id: 'verschiedene', beschriftung: 'Verschiedene', zahl: true },
-    { id: 'breite', beschriftung: 'Breite', zahl: true },
-    { id: 'bereich', beschriftung: 'Bereich', zahl: true },
-    { id: 'unterelemente', beschriftung: 'Unterelemente', zahl: true },
-    { id: 'leer', beschriftung: 'Leer-Anteil', zahl: true },
+    {
+      id: 'vorkommen',
+      beschriftung: 'Vorkommen',
+      zahl: true,
+      erklaerung: 'Wie oft das Feld vorkommt',
+    },
+    {
+      id: 'verschiedene',
+      beschriftung: 'Verschiedene',
+      zahl: true,
+      erklaerung: 'Anzahl verschiedener Werte',
+    },
+    {
+      id: 'breite',
+      beschriftung: 'Textbreite',
+      zahl: true,
+      erklaerung: 'Zeichenlänge der Textwerte - vom kürzesten bis zum längsten Wert',
+    },
+    {
+      id: 'bereich',
+      beschriftung: 'Bereich',
+      zahl: true,
+      erklaerung: 'Wertebereich der Zahlen - vom kleinsten bis zum größten Wert',
+    },
+    {
+      id: 'unterelemente',
+      beschriftung: 'Unterelemente',
+      zahl: true,
+      erklaerung: 'Anzahl der Kind-Elemente bei Objekten und Listen',
+    },
+    { id: 'leer', beschriftung: 'Leer-Anteil', zahl: true, erklaerung: 'Anteil leerer Werte' },
   ]
 
   let sortSpalte = $state<ProfilSpalte>('vorkommen')
@@ -446,7 +473,9 @@
                     <th
                       class:zahl={spalte.zahl}
                       onclick={() => sortiereNach(spalte.id)}
-                      title="Nach {spalte.beschriftung} sortieren"
+                      title={spalte.erklaerung !== undefined
+                        ? `${spalte.erklaerung}. Klick: nach ${spalte.beschriftung} sortieren`
+                        : `Nach ${spalte.beschriftung} sortieren`}
                     >
                       {spalte.beschriftung}
                       {#if sortSpalte === spalte.id}
@@ -466,12 +495,11 @@
               <tbody>
                 {#each sortierteFelder as feld (feld.pfad_muster)}
                   {@const dominant = dominanterTyp(feld)}
-                  <tr
-                    class="statx-profil-zeile"
-                    onclick={() => waehleFeld(feld)}
-                    title="Pfad {feldPfad(feld.pfad_muster)} im Baum auswählen"
-                  >
-                    <td class="statx-feld-zelle">
+                  <tr class="statx-profil-zeile" onclick={() => waehleFeld(feld)}>
+                    <td
+                      class="statx-feld-zelle"
+                      title="Pfad {feldPfad(feld.pfad_muster)} im Baum auswählen"
+                    >
                       <code>{feldPfad(feld.pfad_muster)}</code>
                     </td>
                     <td class="statx-typ-zelle">
