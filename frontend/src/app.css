@@ -725,17 +725,22 @@ textarea.feld {
   cursor: pointer;
 }
 
-/* Sortier-Pfeil ist dauerhaft sichtbar (signalisiert Sortierbarkeit): gedimmt,
-   solange die Spalte nicht die aktive Sortierung trägt - dann im Akzent. */
+/* Sortier-Pfeil: standardmäßig im Akzent (aktive Sortierung, auch in der
+   Statistik). Die Zusatzklasse .hinweis kennzeichnet in der Tabelle eine
+   sortierbare, aber nicht aktiv sortierte Spalte - dezent gedimmt, beim
+   Überfahren des Kopfes deutlicher. */
 .tabelle th .sortier-pfeil {
-  color: var(--text-3);
+  color: var(--akzent);
   margin-left: var(--a1);
-  opacity: 0.5;
 }
 
-.tabelle th .sortier-pfeil.aktiv {
-  color: var(--akzent);
-  opacity: 1;
+.tabelle th .sortier-pfeil.hinweis {
+  color: var(--text-3);
+  opacity: 0.4;
+}
+
+.tabelle th:hover .sortier-pfeil.hinweis {
+  opacity: 0.75;
 }
 
 .tabelle td {

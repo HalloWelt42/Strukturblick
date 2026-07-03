@@ -1020,12 +1020,10 @@
                     {kopf}
                   </button>
                   <i
-                    class="fa-solid sortier-pfeil {sortSpalte === spalte
-                      ? sortRichtung === 'auf'
-                        ? 'fa-arrow-up-short-wide'
-                        : 'fa-arrow-down-wide-short'
-                      : 'fa-sort'}"
-                    class:aktiv={sortSpalte === spalte}
+                    class="fa-solid sortier-pfeil {sortSpalte === spalte && sortRichtung === 'ab'
+                      ? 'fa-arrow-down-wide-short'
+                      : 'fa-arrow-up-short-wide'}"
+                    class:hinweis={sortSpalte !== spalte}
                     title={sortSpalte === spalte
                       ? sortRichtung === 'auf'
                         ? 'Aufsteigend sortiert - Klick für absteigend'
