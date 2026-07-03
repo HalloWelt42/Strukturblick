@@ -16,6 +16,7 @@ KI_FUNKTIONEN: tuple[str, ...] = (
     "schema_aus_text",
     "text_aus_schema",
     "testdaten",
+    "testdaten_spezifikation",
 )
 
 _PROMPT_WURZEL = Path(__file__).resolve().parent

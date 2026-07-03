@@ -143,11 +143,44 @@ export interface CodegenZielInfo {
   dateiendung: string
 }
 
+/** ASCII-Ids der Erzeuger-Arten des Testdaten-Generators - zugleich API-Vertrag. */
+export type ErzeugerArt =
+  | 'personenname'
+  | 'vorname'
+  | 'nachname'
+  | 'email'
+  | 'firma'
+  | 'stadt'
+  | 'strasse'
+  | 'land'
+  | 'telefonnummer'
+  | 'ganzzahl'
+  | 'dezimalzahl'
+  | 'wahrheitswert'
+  | 'datum'
+  | 'datumzeit'
+  | 'uuid'
+  | 'muster'
+  | 'wort'
+  | 'satz'
+  | 'kategorie'
+  | 'konstant'
+
+/** Selbstauskunft einer Erzeuger-Art aus dem Capabilities-Endpunkt. */
+export interface ErzeugerArtInfo {
+  id: ErzeugerArt
+  /** Deutscher Anzeigename. */
+  name: string
+  /** Namen der Parameter-Schlüssel dieser Erzeuger-Art. */
+  parameter: string[]
+}
+
 export interface CapabilitiesAntwort {
   version: string
   formate: FormatFaehigkeiten[]
   konvertierungsmatrix: KonvertierungsPaar[]
   codegen_ziele: CodegenZielInfo[]
+  testdaten_erzeuger: ErzeugerArtInfo[]
   limits: Limits
 }
 
@@ -456,6 +489,42 @@ export interface BeispieldatenAntwort {
   dokumente: JsonWert[]
 }
 
+// ----- Testdaten-Generator (backend/app/modelle/testdaten.py) --------------
+
+/** Bindet einen Blatt-Pfad an einen Erzeuger samt Parametern. */
+export interface FeldErzeuger {
+  /** Pfad-Muster des Blatts (JSON-Pointer-artig, Listenindizes als *). */
+  pfad_muster: string
+  erzeuger: ErzeugerArt
+  parameter: Record<string, JsonWert>
+  /** Ein beispielhaft erzeugter Wert. */
+  beispiel: string
+}
+
+/** Vollständige Bauanleitung: Feld-Erzeuger plus Schablone eines Datensatzes. */
+export interface Spezifikation {
+  felder: FeldErzeuger[]
+  /** Struktur genau eines Datensatzes mit Platzhalter-Werten. */
+  vorlage: JsonWert
+}
+
+export interface SpezifikationAnfrage {
+  dokument: DokumentReferenz
+}
+
+export interface TestdatenGeneratorAnfrage {
+  spezifikation: Spezifikation
+  anzahl?: number
+  seed?: number
+  offset?: number
+}
+
+export interface TestdatenGeneratorAntwort {
+  datensaetze: JsonWert[]
+  offset: number
+  anzahl: number
+}
+
 // ----- KI (backend/app/modelle/ki.py) -------------------------------------
 
 /** Ziel-Abfragesprache eines Vorschlags. "auto" überlässt der KI die Wahl. */
@@ -536,6 +605,12 @@ export interface TestdatenAnfrage {
 
 export interface Testdaten {
   dokumente: JsonWert[]
+}
+
+/** Bitte an die KI, für ein Dokument eine Generator-Spezifikation vorzuschlagen. */
+export interface TestdatenSpezifikationAnfrage {
+  ki: KiKontext
+  dokument: DokumentReferenz
 }
 
 /** Einheitliches Fehlermodell aller Endpunkte. */

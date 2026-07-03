@@ -85,6 +85,7 @@ def engine_fuer(format_id: FormatId) -> FormatEngine:
 def capabilities() -> CapabilitiesAntwort:
     # Lazy-Import: registry ist eine tiefe Schicht, transformer.codegen hängt (über
     # transformer/__init__) an registry - der späte Import bricht diesen Zyklus.
+    from app.generatoren import erzeuger_arten_infos
     from app.transformer.codegen import codegen_ziele
 
     formate = [engine.faehigkeiten for engine in engines.alle()]
@@ -109,6 +110,7 @@ def capabilities() -> CapabilitiesAntwort:
         konvertierungsmatrix=matrix,
         analyzer=analyzer_infos,
         codegen_ziele=codegen_ziele(),
+        testdaten_erzeuger=erzeuger_arten_infos(),
         limits=Limits(
             max_dokument_bytes=config.MAX_DOKUMENT_BYTES,
             cache_ttl_sekunden=config.CACHE_TTL_SEKUNDEN,

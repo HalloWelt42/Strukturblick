@@ -144,3 +144,17 @@ class Testdaten(BaseModel):
     """Die erzeugten Beispiel-Datensätze."""
 
     dokumente: list[JsonWert] = Field(default_factory=list)
+
+
+# --- Testdaten-Spezifikation: KI schlägt Erzeuger/Parameter vor --------------
+
+
+class TestdatenSpezifikationAnfrage(BaseModel):
+    """Bitte an die KI, für ein Dokument eine Generator-Spezifikation vorzuschlagen.
+
+    Antwortmodell ist Spezifikation aus app.modelle.testdaten; das deterministische
+    Ableiten bleibt der Standard, dies ist die optionale zweite Option.
+    """
+
+    ki: KiKontext
+    dokument: DokumentReferenz

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from app.modelle.gemeinsam import FormatId, Positionsgenauigkeit, Verlustaspekt
 from app.modelle.generieren import CodegenZielInfo
+from app.modelle.testdaten import ErzeugerArtInfo
 
 
 class HealthAntwort(BaseModel):
@@ -52,4 +53,5 @@ class CapabilitiesAntwort(BaseModel):
     konvertierungsmatrix: list[KonvertierungsPaar]
     analyzer: list[ModulInfo] = Field(default_factory=list)
     codegen_ziele: list[CodegenZielInfo] = Field(default_factory=list)
+    testdaten_erzeuger: list[ErzeugerArtInfo] = Field(default_factory=list)
     limits: Limits

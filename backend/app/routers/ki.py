@@ -15,6 +15,7 @@ from app.ki.funktionen import (
     erzeuge_testdaten,
     schema_aus_text,
     schlage_abfrage_vor,
+    schlage_testdaten_spezifikation_vor,
     text_aus_schema,
 )
 from app.modelle.ki import (
@@ -27,9 +28,11 @@ from app.modelle.ki import (
     SchemaAusTextAnfrage,
     Testdaten,
     TestdatenAnfrage,
+    TestdatenSpezifikationAnfrage,
     TextAusSchema,
     TextAusSchemaAnfrage,
 )
+from app.modelle.testdaten import Spezifikation
 from app.routers.dokumente import parse_mit_cache
 
 router = APIRouter(tags=["KI"])
@@ -76,3 +79,12 @@ async def ki_testdaten(anfrage: TestdatenAnfrage) -> Testdaten:
     """Erzeugt realistische, zur Struktur passende Beispiel-Datensätze."""
     _, dokument = parse_mit_cache(anfrage.dokument)
     return await erzeuge_testdaten(adapter, anfrage, dokument)
+
+
+@router.post("/ki/testdaten-spezifikation")
+async def ki_testdaten_spezifikation(
+    anfrage: TestdatenSpezifikationAnfrage,
+) -> Spezifikation:
+    """Lässt das Sprachmodell eine Generator-Spezifikation vorschlagen."""
+    _, dokument = parse_mit_cache(anfrage.dokument)
+    return await schlage_testdaten_spezifikation_vor(adapter, anfrage.ki, dokument)

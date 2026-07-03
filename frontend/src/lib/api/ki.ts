@@ -11,8 +11,10 @@ import type {
   KiStatus,
   SchemaAusText,
   SchemaAusTextAnfrage,
+  Spezifikation,
   Testdaten,
   TestdatenAnfrage,
+  TestdatenSpezifikationAnfrage,
   TextAusSchema,
   TextAusSchemaAnfrage,
 } from './typen'
@@ -59,6 +61,16 @@ export function textAusSchema(anfrage: TextAusSchemaAnfrage): Promise<TextAusSch
 
 export function erzeugeTestdaten(anfrage: TestdatenAnfrage): Promise<Testdaten> {
   return requestJson<Testdaten>('/api/ki/testdaten', {
+    method: 'POST',
+    body: JSON.stringify(anfrage),
+  })
+}
+
+/** Lässt die KI für ein Dokument eine Generator-Spezifikation vorschlagen. */
+export function schlageTestdatenSpezifikationVor(
+  anfrage: TestdatenSpezifikationAnfrage,
+): Promise<Spezifikation> {
+  return requestJson<Spezifikation>('/api/ki/testdaten-spezifikation', {
     method: 'POST',
     body: JSON.stringify(anfrage),
   })

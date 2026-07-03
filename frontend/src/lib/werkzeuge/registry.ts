@@ -8,6 +8,7 @@ import CodegenWerkzeug from './CodegenWerkzeug.svelte'
 import DokumenteVerwaltung from './DokumenteVerwaltung.svelte'
 import KonvertierenWerkzeug from './KonvertierenWerkzeug.svelte'
 import ReparaturWerkzeug from './ReparaturWerkzeug.svelte'
+import TestdatenWerkzeug from './TestdatenWerkzeug.svelte'
 import ValidierenWerkzeug from './ValidierenWerkzeug.svelte'
 
 export interface WerkzeugModul {
@@ -30,6 +31,7 @@ registriereWerkzeug({ id: 'konvertieren', titel: 'Konvertieren', komponente: Kon
 registriereWerkzeug({ id: 'validieren', titel: 'Validieren', komponente: ValidierenWerkzeug })
 registriereWerkzeug({ id: 'reparatur', titel: 'Reparatur', komponente: ReparaturWerkzeug })
 registriereWerkzeug({ id: 'codegen', titel: 'Code erzeugen', komponente: CodegenWerkzeug })
+registriereWerkzeug({ id: 'testdaten', titel: 'Testdaten', komponente: TestdatenWerkzeug })
 registriereWerkzeug({
   id: 'dokumente',
   titel: 'Dokumente verwalten',

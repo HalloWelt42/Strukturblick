@@ -27,7 +27,7 @@
     { icon: 'fa-clipboard-check', name: 'Validieren', werkzeugId: 'validieren' },
     { icon: 'fa-screwdriver-wrench', name: 'Reparatur', werkzeugId: 'reparatur' },
     { icon: 'fa-code', name: 'Code erzeugen', werkzeugId: 'codegen' },
-    { icon: 'fa-cubes', name: 'Testdaten' },
+    { icon: 'fa-cubes', name: 'Testdaten', werkzeugId: 'testdaten' },
   ]
 
   /** true, wenn der Werkzeug-Eintrag gerade aktiv ist (Werkzeug offen oder Konsole auf). */
