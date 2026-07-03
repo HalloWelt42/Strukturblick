@@ -177,6 +177,47 @@ def _eindeutige_spaltennamen(rohe_namen: list[str], warnungen: list[str]) -> lis
     return ergebnis
 
 
+def _endet_in_offenem_quote(text: str, trennzeichen: str) -> bool:
+    """Prüft, ob der Text mit einem NICHT geschlossenen Anführungszeichen endet.
+
+    Der csv-Reader schluckt ein am Dateiende offenes Anführungszeichen still: Er
+    zieht den restlichen Inhalt in ein einziges Feld, sodass die Spaltenzahl oft
+    zufällig stimmt und keine Warnung entsteht. Diese Heuristik bildet das
+    nachsichtige Reader-Verhalten nach - ein Anführungszeichen öffnet nur am
+    Feldanfang ein gequotetes Feld, "" innerhalb bleibt maskiert - und meldet nur
+    dann einen Defekt, wenn der Text noch mitten im gequoteten Feld aufhört.
+
+    Gültige, mehrzeilige gequotete Felder nach RFC 4180 (schließendes
+    Anführungszeichen vorhanden) lösen bewusst KEINE Warnung aus.
+    """
+    am_feldanfang, im_feld, im_quote, quote_im_quote = range(4)
+    zustand = am_feldanfang
+    for zeichen in text:
+        if zustand == am_feldanfang:
+            if zeichen == ANFUEHRUNGSZEICHEN:
+                zustand = im_quote
+            elif zeichen == trennzeichen or zeichen in "\r\n":
+                zustand = am_feldanfang
+            else:
+                zustand = im_feld
+        elif zustand == im_feld:
+            # Anführungszeichen mitten im Feld bleiben literal (nachsichtiger Reader).
+            if zeichen == trennzeichen or zeichen in "\r\n":
+                zustand = am_feldanfang
+        elif zustand == im_quote:
+            if zeichen == ANFUEHRUNGSZEICHEN:
+                zustand = quote_im_quote
+            # jedes andere Zeichen (auch Zeilenumbruch) bleibt Teil des Feldes
+        else:  # quote_im_quote: gerade ein Anführungszeichen im gequoteten Feld gesehen
+            if zeichen == ANFUEHRUNGSZEICHEN:
+                zustand = im_quote  # maskiertes "" - Feld läuft weiter
+            elif zeichen == trennzeichen or zeichen in "\r\n":
+                zustand = am_feldanfang  # Feld sauber geschlossen
+            else:
+                zustand = im_feld  # nachsichtig: Text nach dem schließenden Quote
+    return zustand == im_quote
+
+
 def _saetze_lesen(text: str, trennzeichen: str) -> list[_RohSatz]:
     """Liest alle Datensätze und merkt sich je Satz den physischen Zeilenbereich."""
     leser = csv.reader(
@@ -322,6 +363,12 @@ class CsvEngine:
             hat_kopfzeile = _kopfzeile_erkennen(probe)
 
         warnungen: list[str] = []
+        if _endet_in_offenem_quote(text, trennzeichen):
+            warnungen.append(
+                "Ein Anführungszeichen wurde nicht geschlossen - der restliche Inhalt "
+                "ab dieser Stelle wurde in ein einzelnes Feld gezogen. Bitte das fehlende "
+                "schließende Anführungszeichen ergänzen."
+            )
         saetze = _saetze_lesen(text, trennzeichen)
         spaltennamen, datensaetze = self._spalten_bestimmen(saetze, hat_kopfzeile, warnungen)
 

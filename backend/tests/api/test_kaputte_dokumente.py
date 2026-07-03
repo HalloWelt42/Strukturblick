@@ -157,12 +157,10 @@ def test_tolerierter_defekt_liefert_200_mit_warnung(
     assert antwort.status_code == 200, antwort.text
     daten = antwort.json()
     assert daten["format_id"] == _format_der_datei(pfad).value
-    # Ein tolerierter Defekt soll sich in einer Warnung niederschlagen (Transparenz).
-    # Ausnahme: ein unbeendetes CSV-Anführungszeichen wird still verschluckt -
-    # der Rest der Datei wandert in ein Feld, sodass die Spaltenzahl stimmt und
-    # keine Warnung entsteht. Das ist eine bekannte Transparenzlücke (kein Absturz).
-    if relativ_pfad != "csv/kaputte/quote_unbeendet.csv":
-        assert daten["warnungen"], f"{relativ_pfad} toleriert still, ohne Warnung"
+    # Ein tolerierter Defekt soll sich immer in einer Warnung niederschlagen
+    # (Transparenz) - auch ein unbeendetes CSV-Anführungszeichen, das der Reader
+    # sonst still verschlucken würde.
+    assert daten["warnungen"], f"{relativ_pfad} toleriert still, ohne Warnung"
 
 
 # --- Reparatur: JSON schlägt vor, Nicht-JSON lehnt sauber ab ----------------
