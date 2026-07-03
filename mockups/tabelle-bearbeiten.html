@@ -116,6 +116,14 @@
       .bearb-drop-spalte {
         box-shadow: inset 2px 0 0 var(--akzent);
       }
+      /* Griff-Anfasser als sichtbares Zeichen, wo gezogen werden kann
+         (gleiche Optik wie der Zeilen-Griff .bearb-griff). */
+      .bearb-sp-griff {
+        color: var(--rand-2);
+        cursor: grab;
+        margin-right: 5px;
+        font-size: 0.72rem;
+      }
 
       /* Spalten-Menü am Kopf (umbenennen, duplizieren, ausblenden, löschen). */
       .bearb-kopf-menue-wirt {
@@ -259,11 +267,11 @@
             <thead>
               <tr>
                 <th class="bearb-aktionsspalte"></th>
-                <th class="bearb-wird-gezogen" title="Spalte wird gezogen">kundennummer <span class="abzeichen">Text</span></th>
-                <th class="bearb-drop-spalte" title="Hierhin verschieben">name <span class="abzeichen">Text</span></th>
+                <th class="bearb-wird-gezogen" title="Spalte wird gezogen"><span class="bearb-sp-griff" title="Spalte ziehen"><i class="fa-solid fa-grip-vertical"></i></span>kundennummer <span class="abzeichen">Text</span></th>
+                <th class="bearb-drop-spalte" title="Hierhin verschieben"><span class="bearb-sp-griff" title="Spalte ziehen"><i class="fa-solid fa-grip-vertical"></i></span>name <span class="abzeichen">Text</span></th>
                 <!-- Kopf mit geöffnetem Spalten-Menü -->
                 <th class="bearb-kopf-menue-wirt">
-                  email <span class="abzeichen">Text</span>
+                  <span class="bearb-sp-griff" title="Spalte ziehen"><i class="fa-solid fa-grip-vertical"></i></span>email <span class="abzeichen">Text</span>
                   <button class="bearb-kopf-menue-knopf" title="Spalte"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                   <div class="bearb-menue">
                     <button><i class="fa-solid fa-pen"></i> Umbenennen</button>
@@ -274,11 +282,11 @@
                 </th>
                 <!-- Kopf im Umbenennen-Modus (stadt -> ort) -->
                 <th class="bearb-zelle-aktiv">
-                  <input class="feld zellen-feld" type="text" value="ort" />
+                  <span class="bearb-sp-griff" title="Spalte ziehen"><i class="fa-solid fa-grip-vertical"></i></span><input class="feld zellen-feld" type="text" value="ort" />
                 </th>
-                <th>kunde_seit <span class="abzeichen">Datum</span></th>
-                <th class="zahl">umsatz <span class="abzeichen">Zahl</span><i class="fa-solid fa-arrow-down-wide-short sortier-pfeil" title="Absteigend sortiert"></i></th>
-                <th>aktiv <span class="abzeichen">Boole</span></th>
+                <th><span class="bearb-sp-griff" title="Spalte ziehen"><i class="fa-solid fa-grip-vertical"></i></span>kunde_seit <span class="abzeichen">Datum</span></th>
+                <th class="zahl"><span class="bearb-sp-griff" title="Spalte ziehen"><i class="fa-solid fa-grip-vertical"></i></span>umsatz <span class="abzeichen">Zahl</span><i class="fa-solid fa-arrow-down-wide-short sortier-pfeil" title="Absteigend sortiert"></i></th>
+                <th><span class="bearb-sp-griff" title="Spalte ziehen"><i class="fa-solid fa-grip-vertical"></i></span>aktiv <span class="abzeichen">Boole</span></th>
               </tr>
             </thead>
             <tbody>
