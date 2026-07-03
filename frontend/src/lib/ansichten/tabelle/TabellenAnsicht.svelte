@@ -62,6 +62,7 @@
     istZelleGeaendert,
     istZeileNeu,
     kopfName,
+    rueckgaengig,
     setzeKopf,
     setzeZelle,
     spalteDuplizieren,
@@ -69,9 +70,11 @@
     spalteLoeschen,
     spaltenReihenfolgeSetzen,
     verwerfen,
+    wiederherstellen,
     zeileDuplizieren,
     zeileHinzufuegen,
     zeileLoeschen,
+    zeileVerschieben,
   } from './tabellenBearbeitung.svelte'
   import DuplikatDialog from './DuplikatDialog.svelte'
 
@@ -120,6 +123,12 @@
 
   const aenderungen = $derived(bearbeitung !== null ? anzahlAenderungen(bearbeitung) : 0)
   const hatAenderungen = $derived(aenderungen > 0)
+  const kannZurueck = $derived((bearbeitung?.zurueckTiefe ?? 0) > 0)
+  const kannVor = $derived((bearbeitung?.vorTiefe ?? 0) > 0)
+  // Die Bearbeiten-Leiste bleibt sichtbar, solange etwas rückgängig gemacht oder
+  // wiederhergestellt werden kann - sonst wäre "Wiederherstellen" nach dem
+  // Zurücknehmen aller Änderungen nicht mehr erreichbar.
+  const zeigeBearbLeiste = $derived(hatAenderungen || kannZurueck || kannVor)
 
   /** Ad-hoc-Wurzel aus den editierten Zeilen - für die vorhandenen Lese-Helfer. */
   const editWurzel = $derived.by((): JsonWert => {
@@ -406,6 +415,54 @@
     spaltenReihenfolgeSetzen(bearbeitung, neu)
   }
 
+  // ----- Zeilen per Drag-and-Drop umsortieren -------------------------------
+  // Nur ohne Sortierung/Filter sinnvoll (sonst wäre die Zielposition
+  // mehrdeutig); dann ist der Zeilenindex zugleich der Datenindex. Gleiches
+  // Window-Pointer-Muster wie bei den Spalten. Der Griff ist sonst ausgegraut.
+
+  const zeilenDragMoeglich = $derived(sortSpalte === null && filterText.trim() === '')
+  let ziehZeile = $state<number | null>(null)
+  let zielZeile = $state<number | null>(null)
+
+  function beiZeilenGriffStart(ereignis: PointerEvent, zeile: number): void {
+    if (!zeilenDragMoeglich) return
+    ereignis.preventDefault()
+    ereignis.stopPropagation()
+    ziehZeile = zeile
+    zielZeile = zeile
+
+    function beiBewegung(ev: PointerEvent): void {
+      const treffer = document
+        .elementsFromPoint(ev.clientX, ev.clientY)
+        .find((el) => el instanceof HTMLElement && el.dataset.zeile !== undefined) as
+        | HTMLElement
+        | undefined
+      if (treffer !== undefined && treffer.dataset.zeile !== undefined) {
+        zielZeile = Number(treffer.dataset.zeile)
+      }
+    }
+
+    function beiEnde(): void {
+      window.removeEventListener('pointermove', beiBewegung)
+      window.removeEventListener('pointerup', beiEnde)
+      window.removeEventListener('pointercancel', beiEnde)
+      if (
+        bearbeitung !== null &&
+        ziehZeile !== null &&
+        zielZeile !== null &&
+        ziehZeile !== zielZeile
+      ) {
+        zeileVerschieben(bearbeitung, ziehZeile, zielZeile)
+      }
+      ziehZeile = null
+      zielZeile = null
+    }
+
+    window.addEventListener('pointermove', beiBewegung)
+    window.addEventListener('pointerup', beiEnde)
+    window.addEventListener('pointercancel', beiEnde)
+  }
+
   // ----- Zeilen-Aktionen ----------------------------------------------------
 
   function tuZeileDuplizieren(index: number): void {
@@ -465,6 +522,53 @@
     offenesMenue = null
     zeige('Änderungen verworfen.', 'info')
   }
+
+  /** Schließt offene Inline-Felder/Menüs, damit Rückgängig nicht mit ihnen kollidiert. */
+  function schliesseInline(): void {
+    aktiveZelle = null
+    aktiverKopf = null
+    offenesMenue = null
+  }
+
+  function tuRueckgaengig(): void {
+    if (bearbeitung === null || !kannZurueck) return
+    schliesseInline()
+    rueckgaengig(bearbeitung)
+  }
+
+  function tuWiederherstellen(): void {
+    if (bearbeitung === null || !kannVor) return
+    schliesseInline()
+    wiederherstellen(bearbeitung)
+  }
+
+  // Tastenkürzel Rückgängig/Wiederherstellen (Strg/Cmd+Z, Strg/Cmd+Umschalt+Z bzw.
+  // Strg+Y). Nicht, während ein Zell-/Kopf-Feld getippt wird - dort gilt das native
+  // Rückgängig des Eingabefeldes.
+  $effect(() => {
+    function beiTaste(ereignis: KeyboardEvent): void {
+      if (bearbeitung === null) return
+      if (!(ereignis.ctrlKey || ereignis.metaKey) || ereignis.altKey) return
+      if (aktiveZelle !== null || aktiverKopf !== null) return
+      const ziel = ereignis.target
+      if (
+        ziel instanceof HTMLElement &&
+        (ziel.tagName === 'INPUT' || ziel.tagName === 'TEXTAREA' || ziel.isContentEditable)
+      ) {
+        return
+      }
+      const taste = ereignis.key.toLowerCase()
+      if (taste === 'z' && !ereignis.shiftKey) {
+        ereignis.preventDefault()
+        tuRueckgaengig()
+      } else if ((taste === 'z' && ereignis.shiftKey) || taste === 'y') {
+        ereignis.preventDefault()
+        tuWiederherstellen()
+      }
+    }
+    window.addEventListener('keydown', beiTaste)
+    return () => window.removeEventListener('keydown', beiTaste)
+  })
 
   async function tuUebernehmen(): Promise<void> {
     if (tab === null || bearbeitung === null || uebernahmeLaeuft) return
@@ -714,22 +818,56 @@
       </button>
     </div>
 
-    {#if hatAenderungen}
+    {#if zeigeBearbLeiste}
       <div class="bearb-leiste">
-        <span class="abzeichen info">
-          <i class="fa-solid fa-pen"></i>
-          {aenderungen} {aenderungen === 1 ? 'Änderung' : 'Änderungen'} (Vorschau)
+        {#if hatAenderungen}
+          <span class="abzeichen info">
+            <i class="fa-solid fa-pen"></i>
+            {aenderungen} {aenderungen === 1 ? 'Änderung' : 'Änderungen'} (Vorschau)
+          </span>
+        {:else}
+          <span class="abzeichen">
+            <i class="fa-solid fa-clock-rotate-left"></i> Keine offenen Änderungen
+          </span>
+        {/if}
+        <span class="bearb-verlauf">
+          <button
+            class="icon-knopf"
+            title="Rückgängig (Strg+Z)"
+            aria-label="Rückgängig"
+            onclick={tuRueckgaengig}
+            disabled={!kannZurueck || uebernahmeLaeuft}
+          >
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+          </button>
+          <button
+            class="icon-knopf"
+            title="Wiederherstellen (Strg+Umschalt+Z)"
+            aria-label="Wiederherstellen"
+            onclick={tuWiederherstellen}
+            disabled={!kannVor || uebernahmeLaeuft}
+          >
+            <i class="fa-solid fa-arrow-rotate-right"></i>
+          </button>
         </span>
         <span class="hinweis-text">
           Kopf oder Zelle anklicken zum Bearbeiten - erst mit "Übernehmen" wird geschrieben.
         </span>
-        <button class="knopf klein" onclick={tuVerwerfen} disabled={uebernahmeLaeuft}>
-          <i class="fa-solid fa-rotate-left"></i> Verwerfen
+        <button class="knopf klein" onclick={tuVerwerfen} disabled={!hatAenderungen || uebernahmeLaeuft}>
+          <i class="fa-solid fa-eraser"></i> Verwerfen
         </button>
-        <button class="knopf" onclick={() => void tuAlsNeuesDokument()} disabled={uebernahmeLaeuft}>
+        <button
+          class="knopf"
+          onclick={() => void tuAlsNeuesDokument()}
+          disabled={!hatAenderungen || uebernahmeLaeuft}
+        >
           <i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument
         </button>
-        <button class="knopf primaer" onclick={() => void tuUebernehmen()} disabled={uebernahmeLaeuft}>
+        <button
+          class="knopf primaer"
+          onclick={() => void tuUebernehmen()}
+          disabled={!hatAenderungen || uebernahmeLaeuft}
+        >
           <i class="fa-solid fa-check"></i> Übernehmen
         </button>
       </div>
@@ -826,24 +964,46 @@
           {/if}
           {#each fensterZeilen as zeile (zeile)}
             <tr
+              data-zeile={zeile}
               class:selektiert={auswahlZeile === zeile}
               class:bearb-neu={istZeileNeu(bearbeitung, zeile)}
+              class:bearb-zeile-gezogen={ziehZeile === zeile}
+              class:bearb-zeile-ziel={ziehZeile !== null && zielZeile === zeile && ziehZeile !== zeile}
               style="height: {ZEILEN_HOEHE}px"
               onmouseenter={() => (aktiveZeile = zeile)}
             >
               <td class="bearb-aktionsspalte">
-                {#if aktiveZeile === zeile}
-                  <span class="bearb-zeilen-aktionen">
-                    <button title="Zeile duplizieren" aria-label="Zeile duplizieren" onclick={() => tuZeileDuplizieren(zeile)}>
+                <span class="bearb-zeilen-werkzeuge">
+                  <span
+                    class="bearb-griff"
+                    class:aus={!zeilenDragMoeglich}
+                    title={zeilenDragMoeglich
+                      ? 'Zeile ziehen zum Umsortieren'
+                      : 'Zum Umsortieren zuerst Sortierung und Filter aufheben'}
+                    role="button"
+                    tabindex="-1"
+                    aria-label="Zeile ziehen"
+                    onpointerdown={(e) => beiZeilenGriffStart(e, zeile)}
+                  ><i class="fa-solid fa-grip-vertical"></i></span>
+                  {#if aktiveZeile === zeile}
+                    <button
+                      class="bearb-zeilen-akt"
+                      title="Zeile duplizieren"
+                      aria-label="Zeile duplizieren"
+                      onclick={() => tuZeileDuplizieren(zeile)}
+                    >
                       <i class="fa-solid fa-copy"></i>
                     </button>
-                    <button class="gefahr" title="Zeile löschen" aria-label="Zeile löschen" onclick={() => tuZeileLoeschen(zeile)}>
+                    <button
+                      class="bearb-zeilen-akt gefahr"
+                      title="Zeile löschen"
+                      aria-label="Zeile löschen"
+                      onclick={() => tuZeileLoeschen(zeile)}
+                    >
                       <i class="fa-solid fa-trash"></i>
                     </button>
-                  </span>
-                {:else}
-                  <span class="bearb-griff" title="Zeile"><i class="fa-solid fa-grip-vertical"></i></span>
-                {/if}
+                  {/if}
+                </span>
               </td>
               {#each angezeigteSpalten as spalte (spalte)}
                 {@const roh = zellwert(editWurzel, zeile, spalte)}
@@ -1130,25 +1290,36 @@
 
   .tabelle-bearb th.bearb-aktionsspalte,
   .tabelle-bearb td.bearb-aktionsspalte {
-    width: 42px;
-    text-align: center;
+    width: 74px;
+    text-align: left;
     padding-left: var(--a1);
     padding-right: var(--a1);
     color: var(--text-3);
     cursor: default;
   }
 
-  .bearb-griff {
-    color: var(--rand-2);
-    cursor: grab;
-  }
-
-  .bearb-zeilen-aktionen {
+  /* Griff und Zeilen-Aktionen liegen nebeneinander (nie eines statt des
+     anderen), damit der Ziehgriff immer erreichbar bleibt. */
+  .bearb-zeilen-werkzeuge {
     display: inline-flex;
+    align-items: center;
     gap: 2px;
   }
 
-  .bearb-zeilen-aktionen button {
+  .bearb-griff {
+    color: var(--rand-2);
+    cursor: grab;
+    padding: 0 2px;
+    touch-action: none;
+  }
+
+  /* Umsortieren nicht möglich (Sortierung/Filter aktiv): Griff sichtbar aus. */
+  .bearb-griff.aus {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .bearb-zeilen-akt {
     border: none;
     background: none;
     cursor: pointer;
@@ -1157,8 +1328,24 @@
     font-size: 0.74rem;
   }
 
-  .bearb-zeilen-aktionen button.gefahr {
+  .bearb-zeilen-akt.gefahr {
     color: var(--zustand-fehler);
+  }
+
+  /* Zeilen-Drag: gezogene Zeile gedimmt, Zielzeile mit Akzentlinie oben. */
+  .tabelle-bearb tbody tr.bearb-zeile-gezogen td {
+    opacity: 0.45;
+  }
+
+  .tabelle-bearb tbody tr.bearb-zeile-ziel td {
+    box-shadow: inset 0 2px 0 var(--akzent);
+  }
+
+  /* Rückgängig/Wiederherstellen in der Bearbeiten-Leiste. */
+  .bearb-verlauf {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
   }
 
   /* Zelle bzw. Kopf im Bearbeiten-Modus (Klick öffnet ein Feld). */

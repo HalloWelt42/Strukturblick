@@ -55,6 +55,10 @@ export interface TabellenBearbeitung {
   ursprungSpalten: string[]
   /** Laufende Nummer für neue Spalten-Rohnamen (Kollisionsfrei). */
   spaltenZaehler: number
+  /** Anzahl möglicher Rückgängig-Schritte (reaktiv, treibt die Knopf-Zustände). */
+  zurueckTiefe: number
+  /** Anzahl möglicher Wiederherstellen-Schritte (reaktiv). */
+  vorTiefe: number
 }
 
 const zustaende = new Map<string, TabellenBearbeitung>()
@@ -103,6 +107,8 @@ function baueNeu(wurzel: JsonWert, spalten: string[]): TabellenBearbeitung {
     ursprungIds: [...ids],
     ursprungSpalten: [...spalten],
     spaltenZaehler: 0,
+    zurueckTiefe: 0,
+    vorTiefe: 0,
   })
   return zustand
 }
@@ -128,6 +134,7 @@ export function bearbeitungFuer(
   if (vorhanden.quelle !== neuerAbdruck && anzahlAenderungen(vorhanden) === 0) {
     // Quelle hat sich geändert und nichts ist offen: frisch übernehmen.
     setzeInPlace(vorhanden, baueNeu(wurzel, spalten))
+    leereVerlauf(vorhanden)
   }
   return vorhanden
 }
@@ -145,6 +152,106 @@ function setzeInPlace(ziel: TabellenBearbeitung, frisch: TabellenBearbeitung): v
   ziel.ursprungIds = frisch.ursprungIds
   ziel.ursprungSpalten = frisch.ursprungSpalten
   ziel.spaltenZaehler = frisch.spaltenZaehler
+  ziel.zurueckTiefe = frisch.zurueckTiefe
+  ziel.vorTiefe = frisch.vorTiefe
+}
+
+// ----- Rückgängig / Wiederherstellen (Verlauf je Editier-Zustand) -----------
+// Der Verlauf hängt nicht am reaktiven Zustand (er soll nicht mit-proxifiziert
+// werden), sondern in einer WeakMap am Zustandsobjekt. Vor jeder verändernden
+// Operation sichert merke() eine Momentaufnahme; Rückgängig/Wiederherstellen
+// tauschen zwischen den Stapeln. Die Tiefen spiegeln sich in den reaktiven
+// Feldern zurueckTiefe/vorTiefe, damit die Knöpfe reagieren.
+
+/** Höchstzahl gesicherter Schritte (ältere fallen unten heraus). */
+const MAX_VERLAUF = 50
+
+/** Momentaufnahme der veränderlichen Felder (Baseline/Ursprung bleiben stabil). */
+interface Momentaufnahme {
+  zeilen: TabellenZeile[]
+  spaltenReihenfolge: string[]
+  umbenennung: Record<string, string>
+  geaenderteZellen: string[]
+  neueZeilen: string[]
+  zeilenIds: string[]
+  spaltenZaehler: number
+}
+
+interface Verlauf {
+  zurueck: Momentaufnahme[]
+  vor: Momentaufnahme[]
+}
+
+const verlaeufe = new WeakMap<TabellenBearbeitung, Verlauf>()
+
+function verlaufVon(zustand: TabellenBearbeitung): Verlauf {
+  let vorhanden = verlaeufe.get(zustand)
+  if (vorhanden === undefined) {
+    vorhanden = { zurueck: [], vor: [] }
+    verlaeufe.set(zustand, vorhanden)
+  }
+  return vorhanden
+}
+
+function schnappschuss(zustand: TabellenBearbeitung): Momentaufnahme {
+  return {
+    zeilen: zustand.zeilen.map(kopiereZeile),
+    spaltenReihenfolge: [...zustand.spaltenReihenfolge],
+    umbenennung: { ...zustand.umbenennung },
+    geaenderteZellen: [...zustand.geaenderteZellen],
+    neueZeilen: [...zustand.neueZeilen],
+    zeilenIds: [...zustand.zeilenIds],
+    spaltenZaehler: zustand.spaltenZaehler,
+  }
+}
+
+function stelleHer(zustand: TabellenBearbeitung, aufnahme: Momentaufnahme): void {
+  zustand.zeilen = aufnahme.zeilen.map(kopiereZeile)
+  zustand.spaltenReihenfolge = [...aufnahme.spaltenReihenfolge]
+  zustand.umbenennung = { ...aufnahme.umbenennung }
+  zustand.geaenderteZellen = new SvelteSet(aufnahme.geaenderteZellen)
+  zustand.neueZeilen = new SvelteSet(aufnahme.neueZeilen)
+  zustand.zeilenIds = [...aufnahme.zeilenIds]
+  zustand.spaltenZaehler = aufnahme.spaltenZaehler
+}
+
+/** Sichert den aktuellen Stand vor einer Änderung und verwirft den Vor-Stapel. */
+function merke(zustand: TabellenBearbeitung): void {
+  const verlauf = verlaufVon(zustand)
+  verlauf.zurueck.push(schnappschuss(zustand))
+  if (verlauf.zurueck.length > MAX_VERLAUF) verlauf.zurueck.shift()
+  verlauf.vor = []
+  zustand.zurueckTiefe = verlauf.zurueck.length
+  zustand.vorTiefe = 0
+}
+
+/** Löscht den Verlauf (bei Verwerfen/Neu-Aufbau). */
+function leereVerlauf(zustand: TabellenBearbeitung): void {
+  verlaeufe.delete(zustand)
+  zustand.zurueckTiefe = 0
+  zustand.vorTiefe = 0
+}
+
+/** Macht die letzte Änderung rückgängig (falls möglich). */
+export function rueckgaengig(zustand: TabellenBearbeitung): void {
+  const verlauf = verlaufVon(zustand)
+  const letzter = verlauf.zurueck.pop()
+  if (letzter === undefined) return
+  verlauf.vor.push(schnappschuss(zustand))
+  stelleHer(zustand, letzter)
+  zustand.zurueckTiefe = verlauf.zurueck.length
+  zustand.vorTiefe = verlauf.vor.length
+}
+
+/** Stellt eine rückgängig gemachte Änderung wieder her (falls möglich). */
+export function wiederherstellen(zustand: TabellenBearbeitung): void {
+  const verlauf = verlaufVon(zustand)
+  const naechster = verlauf.vor.pop()
+  if (naechster === undefined) return
+  verlauf.zurueck.push(schnappschuss(zustand))
+  stelleHer(zustand, naechster)
+  zustand.zurueckTiefe = verlauf.zurueck.length
+  zustand.vorTiefe = verlauf.vor.length
 }
 
 /** Schlüssel einer Zelle für die Geändert-Markierung. */
@@ -174,6 +281,10 @@ export function setzeZelle(
   const zeile = zustand.zeilen[index]
   if (zeile === undefined) return
   const wert = deuteWert(roheingabe)
+  // Unveränderte Eingabe (Feld ohne echte Änderung verlassen) erzeugt keinen
+  // Verlaufsschritt.
+  if (wertGleich(wert, zeile[spalte])) return
+  merke(zustand)
   zeile[spalte] = wert
   zustand.zeilen = [...zustand.zeilen]
 
@@ -213,10 +324,15 @@ export function setzeKopf(
   neuerName: string,
 ): void {
   const bereinigt = neuerName.trim()
+  const bisher = zustand.umbenennung[spalte]
   if (bereinigt === '' || bereinigt === spalte) {
+    if (bisher === undefined) return
+    merke(zustand)
     const { [spalte]: _weg, ...rest } = zustand.umbenennung
     zustand.umbenennung = rest
   } else {
+    if (bisher === bereinigt) return
+    merke(zustand)
     zustand.umbenennung = { ...zustand.umbenennung, [spalte]: bereinigt }
   }
 }
@@ -231,6 +347,7 @@ export function kopfName(zustand: TabellenBearbeitung, spalte: string): string {
 export function zeileDuplizieren(zustand: TabellenBearbeitung, index: number): void {
   const zeile = zustand.zeilen[index]
   if (zeile === undefined) return
+  merke(zustand)
   const id = crypto.randomUUID()
   zustand.zeilen = [
     ...zustand.zeilen.slice(0, index + 1),
@@ -249,6 +366,7 @@ export function zeileDuplizieren(zustand: TabellenBearbeitung, index: number): v
 export function zeileLoeschen(zustand: TabellenBearbeitung, index: number): void {
   const id = zustand.zeilenIds[index]
   if (id === undefined) return
+  merke(zustand)
   zustand.zeilen = zustand.zeilen.filter((_, i) => i !== index)
   zustand.zeilenIds = zustand.zeilenIds.filter((_, i) => i !== index)
   zustand.neueZeilen.delete(id)
@@ -260,6 +378,7 @@ export function zeileLoeschen(zustand: TabellenBearbeitung, index: number): void
 
 /** Hängt eine neue, leere Zeile an (alle Spalten leerer String), als neu markiert. */
 export function zeileHinzufuegen(zustand: TabellenBearbeitung): void {
+  merke(zustand)
   const id = crypto.randomUUID()
   const neu: TabellenZeile = {}
   for (const spalte of zustand.spaltenReihenfolge) neu[spalte] = ''
@@ -286,6 +405,7 @@ function freierSpaltenname(zustand: TabellenBearbeitung, wunsch: string): string
 export function spalteDuplizieren(zustand: TabellenBearbeitung, spalte: string): void {
   const index = zustand.spaltenReihenfolge.indexOf(spalte)
   if (index === -1) return
+  merke(zustand)
   const neuName = freierSpaltenname(zustand, `${kopfName(zustand, spalte)}_kopie`)
   zustand.spaltenReihenfolge = [
     ...zustand.spaltenReihenfolge.slice(0, index + 1),
@@ -302,6 +422,8 @@ export function spalteDuplizieren(zustand: TabellenBearbeitung, spalte: string):
 
 /** Löscht eine Spalte aus Reihenfolge, Zeilen und Umbenennung. */
 export function spalteLoeschen(zustand: TabellenBearbeitung, spalte: string): void {
+  if (!zustand.spaltenReihenfolge.includes(spalte)) return
+  merke(zustand)
   zustand.spaltenReihenfolge = zustand.spaltenReihenfolge.filter((s) => s !== spalte)
   zustand.zeilen = zustand.zeilen.map((zeile) => {
     const { [spalte]: _weg, ...rest } = zeile
@@ -317,6 +439,7 @@ export function spalteLoeschen(zustand: TabellenBearbeitung, spalte: string): vo
 
 /** Hängt eine neue, leere Spalte an (Rohname "spalte", kollisionsfrei). */
 export function spalteHinzufuegen(zustand: TabellenBearbeitung): string {
+  merke(zustand)
   const neuName = freierSpaltenname(zustand, 'spalte')
   zustand.spaltenReihenfolge = [...zustand.spaltenReihenfolge, neuName]
   zustand.zeilen = zustand.zeilen.map((zeile) => ({ ...zeile, [neuName]: '' }))
@@ -332,7 +455,45 @@ export function spaltenReihenfolgeSetzen(
   const gefiltert = reihenfolge.filter((s) => vorhanden.has(s))
   const bekannt = new Set(gefiltert)
   const rest = zustand.spaltenReihenfolge.filter((s) => !bekannt.has(s))
-  zustand.spaltenReihenfolge = [...gefiltert, ...rest]
+  const neu = [...gefiltert, ...rest]
+  const gleich =
+    neu.length === zustand.spaltenReihenfolge.length &&
+    neu.every((s, i) => s === zustand.spaltenReihenfolge[i])
+  if (gleich) return
+  merke(zustand)
+  zustand.spaltenReihenfolge = neu
+}
+
+/**
+ * Verschiebt eine Zeile von einer Position an eine andere (Zeilen-Drag). Ids und
+ * die Zeilen wandern gemeinsam; Vorschau-Marken (geändert/neu) bleiben an ihrer
+ * Id hängen und ziehen mit. Keine Änderung der Zählung - Umsortieren allein ist
+ * keine "Änderung" gegenüber dem Ursprung, wirkt aber auf die Ausgabe.
+ */
+export function zeileVerschieben(
+  zustand: TabellenBearbeitung,
+  vonIndex: number,
+  nachIndex: number,
+): void {
+  const anzahl = zustand.zeilen.length
+  if (
+    vonIndex < 0 ||
+    vonIndex >= anzahl ||
+    nachIndex < 0 ||
+    nachIndex >= anzahl ||
+    vonIndex === nachIndex
+  ) {
+    return
+  }
+  merke(zustand)
+  const zeilen = [...zustand.zeilen]
+  const ids = [...zustand.zeilenIds]
+  const [zeile] = zeilen.splice(vonIndex, 1)
+  const [id] = ids.splice(vonIndex, 1)
+  zeilen.splice(nachIndex, 0, zeile)
+  ids.splice(nachIndex, 0, id)
+  zustand.zeilen = zeilen
+  zustand.zeilenIds = ids
 }
 
 /**
@@ -346,6 +507,7 @@ export function ersetzeZeilen(
   neueIds: string[],
   neueMarken: SvelteSet<string>,
 ): void {
+  merke(zustand)
   zustand.zeilen = neueZeilen
   zustand.zeilenIds = neueIds
   zustand.neueZeilen = neueMarken
@@ -404,6 +566,7 @@ export function verwerfen(tabId: string, wurzel?: JsonWert, spalten?: string[]):
   const vorhanden = zustaende.get(tabId)
   if (vorhanden !== undefined && wurzel !== undefined && spalten !== undefined) {
     setzeInPlace(vorhanden, baueNeu(wurzel, spalten))
+    leereVerlauf(vorhanden)
     return
   }
   zustaende.delete(tabId)
