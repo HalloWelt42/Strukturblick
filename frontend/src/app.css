@@ -874,6 +874,9 @@ textarea.feld {
 
 .ki-hinweis {
   display: flex;
+  /* Ohne dies streckt der Flex-Container das Icon auf die Zeilenhöhe; ein
+     gestreckter Spinner dreht dann nicht um seinen Mittelpunkt (er eiert). */
+  align-items: flex-start;
   gap: var(--a2);
   margin: var(--a3);
   padding: var(--a2) var(--a3);
