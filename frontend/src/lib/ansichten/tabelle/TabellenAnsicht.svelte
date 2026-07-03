@@ -427,6 +427,8 @@
 
   let ziehSpalte = $state<string | null>(null)
   let zielSpalte = $state<string | null>(null)
+  let ziehX = $state(0)
+  let ziehY = $state(0)
   let kopfLeiste = $state<HTMLTableRowElement>()
 
   function beiGriffStart(ereignis: PointerEvent, spalte: string): void {
@@ -434,8 +436,12 @@
     ereignis.stopPropagation()
     ziehSpalte = spalte
     zielSpalte = spalte
+    ziehX = ereignis.clientX
+    ziehY = ereignis.clientY
 
     function beiBewegung(ev: PointerEvent): void {
+      ziehX = ev.clientX
+      ziehY = ev.clientY
       if (kopfLeiste === undefined) return
       // Über welchem Kopf steht der Zeiger? Der Kopf trägt data-spalte.
       const treffer = document
@@ -948,6 +954,12 @@
     {/if}
 
     <div class="tabelle-flaeche" bind:this={flaeche} bind:clientHeight={sichtHoehe} onscroll={anScroll}>
+      {#if ziehSpalte !== null && bearbeitung !== null}
+        <div class="drag-chip" style="left: {ziehX + 14}px; top: {ziehY + 14}px">
+          <i class="fa-solid fa-grip-vertical"></i>
+          {kopfName(bearbeitung, ziehSpalte)}
+        </div>
+      {/if}
       <table
         class="tabelle tabelle-bearb"
         style="width: {gesamtBreite}px; --spalten-linie: {ansichtZustand?.spaltenlinien ?? 0}px"
@@ -1119,6 +1131,7 @@
                   class:null-wert={leer && text === '' && !aktiv}
                   class:bearb-zelle-aktiv={aktiv}
                   class:bearb-geaendert={geaendert && !aktiv}
+                  class:bearb-drop-spalte={ziehSpalte !== null && zielSpalte === spalte && ziehSpalte !== spalte}
                   ondblclick={() => beginneZelle(zeile, spalte)}
                   onclick={() => {
                     if (!aktiv) waehleZelle(zeile, spalte)
@@ -1455,13 +1468,15 @@
     color: var(--zustand-fehler);
   }
 
-  /* Zeilen-Drag: gezogene Zeile gedimmt, Zielzeile mit Akzentlinie oben. */
+  /* Zeilen-Drag: gezogene Zeile abgehoben, Zielzeile mit kräftiger Einfüge-Linie
+     oben über die ganze Breite - dort landet die Zeile. */
   .tabelle-bearb tbody tr.bearb-zeile-gezogen td {
-    opacity: 0.45;
+    opacity: 0.55;
+    background: var(--akzent-weich);
   }
 
   .tabelle-bearb tbody tr.bearb-zeile-ziel td {
-    box-shadow: inset 0 2px 0 var(--akzent);
+    box-shadow: inset 0 3px 0 var(--akzent);
   }
 
   /* Rückgängig/Wiederherstellen in der Bearbeiten-Leiste. */
@@ -1579,15 +1594,36 @@
     color: inherit;
   }
 
-  /* Spalten per Drag-and-Drop: der gezogene Kopf wird gedimmt, die Ziel-Spalte
-     zeigt eine Akzentlinie (inset box-shadow). */
+  /* Spalten-Drag: der gezogene Kopf wird abgehoben, die Ziel-Spalte trägt über
+     ihre ganze Höhe eine kräftige Einfüge-Linie an der linken Kante - dort landet
+     die Spalte. */
   .bearb-wird-gezogen {
-    opacity: 0.4;
-    outline: 1px dashed var(--rand-2);
+    opacity: 0.55;
+    background: var(--akzent-weich);
+    outline: 1px solid var(--akzent);
   }
 
   .bearb-drop-spalte {
-    box-shadow: inset 2px 0 0 var(--akzent);
+    box-shadow: inset 3px 0 0 var(--akzent);
+  }
+
+  /* Zeiger-Chip beim Spalten-Ziehen: zeigt am Cursor, welche Spalte man zieht. */
+  .drag-chip {
+    position: fixed;
+    z-index: 50;
+    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    background: var(--flaeche-panel);
+    color: var(--akzent);
+    border: 1px solid var(--akzent);
+    border-radius: var(--radius-eingabe);
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: var(--schatten-1);
+    white-space: nowrap;
   }
 
   .bearb-sp-griff {
