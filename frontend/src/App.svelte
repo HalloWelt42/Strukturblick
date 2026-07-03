@@ -38,10 +38,21 @@
       await ladeKiEinstellungen()
       starteKiUeberwachung()
       await stelleWieder()
-      if (tabs.aktiveTabId !== null) {
-        void sofortAnalysieren(tabs.aktiveTabId)
-      }
     })()
+  })
+
+  // Sobald ein Tab aktiv wird und noch nicht analysiert ist ('veraltet'), wird
+  // die Analyse nachgezogen. Ohne das blieben wiederhergestellte, aber nie aktiv
+  // geöffnete Tabs dauerhaft im Ladeskelett stecken (erst ein Reload analysierte
+  // sie). Der Guard auf 'veraltet' verhindert eine Effekt-Schleife: sofortAnalysieren
+  // setzt sofort 'laeuft', danach greift der Effekt nicht mehr.
+  $effect(() => {
+    const id = tabs.aktiveTabId
+    if (id === null) return
+    const tab = tabs.liste.find((eintrag) => eintrag.id === id)
+    if (tab !== undefined && tab.analyseStand === 'veraltet') {
+      void sofortAnalysieren(id)
+    }
   })
 </script>
 

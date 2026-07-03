@@ -8,7 +8,7 @@
   // Editier-Zustand); erst "Übernehmen" schreibt sie ins Dokument zurück.
   //
   // Die Nur-Lese-Fähigkeiten bleiben vollständig erhalten: Sortieren, Filtern,
-  // Spalten verwalten (Sichtbarkeit/Reihenfolge/Umbenennen), Werte übersetzen,
+  // Spalten verwalten (Sichtbarkeit/Reihenfolge/Umbenennen),
   // CSV-Trenner wechseln und Export. Gerendert wird stets aus dem Editier-Zustand
   // (der beim ersten Zugriff eine Kopie der Analyse ist), damit Lesen und
   // Bearbeiten auf denselben Daten arbeiten.
@@ -32,7 +32,6 @@
     spaltenAus,
     trennerKollisionen,
     typVonSpalte,
-    verschiedeneRohwerte,
     zellAnzeige,
     zellwert,
     type Sortierrichtung,
@@ -42,6 +41,7 @@
   import { findeDoppelteSpalten, findeDoppelteZeilen } from '../../dienste/tabellenDuplikate'
   import { ladeHerunter } from '../../dienste/dateiEinAusgabe'
   import { typVon } from '../../dienste/wertZugriff'
+  import { klickAussen } from '../../hilfsteile/klickAussen'
   import AnalyseFehler from '../../hilfsteile/AnalyseFehler.svelte'
   import Modal from '../../hilfsteile/Modal.svelte'
   import FachbegriffLink from '../../lexikon/FachbegriffLink.svelte'
@@ -56,7 +56,6 @@
     setzeAnzeigename,
     setzeBreite,
     setzeSpaltenlinien,
-    setzeWertErsatz,
     tabellenZustandFuer,
     verschiebeSpalte,
   } from './tabellenAnsichtZustand.svelte'
@@ -124,10 +123,10 @@
   const hatAenderungen = $derived(aenderungen > 0)
   const kannZurueck = $derived((bearbeitung?.zurueckTiefe ?? 0) > 0)
   const kannVor = $derived((bearbeitung?.vorTiefe ?? 0) > 0)
-  // Die Bearbeiten-Leiste bleibt sichtbar, solange etwas rückgängig gemacht oder
-  // wiederhergestellt werden kann - sonst wäre "Wiederherstellen" nach dem
-  // Zurücknehmen aller Änderungen nicht mehr erreichbar.
-  const zeigeBearbLeiste = $derived(hatAenderungen || kannZurueck || kannVor)
+  // Die Bearbeiten-Leiste erscheint nur bei echten (Netto-)Änderungen. Ohne
+  // Änderung soll sie nicht im Weg stehen ("man kann den Modus nicht verlassen").
+  // Wiederherstellen bleibt per Tastenkürzel (Strg+Umschalt+Z) erreichbar.
+  const zeigeBearbLeiste = $derived(hatAenderungen)
 
   /** Ad-hoc-Wurzel aus den editierten Zeilen - für die vorhandenen Lese-Helfer. */
   const editWurzel = $derived.by((): JsonWert => {
@@ -177,13 +176,16 @@
     const karten = ansichtZustand?.wertKarten ?? {}
     const stichprobe = basisZeilen.slice(0, 60)
     for (const spalte of angezeigteSpalten) {
-      // Kopfname plus etwas Luft für Sortier-Pfeil und Spalten-Menü.
-      let maxZeichen = kopfName(bearbeitung, spalte).length + 4
+      // Der Kopf muss Griff, Sortier-Pfeil und Menü-Knopf fassen (~64px Zubehör),
+      // die Datenzellen brauchen nur etwas Zellenpolster - die breitere gewinnt.
+      const kopfBreite = kopfName(bearbeitung, spalte).length * 7.5 + 64
+      let datenZeichen = 0
       for (const zeile of stichprobe) {
         const laenge = zellAnzeige(editWurzel, zeile, spalte, karten).length
-        if (laenge > maxZeichen) maxZeichen = laenge
+        if (laenge > datenZeichen) datenZeichen = laenge
       }
-      karte[spalte] = Math.min(BREITE_MAX, Math.max(BREITE_MIN, Math.round(maxZeichen * 7.5 + 30)))
+      const breite = Math.max(kopfBreite, datenZeichen * 7.5 + 26)
+      karte[spalte] = Math.min(BREITE_MAX, Math.max(BREITE_MIN, Math.round(breite)))
     }
     return karte
   })
@@ -751,28 +753,6 @@
 
   let spaltenModalOffen = $state(false)
 
-  // ----- Modal "Werte übersetzen" -------------------------------------------
-
-  let werteModalOffen = $state(false)
-  let werteSpalte = $state<string | null>(null)
-  const werteSpalteWirksam = $derived(werteSpalte ?? bearbeitung?.spaltenReihenfolge[0] ?? null)
-
-  const rohwerteDerSpalte = $derived.by((): string[] => {
-    if (werteSpalteWirksam === null) return []
-    return verschiedeneRohwerte(basisZeilen, editWurzel, werteSpalteWirksam, 50)
-  })
-
-  function ersatzVon(spalte: string, rohwert: string): string {
-    if (ansichtZustand === null) return ''
-    return ansichtZustand.wertKarten[spalte]?.[rohwert] ?? ''
-  }
-
-  function beiErsatzEingabe(spalte: string, rohwert: string, ereignis: Event): void {
-    if (ansichtZustand === null) return
-    const wert = (ereignis.currentTarget as HTMLInputElement).value
-    setzeWertErsatz(ansichtZustand, spalte, rohwert, wert)
-  }
-
   // ----- Modal "Exportieren" ------------------------------------------------
 
   let exportModalOffen = $state(false)
@@ -867,9 +847,6 @@
       <button class="knopf klein" onclick={() => (spaltenModalOffen = true)}>
         <i class="fa-solid fa-table-columns"></i> Spalten verwalten
       </button>
-      <button class="knopf klein" onclick={() => (werteModalOffen = true)}>
-        <i class="fa-solid fa-language"></i> Werte übersetzen
-      </button>
       <button class="knopf klein" onclick={oeffneExport}>
         <i class="fa-solid fa-file-export"></i> Exportieren
       </button>
@@ -883,7 +860,7 @@
           <i class="fa-solid fa-sliders"></i> Ansicht
         </button>
         {#if einstellungenOffen}
-          <div class="tab-einstell-menue">
+          <div class="tab-einstell-menue" use:klickAussen={() => (einstellungenOffen = false)}>
             <label class="tab-einstell-zeile">
               <span>Spaltenlinien</span>
               <select
@@ -990,71 +967,79 @@
                 class:bearb-zelle-aktiv={aktiverKopf === spalte}
                 style="width: {effektiveBreite(spalte)}px"
               >
-                <span
-                  class="bearb-sp-griff"
-                  title="Spalte ziehen"
-                  role="button"
-                  tabindex="-1"
-                  aria-label="Spalte {kopf} ziehen"
-                  onpointerdown={(e) => beiGriffStart(e, spalte)}
-                >
-                  <i class="fa-solid fa-grip-vertical"></i>
-                </span>
-                {#if aktiverKopf === spalte}
-                  <!-- svelte-ignore a11y_autofocus -->
-                  <input
-                    class="feld zellen-feld"
-                    type="text"
-                    autofocus
-                    bind:value={feldWert}
-                    onkeydown={(e) => beiFeldTaste(e, 'kopf')}
-                    onblur={() => beendeKopf(true)}
-                  />
-                {:else}
-                  <button
-                    class="bearb-kopf-text"
-                    onclick={() => sortiereNach(spalte)}
-                    ondblclick={() => beginneKopf(spalte)}
-                    title="Klick: sortieren - Doppelklick: umbenennen"
+                <div class="kopf-zeile">
+                  <span
+                    class="bearb-sp-griff"
+                    title="Spalte ziehen"
+                    role="button"
+                    tabindex="-1"
+                    aria-label="Spalte {kopf} ziehen"
+                    onpointerdown={(e) => beiGriffStart(e, spalte)}
                   >
-                    {kopf}
-                  </button>
-                  <i
-                    class="fa-solid sortier-pfeil {sortSpalte === spalte && sortRichtung === 'ab'
-                      ? 'fa-arrow-down-wide-short'
-                      : 'fa-arrow-up-short-wide'}"
-                    class:hinweis={sortSpalte !== spalte}
-                    title={sortSpalte === spalte
-                      ? sortRichtung === 'auf'
-                        ? 'Aufsteigend sortiert - Klick für absteigend'
-                        : 'Absteigend sortiert - Klick hebt die Sortierung auf'
-                      : 'Nach dieser Spalte sortieren'}
-                    aria-hidden="true"
-                  ></i>
-                  <button
-                    class="bearb-kopf-menue-knopf"
-                    title="Spalte"
-                    aria-label="Spalten-Menü {kopf}"
-                    onclick={() => schalteMenue(spalte)}
-                  >
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                  </button>
-                  {#if offenesMenue === spalte}
-                    <div class="bearb-menue">
-                      <button onclick={() => menueUmbenennen(spalte)}>
-                        <i class="fa-solid fa-pen"></i> Umbenennen
-                      </button>
-                      <button onclick={() => menueDuplizieren(spalte)}>
-                        <i class="fa-solid fa-copy"></i> Spalte duplizieren
-                      </button>
-                      <button onclick={() => menueAusblenden(spalte)}>
-                        <i class="fa-solid fa-eye-slash"></i> Ausblenden
-                      </button>
-                      <button class="gefahr" onclick={() => menueLoeschen(spalte)}>
-                        <i class="fa-solid fa-trash"></i> Spalte löschen
-                      </button>
-                    </div>
+                    <i class="fa-solid fa-grip-vertical"></i>
+                  </span>
+                  {#if aktiverKopf === spalte}
+                    <!-- svelte-ignore a11y_autofocus -->
+                    <input
+                      class="feld zellen-feld kopf-name"
+                      type="text"
+                      autofocus
+                      bind:value={feldWert}
+                      onkeydown={(e) => beiFeldTaste(e, 'kopf')}
+                      onblur={() => beendeKopf(true)}
+                    />
+                  {:else}
+                    <button
+                      class="bearb-kopf-text kopf-name"
+                      onclick={() => sortiereNach(spalte)}
+                      ondblclick={() => beginneKopf(spalte)}
+                      title="Klick: sortieren - Doppelklick: umbenennen"
+                    >
+                      {kopf}
+                    </button>
+                    <button
+                      class="sortier-knopf"
+                      onclick={() => sortiereNach(spalte)}
+                      title={sortSpalte === spalte
+                        ? sortRichtung === 'auf'
+                          ? 'Aufsteigend sortiert - Klick für absteigend'
+                          : 'Absteigend sortiert - Klick hebt die Sortierung auf'
+                        : 'Nach dieser Spalte sortieren'}
+                      aria-label="Nach {kopf} sortieren"
+                    >
+                      <i
+                        class="fa-solid sortier-pfeil {sortSpalte === spalte && sortRichtung === 'ab'
+                          ? 'fa-arrow-down-wide-short'
+                          : 'fa-arrow-up-short-wide'}"
+                        class:hinweis={sortSpalte !== spalte}
+                        aria-hidden="true"
+                      ></i>
+                    </button>
+                    <button
+                      class="bearb-kopf-menue-knopf"
+                      title="Spalte"
+                      aria-label="Spalten-Menü {kopf}"
+                      onclick={() => schalteMenue(spalte)}
+                    >
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
                   {/if}
+                </div>
+                {#if aktiverKopf !== spalte && offenesMenue === spalte}
+                  <div class="bearb-menue" use:klickAussen={() => (offenesMenue = null)}>
+                    <button onclick={() => menueUmbenennen(spalte)}>
+                      <i class="fa-solid fa-pen"></i> Umbenennen
+                    </button>
+                    <button onclick={() => menueDuplizieren(spalte)}>
+                      <i class="fa-solid fa-copy"></i> Spalte duplizieren
+                    </button>
+                    <button onclick={() => menueAusblenden(spalte)}>
+                      <i class="fa-solid fa-eye-slash"></i> Ausblenden
+                    </button>
+                    <button class="gefahr" onclick={() => menueLoeschen(spalte)}>
+                      <i class="fa-solid fa-trash"></i> Spalte löschen
+                    </button>
+                  </div>
                 {/if}
                 <span
                   class="spalten-greifer"
@@ -1238,45 +1223,6 @@
       {/if}
       {#snippet fuss()}
         <button class="knopf primaer" onclick={() => (spaltenModalOffen = false)}>Fertig</button>
-      {/snippet}
-    </Modal>
-
-    <!-- Modal: Werte übersetzen (Rohwert -> Ersatz je Spalte) -->
-    <Modal titel="Werte übersetzen" bind:offen={werteModalOffen}>
-      <div class="werte-kopf">
-        <span class="beschriftung">Spalte:</span>
-        <select class="feld" bind:value={werteSpalte}>
-          {#each bearbeitung.spaltenReihenfolge as spalte (spalte)}
-            <option value={spalte}>{kopfName(bearbeitung, spalte)}</option>
-          {/each}
-        </select>
-      </div>
-      {#if werteSpalteWirksam !== null}
-        {#if rohwerteDerSpalte.length === 0}
-          <p class="werte-leer">Diese Spalte enthält keine übersetzbaren Werte.</p>
-        {:else}
-          <div class="werte-liste">
-            {#each rohwerteDerSpalte as rohwert (rohwert)}
-              <div class="werte-zeile">
-                <span class="werte-roh" title={rohwert}>{rohwert}</span>
-                <i class="fa-solid fa-arrow-right werte-pfeil"></i>
-                <input
-                  class="feld"
-                  type="text"
-                  placeholder="(unverändert)"
-                  value={ersatzVon(werteSpalteWirksam, rohwert)}
-                  oninput={(e) => beiErsatzEingabe(werteSpalteWirksam, rohwert, e)}
-                />
-              </div>
-            {/each}
-          </div>
-          <p class="werte-hinweis">
-            Leeres Feld = unverändert. Es werden bis zu 50 verschiedene Werte gezeigt.
-          </p>
-        {/if}
-      {/if}
-      {#snippet fuss()}
-        <button class="knopf primaer" onclick={() => (werteModalOffen = false)}>Fertig</button>
       {/snippet}
     </Modal>
 
@@ -1571,6 +1517,57 @@
     color: var(--text-1);
   }
 
+  /* Kopf-Inhalt als eine Zeile: der Name kürzt (Ellipse), Griff, Sortier-Pfeil
+     und Menü-Knopf bleiben immer sichtbar. So rutscht bei schmalen Spalten nichts
+     unter die Nachbarspalte - der Sortier-Pfeil verschwindet nie. */
+  .kopf-zeile {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    overflow: hidden;
+    padding-right: 6px;
+  }
+
+  .kopf-zeile .bearb-sp-griff,
+  .kopf-zeile .sortier-knopf,
+  .kopf-zeile .bearb-kopf-menue-knopf {
+    flex: none;
+  }
+
+  /* Das Spalten-Menü sitzt immer am rechten Rand der Spalte. */
+  .kopf-zeile .bearb-kopf-menue-knopf {
+    margin-left: auto;
+  }
+
+  /* Icon-Knöpfe im Kopf: gross genug fürs Icon (mit Luft), zentriert, dezenter
+     Hover - sonst berührt das Icon die Knopfkante ("Icon grösser als Button"). */
+  .sortier-knopf,
+  .bearb-kopf-menue-knopf {
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 4px;
+    border-radius: 4px;
+  }
+
+  .sortier-knopf:hover,
+  .bearb-kopf-menue-knopf:hover {
+    background: var(--flaeche-panel-2);
+  }
+
+  .kopf-name {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
+
   /* Kopf-Text als reiner Text-Knopf (Sortieren per Klick). */
   .bearb-kopf-text {
     border: none;
@@ -1596,20 +1593,18 @@
   .bearb-sp-griff {
     color: var(--rand-2);
     cursor: grab;
-    margin-right: 5px;
     font-size: 0.72rem;
     touch-action: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 2px;
   }
 
   /* Spalten-Menü am Kopf. Die th sind bereits sticky (app.css) und damit
      positionierter Anker für das absolut liegende Menü. */
   .bearb-kopf-menue-knopf {
-    border: none;
-    background: none;
-    cursor: pointer;
     color: var(--text-3);
-    margin-left: 4px;
-    padding: 0 2px;
   }
 
   .bearb-menue {
@@ -1677,56 +1672,6 @@
     min-width: 0;
   }
 
-  /* ----- Modal "Werte übersetzen" ----------------------------------------- */
-
-  .werte-kopf {
-    display: flex;
-    align-items: center;
-    gap: var(--a2);
-    margin-bottom: var(--a3);
-  }
-
-  .werte-kopf .feld {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .werte-liste {
-    display: flex;
-    flex-direction: column;
-    gap: var(--a2);
-  }
-
-  .werte-zeile {
-    display: flex;
-    align-items: center;
-    gap: var(--a2);
-  }
-
-  .werte-roh {
-    width: 200px;
-    flex: none;
-    font-family: var(--schrift-mono);
-    font-size: 0.82rem;
-    color: var(--text-1);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .werte-pfeil {
-    flex: none;
-    color: var(--text-3);
-    font-size: 0.75rem;
-  }
-
-  .werte-zeile .feld {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .werte-leer,
-  .werte-hinweis,
   .export-hinweis {
     color: var(--text-2);
     font-size: 0.82rem;
