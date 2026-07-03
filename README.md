@@ -30,6 +30,13 @@ Tests: `cd backend && .venv/bin/python -m pytest`
 
 ## Mockups ansehen
 
+Direkt im Browser ausprobieren (gehostet, ohne lokale Einrichtung):
+
+- **Galerie: https://hallowelt42.github.io/Strukturblick/mockups/index.html**
+- Viewer mit benannten UI-Elementen: https://hallowelt42.github.io/Strukturblick/mockups/viewer.html
+
+Oder lokal starten:
+
 ```bash
 ./start-mockups.sh           # startet auf Port 6009
 ./start-mockups.sh status
@@ -39,7 +46,7 @@ Tests: `cd backend && .venv/bin/python -m pytest`
 - Galerie aller Seiten: http://localhost:6009/mockups/index.html
 - Viewer mit benannten UI-Elementen: http://localhost:6009/mockups/viewer.html
 
-Voraussetzung: einmalig `npm install` im Ordner `frontend/` (liefert Schrift und Icons für die Mockups).
+Die Mockups sind eigenständig: Schrift und Icons liegen unter `mockups/vendor/` (kein CDN, kein `npm install` nötig). Dieselben Schriften bindet die App selbst über npm ein.
 
 Jede Seite hat unten rechts einen Umschalter zwischen den Themes "Mittelton" (Standard) und "Dunkel". Die zentrale Datei `mockups/stil.css` enthält das komplette Token-System und wird bei der Umsetzung unverändert zur Token-Grundlage des Frontends.
 
