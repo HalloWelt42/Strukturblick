@@ -50,8 +50,12 @@
   import { ladeNeu } from '../../zustand/dokumentListe.svelte'
   import { aktiverTab, oeffneTab, setzeAnsicht, setzeInhalt } from '../../zustand/tabs.svelte'
   import {
+    loescheBreite,
     schalteSichtbar,
+    setzeAlleBreitenZurueck,
     setzeAnzeigename,
+    setzeBreite,
+    setzeSpaltenlinien,
     setzeWertErsatz,
     tabellenZustandFuer,
     verschiebeSpalte,
@@ -82,6 +86,11 @@
   const ZEILEN_HOEHE = 29
   /** Zusätzlich gerenderte Zeilen ober- und unterhalb des Sichtfensters. */
   const UEBERHANG = 12
+
+  /** Grenzen für Spaltenbreiten (px) und Breite der Aktionsspalte (= CSS). */
+  const BREITE_MIN = 70
+  const BREITE_MAX = 380
+  const AKTIONS_BREITE = 74
 
   /** Wählbare CSV-Trenner (Wert = tatsächliches Zeichen, Name = Beschriftung). */
   const TRENNER_KANDIDATEN: { zeichen: string; name: string }[] = [
@@ -139,6 +148,8 @@
   let filterText = $state('')
   let sortSpalte = $state<string | null>(null)
   let sortRichtung = $state<Sortierrichtung>('auf')
+  let breiteDrag = $state<{ spalte: string; startX: number; startBreite: number } | null>(null)
+  let einstellungenOffen = $state(false)
 
   /** Sichtbare Zeilen-Indizes: erst filtern, dann (falls gewählt) sortieren. */
   const sichtbareZeilen = $derived.by((): number[] => {
@@ -157,6 +168,37 @@
       karte[spalte] = typVonSpalte(basisZeilen, editWurzel, spalte)
     }
     return karte
+  })
+
+  /** Inhaltsbasierte Standard-Breite je Spalte (px), aus Kopf + Wertestichprobe. */
+  const standardBreiten = $derived.by((): Record<string, number> => {
+    const karte: Record<string, number> = {}
+    if (bearbeitung === null) return karte
+    const karten = ansichtZustand?.wertKarten ?? {}
+    const stichprobe = basisZeilen.slice(0, 60)
+    for (const spalte of angezeigteSpalten) {
+      // Kopfname plus etwas Luft für Sortier-Pfeil und Spalten-Menü.
+      let maxZeichen = kopfName(bearbeitung, spalte).length + 4
+      for (const zeile of stichprobe) {
+        const laenge = zellAnzeige(editWurzel, zeile, spalte, karten).length
+        if (laenge > maxZeichen) maxZeichen = laenge
+      }
+      karte[spalte] = Math.min(BREITE_MAX, Math.max(BREITE_MIN, Math.round(maxZeichen * 7.5 + 30)))
+    }
+    return karte
+  })
+
+  /** Wirksame Breite einer Spalte: feste Nutzerbreite oder inhaltsbasierter Standard. */
+  function effektiveBreite(spalte: string): number {
+    const fest = ansichtZustand?.breiten[spalte]
+    return fest ?? standardBreiten[spalte] ?? 140
+  }
+
+  /** Gesamtbreite der Tabelle (Aktionsspalte + alle sichtbaren Spalten). */
+  const gesamtBreite = $derived.by((): number => {
+    let summe = AKTIONS_BREITE
+    for (const spalte of angezeigteSpalten) summe += effektiveBreite(spalte)
+    return summe
   })
 
   /** Trefferzahl für "Duplikate prüfen" (Zeilen-Gruppen + doppelte Spalten). */
@@ -231,6 +273,31 @@
       sortSpalte = null
       sortRichtung = 'auf'
     }
+  }
+
+  /** Start des Breite-Ziehens am Kopf-Greifer (Pointer-Capture hält den Zug). */
+  function beiBreiteStart(ereignis: PointerEvent, spalte: string): void {
+    ereignis.preventDefault()
+    ereignis.stopPropagation()
+    ;(ereignis.currentTarget as HTMLElement).setPointerCapture(ereignis.pointerId)
+    breiteDrag = { spalte, startX: ereignis.clientX, startBreite: effektiveBreite(spalte) }
+  }
+
+  function beiBreiteZug(ereignis: PointerEvent): void {
+    if (breiteDrag === null || ansichtZustand === null) return
+    const neu = Math.max(BREITE_MIN, breiteDrag.startBreite + (ereignis.clientX - breiteDrag.startX))
+    setzeBreite(ansichtZustand, breiteDrag.spalte, neu)
+  }
+
+  function beiBreiteEnde(ereignis: PointerEvent): void {
+    if (breiteDrag === null) return
+    ;(ereignis.currentTarget as HTMLElement).releasePointerCapture(ereignis.pointerId)
+    breiteDrag = null
+  }
+
+  /** Doppelklick auf den Greifer: feste Breite entfernen (zurück auf Inhalt). */
+  function breiteAuto(spalte: string): void {
+    if (ansichtZustand !== null) loescheBreite(ansichtZustand, spalte)
   }
 
   /** Klick auf eine Zelle (ohne Bearbeiten): Selektion auf die Zelle setzen. */
@@ -806,6 +873,46 @@
       <button class="knopf klein" onclick={oeffneExport}>
         <i class="fa-solid fa-file-export"></i> Exportieren
       </button>
+      <span class="tab-einstell-wirt">
+        <button
+          class="knopf klein"
+          title="Tabellen-Einstellungen"
+          aria-label="Tabellen-Einstellungen"
+          onclick={() => (einstellungenOffen = !einstellungenOffen)}
+        >
+          <i class="fa-solid fa-sliders"></i> Ansicht
+        </button>
+        {#if einstellungenOffen}
+          <div class="tab-einstell-menue">
+            <label class="tab-einstell-zeile">
+              <span>Spaltenlinien</span>
+              <select
+                class="feld"
+                value={String(ansichtZustand?.spaltenlinien ?? 0)}
+                onchange={(ereignis) => {
+                  if (ansichtZustand !== null) {
+                    setzeSpaltenlinien(ansichtZustand, Number(ereignis.currentTarget.value))
+                  }
+                }}
+              >
+                <option value="0">Aus</option>
+                <option value="1">Dünn</option>
+                <option value="2">Mittel</option>
+                <option value="3">Kräftig</option>
+              </select>
+            </label>
+            <button
+              class="knopf klein"
+              onclick={() => {
+                if (ansichtZustand !== null) setzeAlleBreitenZurueck(ansichtZustand)
+                einstellungenOffen = false
+              }}
+            >
+              <i class="fa-solid fa-arrows-left-right-to-line"></i> Spaltenbreiten zurücksetzen
+            </button>
+          </div>
+        {/if}
+      </span>
     </div>
 
     {#if zeigeBearbLeiste}
@@ -864,7 +971,10 @@
     {/if}
 
     <div class="tabelle-flaeche" bind:this={flaeche} bind:clientHeight={sichtHoehe} onscroll={anScroll}>
-      <table class="tabelle tabelle-bearb">
+      <table
+        class="tabelle tabelle-bearb"
+        style="width: {gesamtBreite}px; --spalten-linie: {ansichtZustand?.spaltenlinien ?? 0}px"
+      >
         <thead>
           <tr bind:this={kopfLeiste}>
             <th class="bearb-aktionsspalte"></th>
@@ -878,6 +988,7 @@
                 class:bearb-drop-spalte={ziehSpalte !== null && zielSpalte === spalte && ziehSpalte !== spalte}
                 class:bearb-kopf-menue-wirt={offenesMenue === spalte}
                 class:bearb-zelle-aktiv={aktiverKopf === spalte}
+                style="width: {effektiveBreite(spalte)}px"
               >
                 <span
                   class="bearb-sp-griff"
@@ -947,6 +1058,17 @@
                     </div>
                   {/if}
                 {/if}
+                <span
+                  class="spalten-greifer"
+                  role="separator"
+                  aria-orientation="vertical"
+                  aria-label="Breite von {kopf} anpassen"
+                  title="Ziehen: Spaltenbreite - Doppelklick: automatisch anpassen"
+                  onpointerdown={(ereignis) => beiBreiteStart(ereignis, spalte)}
+                  onpointermove={beiBreiteZug}
+                  onpointerup={beiBreiteEnde}
+                  ondblclick={() => breiteAuto(spalte)}
+                ></span>
               </th>
             {/each}
           </tr>
@@ -1291,6 +1413,68 @@
     padding-right: var(--a1);
     color: var(--text-3);
     cursor: default;
+  }
+
+  /* Feste Spaltenbreiten: table-layout fixed macht die Kopfbreiten verbindlich,
+     die Zellen folgen automatisch (Tabellenbreite wird inline gesetzt). */
+  .tabelle-bearb {
+    table-layout: fixed;
+  }
+
+  /* Vertikale Spaltenlinien - Stärke über --spalten-linie (0px = aus). */
+  .tabelle-bearb th,
+  .tabelle-bearb td {
+    border-right: var(--spalten-linie, 0px) solid var(--rand-1);
+  }
+
+  /* Greifer am rechten Kopf-Rand zum Ziehen der Spaltenbreite. */
+  .spalten-greifer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 7px;
+    height: 100%;
+    cursor: col-resize;
+    touch-action: none;
+    z-index: 3;
+  }
+
+  .spalten-greifer:hover {
+    background: var(--akzent);
+    opacity: 0.35;
+  }
+
+  /* Tabellen-Einstellungen: Popover am Zahnrad in der Werkzeugzeile. */
+  .tab-einstell-wirt {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .tab-einstell-menue {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 6;
+    margin-top: 4px;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--a2);
+    padding: var(--a3);
+    background: var(--flaeche-panel);
+    border: 1px solid var(--rand-2);
+    box-shadow: var(--schatten-1);
+  }
+
+  .tab-einstell-zeile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--a2);
+  }
+
+  .tab-einstell-zeile .feld {
+    width: 120px;
   }
 
   /* Griff und Zeilen-Aktionen liegen nebeneinander (nie eines statt des

@@ -21,6 +21,10 @@ export interface TabellenAnsichtZustand {
   umbenennung: Record<string, string>
   /** Rohname der Spalte -> (Rohwert -> Ersatzwert). Leer = unverändert. */
   wertKarten: Record<string, Record<string, string>>
+  /** Rohname der Spalte -> feste Breite in Pixeln. Fehlt = inhaltsbasierter Standard. */
+  breiten: Record<string, number>
+  /** Stärke der vertikalen Spaltenlinien in Pixeln (0 = aus). */
+  spaltenlinien: number
 }
 
 const zustaende = new Map<string, TabellenAnsichtZustand>()
@@ -38,6 +42,8 @@ export function tabellenZustandFuer(tabId: string, spalten: string[]): TabellenA
       versteckt: new SvelteSet<string>(),
       umbenennung: {},
       wertKarten: {},
+      breiten: {},
+      spaltenlinien: 0,
     })
     zustaende.set(tabId, neu)
     return neu
@@ -67,6 +73,13 @@ function gleicheSpaltenAb(zustand: TabellenAnsichtZustand, spalten: string[]): v
   // Versteckt-Menge von verschwundenen Spalten befreien.
   for (const spalte of zustand.versteckt) {
     if (!vorhandeneMenge.has(spalte)) zustand.versteckt.delete(spalte)
+  }
+  // Feste Breiten verschwundener Spalten entfernen (sonst bleiben tote Einträge).
+  for (const spalte of Object.keys(zustand.breiten)) {
+    if (!vorhandeneMenge.has(spalte)) {
+      const { [spalte]: _weg, ...rest } = zustand.breiten
+      zustand.breiten = rest
+    }
   }
 }
 
@@ -133,4 +146,26 @@ export function setzeWertErsatz(
   } else {
     zustand.wertKarten = { ...zustand.wertKarten, [spalte]: karteNeu }
   }
+}
+
+/** Setzt die feste Breite (px) einer Spalte. */
+export function setzeBreite(zustand: TabellenAnsichtZustand, spalte: string, breite: number): void {
+  zustand.breiten = { ...zustand.breiten, [spalte]: Math.round(breite) }
+}
+
+/** Entfernt die feste Breite einer Spalte (zurück auf inhaltsbasierten Standard). */
+export function loescheBreite(zustand: TabellenAnsichtZustand, spalte: string): void {
+  if (!(spalte in zustand.breiten)) return
+  const { [spalte]: _weg, ...rest } = zustand.breiten
+  zustand.breiten = rest
+}
+
+/** Setzt alle festen Spaltenbreiten zurück (alles wieder inhaltsbasiert). */
+export function setzeAlleBreitenZurueck(zustand: TabellenAnsichtZustand): void {
+  if (Object.keys(zustand.breiten).length > 0) zustand.breiten = {}
+}
+
+/** Setzt die Stärke der vertikalen Spaltenlinien in Pixeln (0 = aus). */
+export function setzeSpaltenlinien(zustand: TabellenAnsichtZustand, staerke: number): void {
+  zustand.spaltenlinien = Math.max(0, Math.round(staerke))
 }
