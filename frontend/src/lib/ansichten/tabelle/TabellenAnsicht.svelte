@@ -83,16 +83,6 @@
   /** Zusätzlich gerenderte Zeilen ober- und unterhalb des Sichtfensters. */
   const UEBERHANG = 12
 
-  /** Kurze Typnamen für das Kopf-Abzeichen (knapp, wie im Mockup). */
-  const KOPF_TYP_NAME: Record<string, string> = {
-    objekt: 'Objekt',
-    liste: 'Liste',
-    text: 'Text',
-    zahl: 'Zahl',
-    wahrheitswert: 'Boole',
-    null: 'Null',
-  }
-
   /** Wählbare CSV-Trenner (Wert = tatsächliches Zeichen, Name = Beschriftung). */
   const TRENNER_KANDIDATEN: { zeichen: string; name: string }[] = [
     { zeichen: ',', name: 'Komma' },
@@ -918,15 +908,20 @@
                   >
                     {kopf}
                   </button>
-                  <span class="abzeichen">{KOPF_TYP_NAME[typ] ?? 'Text'}</span>
-                  {#if sortSpalte === spalte}
-                    <i
-                      class="fa-solid sortier-pfeil {sortRichtung === 'auf'
+                  <i
+                    class="fa-solid sortier-pfeil {sortSpalte === spalte
+                      ? sortRichtung === 'auf'
                         ? 'fa-arrow-up-short-wide'
-                        : 'fa-arrow-down-wide-short'}"
-                      title={sortRichtung === 'auf' ? 'Aufsteigend sortiert' : 'Absteigend sortiert'}
-                    ></i>
-                  {/if}
+                        : 'fa-arrow-down-wide-short'
+                      : 'fa-sort'}"
+                    class:aktiv={sortSpalte === spalte}
+                    title={sortSpalte === spalte
+                      ? sortRichtung === 'auf'
+                        ? 'Aufsteigend sortiert - Klick für absteigend'
+                        : 'Absteigend sortiert - Klick hebt die Sortierung auf'
+                      : 'Nach dieser Spalte sortieren'}
+                    aria-hidden="true"
+                  ></i>
                   <button
                     class="bearb-kopf-menue-knopf"
                     title="Spalte"

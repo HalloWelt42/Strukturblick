@@ -725,9 +725,17 @@ textarea.feld {
   cursor: pointer;
 }
 
+/* Sortier-Pfeil ist dauerhaft sichtbar (signalisiert Sortierbarkeit): gedimmt,
+   solange die Spalte nicht die aktive Sortierung trägt - dann im Akzent. */
 .tabelle th .sortier-pfeil {
-  color: var(--akzent);
+  color: var(--text-3);
   margin-left: var(--a1);
+  opacity: 0.5;
+}
+
+.tabelle th .sortier-pfeil.aktiv {
+  color: var(--akzent);
+  opacity: 1;
 }
 
 .tabelle td {
