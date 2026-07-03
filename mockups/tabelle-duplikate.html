@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Strukturblick - Tabelle bearbeiten</title>
+    <title>Strukturblick - Duplikate auflösen</title>
     <link rel="stylesheet" href="/frontend/node_modules/@fontsource/barlow/400.css" />
     <link rel="stylesheet" href="/frontend/node_modules/@fontsource/barlow/500.css" />
     <link rel="stylesheet" href="/frontend/node_modules/@fontsource/barlow/600.css" />
@@ -166,6 +166,63 @@
       .bearb-vorher {
         color: var(--text-3);
         text-decoration: line-through;
+      }
+
+      /* Duplikate-Dialog. */
+      .dupl-hinweis {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--a2);
+        padding: var(--a2) var(--a3);
+        margin-bottom: var(--a3);
+        background: var(--zustand-warnung-weich);
+        border: 1px solid var(--rand-1);
+        font-size: 0.86rem;
+        color: var(--text-2);
+      }
+      .dupl-hinweis i {
+        color: var(--zustand-warnung);
+        margin-top: 2px;
+      }
+      .modal-inhalt h3 {
+        margin: var(--a3) 0 var(--a1);
+      }
+      .dupl-gruppe {
+        margin-bottom: var(--a3);
+      }
+      .dupl-gruppe .tabelle th,
+      .dupl-gruppe .tabelle td {
+        font-size: 0.82rem;
+      }
+      tr.dupl-behalten td {
+        background: var(--zustand-erfolg-weich);
+      }
+      tr.dupl-entfernen td {
+        color: var(--text-3);
+      }
+      .dupl-marke {
+        color: var(--zustand-fehler);
+        font-size: 0.76rem;
+      }
+      /* Runder Auswahlknopf (behalten) - Gegenstück zur .checkbox aus stil.css. */
+      .radio {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 1px solid var(--rand-2);
+        border-radius: 50%;
+        vertical-align: middle;
+        position: relative;
+      }
+      .radio.an {
+        border-color: var(--akzent);
+      }
+      .radio.an::after {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        border-radius: 50%;
+        background: var(--akzent);
       }
     </style>
   </head>
@@ -429,6 +486,92 @@
           <span class="diag-zaehler bearb"><i class="fa-solid fa-pen"></i> 3 Änderungen</span>
         </div>
       </footer>
+    </div>
+
+    <!-- Duplikate-Dialog über der App -->
+    <div class="modal-hintergrund">
+      <div class="modal breit">
+        <div class="modal-kopf">
+          <i class="fa-solid fa-clone"></i> Duplikate auflösen
+          <button class="icon-knopf" title="Schließen"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-inhalt">
+          <div class="dupl-hinweis">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Duplikate entstehen auch beim Bearbeiten: Wird eine Merkmalsspalte (hier "kundennummer") gelöscht, sind Datensätze nicht mehr eindeutig - dadurch sind 2 Gruppen jetzt 1:1 doppelt.</span>
+          </div>
+
+          <h3>Doppelte Datensätze (2 Gruppen)</h3>
+          <p class="hinweis-text">Wähle je Gruppe, welcher Datensatz bleibt - die übrigen werden entfernt, sodass genau einer übrig bleibt.</p>
+
+          <div class="karte dupl-gruppe">
+            <div class="karte-kopf"><i class="fa-solid fa-layer-group"></i> Gruppe 1 <span class="luecke"></span><span class="abzeichen">2 identisch</span></div>
+            <table class="tabelle">
+              <thead>
+                <tr><th>behalten</th><th>name</th><th>email</th><th>ort</th><th class="zahl">umsatz</th><th></th></tr>
+              </thead>
+              <tbody>
+                <tr class="dupl-behalten">
+                  <td><span class="radio an"></span></td>
+                  <td>Max Mustermann</td><td class="mono">max@beispiel.de</td><td>Lübeck</td><td class="zahl">1275,00</td>
+                  <td></td>
+                </tr>
+                <tr class="dupl-entfernen">
+                  <td><span class="radio"></span></td>
+                  <td>Max Mustermann</td><td class="mono">max@beispiel.de</td><td>Lübeck</td><td class="zahl">1275,00</td>
+                  <td class="dupl-marke"><i class="fa-solid fa-trash"></i> wird entfernt</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="karte dupl-gruppe">
+            <div class="karte-kopf"><i class="fa-solid fa-layer-group"></i> Gruppe 2 <span class="luecke"></span><span class="abzeichen">3 identisch</span></div>
+            <table class="tabelle">
+              <thead>
+                <tr><th>behalten</th><th>name</th><th>email</th><th>ort</th><th class="zahl">umsatz</th><th></th></tr>
+              </thead>
+              <tbody>
+                <tr class="dupl-behalten">
+                  <td><span class="radio an"></span></td>
+                  <td>Erika Musterfrau</td><td class="mono">erika@beispiel.de</td><td>Hamburg</td><td class="zahl">4820,50</td>
+                  <td></td>
+                </tr>
+                <tr class="dupl-entfernen">
+                  <td><span class="radio"></span></td>
+                  <td>Erika Musterfrau</td><td class="mono">erika@beispiel.de</td><td>Hamburg</td><td class="zahl">4820,50</td>
+                  <td class="dupl-marke"><i class="fa-solid fa-trash"></i> wird entfernt</td>
+                </tr>
+                <tr class="dupl-entfernen">
+                  <td><span class="radio"></span></td>
+                  <td>Erika Musterfrau</td><td class="mono">erika@beispiel.de</td><td>Hamburg</td><td class="zahl">4820,50</td>
+                  <td class="dupl-marke"><i class="fa-solid fa-trash"></i> wird entfernt</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Doppelte Spalten (1)</h3>
+          <div class="karte dupl-gruppe">
+            <div class="karte-inhalt">
+              <div class="einst-zeile">
+                <div class="einst-text">
+                  Spalte "ort" ist inhaltlich identisch mit "stadt"
+                  <span>In allen Zeilen dieselben Werte.</span>
+                </div>
+                <div class="einst-steuer">
+                  <button class="knopf klein">Beide behalten</button>
+                  <button class="knopf klein"><i class="fa-solid fa-trash"></i> "ort" entfernen</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-fuss">
+          <button class="knopf">Abbrechen</button>
+          <button class="knopf primaer"><i class="fa-solid fa-check"></i> Duplikate entfernen - 3 Datensätze, 1 Spalte</button>
+        </div>
+      </div>
     </div>
 
     <!-- Mockup-Leiste: Thema umschalten -->
