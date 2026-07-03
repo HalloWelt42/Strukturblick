@@ -50,8 +50,11 @@ a {
 /* ----- 3. App-Raster ------------------------------------------------------ */
 
 .app {
+  position: relative;
   display: grid;
   height: 100vh;
+  /* grid-template-columns wird in App.svelte aus dem gemerkten Layout gesetzt
+     (verstellbare Leisten); dieser Wert ist nur der Rückfall. */
   grid-template-columns: 232px 1fr 304px;
   grid-template-rows: 44px 1fr auto 28px;
   grid-template-areas:
@@ -61,8 +64,9 @@ a {
     "status status status";
 }
 
-.app.ohne-rechts {
-  grid-template-columns: 232px 1fr 0;
+/* Linke Leiste eingeklappt: Spalte ist 0, Inhalt wird nicht gezeigt. */
+.app.links-zu .seite-links {
+  display: none;
 }
 
 .haupt {

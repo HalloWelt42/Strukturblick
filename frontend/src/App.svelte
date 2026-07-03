@@ -12,18 +12,25 @@
   import HauptBereich from './lib/schale/HauptBereich.svelte'
   import Konsole from './lib/schale/Konsole.svelte'
   import KopfLeiste from './lib/schale/KopfLeiste.svelte'
+  import LeistenGriff from './lib/schale/LeistenGriff.svelte'
   import SeitenLeisteLinks from './lib/schale/SeitenLeisteLinks.svelte'
   import SeitenLeisteRechts from './lib/schale/SeitenLeisteRechts.svelte'
   import StatusLeiste from './lib/schale/StatusLeiste.svelte'
   import { starteBackendUeberwachung } from './lib/zustand/backendStatus.svelte'
   import { ladeCapabilities } from './lib/zustand/capabilities.svelte'
   import { einstellungenModal, schliesseEinstellungen } from './lib/zustand/einstellungenModal.svelte'
+  import { layout } from './lib/zustand/layout.svelte'
   import { ladeKiEinstellungen } from './lib/zustand/kiEinstellungen.svelte'
   import { starteKiUeberwachung } from './lib/zustand/kiStatus.svelte'
   import { stelleWieder, tabs } from './lib/zustand/tabs.svelte'
 
   starteBackendUeberwachung()
   ladeCapabilities()
+
+  // Spaltenbreiten des Rasters aus dem gemerkten Layout. Eingeklappt = 0.
+  const spalten = $derived(
+    `${layout.linksEingeklappt ? 0 : layout.breiteLinks}px 1fr ${layout.breiteRechts}px`,
+  )
 
   onMount(() => {
     void (async () => {
@@ -38,7 +45,7 @@
   })
 </script>
 
-<div class="app">
+<div class="app" class:links-zu={layout.linksEingeklappt} style="grid-template-columns: {spalten}">
   <KopfLeiste />
   <SeitenLeisteLinks />
   <main class="haupt">
@@ -48,6 +55,10 @@
   <SeitenLeisteRechts />
   <Konsole />
   <StatusLeiste />
+  {#if !layout.linksEingeklappt}
+    <LeistenGriff seite="links" />
+  {/if}
+  <LeistenGriff seite="rechts" />
 </div>
 
 <EinstellungenModal offen={einstellungenModal.offen} onSchliessen={schliesseEinstellungen} />
