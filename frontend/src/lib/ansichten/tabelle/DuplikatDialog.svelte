@@ -38,27 +38,44 @@
   let behalten = $state<Record<number, number>>({})
   // Doppelte Spalten, die entfernt werden sollen (Rohname der Kopie).
   let spaltenEntfernen = $state<Set<string>>(new Set())
+  // Spalten, die für die Datensatz-Duplikatprüfung verglichen werden. Standard:
+  // alle. Sind nur einzelne markiert, gelten Datensätze schon als doppelt, wenn
+  // sie in genau diesen Spalten übereinstimmen (der Rest wird ignoriert).
+  let verglSpalten = $state<SvelteSet<string>>(new SvelteSet())
+
+  /** Vergleichsspalten in Dokumentreihenfolge (nur die markierten). */
+  const verglReihenfolge = $derived(
+    bearbeitung.spaltenReihenfolge.filter((s) => verglSpalten.has(s)),
+  )
 
   const gruppen = $derived.by((): DuplikatGruppe[] =>
-    findeDoppelteZeilen(bearbeitung.zeilen, bearbeitung.spaltenReihenfolge),
+    verglReihenfolge.length === 0
+      ? []
+      : findeDoppelteZeilen(bearbeitung.zeilen, verglReihenfolge),
   )
   const doppelSpalten = $derived.by((): DoppelSpalte[] =>
     findeDoppelteSpalten(bearbeitung.zeilen, bearbeitung.spaltenReihenfolge),
   )
 
-  // Beim Öffnen die Vorauswahl (erster Datensatz je Gruppe, keine Spalte
-  // vorgewählt) setzen - nur wenn sich das Modal gerade öffnet.
+  // Beim Öffnen zurücksetzen: alle Spalten als Vergleichsspalten, keine Spalte
+  // zum Entfernen vorgewählt.
   let warOffen = $state(false)
   $effect(() => {
     if (offen && !warOffen) {
-      const vor: Record<number, number> = {}
-      gruppen.forEach((gruppe, i) => {
-        vor[i] = gruppe.indizes[0]
-      })
-      behalten = vor
+      verglSpalten = new SvelteSet(bearbeitung.spaltenReihenfolge)
       spaltenEntfernen = new Set()
     }
     warOffen = offen
+  })
+
+  // Vorauswahl "welcher Datensatz bleibt" bei jeder Änderung der Gruppen neu
+  // setzen (Öffnen oder geänderte Vergleichsspalten): der erste Index bleibt.
+  $effect(() => {
+    const vor: Record<number, number> = {}
+    gruppen.forEach((gruppe, i) => {
+      vor[i] = gruppe.indizes[0]
+    })
+    behalten = vor
   })
 
   /** Anzahl der zu entfernenden Datensätze über alle Gruppen. */
@@ -92,6 +109,21 @@
     if (neu.has(spalte)) neu.delete(spalte)
     else neu.add(spalte)
     spaltenEntfernen = neu
+  }
+
+  function schalteVergl(spalte: string): void {
+    const neu = new SvelteSet(verglSpalten)
+    if (neu.has(spalte)) neu.delete(spalte)
+    else neu.add(spalte)
+    verglSpalten = neu
+  }
+
+  function alleVergl(): void {
+    verglSpalten = new SvelteSet(bearbeitung.spaltenReihenfolge)
+  }
+
+  function keineVergl(): void {
+    verglSpalten = new SvelteSet()
   }
 
   /** Wendet die Auswahl auf den Editier-Zustand an (Vorschau, nicht ins Dokument). */
@@ -144,6 +176,40 @@
       Duplikate entstehen auch beim Bearbeiten: Wird eine Merkmalsspalte gelöscht, sind
       Datensätze nicht mehr eindeutig - dadurch können Gruppen doppelt werden.
     </span>
+  </div>
+
+  <div class="dupl-vergl">
+    <div class="dupl-vergl-kopf">
+      <span class="beschriftung">Vergleichsspalten für doppelte Datensätze</span>
+      <span class="luecke"></span>
+      <button class="knopf klein" onclick={alleVergl}>Alle</button>
+      <button class="knopf klein" onclick={keineVergl}>Keine</button>
+    </div>
+    <div class="dupl-vergl-chips">
+      {#each bearbeitung.spaltenReihenfolge as spalte (spalte)}
+        {@const an = verglSpalten.has(spalte)}
+        <button
+          class="dupl-chip"
+          class:an
+          role="checkbox"
+          aria-checked={an}
+          onclick={() => schalteVergl(spalte)}
+        >
+          <i class="fa-solid {an ? 'fa-check' : 'fa-xmark'}"></i>
+          {kopfName(bearbeitung, spalte)}
+        </button>
+      {/each}
+    </div>
+    {#if verglReihenfolge.length === 0}
+      <p class="hinweis-text dupl-vergl-warn">
+        <i class="fa-solid fa-circle-info"></i>
+        Ohne Vergleichsspalte werden keine doppelten Datensätze gesucht.
+      </p>
+    {:else}
+      <p class="hinweis-text">
+        Nur diese Spalten zählen für doppelte Datensätze - der Rest wird ignoriert. Standard: alle.
+      </p>
+    {/if}
   </div>
 
   {#if gruppen.length === 0 && doppelSpalten.length === 0}
@@ -280,6 +346,59 @@
   .dupl-hinweis i {
     color: var(--zustand-warnung);
     margin-top: 2px;
+  }
+
+  /* Auswahl der Vergleichsspalten für die Datensatz-Duplikatprüfung. */
+  .dupl-vergl {
+    padding: var(--a2) var(--a3);
+    margin-bottom: var(--a3);
+    background: var(--flaeche-panel);
+    border: 1px solid var(--rand-1);
+  }
+
+  .dupl-vergl-kopf {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+    margin-bottom: var(--a2);
+  }
+
+  .dupl-vergl-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--a1);
+  }
+
+  /* Chip als Ein/Aus-Schalter je Spalte (kein natives Kontrollkästchen). */
+  .dupl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    border: 1px solid var(--rand-2);
+    background: none;
+    cursor: pointer;
+    font-family: var(--schrift-anzeige);
+    font-size: 0.82rem;
+    color: var(--text-3);
+  }
+
+  .dupl-chip.an {
+    border-color: var(--akzent);
+    background: var(--akzent-weich);
+    color: var(--text-1);
+  }
+
+  .dupl-chip i {
+    font-size: 0.72rem;
+  }
+
+  .dupl-vergl-warn {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+    margin-top: var(--a2);
+    color: var(--zustand-warnung);
   }
 
   .dupl-leer {
