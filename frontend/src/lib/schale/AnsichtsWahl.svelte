@@ -28,7 +28,7 @@
     { id: 'editor', icon: 'fa-solid fa-code', titel: 'Editor' },
     { id: 'tabelle', icon: 'fa-solid fa-table', titel: 'Tabelle' },
     { id: 'statistik', icon: 'fa-solid fa-chart-column', titel: 'Statistik' },
-    { id: 'schema', icon: 'fa-solid fa-diagram-project', titel: 'Schema' },
+    { id: 'schema', icon: 'fa-solid fa-diagram-project', titel: 'Struktur' },
     { id: 'vergleich', icon: 'fa-solid fa-code-compare', titel: 'Vergleich' },
     { id: 'graph', icon: 'fa-solid fa-circle-nodes', titel: 'Graph' },
     { id: 'lexikon', icon: 'fa-solid fa-book-open', titel: 'Lexikon' },

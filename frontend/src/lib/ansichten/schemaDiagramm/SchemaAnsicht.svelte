@@ -254,7 +254,7 @@
   {:else if eintrag !== undefined && eintrag.fehler !== null}
     <LeererZustand
       icon="fa-triangle-exclamation"
-      titel="Kein Schema verfügbar"
+      titel="Struktur nicht ableitbar"
       text="Das Typmodell konnte nicht abgeleitet werden: {eintrag.fehler}"
     >
       {#snippet aktionen()}

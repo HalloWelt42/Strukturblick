@@ -59,8 +59,11 @@ registriereAnsicht({
 })
 
 registriereAnsicht({
+  // Interne Id bleibt 'schema' (Persistenz im Arbeitsstand); der Reiter heißt
+  // "Struktur", damit "Schema" eindeutig das JSON Schema (Export/Validierung)
+  // bezeichnet und nicht mit der Diagramm-Ansicht verwechselt wird.
   id: 'schema',
-  titel: 'Schema',
+  titel: 'Struktur',
   icon: 'fa-solid fa-diagram-project',
   reihenfolge: 60,
   brauchtAnalyse: true,
