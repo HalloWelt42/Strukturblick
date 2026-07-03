@@ -1,26 +1,26 @@
 <script lang="ts">
-  // Tabellen-Ansicht nach mockups/tabelle.html: Werkzeugzeile (bei CSV mit
-  // Dialekt-Abzeichen, sonst nur Filter + Export), darunter eine echte
-  // <table class="tabelle"> mit sortierbaren Köpfen und Typ-Abzeichen.
+  // Tabellen-Ansicht nach mockups/tabelle.html und der Bearbeiten-Erweiterung
+  // (05b/05c): Werkzeugzeile (bei CSV mit Dialekt-Abzeichen), darunter eine echte
+  // <table class="tabelle"> mit sortierbaren Köpfen und Typ-Abzeichen. Zusätzlich
+  // ist die Tabelle EDITIERBAR: Köpfe und Zellen per Klick, Griffe an Zeilen und
+  // Spaltenköpfen, Spalten per Drag-and-Drop, Spalten-Menü, Zeilen-Aktionen,
+  // "Zeile hinzufügen". Alle Änderungen sind eine Vorschau (flüchtig im
+  // Editier-Zustand); erst "Übernehmen" schreibt sie ins Dokument zurück.
   //
-  // Ausbau: Der Nutzer kann Spalten umsortieren, aus- und einblenden, umbenennen
-  // und Werte je Spalte per Übersetzungstabelle abbilden. Bei CSV lässt sich der
-  // Trenner wechseln (löst ein Neu-Parsen aus), beim Export der Zieltrenner. All
-  // das wirkt zusammen: die Tabelle rendert nur die sichtbaren Spalten in der
-  // gewählten Reihenfolge mit Anzeigenamen und übersetzten Werten; Sortieren und
-  // Filter arbeiten auf den angezeigten (übersetzten) Werten; der Export liefert
-  // genau diesen umgebauten View.
+  // Die Nur-Lese-Fähigkeiten bleiben vollständig erhalten: Sortieren, Filtern,
+  // Spalten verwalten (Sichtbarkeit/Reihenfolge/Umbenennen), Werte übersetzen,
+  // CSV-Trenner wechseln und Export. Gerendert wird stets aus dem Editier-Zustand
+  // (der beim ersten Zugriff eine Kopie der Analyse ist), damit Lesen und
+  // Bearbeiten auf denselben Daten arbeiten.
   //
-  // Virtualisierung: Statt der generischen VirtuelleListe (die auf <div>-Zeilen
-  // baut und die Element-Selektoren .tabelle td/th nicht bekäme) wird hier die
-  // Tabellen-Semantik bewahrt und von Hand virtualisiert - nur der sichtbare
-  // Zeilen-Ausschnitt wird gerendert, zwei Abstandshalter-Zeilen (oben/unten)
-  // halten die Scrollhöhe korrekt. So bleibt die Mockup-Optik (Zebra, Hover,
-  // .selektiert, .zahl, .null-wert) exakt erhalten und auch sehr viele Zeilen
-  // bleiben flüssig.
+  // Virtualisierung: nur der sichtbare Zeilenausschnitt wird gerendert, zwei
+  // Abstandshalter-Zeilen halten die Scrollhöhe. Die Inline-Bearbeitung wirkt nur
+  // auf sichtbare Zeilen - das genügt und lässt die Virtualisierung unberührt.
   import { dokumentParsen } from '../../api/dokumente'
-  import type { ParseAntwort } from '../../api/typen'
+  import type { FormatId, JsonWert, ParseAntwort } from '../../api/typen'
   import { kindPointer } from '../../dienste/pfade'
+  import { formatAusDateiname } from '../../dienste/formatErkennung'
+  import { sofortAnalysieren } from '../../dienste/analyseDienst'
   import {
     alleZeilen,
     alsCsvAngezeigt,
@@ -37,13 +37,18 @@
     zellwert,
     type Sortierrichtung,
   } from '../../dienste/tabellenModell'
+  import { zeilenAlsText, SerialisierungsFehler } from '../../dienste/tabellenSerialisierung'
+  import { wurzelAusZeilen } from '../../dienste/tabellenZeilen'
+  import { findeDoppelteSpalten, findeDoppelteZeilen } from '../../dienste/tabellenDuplikate'
   import { ladeHerunter } from '../../dienste/dateiEinAusgabe'
   import { typVon } from '../../dienste/wertZugriff'
   import AnalyseFehler from '../../hilfsteile/AnalyseFehler.svelte'
   import Modal from '../../hilfsteile/Modal.svelte'
   import FachbegriffLink from '../../lexikon/FachbegriffLink.svelte'
   import { selektion, setzeSelektion } from '../../zustand/selektion.svelte'
-  import { aktiverTab, setzeAnsicht } from '../../zustand/tabs.svelte'
+  import { zeige } from '../../zustand/toaster.svelte'
+  import { ladeNeu } from '../../zustand/dokumentListe.svelte'
+  import { aktiverTab, oeffneTab, setzeAnsicht, setzeInhalt } from '../../zustand/tabs.svelte'
   import {
     schalteSichtbar,
     setzeAnzeigename,
@@ -51,6 +56,24 @@
     tabellenZustandFuer,
     verschiebeSpalte,
   } from './tabellenAnsichtZustand.svelte'
+  import {
+    anzahlAenderungen,
+    bearbeitungFuer,
+    istZelleGeaendert,
+    istZeileNeu,
+    kopfName,
+    setzeKopf,
+    setzeZelle,
+    spalteDuplizieren,
+    spalteHinzufuegen,
+    spalteLoeschen,
+    spaltenReihenfolgeSetzen,
+    verwerfen,
+    zeileDuplizieren,
+    zeileHinzufuegen,
+    zeileLoeschen,
+  } from './tabellenBearbeitung.svelte'
+  import DuplikatDialog from './DuplikatDialog.svelte'
 
   /** Feste Zeilenhöhe in Pixeln (Padding 5px + Text ~19px, wie .tabelle td). */
   const ZEILEN_HOEHE = 29
@@ -81,18 +104,37 @@
   const dialekt = $derived(tab?.analyse?.dialekt_info ?? null)
   const istCsv = $derived(tab?.format === 'csv')
   const spalten = $derived(wurzel !== null ? spaltenAus(wurzel) : [])
-  const basisZeilen = $derived(wurzel !== null ? alleZeilen(wurzel) : [])
 
-  // Anzeige-Zustand je Tab (Reihenfolge/Sichtbarkeit/Umbenennung/Wert-Karten).
-  // Wird bei jedem Lauf mit dem aktuellen Spaltensatz abgeglichen.
+  // Anzeige-Zustand je Tab (Sichtbarkeit/Umbenennung/Wert-Karten). Die
+  // Reihenfolge wird beim Bearbeiten vom Editier-Zustand geführt; das Modal
+  // "Spalten verwalten" nutzt weiter diese Reihenfolge zur Anzeige.
   const ansichtZustand = $derived(
     tab !== null ? tabellenZustandFuer(tab.id, spalten) : null,
   )
 
-  /** Die tatsächlich gerenderten Spalten: Reihenfolge, ohne versteckte. */
+  // Editier-Zustand je Tab: die editierbaren Zeilen und Spalten (Kopie der
+  // Analyse). Gerendert wird stets hieraus.
+  const bearbeitung = $derived(
+    tab !== null && wurzel !== null ? bearbeitungFuer(tab.id, wurzel, spalten) : null,
+  )
+
+  const aenderungen = $derived(bearbeitung !== null ? anzahlAenderungen(bearbeitung) : 0)
+  const hatAenderungen = $derived(aenderungen > 0)
+
+  /** Ad-hoc-Wurzel aus den editierten Zeilen - für die vorhandenen Lese-Helfer. */
+  const editWurzel = $derived.by((): JsonWert => {
+    if (bearbeitung === null) return []
+    return wurzelAusZeilen(bearbeitung.zeilen, bearbeitung.spaltenReihenfolge)
+  })
+
+  /** Zeilen-Indizes (0..n-1) in editWurzel = Indizes in bearbeitung.zeilen. */
+  const basisZeilen = $derived(alleZeilen(editWurzel))
+
+  /** Die tatsächlich gerenderten Spalten: Editier-Reihenfolge ohne versteckte. */
   const angezeigteSpalten = $derived.by((): string[] => {
-    if (ansichtZustand === null) return spalten
-    return sichtbareSpalten(spalten, ansichtZustand.spaltenReihenfolge, ansichtZustand.versteckt)
+    if (bearbeitung === null) return []
+    const versteckt = ansichtZustand?.versteckt ?? new Set<string>()
+    return bearbeitung.spaltenReihenfolge.filter((spalte) => !versteckt.has(spalte))
   })
 
   let filterText = $state('')
@@ -101,21 +143,29 @@
 
   /** Sichtbare Zeilen-Indizes: erst filtern, dann (falls gewählt) sortieren. */
   const sichtbareZeilen = $derived.by((): number[] => {
-    if (wurzel === null || ansichtZustand === null) return []
-    const karten = ansichtZustand.wertKarten
-    const gefiltert = filtereAngezeigt(basisZeilen, wurzel, angezeigteSpalten, filterText, karten)
+    if (bearbeitung === null) return []
+    const karten = ansichtZustand?.wertKarten ?? {}
+    const gefiltert = filtereAngezeigt(basisZeilen, editWurzel, angezeigteSpalten, filterText, karten)
     if (sortSpalte === null) return gefiltert
-    return sortiereAngezeigt(gefiltert, wurzel, sortSpalte, sortRichtung, karten)
+    return sortiereAngezeigt(gefiltert, editWurzel, sortSpalte, sortRichtung, karten)
   })
 
   /** Typ je Spalte (dominanter Werttyp) für das Kopf-Abzeichen. */
   const spaltenTyp = $derived.by((): Record<string, string> => {
     const karte: Record<string, string> = {}
-    if (wurzel === null) return karte
-    for (const spalte of spalten) {
-      karte[spalte] = typVonSpalte(basisZeilen, wurzel, spalte)
+    if (bearbeitung === null) return karte
+    for (const spalte of bearbeitung.spaltenReihenfolge) {
+      karte[spalte] = typVonSpalte(basisZeilen, editWurzel, spalte)
     }
     return karte
+  })
+
+  /** Trefferzahl für "Duplikate prüfen" (Zeilen-Gruppen + doppelte Spalten). */
+  const duplikatTreffer = $derived.by((): number => {
+    if (bearbeitung === null) return 0
+    const zeilen = findeDoppelteZeilen(bearbeitung.zeilen, bearbeitung.spaltenReihenfolge).length
+    const spaltenD = findeDoppelteSpalten(bearbeitung.zeilen, bearbeitung.spaltenReihenfolge).length
+    return zeilen + spaltenD
   })
 
   // Virtualisierung: Scrollzustand des Tabellen-Behälters.
@@ -141,7 +191,6 @@
     const auswahl = selektion.aktuell
     if (auswahl === null || auswahl.pfad === null || tab === null) return null
     if (auswahl.tabId !== tab.id) return null
-    // Erstes Segment des Pointers als Zeilenindex ("/3" oder "/3/spalte").
     const treffer = /^\/(0|[1-9][0-9]*)(?:\/|$)/.exec(auswahl.pfad)
     return treffer !== null ? Number(treffer[1]) : null
   })
@@ -161,8 +210,6 @@
     flaeche.scrollTop = Math.max(0, oben - (flaeche.clientHeight - ZEILEN_HOEHE) / 2)
   }
 
-  // Fremde Selektion (Baum, Editor, ...): zeigt sie auf eine Zeile dieser
-  // Tabelle, dorthin scrollen. Getrackt wird nur die Selektion selbst.
   $effect(() => {
     const auswahl = selektion.aktuell
     if (auswahl === null || auswahl.pfad === null || auswahl.quelle === 'tabelle') return
@@ -174,7 +221,7 @@
     if (position !== -1) scrollZuIndex(position)
   })
 
-  /** Klick auf einen Spaltenkopf: auf -> ab -> Sortierung aus (dreistufig). */
+  /** Klick auf einen Spaltenkopf-Text: auf -> ab -> Sortierung aus (dreistufig). */
   function sortiereNach(spalte: string): void {
     if (sortSpalte !== spalte) {
       sortSpalte = spalte
@@ -187,7 +234,7 @@
     }
   }
 
-  /** Klick auf eine Zelle: Selektion auf die Zelle (Zeile + Spalte) setzen. */
+  /** Klick auf eine Zelle (ohne Bearbeiten): Selektion auf die Zelle setzen. */
   function waehleZelle(zeile: number, spalte: string): void {
     if (tab === null) return
     const zeilenPfad = kindPointer('', zeile)
@@ -217,25 +264,296 @@
     }
   }
 
+  // ----- Inline-Bearbeitung: aktive Zelle / aktiver Kopf --------------------
+
+  /** Aktuell im Bearbeiten-Modus: entweder eine Zelle oder ein Kopf. */
+  let aktiveZelle = $state<{ zeile: number; spalte: string } | null>(null)
+  let aktiverKopf = $state<string | null>(null)
+  let feldWert = $state('')
+
+  /** Aktive Zeile (für die Zeilen-Aktionen ganz links). */
+  let aktiveZeile = $state<number | null>(null)
+
+  /** Textform eines Zellwerts als Eingabewert für das Feld. */
+  function zellEingabe(zeile: number, spalte: string): string {
+    if (bearbeitung === null) return ''
+    const wert = bearbeitung.zeilen[zeile]?.[spalte]
+    if (wert === undefined || wert === null) return wert === null ? 'null' : ''
+    if (typeof wert === 'string') return wert
+    if (typeof wert === 'number' || typeof wert === 'boolean') return String(wert)
+    return JSON.stringify(wert)
+  }
+
+  function beginneZelle(zeile: number, spalte: string): void {
+    aktiverKopf = null
+    aktiveZelle = { zeile, spalte }
+    feldWert = zellEingabe(zeile, spalte)
+    waehleZelle(zeile, spalte)
+  }
+
+  function beendeZelle(uebernehmen: boolean): void {
+    if (aktiveZelle !== null && bearbeitung !== null && uebernehmen) {
+      setzeZelle(bearbeitung, aktiveZelle.zeile, aktiveZelle.spalte, feldWert)
+    }
+    aktiveZelle = null
+  }
+
+  function beginneKopf(spalte: string): void {
+    aktiveZelle = null
+    offenesMenue = null
+    aktiverKopf = spalte
+    feldWert = kopfName(bearbeitung!, spalte)
+  }
+
+  function beendeKopf(uebernehmen: boolean): void {
+    if (aktiverKopf !== null && bearbeitung !== null && uebernehmen) {
+      setzeKopf(bearbeitung, aktiverKopf, feldWert)
+    }
+    aktiverKopf = null
+  }
+
+  function beiFeldTaste(ereignis: KeyboardEvent, art: 'zelle' | 'kopf'): void {
+    if (ereignis.key === 'Enter') {
+      ereignis.preventDefault()
+      if (art === 'zelle') beendeZelle(true)
+      else beendeKopf(true)
+    } else if (ereignis.key === 'Escape') {
+      ereignis.preventDefault()
+      if (art === 'zelle') beendeZelle(false)
+      else beendeKopf(false)
+    }
+  }
+
+  // ----- Spalten-Menü am Kopf ----------------------------------------------
+
+  let offenesMenue = $state<string | null>(null)
+
+  function schalteMenue(spalte: string): void {
+    offenesMenue = offenesMenue === spalte ? null : spalte
+  }
+
+  function menueUmbenennen(spalte: string): void {
+    offenesMenue = null
+    beginneKopf(spalte)
+  }
+
+  function menueDuplizieren(spalte: string): void {
+    offenesMenue = null
+    if (bearbeitung !== null) spalteDuplizieren(bearbeitung, spalte)
+  }
+
+  function menueAusblenden(spalte: string): void {
+    offenesMenue = null
+    if (ansichtZustand !== null) schalteSichtbar(ansichtZustand, spalte)
+  }
+
+  function menueLoeschen(spalte: string): void {
+    offenesMenue = null
+    if (bearbeitung !== null) spalteLoeschen(bearbeitung, spalte)
+  }
+
+  // ----- Spalten per Drag-and-Drop umsortieren -----------------------------
+  // Window-Pointer-Muster wie LeistenGriff (kein setPointerCapture): der
+  // gezogene Spaltenname und die aktuelle Zielposition werden im Zustand
+  // gehalten; über den Köpfen ermittelt beiZiehBewegung das Ziel neu.
+
+  let ziehSpalte = $state<string | null>(null)
+  let zielSpalte = $state<string | null>(null)
+  let kopfLeiste = $state<HTMLTableRowElement>()
+
+  function beiGriffStart(ereignis: PointerEvent, spalte: string): void {
+    ereignis.preventDefault()
+    ereignis.stopPropagation()
+    ziehSpalte = spalte
+    zielSpalte = spalte
+
+    function beiBewegung(ev: PointerEvent): void {
+      if (kopfLeiste === undefined) return
+      // Über welchem Kopf steht der Zeiger? Der Kopf trägt data-spalte.
+      const treffer = document
+        .elementsFromPoint(ev.clientX, ev.clientY)
+        .find((el) => el instanceof HTMLElement && el.dataset.spalte !== undefined) as
+        | HTMLElement
+        | undefined
+      if (treffer !== undefined && treffer.dataset.spalte !== undefined) {
+        zielSpalte = treffer.dataset.spalte
+      }
+    }
+
+    function beiEnde(): void {
+      window.removeEventListener('pointermove', beiBewegung)
+      window.removeEventListener('pointerup', beiEnde)
+      window.removeEventListener('pointercancel', beiEnde)
+      if (bearbeitung !== null && ziehSpalte !== null && zielSpalte !== null && ziehSpalte !== zielSpalte) {
+        verschiebeVor(ziehSpalte, zielSpalte)
+      }
+      ziehSpalte = null
+      zielSpalte = null
+    }
+
+    window.addEventListener('pointermove', beiBewegung)
+    window.addEventListener('pointerup', beiEnde)
+    window.addEventListener('pointercancel', beiEnde)
+  }
+
+  /** Setzt "quelle" direkt vor "ziel" in der Editier-Reihenfolge. */
+  function verschiebeVor(quelle: string, ziel: string): void {
+    if (bearbeitung === null) return
+    const ohne = bearbeitung.spaltenReihenfolge.filter((s) => s !== quelle)
+    const zielPos = ohne.indexOf(ziel)
+    if (zielPos === -1) return
+    const neu = [...ohne.slice(0, zielPos), quelle, ...ohne.slice(zielPos)]
+    spaltenReihenfolgeSetzen(bearbeitung, neu)
+  }
+
+  // ----- Zeilen-Aktionen ----------------------------------------------------
+
+  function tuZeileDuplizieren(index: number): void {
+    if (bearbeitung !== null) zeileDuplizieren(bearbeitung, index)
+  }
+
+  function tuZeileLoeschen(index: number): void {
+    if (bearbeitung !== null) {
+      zeileLoeschen(bearbeitung, index)
+      aktiveZeile = null
+    }
+  }
+
+  function tuZeileHinzufuegen(): void {
+    if (bearbeitung !== null) zeileHinzufuegen(bearbeitung)
+  }
+
+  function tuSpalteHinzufuegen(): void {
+    if (bearbeitung !== null) {
+      const name = spalteHinzufuegen(bearbeitung)
+      // Direkt in den Umbenennen-Modus des neuen Kopfes gehen.
+      beginneKopf(name)
+    }
+  }
+
+  // ----- Bearbeiten-Leiste: Verwerfen / Als neues Dokument / Übernehmen -----
+
+  const zielFormat = $derived<FormatId>(
+    (tab?.format ?? (tab !== null ? formatAusDateiname(tab.titel) : null) ?? 'json') as FormatId,
+  )
+
+  let uebernahmeLaeuft = $state(false)
+
+  /** Baut den Zieltext aus dem Editier-Zustand im aktuellen Format. */
+  async function baueText(): Promise<string> {
+    if (bearbeitung === null) throw new SerialisierungsFehler('Kein Editier-Zustand.')
+    // Beim Übernehmen werden die Spalten-Umbenennungen als echte Schlüssel
+    // geschrieben: Rohname -> Anzeigename. Zellen tragen dann den neuen Schlüssel.
+    const umbenannteZeilen = bearbeitung.zeilen.map((zeile) => {
+      const neu: Record<string, JsonWert> = {}
+      for (const spalte of bearbeitung.spaltenReihenfolge) {
+        const name = kopfName(bearbeitung, spalte)
+        const wert = zeile[spalte]
+        if (wert !== undefined) neu[name] = wert
+      }
+      return neu
+    })
+    const reihenfolge = bearbeitung.spaltenReihenfolge.map((s) => kopfName(bearbeitung, s))
+    return zeilenAlsText(umbenannteZeilen, reihenfolge, zielFormat)
+  }
+
+  function tuVerwerfen(): void {
+    if (tab === null || wurzel === null) return
+    verwerfen(tab.id, wurzel, spalten)
+    aktiveZelle = null
+    aktiverKopf = null
+    offenesMenue = null
+    zeige('Änderungen verworfen.', 'info')
+  }
+
+  async function tuUebernehmen(): Promise<void> {
+    if (tab === null || bearbeitung === null || uebernahmeLaeuft) return
+    uebernahmeLaeuft = true
+    const zielId = tab.id
+    try {
+      const text = await baueText()
+      setzeInhalt(zielId, text)
+      await sofortAnalysieren(zielId)
+      // Editier-Zustand aus der FRISCHEN Analyse in-place zurücksetzen, damit die
+      // Vorschau sofort verschwindet (delete allein löst keine Reaktivität aus,
+      // weil wurzel sich bereits gesetzt hat).
+      const frisch = aktiverTab()
+      const frischeWurzel = frisch?.analyse?.wurzel ?? null
+      if (frisch !== null && frisch.id === zielId && frischeWurzel !== null) {
+        verwerfen(zielId, frischeWurzel, spaltenAus(frischeWurzel))
+      } else {
+        verwerfen(zielId)
+      }
+      aktiveZelle = null
+      aktiverKopf = null
+      zeige('Änderungen übernommen.', 'erfolg')
+    } catch (grund: unknown) {
+      const meldung = grund instanceof Error ? grund.message : String(grund)
+      zeige(`Übernehmen fehlgeschlagen: ${meldung}`, 'fehler')
+    } finally {
+      uebernahmeLaeuft = false
+    }
+  }
+
+  async function tuAlsNeuesDokument(): Promise<void> {
+    if (tab === null || bearbeitung === null || uebernahmeLaeuft) return
+    uebernahmeLaeuft = true
+    try {
+      const text = await baueText()
+      const basis = (tab.titel ?? 'tabelle').replace(/\.[^.]+$/, '')
+      const endung = endungFuer(zielFormat)
+      oeffneTab({ titel: `${basis}-bearbeitet${endung}`, inhalt: text, format: zielFormat })
+      void ladeNeu()
+      zeige('Als neues Dokument geöffnet.', 'erfolg')
+    } catch (grund: unknown) {
+      const meldung = grund instanceof Error ? grund.message : String(grund)
+      zeige(`Neues Dokument fehlgeschlagen: ${meldung}`, 'fehler')
+    } finally {
+      uebernahmeLaeuft = false
+    }
+  }
+
+  /** "Dokument duplizieren": den AKTUELLEN Inhalt als Kopie in einem neuen Tab. */
+  function tuDokumentDuplizieren(): void {
+    if (tab === null) return
+    const basis = (tab.titel ?? 'tabelle').replace(/\.[^.]+$/, '')
+    const endung = endungFuer(zielFormat)
+    oeffneTab({
+      titel: `${basis}-kopie${endung}`,
+      inhalt: tab.inhalt,
+      format: tab.format,
+      istBinaer: tab.istBinaer,
+    })
+    void ladeNeu()
+    zeige('Dokument dupliziert.', 'erfolg')
+  }
+
+  /** Passende Dateiendung zu einem Format. */
+  function endungFuer(format: FormatId): string {
+    const karte: Record<string, string> = {
+      json: '.json',
+      ndjson: '.ndjson',
+      yaml: '.yaml',
+      toml: '.toml',
+      xml: '.xml',
+      csv: '.csv',
+      md_tabelle: '.md',
+      html_tabelle: '.html',
+    }
+    return karte[format] ?? '.txt'
+  }
+
+  // ----- Duplikate-Dialog ---------------------------------------------------
+
+  let duplikatOffen = $state(false)
+
   // ----- Trenner wechseln (CSV neu parsen) ----------------------------------
 
-  /** Der erkannte Trenner aus der Vorermittlung (Dialekt), Basis der Vorauswahl. */
   const erkannterTrenner = $derived(dialekt?.trennzeichen ?? null)
-
-  /** Aktuell gewählter Trenner; initial der erkannte, sonst Semikolon. */
   let gewaehlterTrenner = $state<string | null>(null)
-
-  /** Der wirksame Trenner: die explizite Wahl, sonst der erkannte. */
   const wirksamerTrenner = $derived(gewaehlterTrenner ?? erkannterTrenner ?? ';')
-
   let trennerLaeuft = $state(false)
 
-  /**
-   * Neu-Parsen mit gewähltem Trenner und Übernahme in tab.analyse - analog zum
-   * analyseDienst, aber gezielt mit csv_trennzeichen. Die Anzeige-Einstellungen
-   * (Reihenfolge/Umbenennung/Werte) bleiben erhalten, weil der Spaltensatz gleich
-   * bleibt; nur die Zellwerte werden neu aufgeteilt.
-   */
   async function wechsleTrenner(zeichen: string): Promise<void> {
     if (tab === null || zeichen === wirksamerTrenner) return
     gewaehlterTrenner = zeichen
@@ -248,13 +566,13 @@
         dateiname: zielTab.titel,
         parse_optionen: { csv_trennzeichen: zeichen },
       })
-      // Nur übernehmen, wenn der Tab noch existiert und aktiv geblieben ist.
       const aktuell = aktiverTab()
       if (aktuell !== null && aktuell.id === zielTab.id) {
         aktuell.analyse = antwort
         aktuell.format = antwort.format_id
         aktuell.analyseStand = 'frisch'
         aktuell.analyseFehler = null
+        verwerfen(zielTab.id)
       }
     } catch (grund: unknown) {
       console.error('Neu-Parsen mit gewähltem Trenner fehlgeschlagen:', grund)
@@ -276,14 +594,11 @@
 
   let werteModalOffen = $state(false)
   let werteSpalte = $state<string | null>(null)
+  const werteSpalteWirksam = $derived(werteSpalte ?? bearbeitung?.spaltenReihenfolge[0] ?? null)
 
-  /** Bei geöffnetem Modal ohne Wahl die erste Spalte vorbelegen. */
-  const werteSpalteWirksam = $derived(werteSpalte ?? spalten[0] ?? null)
-
-  /** Verschiedene Rohwerte der gewählten Spalte (bis 50), für die Eingabefelder. */
   const rohwerteDerSpalte = $derived.by((): string[] => {
-    if (wurzel === null || werteSpalteWirksam === null) return []
-    return verschiedeneRohwerte(basisZeilen, wurzel, werteSpalteWirksam, 50)
+    if (werteSpalteWirksam === null) return []
+    return verschiedeneRohwerte(basisZeilen, editWurzel, werteSpalteWirksam, 50)
   })
 
   function ersatzVon(spalte: string, rohwert: string): string {
@@ -302,12 +617,11 @@
   let exportModalOffen = $state(false)
   let exportTrenner = $state(';')
 
-  /** Anzahl Felder, in denen der gewählte Export-Trenner vorkommt (Kollision). */
   const exportKollisionen = $derived.by((): number => {
-    if (wurzel === null || ansichtZustand === null) return 0
+    if (ansichtZustand === null) return 0
     return trennerKollisionen(
       sichtbareZeilen,
-      wurzel,
+      editWurzel,
       angezeigteSpalten,
       ansichtZustand.umbenennung,
       ansichtZustand.wertKarten,
@@ -316,17 +630,16 @@
   })
 
   function oeffneExport(): void {
-    // Der Export-Trenner startet beim wirksamen Trenner, falls wählbar.
     const passend = TRENNER_KANDIDATEN.some((k) => k.zeichen === wirksamerTrenner)
     exportTrenner = passend ? wirksamerTrenner : ';'
     exportModalOffen = true
   }
 
   function fuehreExportDurch(): void {
-    if (wurzel === null || ansichtZustand === null) return
+    if (ansichtZustand === null) return
     const text = alsCsvAngezeigt(
       sichtbareZeilen,
-      wurzel,
+      editWurzel,
       angezeigteSpalten,
       ansichtZustand.umbenennung,
       ansichtZustand.wertKarten,
@@ -339,7 +652,7 @@
 </script>
 
 {#if tab !== null}
-  {#if tabellarisch}
+  {#if tabellarisch && bearbeitung !== null}
     <div class="werkzeugzeile">
       {#if dialekt !== null}
         <span class="beschriftung">
@@ -375,11 +688,23 @@
         class="feld"
         type="text"
         placeholder="Spalten filtern ..."
-        style="width: 200px"
+        style="width: 160px"
         bind:value={filterText}
       />
+      <button class="knopf klein" onclick={tuSpalteHinzufuegen}>
+        <i class="fa-solid fa-plus"></i> Spalte
+      </button>
+      <button class="knopf klein" onclick={() => (duplikatOffen = true)}>
+        <i class="fa-solid fa-clone"></i> Duplikate prüfen
+        {#if duplikatTreffer > 0}
+          <span class="abzeichen warnung">{duplikatTreffer}</span>
+        {/if}
+      </button>
+      <button class="knopf klein" onclick={tuDokumentDuplizieren}>
+        <i class="fa-solid fa-copy"></i> Dokument duplizieren
+      </button>
       <button class="knopf klein" onclick={() => (spaltenModalOffen = true)}>
-        <i class="fa-solid fa-table-columns"></i> Spalten
+        <i class="fa-solid fa-table-columns"></i> Spalten verwalten
       </button>
       <button class="knopf klein" onclick={() => (werteModalOffen = true)}>
         <i class="fa-solid fa-language"></i> Werte übersetzen
@@ -389,29 +714,105 @@
       </button>
     </div>
 
+    {#if hatAenderungen}
+      <div class="bearb-leiste">
+        <span class="abzeichen info">
+          <i class="fa-solid fa-pen"></i>
+          {aenderungen} {aenderungen === 1 ? 'Änderung' : 'Änderungen'} (Vorschau)
+        </span>
+        <span class="hinweis-text">
+          Kopf oder Zelle anklicken zum Bearbeiten - erst mit "Übernehmen" wird geschrieben.
+        </span>
+        <button class="knopf klein" onclick={tuVerwerfen} disabled={uebernahmeLaeuft}>
+          <i class="fa-solid fa-rotate-left"></i> Verwerfen
+        </button>
+        <button class="knopf" onclick={() => void tuAlsNeuesDokument()} disabled={uebernahmeLaeuft}>
+          <i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument
+        </button>
+        <button class="knopf primaer" onclick={() => void tuUebernehmen()} disabled={uebernahmeLaeuft}>
+          <i class="fa-solid fa-check"></i> Übernehmen
+        </button>
+      </div>
+    {/if}
+
     <div class="tabelle-flaeche" bind:this={flaeche} bind:clientHeight={sichtHoehe} onscroll={anScroll}>
-      <table class="tabelle">
+      <table class="tabelle tabelle-bearb">
         <thead>
-          <tr>
+          <tr bind:this={kopfLeiste}>
+            <th class="bearb-aktionsspalte"></th>
             {#each angezeigteSpalten as spalte (spalte)}
               {@const typ = spaltenTyp[spalte] ?? 'text'}
-              {@const kopf = ansichtZustand !== null
-                ? anzeigeName(spalte, ansichtZustand.umbenennung)
-                : spalte}
+              {@const kopf = kopfName(bearbeitung, spalte)}
               <th
+                data-spalte={spalte}
                 class:zahl={typ === 'zahl'}
-                onclick={() => sortiereNach(spalte)}
-                title="Nach {kopf} sortieren"
+                class:bearb-wird-gezogen={ziehSpalte === spalte}
+                class:bearb-drop-spalte={ziehSpalte !== null && zielSpalte === spalte && ziehSpalte !== spalte}
+                class:bearb-kopf-menue-wirt={offenesMenue === spalte}
+                class:bearb-zelle-aktiv={aktiverKopf === spalte}
               >
-                {kopf}
-                <span class="abzeichen">{KOPF_TYP_NAME[typ] ?? 'Text'}</span>
-                {#if sortSpalte === spalte}
-                  <i
-                    class="fa-solid sortier-pfeil {sortRichtung === 'auf'
-                      ? 'fa-arrow-up-short-wide'
-                      : 'fa-arrow-down-wide-short'}"
-                    title={sortRichtung === 'auf' ? 'Aufsteigend sortiert' : 'Absteigend sortiert'}
-                  ></i>
+                <span
+                  class="bearb-sp-griff"
+                  title="Spalte ziehen"
+                  role="button"
+                  tabindex="-1"
+                  aria-label="Spalte {kopf} ziehen"
+                  onpointerdown={(e) => beiGriffStart(e, spalte)}
+                >
+                  <i class="fa-solid fa-grip-vertical"></i>
+                </span>
+                {#if aktiverKopf === spalte}
+                  <!-- svelte-ignore a11y_autofocus -->
+                  <input
+                    class="feld zellen-feld"
+                    type="text"
+                    autofocus
+                    bind:value={feldWert}
+                    onkeydown={(e) => beiFeldTaste(e, 'kopf')}
+                    onblur={() => beendeKopf(true)}
+                  />
+                {:else}
+                  <button
+                    class="bearb-kopf-text"
+                    onclick={() => sortiereNach(spalte)}
+                    ondblclick={() => beginneKopf(spalte)}
+                    title="Klick: sortieren - Doppelklick: umbenennen"
+                  >
+                    {kopf}
+                  </button>
+                  <span class="abzeichen">{KOPF_TYP_NAME[typ] ?? 'Text'}</span>
+                  {#if sortSpalte === spalte}
+                    <i
+                      class="fa-solid sortier-pfeil {sortRichtung === 'auf'
+                        ? 'fa-arrow-up-short-wide'
+                        : 'fa-arrow-down-wide-short'}"
+                      title={sortRichtung === 'auf' ? 'Aufsteigend sortiert' : 'Absteigend sortiert'}
+                    ></i>
+                  {/if}
+                  <button
+                    class="bearb-kopf-menue-knopf"
+                    title="Spalte"
+                    aria-label="Spalten-Menü {kopf}"
+                    onclick={() => schalteMenue(spalte)}
+                  >
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                  </button>
+                  {#if offenesMenue === spalte}
+                    <div class="bearb-menue">
+                      <button onclick={() => menueUmbenennen(spalte)}>
+                        <i class="fa-solid fa-pen"></i> Umbenennen
+                      </button>
+                      <button onclick={() => menueDuplizieren(spalte)}>
+                        <i class="fa-solid fa-copy"></i> Spalte duplizieren
+                      </button>
+                      <button onclick={() => menueAusblenden(spalte)}>
+                        <i class="fa-solid fa-eye-slash"></i> Ausblenden
+                      </button>
+                      <button class="gefahr" onclick={() => menueLoeschen(spalte)}>
+                        <i class="fa-solid fa-trash"></i> Spalte löschen
+                      </button>
+                    </div>
+                  {/if}
                 {/if}
               </th>
             {/each}
@@ -420,36 +821,79 @@
         <tbody>
           {#if platzOben > 0}
             <tr class="abstand" style="height: {platzOben}px" aria-hidden="true">
-              <td colspan={angezeigteSpalten.length}></td>
+              <td colspan={angezeigteSpalten.length + 1}></td>
             </tr>
           {/if}
           {#each fensterZeilen as zeile (zeile)}
             <tr
               class:selektiert={auswahlZeile === zeile}
+              class:bearb-neu={istZeileNeu(bearbeitung, zeile)}
               style="height: {ZEILEN_HOEHE}px"
+              onmouseenter={() => (aktiveZeile = zeile)}
             >
+              <td class="bearb-aktionsspalte">
+                {#if aktiveZeile === zeile}
+                  <span class="bearb-zeilen-aktionen">
+                    <button title="Zeile duplizieren" aria-label="Zeile duplizieren" onclick={() => tuZeileDuplizieren(zeile)}>
+                      <i class="fa-solid fa-copy"></i>
+                    </button>
+                    <button class="gefahr" title="Zeile löschen" aria-label="Zeile löschen" onclick={() => tuZeileLoeschen(zeile)}>
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </span>
+                {:else}
+                  <span class="bearb-griff" title="Zeile"><i class="fa-solid fa-grip-vertical"></i></span>
+                {/if}
+              </td>
               {#each angezeigteSpalten as spalte (spalte)}
-                {@const roh = zellwert(wurzel, zeile, spalte)}
+                {@const roh = zellwert(editWurzel, zeile, spalte)}
                 {@const leer = roh === undefined || roh === null}
                 {@const zahl = roh !== undefined && typVon(roh) === 'zahl'}
                 {@const text = ansichtZustand !== null
-                  ? zellAnzeige(wurzel, zeile, spalte, ansichtZustand.wertKarten)
+                  ? zellAnzeige(editWurzel, zeile, spalte, ansichtZustand.wertKarten)
                   : ''}
+                {@const aktiv = aktiveZelle?.zeile === zeile && aktiveZelle?.spalte === spalte}
+                {@const geaendert = istZelleGeaendert(bearbeitung, zeile, spalte)}
                 <td
                   class:zahl
-                  class:null-wert={leer && text === ''}
-                  onclick={() => waehleZelle(zeile, spalte)}
+                  class:null-wert={leer && text === '' && !aktiv}
+                  class:bearb-zelle-aktiv={aktiv}
+                  class:bearb-geaendert={geaendert && !aktiv}
+                  ondblclick={() => beginneZelle(zeile, spalte)}
+                  onclick={() => {
+                    if (!aktiv) waehleZelle(zeile, spalte)
+                  }}
+                  title="Doppelklick zum Bearbeiten"
                 >
-                  {#if leer && text === ''}(leer){:else}{text}{/if}
+                  {#if aktiv}
+                    <!-- svelte-ignore a11y_autofocus -->
+                    <input
+                      class="feld zellen-feld"
+                      type="text"
+                      autofocus
+                      bind:value={feldWert}
+                      onkeydown={(e) => beiFeldTaste(e, 'zelle')}
+                      onblur={() => beendeZelle(true)}
+                    />
+                  {:else if leer && text === ''}
+                    (leer)
+                  {:else}
+                    {text}{#if geaendert}<span class="bearb-punkt" title="Geändert"></span>{/if}
+                  {/if}
                 </td>
               {/each}
             </tr>
           {/each}
           {#if platzUnten > 0}
             <tr class="abstand" style="height: {platzUnten}px" aria-hidden="true">
-              <td colspan={angezeigteSpalten.length}></td>
+              <td colspan={angezeigteSpalten.length + 1}></td>
             </tr>
           {/if}
+          <!-- Zeile hinzufügen -->
+          <tr class="bearb-neu-zeile" onclick={tuZeileHinzufuegen}>
+            <td class="bearb-aktionsspalte"><i class="fa-solid fa-plus"></i></td>
+            <td colspan={angezeigteSpalten.length}>Zeile hinzufügen</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -460,10 +904,16 @@
         ? ` (von ${basisZeilen.length})`
         : ''}, {angezeigteSpalten.length}
       {angezeigteSpalten.length === 1 ? 'Spalte' : 'Spalten'}{angezeigteSpalten.length <
-      spalten.length
-        ? ` (von ${spalten.length})`
+      bearbeitung.spaltenReihenfolge.length
+        ? ` (von ${bearbeitung.spaltenReihenfolge.length})`
         : ''}
+      {#if hatAenderungen}
+        <span class="fuss-aenderungen"><i class="fa-solid fa-pen"></i> {aenderungen} {aenderungen === 1 ? 'Änderung' : 'Änderungen'}</span>
+      {/if}
     </div>
+
+    <!-- Duplikate auflösen (Dialog nach 05c) -->
+    <DuplikatDialog {bearbeitung} bind:offen={duplikatOffen} onSchliessen={() => (duplikatOffen = false)} />
 
     <!-- Modal: Spalten verwalten (Reihenfolge, Sichtbarkeit, Umbenennung) -->
     <Modal titel="Spalten verwalten" bind:offen={spaltenModalOffen}>
@@ -521,10 +971,8 @@
       <div class="werte-kopf">
         <span class="beschriftung">Spalte:</span>
         <select class="feld" bind:value={werteSpalte}>
-          {#each spalten as spalte (spalte)}
-            <option value={spalte}>
-              {ansichtZustand !== null ? anzeigeName(spalte, ansichtZustand.umbenennung) : spalte}
-            </option>
+          {#each bearbeitung.spaltenReihenfolge as spalte (spalte)}
+            <option value={spalte}>{kopfName(bearbeitung, spalte)}</option>
           {/each}
         </select>
       </div>
@@ -610,7 +1058,6 @@
     overflow: auto;
   }
 
-  /* Abstandshalter-Zeilen tragen keine Zebra-/Hover-Optik. */
   .tabelle tbody tr.abstand,
   .tabelle tbody tr.abstand:hover {
     background: none;
@@ -623,6 +1070,9 @@
 
   .tabelle-fuss {
     flex: none;
+    display: flex;
+    align-items: center;
+    gap: var(--a3);
     padding: var(--a2) var(--a3);
     border-top: 1px solid var(--rand-1);
     background: var(--flaeche-panel);
@@ -630,7 +1080,10 @@
     font-size: 0.8rem;
   }
 
-  /* Leerzustand mittig, wie .leer-zustand, aber lokal für den Sonderfall. */
+  .fuss-aenderungen {
+    color: var(--zustand-info);
+  }
+
   .tabelle-leer {
     flex: 1;
     display: flex;
@@ -650,6 +1103,185 @@
 
   .tabelle-leer > span {
     max-width: 420px;
+  }
+
+  /* ----- Bearbeiten-Leiste (nach 05b) ------------------------------------- */
+
+  .bearb-leiste {
+    display: flex;
+    align-items: center;
+    gap: var(--a2);
+    padding: var(--a2) var(--a3);
+    background: var(--zustand-info-weich);
+    border-bottom: 1px solid var(--rand-1);
+    flex: none;
+  }
+
+  .bearb-leiste .hinweis-text {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ----- Editierbare Tabelle: Aktionsspalte, Griffe, Zeilen-Aktionen ------- */
+
+  .tabelle-bearb th.bearb-aktionsspalte,
+  .tabelle-bearb td.bearb-aktionsspalte {
+    width: 42px;
+    text-align: center;
+    padding-left: var(--a1);
+    padding-right: var(--a1);
+    color: var(--text-3);
+    cursor: default;
+  }
+
+  .bearb-griff {
+    color: var(--rand-2);
+    cursor: grab;
+  }
+
+  .bearb-zeilen-aktionen {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  .bearb-zeilen-aktionen button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-2);
+    padding: 2px 3px;
+    font-size: 0.74rem;
+  }
+
+  .bearb-zeilen-aktionen button.gefahr {
+    color: var(--zustand-fehler);
+  }
+
+  /* Zelle bzw. Kopf im Bearbeiten-Modus (Klick öffnet ein Feld). */
+  .tabelle-bearb td.bearb-zelle-aktiv,
+  .tabelle-bearb th.bearb-zelle-aktiv {
+    padding: 2px 4px;
+    background: var(--flaeche-panel);
+    box-shadow: inset 0 0 0 2px var(--akzent);
+  }
+
+  .zellen-feld {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 3px 6px;
+  }
+
+  /* Geänderte, noch nicht übernommene Zelle (Vorschau). */
+  .tabelle-bearb td.bearb-geaendert {
+    background: var(--zustand-info-weich);
+  }
+
+  .bearb-punkt {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 5px;
+    border-radius: 50%;
+    background: var(--zustand-info);
+    vertical-align: middle;
+  }
+
+  /* Neu hinzugefügte bzw. duplizierte Zeile (Vorschau). */
+  .tabelle-bearb tbody tr.bearb-neu td {
+    background: var(--zustand-info-weich);
+  }
+
+  /* Klickbare "Zeile hinzufügen"-Zeile. */
+  .tabelle-bearb tbody tr.bearb-neu-zeile td {
+    color: var(--text-3);
+    cursor: pointer;
+    border-top: 1px dashed var(--rand-2);
+  }
+
+  .tabelle-bearb tbody tr.bearb-neu-zeile:hover td {
+    background: var(--akzent-weich);
+    color: var(--text-1);
+  }
+
+  /* Kopf-Text als reiner Text-Knopf (Sortieren per Klick). */
+  .bearb-kopf-text {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    color: inherit;
+  }
+
+  /* Spalten per Drag-and-Drop: der gezogene Kopf wird gedimmt, die Ziel-Spalte
+     zeigt eine Akzentlinie (inset box-shadow). */
+  .bearb-wird-gezogen {
+    opacity: 0.4;
+    outline: 1px dashed var(--rand-2);
+  }
+
+  .bearb-drop-spalte {
+    box-shadow: inset 2px 0 0 var(--akzent);
+  }
+
+  .bearb-sp-griff {
+    color: var(--rand-2);
+    cursor: grab;
+    margin-right: 5px;
+    font-size: 0.72rem;
+    touch-action: none;
+  }
+
+  /* Spalten-Menü am Kopf. Die th sind bereits sticky (app.css) und damit
+     positionierter Anker für das absolut liegende Menü. */
+  .bearb-kopf-menue-knopf {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-3);
+    margin-left: 4px;
+    padding: 0 2px;
+  }
+
+  .bearb-menue {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 5;
+    min-width: 190px;
+    display: flex;
+    flex-direction: column;
+    background: var(--flaeche-panel);
+    border: 1px solid var(--rand-2);
+    box-shadow: var(--schatten-1);
+  }
+
+  .bearb-menue button {
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    padding: 7px 12px;
+    color: var(--text-2);
+    font-family: var(--schrift-anzeige);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+  }
+
+  .bearb-menue button:hover {
+    background: var(--akzent-weich);
+    color: var(--text-1);
+  }
+
+  .bearb-menue button.gefahr {
+    color: var(--zustand-fehler);
   }
 
   /* ----- Modal "Spalten verwalten" ---------------------------------------- */
