@@ -39,6 +39,7 @@
   } from '../../dienste/tabellenModell'
   import { ladeHerunter } from '../../dienste/dateiEinAusgabe'
   import { typVon } from '../../dienste/wertZugriff'
+  import AnalyseFehler from '../../hilfsteile/AnalyseFehler.svelte'
   import Modal from '../../hilfsteile/Modal.svelte'
   import FachbegriffLink from '../../lexikon/FachbegriffLink.svelte'
   import { selektion, setzeSelektion } from '../../zustand/selektion.svelte'
@@ -583,6 +584,8 @@
         </button>
       {/snippet}
     </Modal>
+  {:else if tab.analyseStand === 'fehler'}
+    <AnalyseFehler {tab} titel="Keine Tabelle verfügbar" />
   {:else}
     <div class="tabelle-leer">
       <i class="fa-solid fa-table"></i>

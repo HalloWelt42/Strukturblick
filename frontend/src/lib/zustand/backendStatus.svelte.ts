@@ -13,7 +13,8 @@ export const backendStatus = $state<{
   version: null,
 })
 
-async function pruefe(): Promise<void> {
+/** Prüft die Erreichbarkeit des Backends einmalig; auch manuell aufrufbar. */
+export async function pruefeBackend(): Promise<void> {
   try {
     const antwort = await getHealth()
     backendStatus.erreichbar = true
@@ -30,8 +31,8 @@ let gestartet = false
 export function starteBackendUeberwachung(): void {
   if (gestartet) return
   gestartet = true
-  void pruefe()
+  void pruefeBackend()
   setInterval(() => {
-    void pruefe()
+    void pruefeBackend()
   }, POLL_INTERVALL_MS)
 }

@@ -20,11 +20,12 @@
   } from '@xyflow/svelte'
 
   import type { JsonWert } from '../../api/typen'
+  import AnalyseFehler from '../../hilfsteile/AnalyseFehler.svelte'
   import LeererZustand from '../../hilfsteile/LeererZustand.svelte'
   import { WERT_KLASSE } from '../../dienste/wertDarstellung'
   import { theme } from '../../theme/theme.svelte'
   import { selektion, setzeSelektion } from '../../zustand/selektion.svelte'
-  import { aktiverTab, setzeAnsicht } from '../../zustand/tabs.svelte'
+  import { aktiverTab } from '../../zustand/tabs.svelte'
   import { iconFuerTyp } from '../diagramm/symbole'
   import { layoute, type LayoutKante, type LayoutKnoten } from '../diagramm/elkLayout'
   import '../diagramm/flow.css'
@@ -163,10 +164,6 @@
     fokusPfad = null
   }
 
-  function zumEditor(): void {
-    if (tab === null) return
-    setzeAnsicht(tab.id, 'editor')
-  }
 </script>
 
 {#if tab !== null}
@@ -213,17 +210,7 @@
       </SvelteFlow>
     </div>
   {:else if tab.analyseStand === 'fehler'}
-    <LeererZustand
-      icon="fa-triangle-exclamation"
-      titel="Kein Graph verfügbar"
-      text="Das Dokument konnte nicht analysiert werden - wechsle in den Editor, um den Fehler zu beheben."
-    >
-      {#snippet aktionen()}
-        <button class="knopf primaer" onclick={zumEditor}>
-          <i class="fa-solid fa-code"></i> Zum Editor
-        </button>
-      {/snippet}
-    </LeererZustand>
+    <AnalyseFehler {tab} titel="Kein Graph verfügbar" />
   {:else if wurzel !== undefined}
     <LeererZustand
       icon="fa-circle-nodes"

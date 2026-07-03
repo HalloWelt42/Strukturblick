@@ -11,6 +11,7 @@
   import { segmenteAusPointer } from '../../dienste/pfade'
   import { TYP_NAME, WERT_KLASSE } from '../../dienste/wertDarstellung'
   import type { WertTyp } from '../../dienste/wertZugriff'
+  import AnalyseFehler from '../../hilfsteile/AnalyseFehler.svelte'
   import FachbegriffLink from '../../lexikon/FachbegriffLink.svelte'
   import {
     extrasFuer,
@@ -500,13 +501,7 @@
       </div>
     </div>
   {:else if tab.analyseStand === 'fehler'}
-    <div class="statx-inhalt">
-      <span class="hinweis-text">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        Das Dokument konnte nicht analysiert werden - wechsle in den Editor, um den Fehler zu
-        beheben.
-      </span>
-    </div>
+    <AnalyseFehler {tab} titel="Keine Statistik verfügbar" />
   {:else}
     <div class="statx-inhalt">
       {#each SKELETT_BREITEN as breite, index (index)}

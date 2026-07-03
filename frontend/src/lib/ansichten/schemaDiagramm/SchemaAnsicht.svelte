@@ -18,12 +18,13 @@
   import { schemaAbleiten } from '../../api/analyse'
   import type { TypDefinition, TypModellAntwort } from '../../api/typen'
   import { ladeHerunter } from '../../dienste/dateiEinAusgabe'
+  import AnalyseFehler from '../../hilfsteile/AnalyseFehler.svelte'
   import LeererZustand from '../../hilfsteile/LeererZustand.svelte'
   import FachbegriffLink from '../../lexikon/FachbegriffLink.svelte'
   import { theme } from '../../theme/theme.svelte'
   import { extrasFuer, ladeTypmodell } from '../../zustand/analyseExtras.svelte'
   import { setzeSelektion } from '../../zustand/selektion.svelte'
-  import { aktiverTab, setzeAnsicht } from '../../zustand/tabs.svelte'
+  import { aktiverTab } from '../../zustand/tabs.svelte'
   import { iconFuerSchemaTyp } from '../diagramm/symbole'
   import { layoute, type LayoutKante, type LayoutKnoten } from '../diagramm/elkLayout'
   import '../diagramm/flow.css'
@@ -201,10 +202,6 @@
     }
   }
 
-  function zumEditor(): void {
-    if (tab === null) return
-    setzeAnsicht(tab.id, 'editor')
-  }
 </script>
 
 {#if tab !== null}
@@ -267,17 +264,7 @@
       {/snippet}
     </LeererZustand>
   {:else if tab.analyseStand === 'fehler'}
-    <LeererZustand
-      icon="fa-triangle-exclamation"
-      titel="Keine Struktur verfügbar"
-      text="Das Dokument konnte nicht analysiert werden - wechsle in den Editor, um den Fehler zu beheben."
-    >
-      {#snippet aktionen()}
-        <button class="knopf primaer" onclick={zumEditor}>
-          <i class="fa-solid fa-code"></i> Zum Editor
-        </button>
-      {/snippet}
-    </LeererZustand>
+    <AnalyseFehler {tab} titel="Keine Struktur verfügbar" />
   {:else if typmodell !== undefined}
     <LeererZustand
       icon="fa-diagram-project"

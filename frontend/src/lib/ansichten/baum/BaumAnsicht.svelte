@@ -8,7 +8,7 @@
   import { baueSichtbareZeilen, type BaumZeileDaten } from '../../dienste/baumZeilen'
   import { markeFuerPfad } from '../../dienste/musterZuordnung'
   import { ebenenAnzahl } from '../../dienste/tiefe'
-  import LeererZustand from '../../hilfsteile/LeererZustand.svelte'
+  import AnalyseFehler from '../../hilfsteile/AnalyseFehler.svelte'
   import VirtuelleListe from '../../hilfsteile/VirtuelleListe.svelte'
   import { extrasFuer, ladeMuster } from '../../zustand/analyseExtras.svelte'
   import {
@@ -19,7 +19,7 @@
     zustandFuer,
   } from '../../zustand/baumZustand.svelte'
   import { selektion } from '../../zustand/selektion.svelte'
-  import { aktiverTab, setzeAnsicht } from '../../zustand/tabs.svelte'
+  import { aktiverTab } from '../../zustand/tabs.svelte'
   import BaumZeile from './BaumZeile.svelte'
 
   /** Zeilenhöhe des Baums in Pixeln (24, wie .baum-zeile in app.css). */
@@ -63,11 +63,6 @@
     selektion.aktuell !== null && tab !== null && selektion.aktuell.tabId === tab.id
       ? selektion.aktuell.pfad
       : null,
-  )
-  const fehlerText = $derived(
-    tab?.analyseFehler != null
-      ? `${tab.analyseFehler.meldung} - wechsle in den Editor, um den Fehler zu beheben.`
-      : 'Das Dokument konnte nicht analysiert werden - wechsle in den Editor, um den Fehler zu beheben.',
   )
 
   let liste = $state<{ scrollZuIndex: (index: number) => void }>()
@@ -143,10 +138,6 @@
     klappeBisEbene(tab.id, positionen, ebene)
   }
 
-  function zumEditor(): void {
-    if (tab === null) return
-    setzeAnsicht(tab.id, 'editor')
-  }
 </script>
 
 {#if tab !== null}
@@ -206,13 +197,7 @@
       </VirtuelleListe>
     </div>
   {:else if tab.analyseStand === 'fehler'}
-    <LeererZustand icon="fa-triangle-exclamation" titel="Keine Struktur verfügbar" text={fehlerText}>
-      {#snippet aktionen()}
-        <button class="knopf primaer" onclick={zumEditor}>
-          <i class="fa-solid fa-code"></i> Zum Editor
-        </button>
-      {/snippet}
-    </LeererZustand>
+    <AnalyseFehler {tab} titel="Keine Struktur verfügbar" />
   {:else}
     <div class="baum">
       {#each SKELETT_ZEILEN as skelett, index (index)}
