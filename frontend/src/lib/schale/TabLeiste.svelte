@@ -3,6 +3,7 @@
   // und Schließen-Knopf. Tabs mit ungespeicherten Änderungen fragen vor dem
   // Schließen nach.
   import { iconFuerFormat } from '../dienste/formatDarstellung'
+  import { ausZwischenablageOeffnen, oeffneUeberDialog } from '../dienste/dokumenteLaden'
   import Bestaetigung from '../hilfsteile/Bestaetigung.svelte'
   import {
     oeffneTab,
@@ -40,6 +41,25 @@
 
   function neuerTab(): void {
     oeffneTab({ titel: 'unbenannt', inhalt: '' })
+  }
+
+  // Datei öffnen ist immer erreichbar (nicht nur auf der Willkommensfläche).
+  // Große Dateien fragen über ein eigenes Bestätigungsfeld nach (kein Browser-Dialog).
+  let ladeDialogOffen = $state(false)
+  let ladeDialogFrage = $state('')
+  let ladeDialogAufloeser: ((bestaetigt: boolean) => void) | null = null
+
+  function frageNach(frage: string): Promise<boolean> {
+    ladeDialogFrage = frage
+    ladeDialogOffen = true
+    return new Promise((resolve) => {
+      ladeDialogAufloeser = resolve
+    })
+  }
+
+  function beiLadeErgebnis(bestaetigt: boolean): void {
+    ladeDialogAufloeser?.(bestaetigt)
+    ladeDialogAufloeser = null
   }
 </script>
 
@@ -79,7 +99,23 @@
       </button>
     </div>
   {/each}
-  <button class="tab-neu" aria-label="Neues Dokument" onclick={neuerTab}>
+  <button
+    class="tab-neu"
+    aria-label="Datei öffnen"
+    title="Datei öffnen"
+    onclick={() => void oeffneUeberDialog(frageNach)}
+  >
+    <i class="fa-solid fa-folder-open"></i>
+  </button>
+  <button
+    class="tab-neu"
+    aria-label="Aus Zwischenablage einfügen"
+    title="Aus Zwischenablage einfügen"
+    onclick={() => void ausZwischenablageOeffnen()}
+  >
+    <i class="fa-solid fa-clipboard"></i>
+  </button>
+  <button class="tab-neu" aria-label="Neues, leeres Dokument" title="Neues, leeres Dokument" onclick={neuerTab}>
     <i class="fa-solid fa-plus"></i>
   </button>
 </div>
@@ -90,6 +126,14 @@
   frage="Der Tab hat ungespeicherte Änderungen. Trotzdem schließen?"
   bestaetigenText="Schließen"
   onErgebnis={beiSchliessErgebnis}
+/>
+
+<Bestaetigung
+  bind:offen={ladeDialogOffen}
+  titel="Große Datei"
+  frage={ladeDialogFrage}
+  bestaetigenText="Laden"
+  onErgebnis={beiLadeErgebnis}
 />
 
 <style>
