@@ -4,6 +4,8 @@
   // Escape und ein Klick auf den Hintergrund schließen das Modal.
   import type { Snippet } from 'svelte'
 
+  import { haeltNeuladen } from '../zustand/arbeit.svelte'
+
   interface Props {
     titel: string
     offen?: boolean
@@ -17,6 +19,9 @@
 
   let { titel, offen = $bindable(false), breit = false, onSchliessen, children, fuss }: Props =
     $props()
+
+  // Ein offenes Modal ist eine offene Bearbeitung: keine neue Fassung mittendrin laden.
+  haeltNeuladen(() => offen)
 
   function schliesse(): void {
     offen = false

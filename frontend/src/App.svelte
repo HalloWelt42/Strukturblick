@@ -13,12 +13,14 @@
   import Konsole from './lib/schale/Konsole.svelte'
   import KopfLeiste from './lib/schale/KopfLeiste.svelte'
   import LeistenGriff from './lib/schale/LeistenGriff.svelte'
+  import NeueFassung from './lib/schale/NeueFassung.svelte'
   import SeitenLeisteLinks from './lib/schale/SeitenLeisteLinks.svelte'
   import SeitenLeisteRechts from './lib/schale/SeitenLeisteRechts.svelte'
   import StatusLeiste from './lib/schale/StatusLeiste.svelte'
   import { starteBackendUeberwachung } from './lib/zustand/backendStatus.svelte'
   import { ladeCapabilities } from './lib/zustand/capabilities.svelte'
   import { einstellungenModal, schliesseEinstellungen } from './lib/zustand/einstellungenModal.svelte'
+  import { fassungVerfolgen } from './lib/zustand/fassung.svelte'
   import { layout } from './lib/zustand/layout.svelte'
   import { ladeKiEinstellungen } from './lib/zustand/kiEinstellungen.svelte'
   import { starteKiUeberwachung } from './lib/zustand/kiStatus.svelte'
@@ -31,6 +33,9 @@
   const spalten = $derived(
     `${layout.linksEingeklappt ? 0 : layout.breiteLinks}px 1fr ${layout.breiteRechts}px`,
   )
+
+  // Neue Fassung des Backends: von selbst neu laden, sobald es nichts unterbricht.
+  onMount(fassungVerfolgen)
 
   onMount(() => {
     void (async () => {
@@ -60,6 +65,7 @@
   <KopfLeiste />
   <SeitenLeisteLinks />
   <main class="haupt">
+    <NeueFassung />
     <AnsichtsWahl />
     <HauptBereich />
   </main>

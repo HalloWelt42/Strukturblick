@@ -5,7 +5,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
+
+from app import config
 
 PROJEKT_WURZEL = Path(__file__).resolve().parents[3]
 
@@ -25,6 +28,16 @@ def test_health_liefert_version_aus_versionsdatei(client: TestClient) -> None:
     assert daten["status"] == "ok"
     assert daten["version"] == _erwartete_version()
     assert antwort.headers.get("X-Request-Id")
+
+
+def test_health_liest_die_fassung_je_aufruf(client: TestClient, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Neue Fassung ohne Neustart des Prozesses: Health meldet sie sofort (die Oberfläche lädt dann neu)."""
+    datei = tmp_path / "version.json"
+    datei.write_text(json.dumps({"version": "9.9.1"}), encoding="utf-8")
+    monkeypatch.setattr(config, "VERSIONSDATEI", datei)
+    assert client.get("/api/health").json()["version"] == "9.9.1"
+    datei.write_text(json.dumps({"version": "9.9.2"}), encoding="utf-8")
+    assert client.get("/api/health").json()["version"] == "9.9.2"
 
 
 def test_capabilities_formate_matrix_und_limits(client: TestClient) -> None:

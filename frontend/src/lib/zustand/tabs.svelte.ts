@@ -42,6 +42,8 @@ export const tabs = $state<{
 const PERSISTENZ_VERZOEGERUNG_MS = 400
 
 let persistenzTimer: ReturnType<typeof setTimeout> | null = null
+/** Die zuletzt begonnene Sicherung; IndexedDB arbeitet sie in Reihenfolge ab. */
+let laufendeSicherung: Promise<void> = Promise.resolve()
 
 /** Persistierbarer Anteil eines Tabs als reines Objekt (kein $state-Proxy). */
 function alsPersist(tab: DokumentTab): TabPersist {
@@ -58,17 +60,34 @@ function alsPersist(tab: DokumentTab): TabPersist {
   }
 }
 
+function sichereArbeitsstand(): void {
+  laufendeSicherung = speichereArbeitsstand(tabs.liste.map(alsPersist), tabs.aktiveTabId).catch(
+    (grund: unknown) => {
+      console.error('Arbeitsstand konnte nicht gesichert werden:', grund)
+    },
+  )
+}
+
 /** Plant die Sicherung des Arbeitsstands (debounced, 400 ms). */
 export function planeArbeitsstandSicherung(): void {
   if (persistenzTimer !== null) clearTimeout(persistenzTimer)
   persistenzTimer = setTimeout(() => {
     persistenzTimer = null
-    speichereArbeitsstand(tabs.liste.map(alsPersist), tabs.aktiveTabId).catch(
-      (grund: unknown) => {
-        console.error('Arbeitsstand konnte nicht gesichert werden:', grund)
-      },
-    )
+    sichereArbeitsstand()
   }, PERSISTENZ_VERZOEGERUNG_MS)
+}
+
+/**
+ * Vor einem Neuladen: eine geplante Sicherung sofort ausführen und warten, bis sie
+ * geschrieben ist - sonst ginge die letzte Eingabe verloren.
+ */
+export async function sichereArbeitsstandJetzt(): Promise<void> {
+  if (persistenzTimer !== null) {
+    clearTimeout(persistenzTimer)
+    persistenzTimer = null
+    sichereArbeitsstand()
+  }
+  await laufendeSicherung
 }
 
 function holeTab(id: string): DokumentTab | null {

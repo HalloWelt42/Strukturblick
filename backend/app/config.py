@@ -10,7 +10,9 @@ PROJEKT_WURZEL = Path(__file__).resolve().parents[2]
 VERSIONSDATEI = PROJEKT_WURZEL / "version.json"
 
 
-def _lies_version() -> str:
+def lies_version() -> str:
+    """Liest die Fassung frisch aus version.json. Health meldet sie je Aufruf, damit die Oberfläche eine neue Fassung
+    auch dann erkennt, wenn der Entwicklungsserver den Prozess nicht neu gestartet hat."""
     try:
         daten = json.loads(VERSIONSDATEI.read_text(encoding="utf-8"))
         version = daten.get("version")
@@ -29,7 +31,7 @@ def _env_int(name: str, standard: int) -> int:
         return standard
 
 
-APP_VERSION: str = _lies_version()
+APP_VERSION: str = lies_version()
 
 # Grenzen (im Capabilities-Endpunkt ausgeliefert, damit das Frontend sie kennt)
 MAX_DOKUMENT_BYTES: int = _env_int("STRUKTURBLICK_MAX_DOKUMENT_BYTES", 25 * 1024 * 1024)

@@ -108,6 +108,18 @@ export function verschiebeSpalte(
   zustand.spaltenReihenfolge = kopie
 }
 
+/**
+ * Wahr, wenn ein Tab eingetippte Anzeigenamen oder Wert-Übersetzungen trägt. Sie leben nur
+ * hier und gingen mit einem Neuladen verloren; reine Darstellung (versteckt, Breiten, Linien)
+ * ist schnell wieder eingestellt und zählt nicht.
+ */
+export function tabellenAnsichtMitEingaben(): boolean {
+  for (const zustand of zustaende.values()) {
+    if (Object.keys(zustand.umbenennung).length > 0 || Object.keys(zustand.wertKarten).length > 0) return true
+  }
+  return false
+}
+
 /** Setzt den Anzeigenamen einer Spalte; leerer/gleicher Name entfernt die Umbenennung. */
 export function setzeAnzeigename(
   zustand: TabellenAnsichtZustand,

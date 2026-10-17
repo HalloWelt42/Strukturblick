@@ -12,7 +12,8 @@ router = APIRouter(tags=["System"])
 
 @router.get("/health")
 def health() -> HealthAntwort:
-    return HealthAntwort(version=config.APP_VERSION)
+    """Erreichbarkeit und Fassung; die Oberfläche vergleicht die Fassung mit ihrer eingebauten und lädt bei Abweichung neu."""
+    return HealthAntwort(version=config.lies_version())
 
 
 @router.get("/capabilities")

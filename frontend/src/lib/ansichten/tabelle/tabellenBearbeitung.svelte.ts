@@ -538,6 +538,12 @@ export function anzahlAenderungen(zustand: TabellenBearbeitung): number {
   )
 }
 
+/** Wahr, wenn irgendein Tab Tabellen-Änderungen als Vorschau hat, die noch nicht übernommen sind. */
+export function tabellenAenderungenOffen(): boolean {
+  for (const zustand of zustaende.values()) if (anzahlAenderungen(zustand) > 0) return true
+  return false
+}
+
 /** Wahr, wenn die Zelle gegenüber der Baseline geändert (Vorschau) ist. */
 export function istZelleGeaendert(
   zustand: TabellenBearbeitung,
