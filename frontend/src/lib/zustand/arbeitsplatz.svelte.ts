@@ -68,6 +68,12 @@ class Arbeitsplatz {
     return blatt;
   }
 
+  /** Leeres Dokument "unbenannt", bei mehreren durchgezählt; öffnet im Editor */
+  async leeresDokument(ordner = ""): Promise<Arbeitsblatt> {
+    const zahl = this.blaetter.filter((b) => b.name.startsWith("unbenannt")).length + 1;
+    return this.neu(zahl === 1 ? "unbenannt" : `unbenannt ${zahl}`, "", ordner);
+  }
+
   async dateiOeffnen(datei: File, ordner = ""): Promise<void> {
     if (datei.size > WARNUNG_AB_ZEICHEN) meldungen.zeigen({ text: `${datei.name} ist groß (${Math.round(datei.size / 1048576)} MB); das Lesen kann dauern`, art: "hinweis" });
     const text = await datei.text();

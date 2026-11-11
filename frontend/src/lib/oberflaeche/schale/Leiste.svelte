@@ -3,7 +3,8 @@
   // Herunterladen; der Ordnerknopf öffnet die Seite Ablage.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
-  import { herunterladen, dateiWaehlen } from "./dateien";
+  import { aktion } from "../aktionen/aktionen";
+  import { knopfTitel } from "../aktionen/tastatur";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const offen = $derived(new Set(arbeitsplatz.blaetter.map((b) => b.kennung)));
@@ -17,17 +18,17 @@
     ablageverwaltung.oeffnen();
   }
 
-  async function oeffnen(): Promise<void> {
-    for (const d of await dateiWaehlen()) await arbeitsplatz.dateiOeffnen(d);
-  }
+  const oeffnen = aktion("datei-oeffnen");
+  const laden = aktion("herunterladen");
+  const verwalten = aktion("ablage");
 </script>
 
 <aside class="leiste">
   <div class="leiste-feld">
-    <div class="leiste-titel">{arbeitsplatz.ablage.ort} <span class="rechts"><button class="knopf still nur-symbol" class:aktiv-knopf={ablageOffen} title="Ablage verwalten: Ordner, Umbenennen, Papierkorb" onclick={() => ablageverwaltung.oeffnen()}><i class="fa-solid fa-folder-open"></i></button></span></div>
+    <div class="leiste-titel">{arbeitsplatz.ablage.ort} <span class="rechts"><button class="knopf still nur-symbol" class:aktiv-knopf={ablageOffen} title={knopfTitel(verwalten, ablageOffen ? "Ablage schließen" : "Ablage verwalten: Ordner, Umbenennen, Papierkorb")} onclick={() => verwalten.ausfuehren()}><i class="fa-solid fa-folder-open"></i></button></span></div>
     <div class="knopf-spalte">
-      <button class="knopf" onclick={oeffnen}><i class="fa-solid fa-folder-open"></i> <span class="name">Datei öffnen</span></button>
-      <button class="knopf" disabled={!blatt} onclick={() => blatt && herunterladen(blatt.name, blatt.text)}><i class="fa-solid fa-download"></i> <span class="name">Herunterladen</span></button>
+      <button class="knopf" title={knopfTitel(oeffnen)} onclick={() => oeffnen.ausfuehren()}><i class="fa-solid fa-folder-open"></i> <span class="name">Datei öffnen</span></button>
+      <button class="knopf" disabled={!laden.verfuegbar()} title={knopfTitel(laden)} onclick={() => laden.ausfuehren()}><i class="fa-solid fa-download"></i> <span class="name">Herunterladen</span></button>
     </div>
     {#if arbeitsplatz.dokumente.length || ablageverwaltung.ordner.length}
       <div class="leiste-titel">Dokumente</div>

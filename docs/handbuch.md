@@ -29,6 +29,24 @@ Verschieben, Herunterladen, mehrere auf einmal wählen. Entfernen legt in den Pa
 Rückgängig; nach 30 Tagen löscht die Ablage dort endgültig. "Alles sichern" schreibt alle Dokumente samt Verlauf und
 Ordnern in eine Datei, "Einspielen" fügt eine solche Datei hinzu, ohne Vorhandenes zu überschreiben.
 
+Die Befehlspalette (⌘ K, unter Windows und Linux Strg K, oder das Suchfeld oben rechts) findet Befehle, Dokumente,
+Ordner und Ansichten mit unscharfer Suche; zuletzt Benutztes steht oben, jeder Befehl zeigt sein Tastenkürzel. Die
+Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
+
+| Kürzel | Befehl |
+|---|---|
+| ⌘ K | Befehlspalette, auch im Editor |
+| ⌘ Z, ⇧ ⌘ Z oder ⌘ Y | Rückgängig, Wiederholen (im Editor dessen eigene) |
+| ⌘ S | Jetzt ablegen (geschieht sonst von selbst) |
+| ⇧ ⌘ S | Dokument herunterladen |
+| ⌘ O | Datei öffnen |
+| ⌥ ⌘ N | Neues Dokument |
+| ⌥ ⌘ W | Dokument schließen |
+| ⌥ ⌘ A | Ablage verwalten oder schließen |
+| ⌥ ⌘ 1, 2, 3 | Ansicht Baum, Editor, Tabelle |
+
+⌘ N, ⌘ W und ⌘ 1 bis 9 belegt der Browser selbst; deshalb tragen diese Befehle ⌥ dazu.
+
 Zwei Bauarten aus demselben Code:
 
 - Mit Server auf pi5b: Anmeldung mit dem Kellerwolke-Konto, Dokumente liegen in der Datenbank der App und sind auf
@@ -97,6 +115,8 @@ Gerät oder nach dem Leeren des Browsers holt "Einspielen" alles zurück. Das ge
   Dokument, darüber antwortet sie mit 413; der Vorbau reicht ohne `koerper_max` höchstens 200 MB weiter.
 - Ein offener Tab zeigt nach dem Ausrollen noch die alte Fassung: er lädt von selbst neu, sobald alles abgelegt ist;
   solange ein Dokument noch "Wird abgelegt" zeigt, wartet er.
+- Kopieren eines Pfads meldet "Kopieren ging nicht": der Browser gibt die Zwischenablage nur über https oder
+  localhost und nach einem Klick oder Tastendruck frei; der Pfad steht dann im Inspektor zum Markieren.
 - Ein Ordner lässt sich nicht entfernen: nur leere Ordner gehen weg; Dokumente vorher verschieben oder in den
   Papierkorb legen.
 - YAML-Dateien über einigen MB brauchen Sekunden zum Lesen (Bibliothek `yaml`); die Oberfläche bleibt dabei

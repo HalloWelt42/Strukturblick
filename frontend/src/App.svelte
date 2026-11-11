@@ -10,7 +10,9 @@
   import Inspektor from "./lib/oberflaeche/inspektor/Inspektor.svelte";
   import Meldung from "./lib/oberflaeche/bausteine/Meldung.svelte";
   import Ablagezone from "./lib/oberflaeche/schale/Ablagezone.svelte";
-  import { tastenkuerzel } from "./lib/oberflaeche/schale/tastenkuerzel";
+  import { tastaturAnmelden } from "./lib/oberflaeche/aktionen/tastatur";
+  import Palette from "./lib/oberflaeche/palette/Palette.svelte";
+  import { palette } from "./lib/oberflaeche/palette/palettenstand.svelte";
   import Zugangsseite from "./lib/oberflaeche/schale/Zugangsseite.svelte";
   import AblageSeite from "./lib/oberflaeche/ablage/AblageSeite.svelte";
   import { zugang } from "./lib/zustand/zugang.svelte";
@@ -26,7 +28,7 @@
     const sichtbar = () => document.visibilityState === "hidden" && sichern();
     window.addEventListener("pagehide", sichern);
     document.addEventListener("visibilitychange", sichtbar);
-    const weg = tastenkuerzel(() => arbeitsplatz.aktivesBlatt);
+    const weg = tastaturAnmelden();
     return () => {
       window.removeEventListener("pagehide", sichern);
       document.removeEventListener("visibilitychange", sichtbar);
@@ -60,6 +62,7 @@
     <Fuss />
   </div>
 </Ablagezone>
+{#if palette.offen}<Palette />{/if}
 {/if}
 <Meldung />
 
