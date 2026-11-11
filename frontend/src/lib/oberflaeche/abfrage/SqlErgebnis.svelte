@@ -1,8 +1,8 @@
 <script lang="ts">
   // SQL-Ergebnis im Hauptbereich (Entwurf entwuerfe/abfrage-sql.html): Kopf mit Zeilenzahl, Frische und Aktionen,
   // darunter die Tabelle. Die letzte Zahlenspalte bekommt Balken zum Vergleich, wenn alle Werte nicht negativ sind.
-  import { ABFRAGE_GRENZEN, type Tabellenergebnis, type Zellwert } from "../../zustand/abfrage.svelte";
-  import HerunterladenMenue from "./HerunterladenMenue.svelte";
+  import { abfrage, ABFRAGE_GRENZEN, type Tabellenergebnis, type Zellwert } from "../../zustand/abfrage.svelte";
+  import ExportMenue from "../bausteine/ExportMenue.svelte";
 
   let {
     ergebnis,
@@ -41,7 +41,7 @@
     <span class="af-ort" title="Die Abfrage läuft in diesem Browser, nichts geht an einen Server"><i class="fa-solid fa-microchip"></i><span class="af-breit">rechnet im Browser</span></span>
     <span class="rechts">
       <button class="knopf" onclick={() => onalsdokument(true)}><i class="fa-solid fa-file-circle-plus"></i><span class="af-breit">Als neues Dokument</span></button>
-      <HerunterladenMenue rechtsbuendig />
+      <ExportMenue rechtsbuendig holen={(f) => abfrage.ganzerText(f)} dateiname={(f) => abfrage.dateiname(f)} />
       <button class="knopf" title="In den Abfragen-Verlauf" onclick={onmerken}><i class="fa-solid fa-bookmark"></i><span class="af-breit">In den Verlauf</span></button>
     </span>
   </div>

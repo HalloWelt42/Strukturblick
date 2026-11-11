@@ -4,6 +4,8 @@
   import { zeigerAus, type Teil } from "../../../kern";
   import type { Suchergebnis } from "../../../analyse/baumsuche";
   import { EBENEN, type BaumZustand } from "./baumZustand.svelte";
+  import type { Ausgabeformat } from "../../../analyse/ausgabe";
+  import ExportMenue from "../../bausteine/ExportMenue.svelte";
 
   let {
     zustand,
@@ -11,6 +13,7 @@
     treffer,
     ausAbfrage,
     gewaehlterKnoten,
+    trefferExport,
     liest,
     onwaehlen,
     onweiter,
@@ -22,6 +25,8 @@
     /** Die Treffer stammen aus der Abfrage, nicht aus dem Suchfeld */
     ausAbfrage: boolean;
     gewaehlterKnoten: number;
+    /** Export der Treffer als Datei oder neues Dokument; null ohne Treffer */
+    trefferExport: { holen: (f: Ausgabeformat) => string; dateiname: (f: Ausgabeformat) => string; neuesDokument: () => void } | null;
     liest: boolean;
     onwaehlen: (zeiger: string) => void;
     onweiter: (rueckwaerts: boolean) => void;
@@ -65,6 +70,9 @@
         </div>
       {:else}
         <span class="abzeichen" role="status">0 Treffer</span>
+      {/if}
+      {#if trefferExport}
+        <ExportMenue titel="Treffer" erklaerung="Die Werte aller {treffer.anzahl} Treffer als Datei oder neues Dokument" rechtsbuendig holen={trefferExport.holen} dateiname={trefferExport.dateiname} neuesDokument={trefferExport.neuesDokument} />
       {/if}
       <div class="segment">
         <button class:aktiv={zustand.nurTreffer} aria-pressed={zustand.nurTreffer} onclick={() => (zustand.nurTreffer = !zustand.nurTreffer)}>Nur Treffer</button>

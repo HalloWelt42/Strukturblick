@@ -1,9 +1,13 @@
-// Ausgabe eines ganzen Abfrageergebnisses als Text: JSON (eine Liste), NDJSON (ein Wert je Zeile) oder CSV (Semikolon,
-// wie es Tabellenprogramme im deutschen Raum erwarten). Werte aus jq, JSONPath und Suche werden für CSV zu Zeilen:
+// Ausgabe von Ergebnissen als Text (Abfrage, gefilterte Tabelle, Treffer im Baum): JSON (eine Liste), NDJSON (ein Wert je
+// Zeile) oder CSV (Semikolon, wie es Tabellenprogramme im deutschen Raum erwarten). Werte werden für CSV zu Zeilen:
 // Objekte mit der Vereinigung ihrer Schlüssel als Spalten, verschachtelte Werte als JSON-Text, andere Werte in einer
 // Spalte "wert". Rein, ohne Browser.
 
-import type { Zellwert } from "../../kern/abfrage";
+import type { Zellwert } from "../kern/abfrage";
+import type { Strukturindex } from "../kern/strukturindex";
+import { schreiben, teileVon } from "../kern/pfade";
+import type { Tabelle } from "./tabelle";
+import { wertAus } from "./wert";
 
 export type Ausgabeformat = "json" | "ndjson" | "csv";
 
@@ -47,4 +51,16 @@ export function werteAusgeben(werte: readonly unknown[], format: Ausgabeformat):
 export function zeilenAusgeben(spalten: readonly string[], zeilen: readonly (readonly Zellwert[])[], format: Ausgabeformat): string {
   if (format === "csv") return csvAus(spalten, zeilen);
   return werteAusgeben(zeilen.map((z) => Object.fromEntries(spalten.map((s, i) => [s, z[i]]))), format);
+}
+
+/** Die sichtbaren Zeilen einer Tabelle (Filter und Sortierung wie angezeigt) als Werte */
+export const sichtWerte = (t: Tabelle, index: Strukturindex, text: string, sicht: Int32Array): unknown[] =>
+  Array.from(sicht, (i) => wertAus(index, text, t.zeilen[i]));
+
+/** Knoten (etwa Treffer im Baum) als Werte, in Textreihenfolge. Sind alle Objekte (ausgewählte Einträge), bleiben sie,
+ *  wie sie sind; sonst (einzelne Werte einer Textsuche) kommt jeder mit seinem Pfad, damit man weiß, woher er stammt. */
+export function knotenWerte(index: Strukturindex, text: string, knoten: ArrayLike<number>): unknown[] {
+  const werte = Array.from(knoten, (k) => wertAus(index, text, k));
+  if (werte.length && werte.every((w) => typeof w === "object" && w !== null && !Array.isArray(w))) return werte;
+  return Array.from(knoten, (k, i) => ({ pfad: schreiben(teileVon(index, text, k), "jq"), wert: werte[i] }));
 }

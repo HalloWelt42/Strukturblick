@@ -3,7 +3,7 @@
 
 import type { Abfrageergebnis, Abfragefehler, SprachKennung } from "../../kern/abfrage";
 import type { Suchoptionen } from "../../analyse/abfrage/textsuche";
-import type { Ausgabeformat } from "../../analyse/abfrage/ausgabe";
+import type { Ausgabeformat } from "../../analyse/ausgabe";
 import type { Quellen } from "./quellen";
 
 export interface Abfrageauftrag {

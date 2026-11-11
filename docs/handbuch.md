@@ -49,6 +49,11 @@ Ein Fehler im Ausdruck steht an der Stelle im Feld; das letzte gültige Ergebnis
 Ergebnis lässt sich ganz als neues Dokument anlegen (⌘ Enter), herunterladen (JSON, NDJSON, CSV mit Semikolon)
 oder in den Abfragen-Verlauf legen. Eine Abfrage, die länger als 10 s rechnet, wird abgebrochen.
 
+Gefilterte Tabellen und Treffer im Baum lassen sich ebenso mitnehmen: "Exportieren" in der Werkzeugzeile der
+Tabelle nimmt genau die sichtbaren Zeilen (Filter und Sortierung wie angezeigt), "Treffer" neben der
+Treffernavigation des Baums die Treffer der Suche oder Abfrage (einzelne Werte mit ihrem Pfad). Beides geht als
+Datei (JSON, NDJSON, CSV) oder als neues Dokument in der Ablage, im selben Ordner wie die Quelle.
+
 Die Befehlspalette (⌘ K, unter Windows und Linux Strg K, oder das Suchfeld oben rechts) findet Befehle, Dokumente,
 Ordner und Ansichten mit unscharfer Suche; zuletzt Benutztes steht oben, jeder Befehl zeigt sein Tastenkürzel. Die
 Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):

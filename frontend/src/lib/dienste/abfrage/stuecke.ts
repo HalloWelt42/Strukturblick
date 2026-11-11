@@ -2,7 +2,7 @@
 // als Text im gewünschten Format.
 
 import { ABFRAGE_GRENZEN, type Abfrageergebnis, type Wertstueck } from "../../kern/abfrage";
-import { werteAusgeben, type Ausgabeformat } from "../../analyse/abfrage/ausgabe";
+import { werteAusgeben, type Ausgabeformat } from "../../analyse/ausgabe";
 
 /** Eingerücktes JSON für die Anzeige; undefined (gibt es in JSON nicht) als null */
 export const eingerueckt = (w: unknown): string => JSON.stringify(w ?? null, null, 2);

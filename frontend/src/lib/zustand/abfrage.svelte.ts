@@ -5,7 +5,7 @@
 import { ABFRAGE_GRENZEN, sprache as spracheVon, type Abfrageausgang, type SprachKennung } from "../kern/abfrage";
 import type { Suchoptionen } from "../analyse/abfrage/textsuche";
 import { VORGABE_SUCHE } from "../analyse/abfrage/textsuche";
-import { AUSGABEFORMATE, type Ausgabeformat } from "../analyse/abfrage/ausgabe";
+import { AUSGABEFORMATE, type Ausgabeformat } from "../analyse/ausgabe";
 import { Abfragedienst, type Abfrageauftrag, type Dokumentstand } from "../dienste/abfrage/abfragedienst";
 import type { Arbeitsblatt } from "./arbeitsblatt.svelte";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
@@ -16,7 +16,6 @@ import { meldungen } from "./meldungen.svelte";
 export { SPRACHEN, ABFRAGE_GRENZEN, type SprachKennung, type Werteergebnis, type Tabellenergebnis, type Tabellenuebersicht, type Zellwert } from "../kern/abfrage";
 export type { Suchoptionen } from "../analyse/abfrage/textsuche";
 export { abfrageverlauf, type Gemerkt } from "./abfrageverlauf.svelte";
-export { AUSGABEFORMATE, type Ausgabeformat } from "../analyse/abfrage/ausgabe";
 
 export interface Bezug {
   readonly kennung: string;

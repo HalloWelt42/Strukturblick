@@ -1,0 +1,41 @@
+{
+  "kapitel": "exportieren",
+  "titel": "Ergebnisse mitnehmen",
+  "ticket": "STB-21",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet (Kapitel beispiele), kunden.csv aktiv",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "In der Tabelle der Kunden filtere ich nach Leipzig. Übrig bleiben 142 von 1.214 Zeilen, in allen Schreibweisen der Stadt.",
+      "ziel": { "anker": "tabelle-filter", "notbehelf": ".tb-filter input" },
+      "aktion": { "art": "tippen", "text": "leipzig", "vorher": "Ansicht Tabelle" },
+      "erwartung": "Zähler 142 von 1.214 Zeilen",
+      "geprueft": "2026-11-11, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Genau diese Auswahl nehme ich mit. Exportieren bietet eine Datei in JSON, NDJSON oder CSV, oder ein neues Dokument hier in der Ablage. Gefilterte und sortierte Zeilen bleiben so, wie sie zu sehen sind.",
+      "ziel": { "anker": "tabelle-exportieren", "notbehelf": "Knopf Exportieren in der Werkzeugzeile der Tabelle" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Menü: Als neues Dokument in der Ablage, JSON, NDJSON, CSV",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Als neues Dokument entsteht kunden-auswahl.csv mit den 142 Zeilen, wieder als CSV, im selben Ordner. Damit lässt sich weiterarbeiten wie mit jedem Dokument.",
+      "ziel": { "anker": "export-neues-dokument", "notbehelf": "Menüeintrag Als neues Dokument in der Ablage" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Reiter kunden-auswahl.csv, Tabelle mit 142 von 142 Zeilen, Meldung Neues Dokument ... mit 142 Zeilen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Auch Treffer im Baum lassen sich mitnehmen. Ich suche in den Bestellungen nach Leipzig und exportiere die Treffer. Jeder Wert kommt mit seinem Pfad, damit man weiß, woher er stammt.",
+      "ziel": { "anker": "baum-treffer-export", "notbehelf": "Knopf Treffer neben der Treffernavigation im Baum" },
+      "aktion": { "art": "klicken", "vorher": "bestellungen.json, Ansicht Baum, im Baum suchen: Leipzig" },
+      "erwartung": "33 Treffer; als neues Dokument bestellungen-treffer.json mit pfad und wert je Eintrag",
+      "geprueft": "2026-11-11"
+    }
+  ]
+}

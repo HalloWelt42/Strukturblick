@@ -45,3 +45,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `ablage.json` | Dokumente ordnen (STB-18) | durchgespielt 11.11.2026 |
 | `palette.json` | Alles über die Tastatur (STB-16) | durchgespielt 11.11.2026 |
 | `abfrage.json` | Fragen an die Daten stellen (STB-5) | durchgespielt 11.11.2026 |
+| `exportieren.json` | Ergebnisse mitnehmen (STB-21) | durchgespielt 11.11.2026 |

@@ -6,6 +6,9 @@
   import { naechsterTreffer, suchen, trefferAus } from "../../../analyse/baumsuche";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import { abfrage } from "../../../zustand/abfrage.svelte";
+  import { arbeitsplatz } from "../../../zustand/arbeitsplatz.svelte";
+  import { meldungen } from "../../../zustand/meldungen.svelte";
+  import { AUSGABEFORMATE, knotenWerte, werteAusgeben, type Ausgabeformat } from "../../../analyse/ausgabe";
   import { lesestand } from "../../bausteine/lesestand.svelte";
   import { BaumZustand } from "./baumZustand.svelte";
   import BaumWerkzeuge from "./BaumWerkzeuge.svelte";
@@ -42,6 +45,27 @@
 
   const fehlertext = $derived(stand?.analyse.diagnosen.find((d) => d.schwere === "fehler")?.meldung ?? blatt.lesefehler);
 
+  // ----- Export der Treffer (Suche im Baum oder Abfrage) -----
+  const stamm = $derived(blatt.name.replace(/\.[^.]+$/, ""));
+  const endung = (f: Ausgabeformat) => AUSGABEFORMATE.find((x) => x.kennung === f)?.endung ?? f;
+  const trefferWerte = (): unknown[] => (index && treffer ? knotenWerte(index, text, treffer.knoten) : []);
+  const trefferExport = $derived(
+    treffer && treffer.anzahl > 0
+      ? {
+          holen: (f: Ausgabeformat) => werteAusgeben(trefferWerte(), f),
+          dateiname: (f: Ausgabeformat) => `${stamm}-treffer.${endung(f)}`,
+          neuesDokument: () => void trefferAlsDokument(),
+        }
+      : null,
+  );
+
+  async function trefferAlsDokument(): Promise<void> {
+    const werte = trefferWerte();
+    const neu = await arbeitsplatz.neu(`${stamm}-treffer.json`, werteAusgeben(werte, "json"), blatt.ordner);
+    neu.zeigen({ art: "ansicht", kennung: "baum" });
+    meldungen.zeigen({ text: `Neues Dokument ${neu.name} mit ${werte.length} Treffern`, art: "erfolg" });
+  }
+
   function weiter(rueckwaerts: boolean): void {
     if (!index || !treffer) return;
     const k = naechsterTreffer(treffer, gewaehlterKnoten, rueckwaerts);
@@ -51,7 +75,7 @@
 
 <svelte:window onkeydown={(e) => { if (e.key === "F3" && treffer) { e.preventDefault(); weiter(e.shiftKey); } }} />
 
-<BaumWerkzeuge {zustand} {teile} {treffer} {ausAbfrage} {gewaehlterKnoten} liest={stand !== null && !stand.aktuell} onwaehlen={(z) => blatt.waehlen(z)} onweiter={weiter} />
+<BaumWerkzeuge {zustand} {teile} {treffer} {ausAbfrage} {gewaehlterKnoten} {trefferExport} liest={stand !== null && !stand.aktuell} onwaehlen={(z) => blatt.waehlen(z)} onweiter={weiter} />
 
 {#if index && stand}
   <BaumListe {blatt} {zustand} {index} {text} aktuell={stand.aktuell} {treffer} {gewaehlterKnoten} />

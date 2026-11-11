@@ -6,7 +6,7 @@ import type { Database, SqlJsStatic } from "sql.js";
 import { ABFRAGE_GRENZEN, type Tabellenuebersicht, type Zellwert } from "../../kern/abfrage";
 import { format } from "../../formate/registrierung";
 import { sqlTabellen, type SqlTabelle } from "../../analyse/abfrage/sqltabellen";
-import { zeilenAusgeben } from "../../analyse/abfrage/ausgabe";
+import { zeilenAusgeben } from "../../analyse/ausgabe";
 import { wurf, type Maschine } from "./maschine";
 import type { Quellen } from "./quellen";
 

@@ -14,7 +14,7 @@
   import KonsolenLeiste from "./KonsolenLeiste.svelte";
   import SqlTabellen from "./SqlTabellen.svelte";
   import VerlaufMenue from "./VerlaufMenue.svelte";
-  import HerunterladenMenue from "./HerunterladenMenue.svelte";
+  import ExportMenue from "../bausteine/ExportMenue.svelte";
   import WerteErgebnis from "./WerteErgebnis.svelte";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
@@ -186,7 +186,7 @@
       {:else}
         <button class="knopf" disabled={!ergebnis} onclick={() => void abfrage.alsDokument(false)}><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>
         <button class="knopf" disabled={!ergebnis} onclick={() => void abfrage.alsDokument(true)}><i class="fa-solid fa-table"></i> Als Tabelle</button>
-        <HerunterladenMenue gesperrt={!ergebnis} nachOben />
+        <ExportMenue gesperrt={!ergebnis} nachOben holen={(f) => abfrage.ganzerText(f)} dateiname={(f) => abfrage.dateiname(f)} />
         <button class="knopf" disabled={!abfrage.ausdruck.trim()} onclick={() => abfrage.merken()}><i class="fa-solid fa-bookmark"></i> In den Verlauf</button>
       {/if}
     </div>
