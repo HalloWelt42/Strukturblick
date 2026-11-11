@@ -6,8 +6,8 @@ from fastapi import APIRouter, HTTPException, Path, Response
 from appkern.anmeldung.dienst import Konto
 from appkern.app import Geruest
 
-from .bestand import Bestand
-from .modelle import KENNUNG, Arbeitsstand, Dokument, Dokumentkopf
+from .bestand import Ablagefehler, Bestand
+from .modelle import KENNUNG, ORDNER, Aenderung, Arbeitsstand, Dokument, Dokumentkopf, Ordnername, Papierkorbeintrag
 
 #: Größtes Dokument, das die Ablage annimmt (Zeichen); darüber lehnt sie mit 413 ab
 GROESSTES_DOKUMENT = 100 * 1024 * 1024
@@ -37,9 +37,61 @@ def router(geruest: Geruest, bestand: Bestand) -> APIRouter:
         await bestand.speichern(konto.id, dok)
         return Response(status_code=204)
 
+    @r.patch("/dokumente/{kennung}", status_code=204)
+    async def aendern(teil: Aenderung, kennung: str = Path(pattern=KENNUNG), konto: Konto = pflicht) -> Response:
+        if not await bestand.aendern(konto.id, kennung, teil.name, teil.ordner):
+            raise HTTPException(404, "Das Dokument gibt es in der Ablage nicht")
+        return Response(status_code=204)
+
     @r.delete("/dokumente/{kennung}", status_code=204)
     async def entfernen(kennung: str = Path(pattern=KENNUNG), konto: Konto = pflicht) -> Response:
-        await bestand.entfernen(konto.id, kennung)
+        """In den Papierkorb (endgültig nach 30 Tagen oder über den Papierkorb)."""
+        if not await bestand.entfernen(konto.id, kennung):
+            raise HTTPException(404, "Das Dokument gibt es in der Ablage nicht")
+        return Response(status_code=204)
+
+    @r.get("/papierkorb", response_model=list[Papierkorbeintrag])
+    async def papierkorb(konto: Konto = pflicht) -> list[Papierkorbeintrag]:
+        return await bestand.papierkorb(konto.id)
+
+    @r.post("/papierkorb/{kennung}/wiederherstellen", status_code=204)
+    async def wiederherstellen(kennung: str = Path(pattern=KENNUNG), konto: Konto = pflicht) -> Response:
+        if not await bestand.wiederherstellen(konto.id, kennung):
+            raise HTTPException(404, "Das Dokument liegt nicht im Papierkorb")
+        return Response(status_code=204)
+
+    @r.delete("/papierkorb/{kennung}", status_code=204)
+    async def endgueltig(kennung: str = Path(pattern=KENNUNG), konto: Konto = pflicht) -> Response:
+        if not await bestand.endgueltig_entfernen(konto.id, kennung):
+            raise HTTPException(404, "Das Dokument liegt nicht im Papierkorb")
+        return Response(status_code=204)
+
+    @r.get("/ordner", response_model=list[str])
+    async def ordner(konto: Konto = pflicht) -> list[str]:
+        return await bestand.ordner(konto.id)
+
+    @r.post("/ordner", status_code=204)
+    async def ordner_anlegen(neu: Ordnername, konto: Konto = pflicht) -> Response:
+        try:
+            await bestand.ordner_anlegen(konto.id, neu.name.strip())
+        except Ablagefehler as f:
+            raise HTTPException(409, str(f)) from f
+        return Response(status_code=204)
+
+    @r.patch("/ordner/{name}", status_code=204)
+    async def ordner_umbenennen(neu: Ordnername, name: str = Path(pattern=ORDNER), konto: Konto = pflicht) -> Response:
+        try:
+            await bestand.ordner_umbenennen(konto.id, name, neu.name.strip())
+        except Ablagefehler as f:
+            raise HTTPException(409, str(f)) from f
+        return Response(status_code=204)
+
+    @r.delete("/ordner/{name}", status_code=204)
+    async def ordner_entfernen(name: str = Path(pattern=ORDNER), konto: Konto = pflicht) -> Response:
+        try:
+            await bestand.ordner_entfernen(konto.id, name)
+        except Ablagefehler as f:
+            raise HTTPException(409, str(f)) from f
         return Response(status_code=204)
 
     @r.get("/arbeitsstand", response_model=Arbeitsstand)

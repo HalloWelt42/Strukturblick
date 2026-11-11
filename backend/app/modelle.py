@@ -26,6 +26,7 @@ class Verlauf(BaseModel):
 class Dokument(BaseModel):
     kennung: str = Field(pattern=KENNUNG)
     name: str = Field(min_length=1, max_length=255)
+    ordner: str = Field("", max_length=80)
     formatWahl: Literal["json", "ndjson", "csv", "yaml"] | None = None
     optionen: dict[str, Leseoption] = Field(default_factory=dict)
     text: str
@@ -37,8 +38,28 @@ class Dokument(BaseModel):
 class Dokumentkopf(BaseModel):
     kennung: str
     name: str
+    ordner: str
     groesse: int
     geaendert: str
+
+
+class Papierkorbeintrag(Dokumentkopf):
+    geloescht: str
+
+
+#: Ordnernamen: eine Ebene, 1 bis 80 Zeichen, ohne Schrägstriche
+ORDNER = r"^[^/\\]{1,80}$"
+
+
+class Aenderung(BaseModel):
+    """Name oder Ordner eines Dokuments ändern, ohne den Inhalt zu übertragen."""
+
+    name: str | None = Field(None, min_length=1, max_length=255)
+    ordner: str | None = Field(None, pattern=r"^[^/\\]{0,80}$")
+
+
+class Ordnername(BaseModel):
+    name: str = Field(pattern=ORDNER)
 
 
 class Arbeitsstand(BaseModel):

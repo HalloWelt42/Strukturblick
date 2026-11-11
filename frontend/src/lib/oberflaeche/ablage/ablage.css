@@ -1,0 +1,270 @@
+/* Bausteine der Seite Ablage, übernommen aus den abgenommenen Entwürfen (entwuerfe/teile/verwaltung.css, STB-2). */
+
+.vw-anmeldung {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.vw-anmeldung > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.vw-anmeldung > i {
+  color: var(--text-3);
+}
+
+.vw-zweiteilig {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.vw-seitenspalte {
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--a2);
+  background: var(--flaeche-panel-2);
+}
+
+.vw-hauptspalte {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.vw-hauptspalte.vw-gestapelt {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.vw-haken {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: transparent;
+  font-size: var(--marke);
+  cursor: pointer;
+}
+
+.vw-haken.an {
+  background-color: var(--akzent-flaeche);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--auf-akzent);
+}
+
+.vw-haken.teils {
+  color: var(--text-2);
+}
+
+.vw-auswahl-leiste {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  flex: none;
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--klein);
+}
+
+.vw-auswahl-leiste .vw-anzahl {
+  font-weight: 600;
+  margin-right: var(--a2);
+}
+
+.vw-auswahl-leiste .rechts {
+  margin-left: auto;
+}
+
+.vw-auswahl-leiste.vw-klebend {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 calc(-1 * var(--a3));
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+
+.vw-vorgang > .vw-haken {
+  margin-top: 1px;
+}
+
+.vw-ordner .eintrag .rechts {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+.vw-ordner-trenner {
+  height: 1px;
+  margin: var(--a2) var(--a2);
+  background: var(--rand-1);
+}
+
+.vw-ablagezone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  margin: var(--a3);
+  padding: var(--a3) var(--a4);
+  flex: none;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+.vw-ablagezone > i {
+  font-size: var(--titel);
+  color: var(--text-3);
+}
+
+.vw-ablagezone .rechts {
+  margin-left: auto;
+}
+
+.vw-tabellenfeld {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  container-type: inline-size;
+}
+
+.vw-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+
+.vw-tabelle th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: inset 0 -1px 0 var(--rand-2);
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.vw-tabelle th.vw-sortiert {
+  color: var(--akzent);
+}
+
+.vw-tabelle td {
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  white-space: nowrap;
+}
+
+.vw-tabelle tbody tr:hover td {
+  background: var(--flaeche-wechsel);
+}
+
+.vw-tabelle tr.gewaehlt td {
+  background: var(--akzent-weich);
+}
+
+.vw-tabelle .vw-schmal {
+  width: 1%;
+}
+
+.vw-tabelle .vw-zahl-zelle {
+  text-align: right;
+  font-family: var(--schrift-mono);
+}
+
+.vw-tabelle .vw-leise {
+  color: var(--text-3);
+}
+
+/* Die Namensspalte nimmt den Rest und kürzt mit Auslassungspunkten, statt die Tabelle seitlich zu verbreitern */
+.vw-tabelle .vw-name-zelle {
+  width: 100%;
+  max-width: 0;
+}
+
+.vw-dateiname {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+}
+
+.vw-dateiname > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vw-dateiname > i {
+  width: 18px;
+  text-align: center;
+  color: var(--text-3);
+}
+
+.vw-umbenennen {
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+}
+
+.vw-umbenennen input {
+  flex: 1;
+  min-width: 0;
+  min-height: calc(var(--zeile) - 6px);
+  padding: 0 var(--a2);
+  border: 0;
+  outline: 0;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft), 0 0 0 2px var(--akzent-flaeche);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+
+@media (max-width: 1279px) {
+  .vw-zweiteilig {
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 899px) {
+  .vw-anmeldung > span {
+    display: none;
+  }
+}
+
+/* Schmale Tabellenfläche: zuerst fällt das Format weg (steht im Namen), dann die Zeit (steht im Inspektor) */
+@container (max-width: 599px) {
+  .vw-tabelle .vw-ab-mittel {
+    display: none;
+  }
+}
+
+@container (max-width: 459px) {
+  .vw-tabelle .vw-ab-breit {
+    display: none;
+  }
+}

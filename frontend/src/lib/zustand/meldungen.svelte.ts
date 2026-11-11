@@ -8,6 +8,8 @@ export interface Meldung {
 }
 
 const DAUER_MS: Record<Meldung["art"], number> = { erfolg: 6000, hinweis: 6000, fehler: 10000 };
+/** Mit Aktion (Rückgängig) länger, damit man sie erreicht */
+const DAUER_MIT_AKTION_MS = 12000;
 
 class Meldungen {
   aktuell = $state<(Meldung & { readonly nummer: number }) | null>(null);
@@ -17,7 +19,7 @@ class Meldungen {
   zeigen(m: Meldung): void {
     if (this.zeit) clearTimeout(this.zeit);
     this.aktuell = { ...m, nummer: ++this.zaehler };
-    this.zeit = setTimeout(() => this.schliessen(), DAUER_MS[m.art]);
+    this.zeit = setTimeout(() => this.schliessen(), m.aktion ? DAUER_MIT_AKTION_MS : DAUER_MS[m.art]);
   }
 
   schliessen(): void {

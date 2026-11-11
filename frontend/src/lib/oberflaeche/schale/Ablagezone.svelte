@@ -2,6 +2,7 @@
   // Dateien überall auf die App ziehen: öffnet sie als neue Dokumente; während des Ziehens ein deutlicher Rahmen.
   import type { Snippet } from "svelte";
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
+  import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
 
   let { children }: { children: Snippet } = $props();
   let tiefe = $state(0);
@@ -11,7 +12,9 @@
   async function ablegen(e: DragEvent): Promise<void> {
     e.preventDefault();
     tiefe = 0;
-    for (const d of [...(e.dataTransfer?.files ?? [])]) await arbeitsplatz.dateiOeffnen(d);
+    // In der Ablage landen Dateien im gewählten Ordner, sonst auf der obersten Ebene
+    const ordner = arbeitsplatz.seite === "ablage" ? (ablageverwaltung.ordnerWahl ?? "") : "";
+    for (const d of [...(e.dataTransfer?.files ?? [])]) await arbeitsplatz.dateiOeffnen(d, ordner);
   }
 </script>
 

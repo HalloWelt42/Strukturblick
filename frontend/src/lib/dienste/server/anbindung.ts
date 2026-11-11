@@ -3,7 +3,7 @@
 // damit die Bauart ohne Server nichts davon enthält.
 
 import { hole, json } from "appkern-oberflaeche";
-import type { Ablage, AbgelegtesDokument, Arbeitsstand, Dokumentkopf } from "../ablage";
+import { Ablagefehler, type Ablage, type AbgelegtesDokument, type Arbeitsstand, type Dokumentkopf, type Papierkorbeintrag } from "../ablage";
 
 export {
   sitzung,
@@ -25,6 +25,18 @@ export {
 const SPEICHERN_ZEITGRENZE_MS = 120_000;
 
 const pfad = (kennung: string): string => `/dokumente/${encodeURIComponent(kennung)}`;
+const ordnerPfad = (name: string): string => `/ordner/${encodeURIComponent(name)}`;
+
+/** Fachliche Ablehnung des Servers (409 Konflikt, 400 ungültig) als Ablagefehler mit seiner Meldung */
+async function fachlich<T>(arbeit: Promise<T>): Promise<T> {
+  try {
+    return await arbeit;
+  } catch (f) {
+    const status = (f as { status?: number }).status;
+    if (status === 409 || status === 400 || status === 404) throw new Ablagefehler((f as Error).message);
+    throw f;
+  }
+}
 
 export class ServerAblage implements Ablage {
   readonly ort = "Ablage auf pi5b";
@@ -47,8 +59,40 @@ export class ServerAblage implements Ablage {
     await hole<void>(pfad(dok.kennung), { method: "PUT", ...json(dok), zeitgrenzeMs: SPEICHERN_ZEITGRENZE_MS });
   }
 
+  async aendern(kennung: string, teil: { name?: string; ordner?: string }): Promise<void> {
+    await fachlich(hole<void>(pfad(kennung), { method: "PATCH", ...json(teil) }));
+  }
+
   async entfernen(kennung: string): Promise<void> {
-    await hole<void>(pfad(kennung), { method: "DELETE" });
+    await fachlich(hole<void>(pfad(kennung), { method: "DELETE" }));
+  }
+
+  papierkorb(): Promise<Papierkorbeintrag[]> {
+    return hole<Papierkorbeintrag[]>("/papierkorb");
+  }
+
+  async wiederherstellen(kennung: string): Promise<void> {
+    await fachlich(hole<void>(`/papierkorb/${encodeURIComponent(kennung)}/wiederherstellen`, { method: "POST" }));
+  }
+
+  async endgueltigEntfernen(kennung: string): Promise<void> {
+    await fachlich(hole<void>(`/papierkorb/${encodeURIComponent(kennung)}`, { method: "DELETE" }));
+  }
+
+  ordner(): Promise<string[]> {
+    return hole<string[]>("/ordner");
+  }
+
+  async ordnerAnlegen(name: string): Promise<void> {
+    await fachlich(hole<void>("/ordner", { method: "POST", ...json({ name }) }));
+  }
+
+  async ordnerUmbenennen(alt: string, neu: string): Promise<void> {
+    await fachlich(hole<void>(ordnerPfad(alt), { method: "PATCH", ...json({ name: neu }) }));
+  }
+
+  async ordnerEntfernen(name: string): Promise<void> {
+    await fachlich(hole<void>(ordnerPfad(name), { method: "DELETE" }));
   }
 
   arbeitsstand(): Promise<Arbeitsstand> {

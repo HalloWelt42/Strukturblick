@@ -15,6 +15,8 @@ class Arbeitsplatz {
   aktivesBlatt = $state<Arbeitsblatt | null>(null);
   dokumente = $state.raw<Dokumentkopf[]>([]);
   bereit = $state(false);
+  /** Was der Hauptbereich zeigt: das aktive Blatt oder die Ablage (genau eins) */
+  seite = $state<"blatt" | "ablage">("blatt");
 
   private ablageStand: Ablage | null = null;
 
@@ -24,13 +26,17 @@ class Arbeitsplatz {
     return this.ablageStand;
   }
 
+  /** Startet mit einer Ablage; ein erneuter Start ersetzt die offenen Blätter, statt sie zu verdoppeln. */
   async starten(ablage: Ablage): Promise<void> {
+    for (const b of this.blaetter) await b.schliessen();
     this.ablageStand = ablage;
     const stand = await this.ablage.arbeitsstand();
+    const blaetter: Arbeitsblatt[] = [];
     for (const kennung of stand.offen) {
       const dok = await this.ablage.laden(kennung);
-      if (dok) this.blaetter.push(new Arbeitsblatt(dok, this.ablage));
+      if (dok) blaetter.push(new Arbeitsblatt(dok, this.ablage));
     }
+    this.blaetter = blaetter;
     this.aktivesBlatt = this.blaetter.find((b) => b.kennung === stand.aktiv) ?? this.blaetter[0] ?? null;
     await this.listeNeu();
     this.bereit = true;
@@ -42,33 +48,36 @@ class Arbeitsplatz {
 
   waehlen(blatt: Arbeitsblatt): void {
     this.aktivesBlatt = blatt;
+    this.seite = "blatt";
     void this.standSpeichern();
   }
 
   /** Neues Dokument aus Text (Einfügen, Leer); öffnet je nach Inhalt im Editor oder in der Struktur. */
-  async neu(name: string, text: string): Promise<Arbeitsblatt> {
+  async neu(name: string, text: string, ordner = ""): Promise<Arbeitsblatt> {
     const blatt = new Arbeitsblatt(
-      { kennung: neueKennung(), name, formatWahl: null, optionen: {}, text, verlauf: { eintraege: [], zeiger: 0 }, geaendert: new Date().toISOString() },
+      { kennung: neueKennung(), name, ordner, formatWahl: null, optionen: {}, text, verlauf: { eintraege: [], zeiger: 0 }, geaendert: new Date().toISOString() },
       this.ablage,
     );
     if (text.trim() === "") blatt.zeigen({ art: "ansicht", kennung: "editor" });
     this.blaetter.push(blatt);
     this.aktivesBlatt = blatt;
+    this.seite = "blatt";
     await blatt.speichern();
     await this.standSpeichern();
     await this.listeNeu();
     return blatt;
   }
 
-  async dateiOeffnen(datei: File): Promise<void> {
+  async dateiOeffnen(datei: File, ordner = ""): Promise<void> {
     if (datei.size > WARNUNG_AB_ZEICHEN) meldungen.zeigen({ text: `${datei.name} ist groß (${Math.round(datei.size / 1048576)} MB); das Lesen kann dauern`, art: "hinweis" });
     const text = await datei.text();
-    await this.neu(datei.name, text);
+    await this.neu(datei.name, text, ordner);
   }
 
   async ausAblageOeffnen(kennung: string): Promise<void> {
     const offen = this.blaetter.find((b) => b.kennung === kennung);
     if (offen) return this.waehlen(offen);
+    this.seite = "blatt";
     const dok = await this.ablage.laden(kennung);
     if (!dok) return meldungen.zeigen({ text: "Das Dokument gibt es in der Ablage nicht mehr", art: "fehler" });
     const blatt = new Arbeitsblatt(dok, this.ablage);

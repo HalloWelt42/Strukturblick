@@ -4,6 +4,7 @@
 
 import { BAUART, FASSUNG, ablageFuerBauart, serverteil, type Serverteil } from "../dienste/bauart";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
+import { ablageverwaltung } from "./ablageverwaltung.svelte";
 
 export type Zugangsstand = "laedt" | "nicht-erreichbar" | "einrichtung" | "anmeldung" | "bereit";
 
@@ -38,6 +39,7 @@ class Zugang {
     if (this.gestartet || this.stand !== "bereit") return;
     this.gestartet = true;
     await arbeitsplatz.starten(await ablageFuerBauart());
+    await ablageverwaltung.neuLaden();
   }
 
   async abmelden(): Promise<void> {

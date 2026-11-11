@@ -12,6 +12,7 @@
   import Ablagezone from "./lib/oberflaeche/schale/Ablagezone.svelte";
   import { tastenkuerzel } from "./lib/oberflaeche/schale/tastenkuerzel";
   import Zugangsseite from "./lib/oberflaeche/schale/Zugangsseite.svelte";
+  import AblageSeite from "./lib/oberflaeche/ablage/AblageSeite.svelte";
   import { zugang } from "./lib/zustand/zugang.svelte";
 
   // Sobald der Zugang bereit ist (ohne Server sofort, mit Server nach der Anmeldung), startet der Arbeitsplatz einmal
@@ -45,7 +46,9 @@
   <div class="app">
     <Kopf />
     <Leiste />
-    {#if blatt}
+    {#if arbeitsplatz.seite === "ablage"}
+      <AblageSeite />
+    {:else if blatt}
       {#key blatt.kennung}
         <Haupt {blatt} />
         <Inspektor {blatt} />

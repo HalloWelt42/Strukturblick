@@ -60,7 +60,7 @@ async def test_dokument_speichern_laden_entfernen(client):
     assert (await client.put(f"/api/v1/dokumente/{KENNUNG}", headers=h, json=dokument())).status_code == 204
     assert (await client.put(f"/api/v1/dokumente/{KENNUNG}", headers=h, json=dokument('{"a": 2}'))).status_code == 204
     liste = (await client.get("/api/v1/dokumente", headers=h)).json()
-    assert liste == [{"kennung": KENNUNG, "name": "probe.json", "groesse": 8, "geaendert": "2026-11-11T21:00:00+01:00"}]
+    assert liste == [{"kennung": KENNUNG, "name": "probe.json", "ordner": "", "groesse": 8, "geaendert": "2026-11-11T21:00:00+01:00"}]
     geladen = (await client.get(f"/api/v1/dokumente/{KENNUNG}", headers=h)).json()
     assert geladen["text"] == '{"a": 2}' and geladen["optionen"] == {"trennzeichen": ";"} and geladen["platz"]["kennung"] == "tabelle"
     assert geladen["verlauf"]["zeiger"] == 1
@@ -80,3 +80,45 @@ async def test_arbeitsstand(client):
     assert (await client.get("/api/v1/arbeitsstand", headers=h)).json() == {"offen": [], "aktiv": None}
     assert (await client.put("/api/v1/arbeitsstand", headers=h, json={"offen": [KENNUNG], "aktiv": KENNUNG})).status_code == 204
     assert (await client.get("/api/v1/arbeitsstand", headers=h)).json() == {"offen": [KENNUNG], "aktiv": KENNUNG}
+
+
+ZWEITE = "2b6f3a52-2a52-4a7e-9a52-1c2d3e4f5a6b"
+
+
+async def test_papierkorb_und_wiederherstellen(client):
+    h = await anmelden(client)
+    await client.put(f"/api/v1/dokumente/{KENNUNG}", headers=h, json=dokument())
+    assert (await client.delete(f"/api/v1/dokumente/{KENNUNG}", headers=h)).status_code == 204
+    assert (await client.get("/api/v1/dokumente", headers=h)).json() == []
+    assert (await client.get(f"/api/v1/dokumente/{KENNUNG}", headers=h)).status_code == 404
+    korb = (await client.get("/api/v1/papierkorb", headers=h)).json()
+    assert [e["kennung"] for e in korb] == [KENNUNG] and korb[0]["geloescht"]
+    assert (await client.post(f"/api/v1/papierkorb/{KENNUNG}/wiederherstellen", headers=h)).status_code == 204
+    assert [d["kennung"] for d in (await client.get("/api/v1/dokumente", headers=h)).json()] == [KENNUNG]
+    await client.delete(f"/api/v1/dokumente/{KENNUNG}", headers=h)
+    assert (await client.delete(f"/api/v1/papierkorb/{KENNUNG}", headers=h)).status_code == 204
+    assert (await client.get("/api/v1/papierkorb", headers=h)).json() == []
+
+
+async def test_umbenennen_verschieben_ohne_inhalt(client):
+    h = await anmelden(client)
+    await client.put(f"/api/v1/dokumente/{KENNUNG}", headers=h, json=dokument())
+    assert (await client.patch(f"/api/v1/dokumente/{KENNUNG}", headers=h, json={"name": "neu.json", "ordner": "Import"})).status_code == 204
+    d = (await client.get(f"/api/v1/dokumente/{KENNUNG}", headers=h)).json()
+    assert d["name"] == "neu.json" and d["ordner"] == "Import" and d["text"] == '{"a": 1}'
+    assert (await client.get("/api/v1/ordner", headers=h)).json() == ["Import"]
+    assert (await client.patch(f"/api/v1/dokumente/{ZWEITE}", headers=h, json={"name": "x"})).status_code == 404
+
+
+async def test_ordner(client):
+    h = await anmelden(client)
+    assert (await client.post("/api/v1/ordner", headers=h, json={"name": "Kundenimport"})).status_code == 204
+    assert (await client.post("/api/v1/ordner", headers=h, json={"name": "Kundenimport"})).status_code == 409
+    assert (await client.post("/api/v1/ordner", headers=h, json={"name": "a/b"})).status_code == 422
+    await client.put(f"/api/v1/dokumente/{KENNUNG}", headers=h, json={**dokument(), "ordner": "Kundenimport"})
+    assert (await client.delete("/api/v1/ordner/Kundenimport", headers=h)).status_code == 409
+    assert (await client.patch("/api/v1/ordner/Kundenimport", headers=h, json={"name": "Import"})).status_code == 204
+    assert (await client.get(f"/api/v1/dokumente/{KENNUNG}", headers=h)).json()["ordner"] == "Import"
+    await client.patch(f"/api/v1/dokumente/{KENNUNG}", headers=h, json={"ordner": ""})
+    assert (await client.delete("/api/v1/ordner/Import", headers=h)).status_code == 204
+    assert (await client.get("/api/v1/ordner", headers=h)).json() == []

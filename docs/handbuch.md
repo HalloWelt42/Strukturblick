@@ -3,8 +3,8 @@ zweck: "Zeigt, prüft und baut Strukturdaten um (JSON, NDJSON, CSV, YAML): Baum,
 geraet: [pi5b]
 abhaengigkeiten: [kellerwolke, appkern, vorbau]
 daten:
-  - "pi5b: `{{wurzel}}/daten/strukturblick.sqlite` (Dokumente samt Verlauf und Arbeitsstand je Konto, Einstellungen, Protokoll)"
-  - "Bauart ohne Server (GitHub Pages): nur im Browser des Geräts (IndexedDB `strukturblick-2`), sichern per Herunterladen"
+  - "pi5b: `{{wurzel}}/daten/strukturblick.sqlite` (Dokumente samt Verlauf, Ordner, Papierkorb und Arbeitsstand je Konto, Einstellungen, Protokoll)"
+  - "Bauart ohne Server (GitHub Pages): nur im Browser des Geräts (IndexedDB `strukturblick-2`), sichern über Ablage, Alles sichern"
 sicherung:
   - "nach der Regel des Appkerns eine Kopie von `strukturblick.sqlite` nach `{{wurzel}}/sicherungen`, wöchentlich und vor dem Ausrollen (nur, wenn die jüngste älter als 24 Stunden ist), höchstens drei Stände"
 schluessel_orte:
@@ -23,6 +23,11 @@ der Inspektor zeigt das Gewählte, kopiert seinen Pfad (jq, JSONPath, Zeiger, PH
 alle Werte desselben Pfads. Alle Ansichten arbeiten auf demselben Text: eine Änderung in der Tabelle ist eine
 Textänderung an genau dieser Stelle, CSV-Dialekt, Kommentare und Formatierung bleiben. Rückgängig gilt für alle
 Ansichten gemeinsam, der Verlauf bleibt beim Neuladen erhalten.
+
+Die Seite Ablage (Ordnerknopf oben in der Leiste) verwaltet die Dokumente: Ordner (eine Ebene), Umbenennen,
+Verschieben, Herunterladen, mehrere auf einmal wählen. Entfernen legt in den Papierkorb, die Meldung bietet
+Rückgängig; nach 30 Tagen löscht die Ablage dort endgültig. "Alles sichern" schreibt alle Dokumente samt Verlauf und
+Ordnern in eine Datei, "Einspielen" fügt eine solche Datei hinzu, ohne Vorhandenes zu überschreiben.
 
 Zwei Bauarten aus demselben Code:
 
@@ -73,14 +78,16 @@ Der Ablauf `.github/workflows/pages.yml` baut bei jedem Push auf `main` die Baua
 (`npm run build:eigenstaendig`) und veröffentlicht sie. Einmalig: im Repo Settings, Pages, Source "GitHub Actions".
 
 Probe: `https://hallowelt42.github.io/Strukturblick/` zeigt den Arbeitsplatz ohne Anmeldung; eine hineingezogene
-Datei erscheint im Baum, nach dem Neuladen ist sie noch da.
+Datei erscheint im Baum, nach dem Neuladen ist sie noch da. In der Ablage einen Ordner anlegen und die Datei dorthin
+verschieben; die Leiste zeigt den Ordner.
 
 ## Sicherung und Rückspielen
 
 Die Datenbank sichert der Appkern nach seiner Regel nach {{wurzel}}/sicherungen. Zurückspielen: App anhalten
 (`docker compose -f compose.pi.yml stop strukturblick` in {{wurzel}}), Kopie als `daten/strukturblick.sqlite`
 ablegen, starten. Prüfen: nach dem Anmelden sind die Dokumente in der Leiste wie vorher. Die Bauart ohne Server hat
-keine Sicherung auf dem Server; dort hilft nur das Herunterladen der Dokumente.
+keine Sicherung auf dem Server: dort in der Ablage "Alles sichern" wählen und die Datei aufheben; auf einem anderen
+Gerät oder nach dem Leeren des Browsers holt "Einspielen" alles zurück. Das geht auch zwischen den Bauarten.
 
 ## Wenn etwas klemmt
 
@@ -90,5 +97,7 @@ keine Sicherung auf dem Server; dort hilft nur das Herunterladen der Dokumente.
   Dokument, darüber antwortet sie mit 413; der Vorbau reicht ohne `koerper_max` höchstens 200 MB weiter.
 - Ein offener Tab zeigt nach dem Ausrollen noch die alte Fassung: er lädt von selbst neu, sobald alles abgelegt ist;
   solange ein Dokument noch "Wird abgelegt" zeigt, wartet er.
+- Ein Ordner lässt sich nicht entfernen: nur leere Ordner gehen weg; Dokumente vorher verschieben oder in den
+  Papierkorb legen.
 - YAML-Dateien über einigen MB brauchen Sekunden zum Lesen (Bibliothek `yaml`); die Oberfläche bleibt dabei
   bedienbar, der Fuß zeigt "liest".

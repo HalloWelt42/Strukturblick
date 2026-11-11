@@ -18,6 +18,8 @@ export class Arbeitsblatt {
   readonly kennung: string;
   readonly sitzung: Sitzung;
   name = $state("");
+  /** Ordner in der Ablage ("" = oberste Ebene) */
+  ordner = $state("");
   formatWahl = $state<FormatKennung | null>(null);
   optionen = $state<Leseoptionen>({});
   text = $state.raw("");
@@ -49,6 +51,7 @@ export class Arbeitsblatt {
   constructor(dok: AbgelegtesDokument, private readonly ablage: Ablage) {
     this.kennung = dok.kennung;
     this.name = dok.name;
+    this.ordner = dok.ordner ?? "";
     this.formatWahl = dok.formatWahl;
     this.optionen = dok.optionen;
     if (dok.platz) this.platz = dok.platz;
@@ -156,6 +159,7 @@ export class Arbeitsblatt {
     return {
       kennung: this.kennung,
       name: this.name,
+      ordner: this.ordner,
       formatWahl: this.formatWahl,
       optionen: $state.snapshot(this.optionen),
       text: this.sitzung.text,
