@@ -50,3 +50,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `bereinigen.json` | Daten aufräumen (STB-6) | durchgespielt 11.11.2026 |
 | `rezepte.json` | Aufräumen wiederholen (STB-7) | durchgespielt 11.11.2026 |
 | `statistik.json` | Daten auf einen Blick (STB-31) | durchgespielt 11.11.2026 |
+| `struktur.json` | Den Aufbau sehen (STB-32) | durchgespielt 12.11.2026 |

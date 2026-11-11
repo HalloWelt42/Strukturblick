@@ -1,0 +1,41 @@
+{
+  "kapitel": "struktur",
+  "titel": "Den Aufbau sehen",
+  "ticket": "STB-32",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json aktiv",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Die Ansicht Struktur leitet aus allen Werten ab, wie das Dokument aufgebaut ist. Jeder Objekttyp wird eine Karte: die Wurzel, die Bestellung, darin Kunde und Position. Die Namen kommen aus den Schlüsseln, Listen in der Einzahl.",
+      "ziel": { "anker": "ansicht-struktur", "notbehelf": "Ansichtswahl, fünfter Knopf Struktur (⌥ ⌘ 5)" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Karten Wurzel, Bestellung (128), Kunde (128), Position (297)",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Ein Stern heißt: steht in jedem Eintrag. Die Kanten sagen, wie viele es gibt: genau einen Kunden, beliebig viele Positionen. Einpassen zeigt das ganze Diagramm.",
+      "ziel": { "anker": "struktur-einpassen", "notbehelf": "Knopf Einpassen in der Werkzeugzeile" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Zoom 80 %, alle vier Karten sichtbar; Kanten 0..n und 1",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Ein Klick auf die Bestellung zeigt rechts, was abgeleitet wurde: 128 Stück, sechs Felder, nr als eindeutiger Schlüssel, und den Ausschnitt als JSON Schema zum Kopieren.",
+      "ziel": { "anker": "struktur-typ", "notbehelf": "Karte Bestellung" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Inspektor Gewählter Typ Bestellung, Schlüssel nr, Name aus dem Listennamen abgeleitet",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Als JSON Schema lädt das ganze Schema als Datei herunter. Es ist die Grundlage für das Validieren neuer Dateien und für erzeugten Code.",
+      "ziel": { "anker": "struktur-schema", "notbehelf": "Knopf Als JSON Schema" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Datei bestellungen.schema.json mit $defs Bestellung, Kunde, Position",
+      "geprueft": "2026-11-12, Inhalt per Test geprüft"
+    }
+  ]
+}

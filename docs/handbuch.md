@@ -66,6 +66,12 @@ Datum nach Datum) und den Leer-Anteil (fehlt, null oder leer). Verschachtelte Fe
 (positionen[].preis). Ein Klick auf ein Feld zeigt sein Histogramm und im Inspektor alle Werte dieses Pfads; Muster
 nennen Schlüssel, Datumsangaben und Nummern mit führender Null.
 
+Die Ansicht Struktur (⌥ ⌘ 5) leitet aus allen Werten das Schema ab: je Objekttyp eine Karte mit Feldern, Typ
+(Datum in ISO-Form, andere Datumsformen, nur Ziffern, ganze Zahl), Stern für "in jedem Eintrag" und Schlüssel;
+Kanten nennen 1, 0..1 oder 0..n. Namen kommen aus den Schlüsseln, Listeneinträge aus dem Listennamen in der
+Einzahl. "Als JSON Schema" lädt das Schema (Entwurf 2020-12) herunter; der Inspektor zeigt den gewählten Typ und
+seinen Ausschnitt zum Kopieren.
+
 Das Werkzeug Bereinigen (Leiste, "Prüfen und umbauen", oder die Befehlspalette) arbeitet auf der Liste, die
 auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz im Segment geschlossen wird:
 
@@ -106,7 +112,7 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 | ⌥ ⌘ N | Neues Dokument |
 | ⌥ ⌘ W | Dokument schließen |
 | ⌥ ⌘ A | Ablage verwalten oder schließen |
-| ⌥ ⌘ 1, 2, 3, 4 | Ansicht Baum, Editor, Tabelle, Statistik |
+| ⌥ ⌘ 1 bis 5 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur |
 | ⌥ ⌘ E | Abfrage öffnen oder einklappen |
 | F3, ⇧ F3 | Nächster, voriger Treffer im Baum |
 
