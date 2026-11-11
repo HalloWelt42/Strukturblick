@@ -36,8 +36,18 @@ export const TEXT_ERSETZEN = befehl({
   werte: z.object({ text: z.string(), titel: z.string().optional() }),
   brauchtAnalyse: false,
   beschreiben: (w) => w.titel ?? "Text ersetzt",
-  aenderungen: (w, u) => [{ von: 0, bis: u.text.length, einfuegen: w.text }],
+  aenderungen: (w, u) => [kleinsteAenderung(u.text, w.text)],
 });
+
+/** Eine Änderung von `alt` zu `neu`, die gleichen Anfang und gleiches Ende stehen lässt (der Verlauf bleibt klein). */
+export function kleinsteAenderung(alt: string, neu: string): { von: number; bis: number; einfuegen: string } {
+  let anfang = 0;
+  const kurz = Math.min(alt.length, neu.length);
+  while (anfang < kurz && alt.charCodeAt(anfang) === neu.charCodeAt(anfang)) anfang++;
+  let ende = 0;
+  while (ende < kurz - anfang && alt.charCodeAt(alt.length - 1 - ende) === neu.charCodeAt(neu.length - 1 - ende)) ende++;
+  return { von: anfang, bis: alt.length - ende, einfuegen: neu.slice(anfang, neu.length - ende) };
+}
 
 const setzen = z.object({ zeiger: z.string(), neu: neuerWert });
 

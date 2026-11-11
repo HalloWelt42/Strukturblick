@@ -11,6 +11,8 @@ export interface Aufruf {
   readonly zeit: string;                   // ISO-Zeit des ersten Schritts
   readonly ort: string;                    // wo er entstand: "Editor", "Baum", "Tabelle", "Telefon" ...
   readonly geste?: string;
+  /** Fachlicher Schritt für Rezepte (Werkzeug Bereinigen); der Kern liest ihn nicht, er reist nur mit */
+  readonly rezeptschritt?: unknown;
 }
 
 export interface Schritt {

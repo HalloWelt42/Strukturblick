@@ -27,6 +27,8 @@ export interface Ereignis {
 export interface Aufrufangaben {
   readonly ort: string;
   readonly geste?: string;
+  /** Fachlicher Schritt, der im Verlauf mitreist (für Rezepte aus dem Verlauf) */
+  readonly rezeptschritt?: unknown;
 }
 
 export class Sitzung {
@@ -99,7 +101,10 @@ export class Sitzung {
       return { ok: false, art: "fachlich", fehler: f instanceof Error ? f.message : String(f) };
     }
     if (neu.text === this.textStand) return { ok: true, titel: v.titel, geaendert: false };
-    const aufruf: Aufruf = { befehl: kennung, titel: v.titel, werte, zeit: new Date().toISOString(), ort: angaben.ort, geste: angaben.geste };
+    const aufruf: Aufruf = {
+      befehl: kennung, titel: v.titel, werte, zeit: new Date().toISOString(), ort: angaben.ort, geste: angaben.geste,
+      ...(angaben.rezeptschritt !== undefined ? { rezeptschritt: angaben.rezeptschritt } : {}),
+    };
     this.verlaufStand = hinzu(this.verlaufStand, aufruf, { aenderungen: neu.aenderungen, umkehrung: neu.umkehrung }, this.grenzen);
     this.setzen(neu.text, { art: "ausgefuehrt", aenderungen: neu.aenderungen, titel: v.titel, ort: angaben.ort });
     return { ok: true, titel: v.titel, geaendert: true };

@@ -5,6 +5,6 @@ export * from "./format";
 export * from "./aenderung";
 export * from "./verlauf";
 export * from "./befehl";
-export { GRUNDBEFEHLE, anzeige } from "./befehle";
+export { GRUNDBEFEHLE, anzeige, kleinsteAenderung } from "./befehle";
 export * from "./sitzung";
 export * from "./abfrage";
