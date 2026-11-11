@@ -23,7 +23,7 @@ export const jsonpathMaschine: Maschine = async (a, q) => {
     throw wurf(`JSONPath ungültig: ${(f as Error).message.replace(/^jsonPath: /, "")}`);
   }
   const orte = funde.map((f) => f.pointer);
-  return werteErgebnis(funde.map((f) => f.value), orte, orte, a.ganz);
+  return werteErgebnis(funde.map((f) => f.value), orte, orte, a.ausgabe);
 };
 
 export const sucheMaschine: Maschine = async (a, q) => {
@@ -36,5 +36,5 @@ export const sucheMaschine: Maschine = async (a, q) => {
     throw f;
   }
   const orte = knoten.map((k) => zeigerVon(s.index, s.text, k));
-  return werteErgebnis(knoten.map((k) => wertAus(s.index, s.text, k)), orte, orte, a.ganz);
+  return werteErgebnis(knoten.map((k) => wertAus(s.index, s.text, k)), orte, orte, a.ausgabe);
 };

@@ -7,8 +7,10 @@
 import type { Jq } from "jq-wasm";
 import { pfadAusdruck, vordereTeile, zeigerAusPfad } from "../../analyse/abfrage/jqpfad";
 import type { Teil } from "../../kern/pfade";
+import type { Abfrageergebnis } from "../../kern/abfrage";
 import { werteErgebnis } from "./stuecke";
-import { wurf, zielVon, type Maschine } from "./maschine";
+import { Abfragewurf, wurf, zielVon, type Abfrageauftrag, type Maschine } from "./maschine";
+import type { Quellen } from "./quellen";
 
 const STELLE = /line (\d+), column (\d+)/;
 
@@ -33,26 +35,39 @@ const uebersetzbar = (jq: Jq, ausdruck: string): string | null => {
   return r.exitCode === 0 ? null : r.stderr;
 };
 
+/** raw() meldet jq-Fehler über stderr und wirft nie; wirft es doch, ist die WebAssembly abgestürzt (meist Speicher) */
+const ABSTURZ = "jq brauchte mehr Speicher als vorhanden und hat abgebrochen. Weniger Werte auf einmal sammeln, etwa mit limit(1000; ...), first(...) oder ohne [ ... ] um große Folgen.";
+
 export function jqMaschine(laden: () => Promise<Jq>): Maschine {
   let jq: Promise<Jq> | null = null;
   return async (a, q) => {
     const j = await (jq ??= laden());
-    const ausdruck = a.ausdruck.trim() || ".";
-    const fehler = uebersetzbar(j, ausdruck);
-    if (fehler) throw fehlerVon(fehler, 1, ausdruck);
-
-    const ein = q.jqEingabe(zielVon(a));
-    const flags = ein.folge ? ["-s"] : [];
-    const teile = a.ganz ? [] : vordereTeile(ausdruck).filter((t) => uebersetzbar(j, pfadAusdruck(t)) === null);
-    const pfade = teile.map((t) => `(try ${pfadAusdruck(t)} catch null)`).join(", ");
-    const r = j.raw(ein.text, `{w: [\n${ausdruck}\n], p: [${pfade}]}`, ["-c", ...flags]);
-    if (r.exitCode !== 0) throw fehlerVon(r.stderr, 1, ausdruck);
-    const { w, p } = JSON.parse(r.stdout) as { w: unknown[]; p: (Teil[][] | null)[] };
-
-    const gefunden = p.findIndex((x) => x !== null);
-    const treffer = gefunden < 0 ? null : (p[gefunden] as Teil[][]).map(zeigerAusPfad);
-    // Stammen die Treffer vom ganzen Ausdruck, gehört zu jedem Wert genau ein Ort
-    const orte = gefunden === 0 && teile[0] === ausdruck && treffer && treffer.length === w.length ? treffer : null;
-    return werteErgebnis(w, orte, treffer, a.ganz);
+    try {
+      return rechnen(j, a, q);
+    } catch (f) {
+      if (f instanceof Abfragewurf) throw f;
+      jq = null;                               // die abgestürzte Maschine ist nicht mehr zu gebrauchen
+      throw wurf(ABSTURZ);
+    }
   };
+}
+
+function rechnen(j: Jq, a: Abfrageauftrag, q: Quellen): Abfrageergebnis {
+  const ausdruck = a.ausdruck.trim() || ".";
+  const fehler = uebersetzbar(j, ausdruck);
+  if (fehler) throw fehlerVon(fehler, 1, ausdruck);
+
+  const ein = q.jqEingabe(zielVon(a));
+  const flags = ein.folge ? ["-s"] : [];
+  const teile = a.ausgabe ? [] : vordereTeile(ausdruck).filter((t) => uebersetzbar(j, pfadAusdruck(t)) === null);
+  const pfade = teile.map((t) => `(try ${pfadAusdruck(t)} catch null)`).join(", ");
+  const r = j.raw(ein.text, `{w: [\n${ausdruck}\n], p: [${pfade}]}`, ["-c", ...flags]);
+  if (r.exitCode !== 0) throw fehlerVon(r.stderr, 1, ausdruck);
+  const { w, p } = JSON.parse(r.stdout) as { w: unknown[]; p: (Teil[][] | null)[] };
+
+  const gefunden = p.findIndex((x) => x !== null);
+  const treffer = gefunden < 0 ? null : (p[gefunden] as Teil[][]).map(zeigerAusPfad);
+  // Stammen die Treffer vom ganzen Ausdruck, gehört zu jedem Wert genau ein Ort
+  const orte = gefunden === 0 && teile[0] === ausdruck && treffer && treffer.length === w.length ? treffer : null;
+  return werteErgebnis(w, orte, treffer, a.ausgabe);
 }

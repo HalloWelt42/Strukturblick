@@ -34,7 +34,7 @@ const quellen = new Quellen();
 quellen.setzen(stand("b", "bestellungen.json", "json", BESTELLUNGEN));
 quellen.setzen(stand("k", "kunden.csv", "csv", KUNDEN));
 
-const auftrag = (sprache: Abfrageauftrag["sprache"], ausdruck: string, ziel: string | null = "b", ganz = false): Abfrageauftrag => ({ sprache, ausdruck, ziel, suche: VORGABE_SUCHE, ganz });
+const auftrag = (sprache: Abfrageauftrag["sprache"], ausdruck: string, ziel: string | null = "b", ausgabe: Abfrageauftrag["ausgabe"] = null): Abfrageauftrag => ({ sprache, ausdruck, ziel, suche: VORGABE_SUCHE, ausgabe });
 
 let jq: Maschine;
 let sql: Maschine;
@@ -83,7 +83,7 @@ describe("jq", () => {
   });
 
   it("liefert das ganze Ergebnis als Dokument", async () => {
-    const e = await jq(auftrag("jq", ".bestellungen[].nr", "b", true), quellen);
+    const e = await jq(auftrag("jq", ".bestellungen[].nr", "b", "json"), quellen);
     expect(e).toEqual({ art: "dokument", text: JSON.stringify(["B-1", "B-2", "B-3"], null, 2) });
   });
 });

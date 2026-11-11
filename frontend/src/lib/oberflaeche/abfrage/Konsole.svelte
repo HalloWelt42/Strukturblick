@@ -13,6 +13,7 @@
   import KonsolenLeiste from "./KonsolenLeiste.svelte";
   import SqlTabellen from "./SqlTabellen.svelte";
   import VerlaufMenue from "./VerlaufMenue.svelte";
+  import HerunterladenMenue from "./HerunterladenMenue.svelte";
   import WerteErgebnis from "./WerteErgebnis.svelte";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
@@ -166,9 +167,9 @@
             <span class="af-etikett">Ergebnis</span>
             {#if ergebnis?.art === "werte"}
               {#if fehler}
-                <span class="abzeichen warn"><i class="fa-solid fa-clock-rotate-left"></i> veraltet</span><span class="text-3 klein">letztes gültiges, {ergebnis.anzahl} Ergebnisse</span>
+                <span class="abzeichen warn"><i class="fa-solid fa-clock-rotate-left"></i> veraltet</span><span class="text-3 klein af-breit">letztes gültiges, {ergebnis.anzahl} Ergebnisse</span>
               {:else}
-                <span class="abzeichen gut"><i class="fa-solid fa-bolt"></i> aktuell, {Math.round(dauer)} ms</span><span class="text-3 klein">{ergebnis.anzahl === 1 ? "1 Ergebnis" : `${ergebnis.anzahl} Ergebnisse`}</span>
+                <span class="abzeichen gut"><i class="fa-solid fa-bolt"></i> aktuell, {Math.round(dauer)} ms</span><span class="text-3 klein af-breit">{ergebnis.anzahl === 1 ? "1 Ergebnis" : `${ergebnis.anzahl} Ergebnisse`}</span>
               {/if}
               <span class="rechts"><button class="knopf still nur-symbol" title="Ganzes Ergebnis kopieren" onclick={() => void kopieren()}><i class="fa-solid fa-copy"></i></button></span>
             {/if}
@@ -186,13 +187,14 @@
       {#if fehler}
         <div class="af-fehlerzeile" role="alert">
           <i class="fa-solid fa-circle-exclamation"></i>
-          <span>{fehler.meldung}{#if gueltig}. {s.kennung === "sql" ? "Oben" : "Rechts"} steht das letzte gültige Ergebnis.{/if}</span>
+          <span>{fehler.meldung.replace(/\.?$/, ".")}{#if gueltig} {s.kennung === "sql" ? "Oben" : "Rechts"} steht das letzte gültige Ergebnis.{/if}</span>
         </div>
       {:else if s.kennung === "sql"}
         <span>Jedes geöffnete Dokument ist eine Tabelle; Listen in JSON werden zu eigenen Tabellen entfaltet.</span>
       {:else}
         <button class="knopf" disabled={!ergebnis} onclick={() => void abfrage.alsDokument(false)}><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>
         <button class="knopf" disabled={!ergebnis} onclick={() => void abfrage.alsDokument(true)}><i class="fa-solid fa-table"></i> Als Tabelle</button>
+        <HerunterladenMenue gesperrt={!ergebnis} nachOben />
         <button class="knopf" disabled={!abfrage.ausdruck.trim()} onclick={() => abfrage.merken()}><i class="fa-solid fa-bookmark"></i> In den Verlauf</button>
       {/if}
     </div>

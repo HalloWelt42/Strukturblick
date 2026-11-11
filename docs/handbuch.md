@@ -29,6 +29,19 @@ Verschieben, Herunterladen, mehrere auf einmal wählen. Entfernen legt in den Pa
 Rückgängig; nach 30 Tagen löscht die Ablage dort endgültig. "Alles sichern" schreibt alle Dokumente samt Verlauf und
 Ordnern in eine Datei, "Einspielen" fügt eine solche Datei hinzu, ohne Vorhandenes zu überschreiben.
 
+Die Abfrage am Fuß des Hauptbereichs (⌥ ⌘ E oder "Öffnen" in der Leiste) rechnet beim Tippen, ganz im Browser:
+
+- jq (echtes jq 1.8 als WebAssembly) und JSONPath auf dem offenen Dokument; die Treffer erscheinen im Baum
+  (F3 und ⇧ F3 springen), jeder Wert mit bekanntem Ort springt per Klick dorthin.
+- SQL (SQLite im Browser) über alle offenen Dokumente: jedes Dokument ist eine Tabelle, Listen von Objekten
+  werden eigene Tabellen mit Verweis auf die Elternzeile (etwa positionen.nr auf bestellungen); lower und upper
+  kennen Umlaute, REGEXP geht. Das Ergebnis belegt die Ansicht mit Balken zum Vergleich.
+- Suche über Schlüssel und Werte, wahlweise als regulärer Ausdruck und mit Groß und Klein.
+
+Ein Fehler im Ausdruck steht an der Stelle im Feld; das letzte gültige Ergebnis bleibt gedimmt stehen. Jedes
+Ergebnis lässt sich ganz als neues Dokument anlegen (⌘ Enter), herunterladen (JSON, NDJSON, CSV mit Semikolon)
+oder in den Abfragen-Verlauf legen. Eine Abfrage, die länger als 10 s rechnet, wird abgebrochen.
+
 Die Befehlspalette (⌘ K, unter Windows und Linux Strg K, oder das Suchfeld oben rechts) findet Befehle, Dokumente,
 Ordner und Ansichten mit unscharfer Suche; zuletzt Benutztes steht oben, jeder Befehl zeigt sein Tastenkürzel. Die
 Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
@@ -44,6 +57,8 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 | ⌥ ⌘ W | Dokument schließen |
 | ⌥ ⌘ A | Ablage verwalten oder schließen |
 | ⌥ ⌘ 1, 2, 3 | Ansicht Baum, Editor, Tabelle |
+| ⌥ ⌘ E | Abfrage öffnen oder einklappen |
+| F3, ⇧ F3 | Nächster, voriger Treffer im Baum |
 
 ⌘ N, ⌘ W und ⌘ 1 bis 9 belegt der Browser selbst; deshalb tragen diese Befehle ⌥ dazu.
 
@@ -117,6 +132,10 @@ Gerät oder nach dem Leeren des Browsers holt "Einspielen" alles zurück. Das ge
   solange ein Dokument noch "Wird abgelegt" zeigt, wartet er.
 - Kopieren eines Pfads meldet "Kopieren ging nicht": der Browser gibt die Zwischenablage nur über https oder
   localhost und nach einem Klick oder Tastendruck frei; der Pfad steht dann im Inspektor zum Markieren.
+- Die Abfrage meldet "jq brauchte mehr Speicher": jq sammelt zu viele Werte auf einmal, etwa [range(...)] über
+  sehr große Folgen; mit limit(1000; ...) oder first(...) begrenzen. jq lädt danach von selbst neu.
+- Eine Abfrage bricht nach 10 s ab: meist ein regulärer Ausdruck mit verschachtelten Wiederholungen oder eine
+  Schleife in jq; der Abfrage-Worker startet danach neu, die nächste Abfrage läuft normal.
 - Ein Ordner lässt sich nicht entfernen: nur leere Ordner gehen weg; Dokumente vorher verschieben oder in den
   Papierkorb legen.
 - YAML-Dateien über einigen MB brauchen Sekunden zum Lesen (Bibliothek `yaml`); die Oberfläche bleibt dabei

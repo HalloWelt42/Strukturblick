@@ -5,6 +5,7 @@
 import { ABFRAGE_GRENZEN, sprache as spracheVon, type Abfrageausgang, type SprachKennung } from "../kern/abfrage";
 import type { Suchoptionen } from "../analyse/abfrage/textsuche";
 import { VORGABE_SUCHE } from "../analyse/abfrage/textsuche";
+import { AUSGABEFORMATE, type Ausgabeformat } from "../analyse/abfrage/ausgabe";
 import { Abfragedienst, type Abfrageauftrag, type Dokumentstand } from "../dienste/abfrage/abfragedienst";
 import type { Arbeitsblatt } from "./arbeitsblatt.svelte";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
@@ -15,6 +16,7 @@ import { meldungen } from "./meldungen.svelte";
 export { SPRACHEN, ABFRAGE_GRENZEN, type SprachKennung, type Werteergebnis, type Tabellenergebnis, type Tabellenuebersicht, type Zellwert } from "../kern/abfrage";
 export type { Suchoptionen } from "../analyse/abfrage/textsuche";
 export { abfrageverlauf, type Gemerkt } from "./abfrageverlauf.svelte";
+export { AUSGABEFORMATE, type Ausgabeformat } from "../analyse/abfrage/ausgabe";
 
 export interface Bezug {
   readonly kennung: string;
@@ -75,7 +77,7 @@ class Abfrage {
   /** Nach einer Änderung (Tippen, Sprache, Dokument): kurz warten, dann rechnen */
   planen(): void {
     if (this.zeit) clearTimeout(this.zeit);
-    this.zeit = setTimeout(() => void this.rechnen(false), ABFRAGE_GRENZEN.tippenMs);
+    this.zeit = setTimeout(() => void this.rechnen(null), ABFRAGE_GRENZEN.tippenMs);
   }
 
   /** Treffer im Baum für dieses Blatt, nur wenn sie aus seinem gelesenen Stand stammen. Ist der Ausdruck gerade
@@ -87,9 +89,9 @@ class Abfrage {
     return s.ausgang.ergebnis.treffer;
   }
 
-  /** Das ganze Ergebnis als JSON-Text (alle Werte oder Zeilen, nicht nur die gezeigten); null bei Fehler */
-  async ganzerText(): Promise<string | null> {
-    const ausgang = await this.rechnen(true);
+  /** Das ganze Ergebnis als Text (alle Werte oder Zeilen, nicht nur die gezeigten); null bei Fehler */
+  async ganzerText(format: Ausgabeformat = "json"): Promise<string | null> {
+    const ausgang = await this.rechnen(format);
     if (!ausgang) return null;
     if (!ausgang.ok) {
       meldungen.zeigen({ text: ausgang.fehler.meldung, art: "fehler" });
@@ -108,39 +110,46 @@ class Abfrage {
     abfrageverlauf.merken(this.sprache, this.ausdruck);
   }
 
+  /** Dateiname für das Herunterladen: Dokument (oder "abfrage" bei SQL), Sprache, Endung des Formats */
+  dateiname(format: Ausgabeformat): string {
+    const b = arbeitsplatz.aktivesBlatt;
+    const stamm = spracheVon(this.sprache).ueberAlle || !b ? "abfrage" : b.name.replace(/\.[^.]+$/, "");
+    return `${stamm}-${this.sprache}.${AUSGABEFORMATE.find((f) => f.kennung === format)?.endung ?? format}`;
+  }
+
   merken(): void {
     abfrageverlauf.merken(this.sprache, this.ausdruck);
     meldungen.zeigen({ text: "In den Abfragen-Verlauf gelegt", art: "erfolg" });
   }
 
-  private auftrag(ganz: boolean): { auftrag: Abfrageauftrag; dokumente: Dokumentstand[] } | null {
+  private auftrag(ausgabe: Ausgabeformat | null): { auftrag: Abfrageauftrag; dokumente: Dokumentstand[] } | null {
     const s = spracheVon(this.sprache);
     // Einfache Kopie: ein reaktiver Zustand lässt sich nicht an den Worker schicken
     const suche = $state.snapshot(this.suche);
     if (s.ueberAlle) {
       const dokumente = arbeitsplatz.blaetter.map(stand).filter((d) => d !== null);
-      return { auftrag: { sprache: s.kennung, ausdruck: this.ausdruck, ziel: null, suche, ganz }, dokumente };
+      return { auftrag: { sprache: s.kennung, ausdruck: this.ausdruck, ziel: null, suche, ausgabe }, dokumente };
     }
     const b = arbeitsplatz.aktivesBlatt;
     const d = b ? stand(b) : null;
     if (!d) return null;
-    return { auftrag: { sprache: s.kennung, ausdruck: this.ausdruck, ziel: d.kennung, suche, ganz }, dokumente: [d] };
+    return { auftrag: { sprache: s.kennung, ausdruck: this.ausdruck, ziel: d.kennung, suche, ausgabe }, dokumente: [d] };
   }
 
-  private async rechnen(ganz: boolean): Promise<Abfrageausgang | null> {
+  private async rechnen(ausgabe: Ausgabeformat | null): Promise<Abfrageausgang | null> {
     // Ohne Ausdruck gibt es nichts zu rechnen; nur SQL zeigt dann seine Tabellen
     if (!this.ausdruck.trim() && !spracheVon(this.sprache).ueberAlle) {
       if (this.letztes?.sprache === this.sprache) this.letztes = null;
       if (this.gueltig?.sprache === this.sprache) this.gueltig = null;
       return null;
     }
-    const a = this.auftrag(ganz);
+    const a = this.auftrag(ausgabe);
     if (!a) return null;
     const ziel = a.auftrag.ziel ? { kennung: a.auftrag.ziel, revision: a.dokumente[0].revision } : null;
-    this.rechnet = !ganz;
+    this.rechnet = ausgabe === null;
     const ausgang = await this.dienst.rechnen(a.auftrag, a.dokumente, arbeitsplatz.blaetter.map((b) => b.kennung));
     if (!ausgang) return null;
-    if (ganz) return ausgang;
+    if (ausgabe) return ausgang;
     this.rechnet = false;
     const neu: Abfragestand = { sprache: a.auftrag.sprache, ausdruck: a.auftrag.ausdruck, ziel, ausgang };
     this.letztes = neu;

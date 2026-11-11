@@ -15,7 +15,7 @@
 </script>
 
 <div class="af-fach">
-  <div class="af-fach-kopf"><span class="af-etikett">Tabellen</span><span class="rechts">Klick fügt den Namen ein</span></div>
+  <div class="af-fach-kopf"><span class="af-etikett">Tabellen</span><span class="rechts kurz" title="Klick fügt den Namen ein">Klick fügt den Namen ein</span></div>
   <div class="af-tabellen">
     {#each tabellen as t (t.name)}
       <div class="af-tab-kopf">
@@ -54,6 +54,12 @@
   .af-tab-kopf .still-knopf:first-child {
     width: 14px;
     color: var(--text-3);
+  }
+  .kurz {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .leer {
     margin: 0;

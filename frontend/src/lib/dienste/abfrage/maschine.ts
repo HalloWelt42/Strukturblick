@@ -3,6 +3,7 @@
 
 import type { Abfrageergebnis, Abfragefehler, SprachKennung } from "../../kern/abfrage";
 import type { Suchoptionen } from "../../analyse/abfrage/textsuche";
+import type { Ausgabeformat } from "../../analyse/abfrage/ausgabe";
 import type { Quellen } from "./quellen";
 
 export interface Abfrageauftrag {
@@ -11,8 +12,8 @@ export interface Abfrageauftrag {
   /** Kennung des Dokuments für Sprachen über ein Dokument; null bei SQL (alle) */
   readonly ziel: string | null;
   readonly suche: Suchoptionen;
-  /** Das ganze Ergebnis als Text (für ein neues Dokument) statt der Anzeige */
-  readonly ganz: boolean;
+  /** Das ganze Ergebnis als Text in diesem Format (neues Dokument, Herunterladen) statt der Anzeige; null: Anzeige */
+  readonly ausgabe: Ausgabeformat | null;
 }
 
 export type Maschine = (a: Abfrageauftrag, q: Quellen) => Promise<Abfrageergebnis>;

@@ -6,6 +6,7 @@ import type { Database, SqlJsStatic } from "sql.js";
 import { ABFRAGE_GRENZEN, type Tabellenuebersicht, type Zellwert } from "../../kern/abfrage";
 import { format } from "../../formate/registrierung";
 import { sqlTabellen, type SqlTabelle } from "../../analyse/abfrage/sqltabellen";
+import { zeilenAusgeben } from "../../analyse/abfrage/ausgabe";
 import { wurf, type Maschine } from "./maschine";
 import type { Quellen } from "./quellen";
 
@@ -85,7 +86,7 @@ export function sqlMaschine(laden: () => Promise<SqlJsStatic>): Maschine {
     const letztes = ergebnisse.at(-1);
     const namen = letztes?.columns ?? [];
     const alle = (letztes?.values ?? []) as Zellwert[][];
-    if (a.ganz) return { art: "dokument", text: JSON.stringify(alle.map((z) => Object.fromEntries(namen.map((n, i) => [n, z[i]]))), null, 2) };
+    if (a.ausgabe) return { art: "dokument", text: zeilenAusgeben(namen, alle, a.ausgabe) };
     const spalten = namen.map((name, i) => ({ name, art: artVon(alle.map((z) => z[i])) }));
     return { art: "tabelle", spalten, zeilen: alle.slice(0, ABFRAGE_GRENZEN.zeilen), anzahl: alle.length, tabellen };
   };

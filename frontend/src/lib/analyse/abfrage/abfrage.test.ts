@@ -89,3 +89,14 @@ describe("textsuche", () => {
     expect(() => textsuche(index, json, "(", { regex: true, grossKlein: false })).toThrow(Suchfehler);
   });
 });
+
+describe("Ausgabe", () => {
+  it("schreibt CSV mit Semikolon und maskiert nur wo nötig", async () => {
+    const { csvAus, werteAusgeben, zeilenAusgeben } = await import("./ausgabe");
+    expect(csvAus(["a", "b"], [["x;y", 'sag "hi"'], [1.5, null]])).toBe('a;b\r\n"x;y";"sag ""hi"""\r\n1.5;\r\n');
+    expect(werteAusgeben([{ nr: 1, k: { n: "A" } }, { nr: 2, t: [1] }], "csv")).toBe('nr;k;t\r\n1;"{""n"":""A""}";\r\n2;;[1]\r\n');
+    expect(werteAusgeben(["a", 2], "csv")).toBe("wert\r\na\r\n2\r\n");
+    expect(werteAusgeben([{ a: 1 }, null], "ndjson")).toBe('{"a":1}\nnull\n');
+    expect(JSON.parse(zeilenAusgeben(["ort", "n"], [["Leipzig", 2]], "json"))).toEqual([{ ort: "Leipzig", n: 2 }]);
+  });
+});
