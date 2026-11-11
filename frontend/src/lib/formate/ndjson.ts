@@ -101,6 +101,7 @@ export const NDJSON_FORMAT: Format = {
   leseoptionen: [],
   erkennen,
   lesen,
+  jsonText: () => "folge",
   wertSchreiben: (_text, index, k, neu) => {
     if (k === 0) throw new Formatfehler("Die Wurzel ist die Liste der Zeilen und wird nicht ersetzt");
     return jsonWertSchreiben(index, k, neu);

@@ -53,5 +53,7 @@ export const JSON_FORMAT: Format = {
   leseoptionen: [],
   erkennen,
   lesen,
+  // Mit Kommentaren oder abschließenden Kommas ist es JSONC, das reines JSON nicht liest
+  jsonText: (m) => (m.kommentare || m.abschliessendeKommas ? null : "wert"),
   wertSchreiben: (_text, index, k, neu) => jsonWertSchreiben(index, k, neu),
 };

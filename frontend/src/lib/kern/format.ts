@@ -67,6 +67,9 @@ export interface Format {
   /** Wie sicher ist dieses Format für den Text? 0 nein, 1 sicher. Dateiname nur als Hinweis. */
   erkennen(text: string, dateiname?: string): number;
   lesen(text: string, optionen?: Leseoptionen): Leseergebnis;
+  /** Ist dieser Text schon reines JSON, so wie er dasteht? "wert": ein JSON-Wert, "folge": ein JSON-Wert je Zeile.
+   *  Abfragen (jq) lesen ihn dann unverändert; sonst bekommen sie den aus dem Index erzeugten Wert. */
+  jsonText?(merkmale: Merkmale): "wert" | "folge" | null;
   /** Textänderung, die den Wert des Knotens `k` ersetzt; wirft Formatfehler, wenn der Wert hier nicht geht. */
   wertSchreiben(text: string, index: Strukturindex, k: number, neu: NeuerWert, merkmale: Merkmale): TextAenderung;
 }
