@@ -872,43 +872,6 @@ button.br-hinweis:hover {
   font-size: var(--klein);
   color: var(--text-3);
 }
-.br-menue {
-  position: relative;
-}
-.br-menue-liste {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  z-index: 20;
-  min-width: 220px;
-  max-height: 320px;
-  overflow-y: auto;
-  padding: var(--a1);
-  background-color: var(--flaeche-panel-2);
-  background-image: var(--erhaben);
-  box-shadow: var(--kante), var(--schatten-ruhig);
-}
-.br-menue-liste > button {
-  display: flex;
-  align-items: center;
-  gap: var(--a2);
-  width: 100%;
-  min-height: var(--zeile);
-  padding: 0 var(--a2);
-  border: 0;
-  background: transparent;
-  font: inherit;
-  font-size: var(--klein);
-  color: var(--text-1);
-  text-align: left;
-  cursor: pointer;
-}
-.br-menue-liste > button:hover {
-  background: var(--flaeche-wechsel);
-}
-.br-menue-liste > button .abzeichen {
-  margin-left: auto;
-}
 .br-oben {
   margin-top: var(--a3);
 }

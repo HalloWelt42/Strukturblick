@@ -61,7 +61,7 @@
                   {#if p.status === "aus"}<span class="abzeichen zweit">ausgeschaltet</span>
                   {:else if p.status === "uebersprungen"}<span class="abzeichen warn"><i class="fa-solid fa-forward"></i> übersprungen</span>
                   {:else if !p.befehl}<span class="abzeichen zweit">ändert hier nichts</span>
-                  {:else}<span class="abzeichen">{p.zeilen ? `${anzahl(p.zeilen)} Zeilen entfallen` : `${anzahl(p.zellen)} Zellen`}</span>{/if}
+                  {:else}<span class="abzeichen">{p.spalten ? "Spalte entfällt" : p.zeilen ? `${anzahl(p.zeilen)} Zeilen entfallen` : `${anzahl(p.zellen)} Zellen`}</span>{/if}
                 </span>
               </div>
               <table class="vw-beispiele">
@@ -78,8 +78,9 @@
                         <td class="vw-anzahl-zelle">{b.anzahl > 1 ? anzahl(b.anzahl) : ""}</td>
                       </tr>
                     {/each}
-                    {#if p.zeilen}<tr><td colspan="5" class="text-3">Es bleiben {anzahl(pruefung.zeilen - p.zeilen)} Zeilen, die zu den Filtern passen.</td></tr>{/if}
-                    {#if p.zellen > p.beispiele.reduce((n, b) => n + b.anzahl, 0)}<tr><td colspan="5" class="text-3">und weitere Zellen wie diese</td></tr>{/if}
+                    {#if p.zeilen && s.art === "behalten"}<tr><td colspan="5" class="text-3">Es bleiben {anzahl(pruefung.zeilen - p.zeilen)} Zeilen, die zu den Filtern passen.</td></tr>{/if}
+                    {#if p.spalten}<tr><td colspan="5" class="text-3">Die Spalte fällt aus {anzahl(p.zellen)} Einträgen weg.</td></tr>{/if}
+                    {#if !p.spalten && p.zellen > p.beispiele.reduce((n, b) => n + b.anzahl, 0)}<tr><td colspan="5" class="text-3">und weitere Zellen wie diese</td></tr>{/if}
                   {/if}
                 </tbody>
               </table>

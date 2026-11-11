@@ -4,6 +4,7 @@
 
 import { REZEPTSCHRITT, schrittTitel, type Rezept, type Rezeptschritt } from "../analyse/rezepte/rezept";
 import { rezeptTabelle } from "../analyse/rezepte/planen";
+import type { Behalten } from "../analyse/duplikate";
 import type { Lauf } from "../analyse/rezepte/ausfuehren";
 import { Ablagefehler } from "../dienste/ablage";
 import type { Arbeitsblatt } from "./arbeitsblatt.svelte";
@@ -77,7 +78,7 @@ class Rezepte {
     await this.ablegen({ ...r, name: n.slice(0, 120) });
   }
 
-  async schrittAendern(r: Rezept, i: number, teil: Partial<Pick<Rezeptschritt, "an">> & { unlesbar?: "lassen" | "leeren" }): Promise<void> {
+  async schrittAendern(r: Rezept, i: number, teil: Partial<Pick<Rezeptschritt, "an">> & { unlesbar?: "lassen" | "leeren"; behalten?: Behalten }): Promise<void> {
     const schritte = r.schritte.map((s, j) => (j === i ? ({ ...s, ...teil } as Rezeptschritt) : s));
     await this.ablegen({ ...r, schritte });
   }

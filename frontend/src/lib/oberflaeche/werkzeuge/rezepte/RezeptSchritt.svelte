@@ -4,6 +4,7 @@
   import { SCHRITT_ART, schrittErklaerung, schrittTitel, type Rezept, type Rezeptschritt } from "../../../analyse/rezepte/rezept";
   import { rezepte } from "../../../zustand/rezepte.svelte";
   import WertText from "../../bausteine/WertText.svelte";
+  import { BEHALTEN } from "../../../analyse/duplikate";
 
   let { rezept, schritt, nr }: { rezept: Rezept; schritt: Rezeptschritt; nr: number } = $props();
 
@@ -35,6 +36,16 @@
           {:else}<span class="vw-wert">{f.auswahl.von ?? "Anfang"} bis {f.auswahl.bis ?? "Ende"}</span>{/if}
         </div>
       {/each}
+    {/if}
+    {#if schritt.art === "duplikate"}
+      <div class="vw-feldzeile">
+        <span class="vw-feldname">Es bleibt</span>
+        <div class="segment">
+          {#each BEHALTEN as b (b.kennung)}
+            <button class:aktiv={schritt.behalten === b.kennung} onclick={() => void rezepte.schrittAendern(rezept, nr, { behalten: b.kennung })}>{b.name}</button>
+          {/each}
+        </div>
+      </div>
     {/if}
     {#if schritt.art === "betrag" || schritt.art === "datum"}
       <div class="vw-feldzeile">

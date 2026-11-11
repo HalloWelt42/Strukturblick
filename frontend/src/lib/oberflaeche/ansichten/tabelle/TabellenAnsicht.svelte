@@ -124,7 +124,7 @@
       <button class="knopf primaer" onclick={() => blatt.zeigen({ art: "ansicht", kennung: "baum" })}><i class="fa-solid fa-folder-tree"></i> Im Baum ansehen</button>
     </div>
   {:else}
-    <TabellenWerkzeugzeile {blatt} {zustand} analyse={stand.analyse} {tabelle} {sicht} text={stand.text} liest={!blatt.aktuell} />
+    <TabellenWerkzeugzeile {blatt} {zustand} analyse={stand.analyse} {tabelle} {sicht} text={stand.text} liest={!blatt.aktuell} {spalteGewaehlt} />
     <TabellenRaster
       {blatt}
       {zustand}

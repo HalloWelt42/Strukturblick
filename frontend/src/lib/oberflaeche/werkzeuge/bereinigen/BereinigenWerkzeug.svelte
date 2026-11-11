@@ -5,7 +5,7 @@
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import { spaltentypen } from "../../../analyse/bereinigen/typen";
   import { bereinigenZustand, REITER } from "./bereinigenZustand.svelte";
-  import SpaltenMenue from "./SpaltenMenue.svelte";
+  import SpaltenMenue from "../../bausteine/SpaltenMenue.svelte";
   import Facetten from "./Facetten.svelte";
   import Aehnlich from "./Aehnlich.svelte";
   import Typen from "./Typen.svelte";
