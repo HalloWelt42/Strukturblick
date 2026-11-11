@@ -2,6 +2,7 @@
   // SQL-Ergebnis im Hauptbereich (Entwurf entwuerfe/abfrage-sql.html): Kopf mit Zeilenzahl, Frische und Aktionen,
   // darunter die Tabelle. Die letzte Zahlenspalte bekommt Balken zum Vergleich, wenn alle Werte nicht negativ sind.
   import { abfrage, ABFRAGE_GRENZEN, type Tabellenergebnis, type Zellwert } from "../../zustand/abfrage.svelte";
+  import { spanne } from "../../analyse/klassen";
   import ExportMenue from "../bausteine/ExportMenue.svelte";
 
   let {
@@ -26,7 +27,7 @@
     }
     return -1;
   });
-  const hoechst = $derived(balkenSpalte < 0 ? 0 : Math.max(0, ...ergebnis.zeilen.map((z) => (z[balkenSpalte] as number | null) ?? 0)));
+  const hoechst = $derived(balkenSpalte < 0 ? 0 : Math.max(0, spanne(ergebnis.zeilen.map((z) => (z[balkenSpalte] as number | null) ?? 0))?.max ?? 0));
   const zeige = (w: Zellwert): string => (w === null ? "" : String(w));
 </script>
 

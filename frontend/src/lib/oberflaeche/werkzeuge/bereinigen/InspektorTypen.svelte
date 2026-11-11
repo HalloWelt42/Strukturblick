@@ -2,6 +2,7 @@
   // Inspektor zu den Typen: die gewählte Spalte (Zeile in der Übersicht anklicken) mit dem, was gelesen wurde, und die
   // nicht lesbaren Werte zum Ansehen in der Tabelle (von Hand ändern gilt sofort, die Vorschau zählt danach mit).
   import { spaltentypen, vorschlagFuer } from "../../../analyse/bereinigen/typen";
+  import { spanne } from "../../../analyse/klassen";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import type { BereinigenZustand, Tabellenstand } from "./bereinigenZustand.svelte";
   import { anzahl } from "../../ansichten/tabelle/zahlen";
@@ -13,10 +14,11 @@
   const spalte = $derived(z.typenSpalte(s, typen.find((t) => t.vorschlag !== null)?.spalte ?? null));
   const typ = $derived(typen.find((t) => t.spalte === spalte));
   const v = $derived(vorschlagFuer(s.tabelle, s.index, s.text, s.tabelle.spalteNach.get(spalte) ?? 0));
-  const spanne = $derived.by(() => {
+  const betragSpanne = $derived.by(() => {
     if (v?.art !== "betrag" || !v.aenderungen.length) return null;
     const z2 = v.aenderungen.map((a) => (a.neu.art === "zahl" ? Number(a.neu.roh) : Number.NaN)).filter((x) => !Number.isNaN(x));
-    return `${ZAHL.format(Math.min(...z2))} bis ${ZAHL.format(Math.max(...z2))}`;
+    const s2 = spanne(z2);
+    return s2 ? `${ZAHL.format(s2.min)} bis ${ZAHL.format(s2.max)}` : null;
   });
 
   function zeigen(zeiger: string): void {
@@ -36,7 +38,7 @@
     {#if v?.art === "text-bleibt"}
       <dt>Führende Null</dt><dd><span class="mono">{anzahl(v.fuehrendeNullen)}</span> Werte</dd>
     {/if}
-    {#if spanne}<dt>Spanne</dt><dd class="mono">{spanne}</dd>{/if}
+    {#if betragSpanne}<dt>Spanne</dt><dd class="mono">{betragSpanne}</dd>{/if}
   </dl>
   {#if !v}<p class="br-karten-text br-oben">Kein Vorschlag: Die Spalte steht so, wie sie gelesen wird. In der Übersicht eine andere Spalte anklicken.</p>{/if}
 </div>

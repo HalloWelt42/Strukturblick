@@ -2,6 +2,7 @@
   // Facette für Text (und Listen in der Zelle): jeder Wert mit Anzahl zum Ankreuzen, nach dem Alphabet oder nach Anzahl.
   // Gibt es Schreibweisen mit gleichem Kern, verweist ein Hinweis auf den Reiter Ähnliche Werte.
   import { gruppenFinden } from "../../../analyse/bereinigen/aehnlich";
+  import { spanne } from "../../../analyse/klassen";
   import type { BereinigenZustand, Tabellenstand } from "./bereinigenZustand.svelte";
   import { anzahl } from "../../ansichten/tabelle/zahlen";
   import WertText from "../../bausteine/WertText.svelte";
@@ -17,7 +18,7 @@
   const sortiert = $derived([...werte].sort((a, b) => (nachAnzahl ? b.anzahl - a.anzahl : 0) || SORTIERER.compare(a.wert, b.wert)));
   const alle = $derived(z.alleWerte[name] ?? false);
   const gezeigt = $derived(alle ? sortiert : sortiert.slice(0, ZUERST));
-  const hoechste = $derived(Math.max(1, ...werte.map((w) => w.anzahl)));
+  const hoechste = $derived(Math.max(1, spanne(werte.map((w) => w.anzahl))?.max ?? 1));
   const auswahl = $derived(z.auswahl(name));
   const an = $derived(new Set(auswahl?.art === "werte" ? auswahl.werte : []));
 

@@ -5,6 +5,7 @@
 import { inhalt, istBehaelter, KEIN, KnotenArt, type Strukturindex } from "../../kern/strukturindex";
 import { spaltenprofil } from "../spaltenprofil";
 import { zahlenwert, zelle, type Tabelle } from "../tabelle";
+import { klassenBilden, type Klasse } from "../klassen";
 
 export type Facettenart = "werte" | "zahl" | "datum";
 
@@ -14,11 +15,7 @@ export interface Wertzaehlung {
   readonly anzahl: number;
 }
 
-export interface Klasse {
-  readonly von: number;
-  readonly bis: number;
-  readonly anzahl: number;
-}
+export type { Klasse };
 
 export interface Verteilung {
   readonly klassen: readonly Klasse[];
@@ -107,14 +104,6 @@ const monatVon = (s: string): string | null => {
   return d ? `${d.jahr}-${String(d.monat).padStart(2, "0")}` : null;
 };
 
-/** Ein runder Schritt für etwa `ziel` Klassen (1, 2, 5 mal Zehnerpotenz) */
-function schrittFuer(spanne: number, ziel: number): number {
-  if (spanne <= 0) return 1;
-  const roh = spanne / ziel;
-  const p = 10 ** Math.floor(Math.log10(roh));
-  return [1, 2, 5, 10].map((f) => f * p).find((s) => s >= roh) ?? 10 * p;
-}
-
 export function zahlenVerteilung(t: Tabelle, index: Strukturindex, text: string, spalte: number, ziel = 12): Verteilung {
   const zahlen: number[] = [];
   let unlesbar = 0;
@@ -125,15 +114,7 @@ export function zahlenVerteilung(t: Tabelle, index: Strukturindex, text: string,
     if (Number.isNaN(z)) unlesbar++;
     else zahlen.push(z);
   }
-  if (!zahlen.length) return { klassen: [], unlesbar };
-  const min = Math.min(...zahlen);
-  const max = Math.max(...zahlen);
-  const schritt = schrittFuer(max - min, ziel);
-  const anfang = Math.floor(min / schritt) * schritt;
-  const anzahl = Math.max(1, Math.floor((max - anfang) / schritt) + 1);
-  const klassen = Array.from({ length: anzahl }, (_, j) => ({ von: anfang + j * schritt, bis: anfang + (j + 1) * schritt, anzahl: 0 }));
-  for (const z of zahlen) (klassen[Math.min(anzahl - 1, Math.floor((z - anfang) / schritt))] as { anzahl: number }).anzahl++;
-  return { klassen, unlesbar };
+  return { klassen: klassenBilden(zahlen, ziel).klassen, unlesbar };
 }
 
 export function monatsVerteilung(t: Tabelle, index: Strukturindex, text: string, spalte: number): { monate: Monat[]; unlesbar: number } {
