@@ -2,6 +2,10 @@
 # Rechner, Ordner, Adresse, Namen im Zertifikat und Leitstelle gehören dem Haus und stehen nicht im Repo:
 # tools/ausrollen.sh holt sie aus der privaten Wahrheit (handbuch ziel strukturblick --toml) als Ergänzung.
 kennung = "strukturblick"
-repo = "https://github.com/HalloWelt42/strukturblick.git"
+repo = "https://github.com/HalloWelt42/Strukturblick.git"   # öffentlich: pi5b klont ohne Schlüssel
 # ton: die App nutzt den Tondienst (Tonarbeit auf dem Mac über die Leitstelle); geprüft wird, ob die Leitstelle ihn meldet
 ton = false
+# Zugänge besorgt das Ausrollen (Appkern docs/ZUGAENGE.md): der App-Schlüssel der Kellerwolke für das Konto des Nutzers.
+[zugaenge]
+name = "Strukturblick"
+kellerwolke = "admin"
