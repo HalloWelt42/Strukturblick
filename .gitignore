@@ -12,4 +12,9 @@ dist/
 *.egg-info/
 .claude/
 dist-eigenstaendig/
-app/pruefdaten/gross/
+frontend/pruefdaten/gross/
+backend/.env.test
+/daten/
+/zertifikate/
+/sicherungen/
+.env

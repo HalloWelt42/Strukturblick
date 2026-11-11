@@ -1,5 +1,0 @@
-{
-  // Konfiguration für den Prüfstand
-  "name": "Prüfstand",
-  "stufen": [1, 2, 3,],
-}

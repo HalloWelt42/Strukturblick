@@ -1,83 +1,73 @@
 <script lang="ts">
-  // App-Schale: Raster aus app.css (.app), zusammengesetzt aus den
-  // Schale-Komponenten. Startet die Backend-Überwachung, lädt die
-  // Capabilities einmalig und stellt den Arbeitsstand wieder her.
-  import { onMount } from 'svelte'
+  // Schale nach den abgenommenen Entwürfen (entwuerfe/arbeitsplatz.html): Kopf, Leiste, Hauptbereich, Inspektor, Fuß.
+  import { onMount } from "svelte";
+  import { arbeitsplatz } from "./lib/zustand/arbeitsplatz.svelte";
+  import Kopf from "./lib/oberflaeche/schale/Kopf.svelte";
+  import Leiste from "./lib/oberflaeche/schale/Leiste.svelte";
+  import Haupt from "./lib/oberflaeche/schale/Haupt.svelte";
+  import Fuss from "./lib/oberflaeche/schale/Fuss.svelte";
+  import Willkommen from "./lib/oberflaeche/schale/Willkommen.svelte";
+  import Inspektor from "./lib/oberflaeche/inspektor/Inspektor.svelte";
+  import Meldung from "./lib/oberflaeche/bausteine/Meldung.svelte";
+  import Ablagezone from "./lib/oberflaeche/schale/Ablagezone.svelte";
+  import { tastenkuerzel } from "./lib/oberflaeche/schale/tastenkuerzel";
+  import Zugangsseite from "./lib/oberflaeche/schale/Zugangsseite.svelte";
+  import { zugang } from "./lib/zustand/zugang.svelte";
 
-  import { sofortAnalysieren } from './lib/dienste/analyseDienst'
-  import Toast from './lib/hilfsteile/Toast.svelte'
-  import LexikonPanel from './lib/lexikon/LexikonPanel.svelte'
-  import AnsichtsWahl from './lib/schale/AnsichtsWahl.svelte'
-  import EinstellungenModal from './lib/schale/EinstellungenModal.svelte'
-  import HauptBereich from './lib/schale/HauptBereich.svelte'
-  import Konsole from './lib/schale/Konsole.svelte'
-  import KopfLeiste from './lib/schale/KopfLeiste.svelte'
-  import LeistenGriff from './lib/schale/LeistenGriff.svelte'
-  import NeueFassung from './lib/schale/NeueFassung.svelte'
-  import SeitenLeisteLinks from './lib/schale/SeitenLeisteLinks.svelte'
-  import SeitenLeisteRechts from './lib/schale/SeitenLeisteRechts.svelte'
-  import StatusLeiste from './lib/schale/StatusLeiste.svelte'
-  import { starteBackendUeberwachung } from './lib/zustand/backendStatus.svelte'
-  import { ladeCapabilities } from './lib/zustand/capabilities.svelte'
-  import { einstellungenModal, schliesseEinstellungen } from './lib/zustand/einstellungenModal.svelte'
-  import { fassungVerfolgen } from './lib/zustand/fassung.svelte'
-  import { layout } from './lib/zustand/layout.svelte'
-  import { ladeKiEinstellungen } from './lib/zustand/kiEinstellungen.svelte'
-  import { starteKiUeberwachung } from './lib/zustand/kiStatus.svelte'
-  import { stelleWieder, tabs } from './lib/zustand/tabs.svelte'
-
-  starteBackendUeberwachung()
-  ladeCapabilities()
-
-  // Spaltenbreiten des Rasters aus dem gemerkten Layout. Eingeklappt = 0.
-  const spalten = $derived(
-    `${layout.linksEingeklappt ? 0 : layout.breiteLinks}px 1fr ${layout.breiteRechts}px`,
-  )
-
-  // Neue Fassung des Backends: von selbst neu laden, sobald es nichts unterbricht.
-  onMount(fassungVerfolgen)
+  // Sobald der Zugang bereit ist (ohne Server sofort, mit Server nach der Anmeldung), startet der Arbeitsplatz einmal
+  $effect(() => {
+    if (zugang.stand === "bereit") void zugang.arbeitsplatzStarten();
+  });
 
   onMount(() => {
-    void (async () => {
-      // KI-Adresse und -Modell laden, dann die Erreichbarkeit überwachen.
-      await ladeKiEinstellungen()
-      starteKiUeberwachung()
-      await stelleWieder()
-    })()
-  })
+    void zugang.starten();
+    const sichern = () => void arbeitsplatz.allesSpeichern();
+    const sichtbar = () => document.visibilityState === "hidden" && sichern();
+    window.addEventListener("pagehide", sichern);
+    document.addEventListener("visibilitychange", sichtbar);
+    const weg = tastenkuerzel(() => arbeitsplatz.aktivesBlatt);
+    return () => {
+      window.removeEventListener("pagehide", sichern);
+      document.removeEventListener("visibilitychange", sichtbar);
+      weg();
+    };
+  });
 
-  // Sobald ein Tab aktiv wird und noch nicht analysiert ist ('veraltet'), wird
-  // die Analyse nachgezogen. Ohne das blieben wiederhergestellte, aber nie aktiv
-  // geöffnete Tabs dauerhaft im Ladeskelett stecken (erst ein Reload analysierte
-  // sie). Der Guard auf 'veraltet' verhindert eine Effekt-Schleife: sofortAnalysieren
-  // setzt sofort 'laeuft', danach greift der Effekt nicht mehr.
-  $effect(() => {
-    const id = tabs.aktiveTabId
-    if (id === null) return
-    const tab = tabs.liste.find((eintrag) => eintrag.id === id)
-    if (tab !== undefined && tab.analyseStand === 'veraltet') {
-      void sofortAnalysieren(id)
-    }
-  })
+  const blatt = $derived(arbeitsplatz.aktivesBlatt);
 </script>
 
-<div class="app" class:links-zu={layout.linksEingeklappt} style="grid-template-columns: {spalten}">
-  <KopfLeiste />
-  <SeitenLeisteLinks />
-  <main class="haupt">
-    <NeueFassung />
-    <AnsichtsWahl />
-    <HauptBereich />
-  </main>
-  <SeitenLeisteRechts />
-  <Konsole />
-  <StatusLeiste />
-  {#if !layout.linksEingeklappt}
-    <LeistenGriff seite="links" />
-  {/if}
-  <LeistenGriff seite="rechts" />
-</div>
+{#if zugang.stand !== "bereit"}
+  <Zugangsseite />
+{:else if !arbeitsplatz.bereit}
+  <div class="laden-start"><i class="fa-solid fa-spinner fa-spin"></i> Öffne den Arbeitsplatz ...</div>
+{:else}
+<Ablagezone>
+  <div class="app">
+    <Kopf />
+    <Leiste />
+    {#if blatt}
+      {#key blatt.kennung}
+        <Haupt {blatt} />
+        <Inspektor {blatt} />
+      {/key}
+    {:else}
+      <main class="haupt"><Willkommen /></main>
+      <aside class="inspektor"></aside>
+    {/if}
+    <Fuss />
+  </div>
+</Ablagezone>
+{/if}
+<Meldung />
 
-<EinstellungenModal offen={einstellungenModal.offen} onSchliessen={schliesseEinstellungen} />
-<LexikonPanel />
-<Toast />
+<style>
+  .laden-start {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--a2);
+    color: var(--text-3);
+    background: var(--flaeche-seite);
+  }
+</style>

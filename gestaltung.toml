@@ -1,0 +1,3 @@
+# Prüfung der Gestaltung (python -m appkern.werkzeuge): Strukturblick hat eigene Marken (frontend/src/stil/marken.css,
+# abgenommen in STB-2); "melden" zählt feste Werte außerhalb der Marken, ohne den Commit aufzuhalten.
+marken = "melden"

@@ -1,0 +1,11 @@
+name = "Strukturblick"
+beschreibung = "zeigt, prüft und baut Strukturdaten um"
+oberflaeche = "http://127.0.0.1:8470"
+
+[[teile]]
+kennung = "backend"
+name = "Backend"
+ordner = "/private/tmp/claude-501/-Users-alpha--claude-spares-spare-LYX2L5/0651282a-16e0-480b-85e0-c7fee51b7d63/scratchpad/vorlage/strukturblick/backend"
+befehl = [".venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8470", "--log-level", "warning"]
+port = 8470
+speicher_gb = 0.3

@@ -2,5 +2,4 @@
 # Jede Commit-Nachricht beginnt mit der Ticket-Kennung ("STB-12: ..."); Prüfung im Appkern.
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
-python="${APPKERN_PYTHON:-$HOME/Entwicklung/Werkzeuge/Appkern/.venv/bin/python}"
-exec "$python" -m appkern.werkzeuge nachricht "$1"
+exec backend/.venv/bin/python -m appkern.werkzeuge nachricht "$1"

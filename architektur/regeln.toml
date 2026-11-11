@@ -16,14 +16,14 @@ kennung = "A1"
 titel = "Schichten der App"
 art = "schichten"
 warum = "Der Text ist die eine Wahrheit; Kern, Formate und Analyse kennen keine Oberfläche, die Oberfläche greift nur über den Zustand auf Dienste zu. So bleibt jede Schicht testbar und austauschbar (Leitgedanken 2, 4, 9)."
-dateien = ["app/src/**"]
+dateien = ["frontend/src/**"]
 schichten = [
-  { name = "kern", dateien = ["app/src/lib/kern/**"] },
-  { name = "formate", dateien = ["app/src/lib/formate/**"] },
-  { name = "analyse", dateien = ["app/src/lib/analyse/**"] },
-  { name = "dienste", dateien = ["app/src/lib/dienste/**"] },
-  { name = "zustand", dateien = ["app/src/lib/zustand/**"] },
-  { name = "oberflaeche", dateien = ["app/src/lib/oberflaeche/**", "app/src/App.svelte", "app/src/main.ts"] },
+  { name = "kern", dateien = ["frontend/src/lib/kern/**"] },
+  { name = "formate", dateien = ["frontend/src/lib/formate/**"] },
+  { name = "analyse", dateien = ["frontend/src/lib/analyse/**"] },
+  { name = "dienste", dateien = ["frontend/src/lib/dienste/**"] },
+  { name = "zustand", dateien = ["frontend/src/lib/zustand/**"] },
+  { name = "oberflaeche", dateien = ["frontend/src/lib/oberflaeche/**", "frontend/src/App.svelte", "frontend/src/main.ts"] },
 ]
 erlaubt = { formate = ["kern"], analyse = ["kern", "formate"], dienste = ["kern", "formate", "analyse"], zustand = ["kern", "formate", "analyse", "dienste"], oberflaeche = ["zustand", "kern", "formate", "analyse"] }
 
@@ -32,7 +32,7 @@ kennung = "A2"
 titel = "Kern, Formate und Analyse ohne Browser"
 art = "verboten"
 warum = "Sie laufen im Worker, in Tests und später auf dem Server (Leitgedanke 9)."
-dateien = ["app/src/lib/kern/**", "app/src/lib/formate/**", "app/src/lib/analyse/**"]
+dateien = ["frontend/src/lib/kern/**", "frontend/src/lib/formate/**", "frontend/src/lib/analyse/**"]
 ausser = ["**/*.test.ts"]
 muster = '\b(document|window|navigator|localStorage|sessionStorage|indexedDB|fetch)\b'
 
@@ -41,7 +41,7 @@ kennung = "A3"
 titel = "Kein Neu-Serialisieren bei Einzeländerungen"
 art = "verboten"
 warum = "Eine Änderung aus Baum oder Tabelle ist eine Textänderung an bekannter Stelle; ganze Dokumente neu zu schreiben hat in 0.x Dialekt, Kommentare und Editor-Änderungen vernichtet (Leitgedanke 1)."
-dateien = ["app/src/lib/kern/befehle/**", "app/src/lib/oberflaeche/**", "app/src/lib/zustand/**"]
+dateien = ["frontend/src/lib/kern/befehle/**", "frontend/src/lib/oberflaeche/**", "frontend/src/lib/zustand/**"]
 ausser = ["**/*.test.ts"]
 muster = '\bJSON\.stringify\(\s*(dok|dokument|wurzel|daten|zeilen)\b'
 
@@ -50,7 +50,7 @@ kennung = "A4"
 titel = "Keine Sonderfälle für Formate in Oberfläche und Zustand"
 art = "verboten"
 warum = "Was ein Format kann, sagt sein Vertrag (Fähigkeiten); die Oberfläche fragt dort nach (Leitgedanke 7)."
-dateien = ["app/src/lib/oberflaeche/**", "app/src/lib/zustand/**"]
+dateien = ["frontend/src/lib/oberflaeche/**", "frontend/src/lib/zustand/**"]
 ausser = ["**/*.test.ts"]
 muster = '''(format|formatId|kennung)\s*(===|!==|==)\s*['"](json|ndjson|csv|yaml|toml|xml|xlsx)['"]|case\s+['"](json|ndjson|csv|yaml|toml|xml|xlsx)['"]'''
 
@@ -59,7 +59,7 @@ kennung = "A5"
 titel = "Kein globaler Griff zum aktiven Dokument in Ansichten"
 art = "verboten"
 warum = "Ansichten bekommen ihr Arbeitsblatt als Eigenschaft; ein globaler Zugriff war in 0.x die Ursache für Ergebnisse beim falschen Tab (Leitgedanke 4)."
-dateien = ["app/src/lib/oberflaeche/ansichten/**", "app/src/lib/oberflaeche/werkzeuge/**", "app/src/lib/oberflaeche/inspektor/**"]
+dateien = ["frontend/src/lib/oberflaeche/ansichten/**", "frontend/src/lib/oberflaeche/werkzeuge/**", "frontend/src/lib/oberflaeche/inspektor/**"]
 ausser = ["**/*.test.ts"]
 muster = '\b(aktivesBlatt|aktiverTab)\b'
 
@@ -70,7 +70,7 @@ kennung = "K1"
 titel = "Kein direkter Weg zu KI-Diensten"
 art = "verboten"
 warum = "KI läuft nur über die Leitstelle (Hausregel); die App nennt weder Modelle noch Endpunkte von Sprachmodellen."
-dateien = ["app/src/**", "server/**"]
+dateien = ["frontend/src/**", "server/**"]
 muster = '(:1234\b|/v1/chat/completions|ollama|lmstudio|mlx_lm)'
 
 # ----- Grundregeln -------------------------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ kennung = "G1"
 titel = "Keine Bibliotheken aus dem Netz"
 art = "verboten"
 warum = "Schriften, Symbole und Bibliotheken kommen über npm; die Bauart ohne Server muss ohne fremde Netze laufen."
-dateien = ["app/src/**", "app/*.html"]
+dateien = ["frontend/src/**", "frontend/*.html"]
 muster = 'https?://(cdn|unpkg|cdnjs|fonts\.googleapis|fonts\.gstatic|use\.fontawesome|esm\.sh)'
 
 [[regel]]
@@ -88,7 +88,7 @@ kennung = "G2"
 titel = "Kleine Dateien"
 art = "zeilen"
 warum = "Lesbarkeit und eine Verantwortung je Einheit; TabellenAnsicht mit 1810 Zeilen war in 0.x ein Grund für die Fehler."
-dateien = ["app/src/**/*.ts", "app/src/**/*.svelte"]
+dateien = ["frontend/src/**/*.ts", "frontend/src/**/*.svelte"]
 ausser = ["**/*.test.ts"]
 hoechstens = 400
 

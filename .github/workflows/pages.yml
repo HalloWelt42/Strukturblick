@@ -1,0 +1,53 @@
+# Bauart ohne Server auf GitHub Pages: rechnet und speichert alles im Browser (docs/ARCHITEKTUR.md, Leitgedanke 8).
+# Baut bei jedem Push auf main die Oberfläche mit VITE_BAUART=eigenstaendig und veröffentlicht sie, dazu die Entwürfe
+# unter /entwuerfe/.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Abhängigkeiten
+        working-directory: frontend
+        run: npm ci --no-audit --no-fund
+      - name: Tests
+        working-directory: frontend
+        run: npx vitest run
+      - name: Bau ohne Server
+        working-directory: frontend
+        run: npm run build:eigenstaendig
+      - name: Entwürfe dazu
+        run: cp -R entwuerfe frontend/dist-eigenstaendig/entwuerfe
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist-eigenstaendig
+
+  veroeffentlichen:
+    needs: bauen
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.seite.outputs.page_url }}
+    steps:
+      - id: seite
+        uses: actions/deploy-pages@v4

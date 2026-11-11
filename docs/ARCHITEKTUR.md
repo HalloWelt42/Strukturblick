@@ -31,7 +31,7 @@ Stand: 11.11.2026, Ticket STB-3. Die Fassung 0.x ist an ihrem Zustand gescheiter
    Die Bauart steht beim Bau fest (`VITE_BAUART=eigenstaendig|server`). Ohne Server fehlen die Funktionen ganz, statt ausgegraut dazustehen. Jede Fachfunktion rechnet im Browser.
 9. **Kern ohne Browser.** `kern/`, `formate/` und `analyse/` kennen weder `window` noch `document`. Sie laufen im Worker, in Tests und auf dem Server.
 
-## Schichten (`app/src/lib`)
+## Schichten (`frontend/src/lib`)
 
 | Schicht | Inhalt | darf nutzen |
 |---|---|---|
@@ -58,4 +58,4 @@ Zelle bearbeiten (Tabelle)
 
 ## Gestaltung
 
-Die Marken stehen in `entwuerfe/stil.css` (Abschnitt 1) und wandern unverändert nach `app/src/stil/marken.css`. Bausteine sind Svelte-Komponenten nach den abgenommenen Entwürfen (`entwuerfe/`). Die Dauerkarten STB-10 bis STB-14 im Board halten die Regeln zum Nachschlagen. Schriften und Symbole kommen über npm, ohne CDN.
+Die Marken stehen in `entwuerfe/stil.css` (Abschnitt 1) und wandern unverändert nach `frontend/src/stil/marken.css`. Bausteine sind Svelte-Komponenten nach den abgenommenen Entwürfen (`entwuerfe/`). Die Dauerkarten STB-10 bis STB-14 im Board halten die Regeln zum Nachschlagen. Schriften und Symbole kommen über npm, ohne CDN.

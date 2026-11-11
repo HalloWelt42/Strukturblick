@@ -1,64 +1,53 @@
-"""App-Fabrik: Middleware, Fehler-Handler, Modul-Discovery, Router."""
+"""Strukturblick: zeigt, prüft und baut Strukturdaten um. Backend auf dem Gerüst des Appkerns: Anmeldung über das
+Konto der Kellerwolke, Ablage der Dokumente je Konto, Auslieferung der Oberfläche (Bauart "server").
 
-from __future__ import annotations
+    uvicorn app.main:app --port 8470
+"""
 
-from uuid import uuid4
+import os
+from pathlib import Path
 
-from fastapi import FastAPI, Request, Response
-from fastapi.middleware.cors import CORSMiddleware
+import httpx
+from fastapi import FastAPI
 
-from app import config, registry
-from app.fehler import registriere_fehler_handler
-from app.routers import abfrage, analyse, dokumente, generieren, ki, system, transform
+from appkern.app import Geruest
+from appkern.app.begleiter import Begleiter
+
+from .api import router
+from .bestand import Bestand
+from .einstellungen import AppEinstellungen
+from .fassung import FASSUNG, WURZEL
 
 
-def create_app() -> FastAPI:
-    app = FastAPI(
-        title="Strukturblick",
-        version=config.APP_VERSION,
-        docs_url="/docs",
-        openapi_url="/openapi.json",
-    )
+class Einrichtung(Begleiter):
+    """Richtet beim Start das Schema der Ablage ein."""
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=list(config.FRONTEND_URSPRUENGE),
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    def __init__(self, bestand: Bestand) -> None:
+        self.bestand = bestand
 
-    @app.middleware("http")
-    async def request_id_und_limit(request: Request, call_next) -> Response:  # type: ignore[no-untyped-def]
-        request.state.request_id = uuid4()
-        inhaltslaenge = request.headers.get("content-length")
-        if inhaltslaenge is not None and inhaltslaenge.isdigit():
-            # Grobfilter vor dem Einlesen; die feine Prüfung je Dokument macht der Router.
-            if int(inhaltslaenge) > config.MAX_DOKUMENT_BYTES * 2:
-                from fastapi.responses import JSONResponse
+    async def starten(self) -> None:
+        await self.bestand.einrichten()
 
-                from app.modelle.gemeinsam import FehlerAntwort, FehlerDetail
 
-                detail = FehlerDetail(
-                    code="limit_ueberschritten",
-                    meldung="Die Anfrage ist zu groß.",
-                    request_id=request.state.request_id,
-                )
-                return JSONResponse(status_code=413, content=FehlerAntwort(fehler=detail).model_dump(mode="json"))
-        antwort: Response = await call_next(request)
-        antwort.headers.setdefault("X-Request-Id", str(request.state.request_id))
-        return antwort
-
-    registriere_fehler_handler(app)
-    registry.entdecke_module()
-
-    app.include_router(system.router, prefix="/api")
-    app.include_router(dokumente.router, prefix="/api")
-    app.include_router(analyse.router, prefix="/api")
-    app.include_router(abfrage.router, prefix="/api")
-    app.include_router(transform.router, prefix="/api")
-    app.include_router(generieren.router, prefix="/api")
-    app.include_router(ki.router, prefix="/api")
+def app_bauen(daten: Path, transport: httpx.AsyncBaseTransport | None = None) -> FastAPI:
+    """`transport` nur für Tests (Kellerwolke nachgestellt)."""
+    geruest = Geruest(name="Strukturblick", kennung="strukturblick", rolle="zeigt, prüft und baut Strukturdaten um",
+                      symbol="fa-sitemap", farbe="#4e6379", fassung=FASSUNG, daten=daten,
+                      einstellungen=AppEinstellungen, oberflaeche=WURZEL / "frontend" / "dist",
+                      leitstelle_wahlweise=True,      # KI kommt mit Stufe 7 über die Leitstelle; bis dahin ohne
+                      transport=transport)
+    bestand = Bestand(geruest.db)
+    geruest.begleiter_anmelden(Einrichtung(bestand))
+    app = geruest.fastapi()
+    app.state.geruest = geruest
+    app.include_router(router(geruest, bestand))
+    geruest.oberflaeche_ausliefern(app)
     return app
 
 
-app = create_app()
+def daten_ordner() -> Path:
+    """Wo die App ihre Daten hält: `STRUKTURBLICK_DATEN` (im Container /app/daten), sonst daten/ im Repo."""
+    return Path(os.environ.get("STRUKTURBLICK_DATEN") or WURZEL / "daten")
+
+
+app = app_bauen(daten_ordner())

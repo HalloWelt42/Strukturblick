@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
-# Vor jedem Commit (STB-3): Fassung hochzählen und die Prüfungen des Appkerns, darunter die harten Architekturregeln
-# aus architektur/regeln.toml. Befunde halten den Commit auf; Ausnahmen nur mit Freigabe des Nutzers am Ticket.
+# Vor jedem Commit: Fassung hochzählen (nur neue Kennung, wenn version.json schon vorgemerkt ist) und vormerken, dann die
+# vorgemerkten Dateien prüfen (nur gerade Zeichen; Stil ohne !important, einseitige Streifen und Regeln auf Klassen der
+# Schale; nur Marken der Gestaltung, scharf nach gestaltung.toml). Die Prüfungen stehen an einer Stelle im Appkern
+# (appkern.werkzeuge).
 set -euo pipefail
-cd "$(git rev-parse --show-toplevel)"
-python="${APPKERN_PYTHON:-$HOME/Entwicklung/Werkzeuge/Appkern/.venv/bin/python}"
-if [ ! -x "$python" ]; then
-  echo "Abbruch: keine Python-Umgebung mit dem Appkern gefunden (APPKERN_PYTHON)" >&2
+# >>> handbuch: Seite und Einrichtungsskript prüfen (eingesetzt von "handbuch einbinden", nicht von Hand ändern)
+handbuch_befehl="$(command -v handbuch || true)"
+[ -n "$handbuch_befehl" ] || handbuch_befehl="$HOME/.local/bin/handbuch"
+if [ ! -x "$handbuch_befehl" ]; then
+  echo "Abbruch: das Werkzeug handbuch fehlt (Handbuch, Grundlage Mac)" >&2
   exit 1
 fi
-exec "$python" -m appkern.werkzeuge vor-dem-commit
+"$handbuch_befehl" vor-commit "$(git rev-parse --show-toplevel)" || exit 1
+# <<< handbuch
+cd "$(git rev-parse --show-toplevel)"
+exec backend/.venv/bin/python -m appkern.werkzeuge vor-dem-commit

@@ -1,57 +1,27 @@
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+// Bau von Strukturblick 2.0. Die Fassung kommt aus ../version.json (eine Quelle): eingebaut ins Skript und als Meta in
+// die Startseite; der Server meldet die der ausgelieferten Startseite, weicht sie ab, lädt ein offener Tab von selbst
+// neu. Die Bauart wählt VITE_BAUART: "server" (pi5b, mit Anmeldung und Ablage) oder "eigenstaendig" (GitHub Pages,
+// alles im Browser). Relative Pfade, damit die eigenständige Bauart unter jedem Unterpfad läuft.
+import { defineConfig } from "vitest/config";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { readFileSync } from "node:fs";
 
-import { svelte } from '@sveltejs/vite-plugin-svelte'
-import { defineConfig, type Plugin } from 'vite'
-
-// Backend-Port: start.sh setzt STRUKTURBLICK_API_PORT, falls 6000 belegt ist
-// und das Backend auf einen freien Port ausweicht. Default bleibt 6000.
-const apiPort = process.env.STRUKTURBLICK_API_PORT ?? '6000'
-const apiZiel = `http://localhost:${apiPort}`
-
-// Fassung der Oberfläche aus der einzigen Quelle version.json; weicht die des Backends ab,
-// lädt die Oberfläche von selbst neu (src/lib/zustand/fassung.svelte.ts).
-const VERSIONSDATEI = fileURLToPath(new URL('../version.json', import.meta.url))
-const fassung = (JSON.parse(readFileSync(VERSIONSDATEI, 'utf-8')) as { version: string }).version
-
-/**
- * Die eingebaute Fassung gilt je Start des Entwicklungsservers. Wechselt version.json (neuer
- * Stand geholt), startet der Server neu, damit Oberfläche und Backend dieselbe Fassung melden.
- */
-function fassungBeobachten(): Plugin {
-  return {
-    name: 'strukturblick-fassung',
-    configureServer(server) {
-      server.watcher.add(VERSIONSDATEI)
-      server.watcher.on('change', (datei) => {
-        if (resolve(datei) === VERSIONSDATEI) void server.restart()
-      })
-    },
-  }
-}
+const FASSUNG = (JSON.parse(readFileSync(new URL("../version.json", import.meta.url), "utf8")) as { version: string }).version;
+const fassungEinsetzen = {
+  name: "fassung-einsetzen",
+  transformIndexHtml: (html: string) => html.replace("</head>", `  <meta name="app-fassung" content="${FASSUNG}" />\n  </head>`),
+};
 
 export default defineConfig({
+  base: "./",
+  plugins: [svelte(), fassungEinsetzen],
   define: {
-    __APP_VERSION__: JSON.stringify(fassung),
+    __APP_FASSUNG__: JSON.stringify(FASSUNG),
   },
-  plugins: [svelte(), fassungBeobachten()],
-  server: {
-    port: 6001,
-    strictPort: true,
-    proxy: {
-      '/api': {
-        target: apiZiel,
-        changeOrigin: true,
-      },
-      '/docs': {
-        target: apiZiel,
-        changeOrigin: true,
-      },
-      '/openapi.json': {
-        target: apiZiel,
-        changeOrigin: true,
-      },
-    },
-  },
-})
+  // Die Oberfläche des Appkerns kommt als Svelte-Quelltext; Vite bündelt sie nicht vor
+  optimizeDeps: { exclude: ["appkern-oberflaeche"] },
+  worker: { format: "es" },
+  // Beim Entwickeln leitet Vite /api an das Backend (Port 8470); im Betrieb liefert das Backend die Oberfläche selbst aus
+  server: { port: 6011, strictPort: true, host: "0.0.0.0", proxy: { "/api": { target: "http://127.0.0.1:8470", changeOrigin: false } } },
+  test: { include: ["src/**/*.test.ts"], environment: "node" },
+});
