@@ -7,3 +7,4 @@ export * from "./verlauf";
 export * from "./befehl";
 export { GRUNDBEFEHLE, anzeige } from "./befehle";
 export * from "./sitzung";
+export * from "./abfrage";

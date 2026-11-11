@@ -38,6 +38,17 @@ export function suchen(index: Strukturindex, text: string, suche: string): Suche
   return { suche, anzahl: gefunden.length, merkmale, knoten: Int32Array.from(gefunden) };
 }
 
+/** Suchergebnis aus fertigen Treffern (etwa einer Abfrage); `suche` leer, weil kein Text im Knoten markiert wird. */
+export function trefferAus(index: Strukturindex, knoten: readonly number[]): Suchergebnis {
+  const merkmale = new Uint8Array(index.anzahl);
+  const gueltig = [...new Set(knoten.filter((k) => k >= 0 && k < index.anzahl))].sort((a, b) => a - b);
+  for (const k of gueltig) {
+    merkmale[k] |= TREFFER;
+    for (let e = index.eltern[k]; e !== KEIN && (merkmale[e] & ENTHAELT_TREFFER) === 0; e = index.eltern[e]) merkmale[e] |= ENTHAELT_TREFFER;
+  }
+  return { suche: "", anzahl: gueltig.length, merkmale, knoten: Int32Array.from(gueltig) };
+}
+
 /** Nächster Treffer nach dem Knoten `nach` (KEIN: der erste), rückwärts der vorige; ringsum. KEIN ohne Treffer. */
 export function naechsterTreffer(e: Suchergebnis, nach: number, rueckwaerts = false): number {
   const t = e.knoten;

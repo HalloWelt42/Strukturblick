@@ -1,0 +1,591 @@
+/* Abfrage-Konsole (.af-), übernommen aus dem abgenommenen Entwurf entwuerfe/teile/abfrage.css, Abschnitte 1 bis 5
+   (Abschnitt 6, die Befehlspalette, steht in oberflaeche/palette/palette.css). */
+
+/* ----- 1. Ziehgriff und Rahmen der Konsole -------------------------------- */
+
+.af-griff {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--zeile) / 2);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--text-3);
+  font-size: var(--marke);
+  cursor: row-resize;
+  position: relative;
+  z-index: 1;
+}
+.af-griff:hover {
+  color: var(--akzent);
+}
+
+.af-konsole {
+  flex: 0 0 50%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--flaeche-panel-2);
+  container-type: inline-size;
+  container-name: konsole;
+}
+
+.af-kopf {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  min-height: calc(var(--knopf-hoehe) + 12px);
+  padding: 0 var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  font-size: var(--klein);
+  color: var(--text-2);
+  min-width: 0;
+}
+.af-kopf > i:first-child {
+  color: var(--akzent);
+}
+.af-kopf .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+.af-quelle {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-3);
+}
+.af-quelle .mono {
+  color: var(--text-2);
+}
+
+/* Rumpf: Ausdruck und Ergebnis nebeneinander, schmal untereinander */
+.af-rumpf {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: var(--a3);
+  padding: var(--a3);
+}
+.af-rumpf.af-mit-tabellen {
+  grid-template-columns: minmax(200px, 30%) minmax(0, 1fr);
+}
+
+/* Fach: eine Spalte im Rumpf mit kleinem Kopf */
+.af-fach {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+  min-height: 0;
+  min-width: 0;
+}
+.af-fach-kopf {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  font-size: var(--marke);
+  color: var(--text-3);
+  white-space: nowrap;
+  min-width: 0;
+}
+.af-fach-kopf .af-etikett {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.af-fach-kopf .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+}
+
+/* Fuß der Konsole: Aktionen zum Ergebnis */
+.af-fuss {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.af-fuss .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+}
+
+/* Werkzeugzeile mit eigenem Inhalt (SQL-Ergebnis): misst die eigene Breite */
+.af-zeilenkopf {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  container-type: inline-size;
+}
+.af-zeilenkopf .rechts {
+  margin-left: auto;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+
+/* Schmal (Hauptbereich ab etwa 536 px neben dem Inspektor): Knopftexte und
+   Nebenangaben treten zurück, die Symbole bleiben mit Titel. Gemessen wird
+   der jeweils nächste Container, also Konsole oder Zeilenkopf. */
+@container (max-width: 720px) {
+  .af-breit,
+  .af-quelle {
+    display: none;
+  }
+}
+/* Sehr schmal: Ausdruck und Ergebnis untereinander */
+@container konsole (max-width: 500px) {
+  .af-rumpf,
+  .af-rumpf.af-mit-tabellen {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* ----- 2. Ausdruck: Editor mit Zeilennummern und Syntaxfarben ------------- */
+
+.af-editor {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--a2) 0;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  line-height: 1.6;
+  cursor: text;
+}
+.af-zeile {
+  display: grid;
+  grid-template-columns: 4ch minmax(0, 1fr);
+  gap: var(--a2);
+  padding-right: var(--a3);
+}
+.af-zeile.aktiv {
+  background: var(--flaeche-wechsel);
+}
+.af-zn {
+  text-align: right;
+  color: var(--text-3);
+  font-size: var(--klein);
+  line-height: calc(var(--gross) * 1.6);
+  user-select: none;
+}
+.af-zeile.aktiv .af-zn {
+  color: var(--text-1);
+}
+.af-zeile code {
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.af-schreibmarke {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--akzent);
+}
+
+/* Syntaxfarben für jq und SQL; Werte nutzen .w-text, .w-zahl aus stil.css */
+.af-s-feld {
+  color: var(--typ-objekt);
+}
+.af-s-schl {
+  color: var(--typ-schluessel);
+  font-weight: 600;
+}
+.af-s-fn {
+  color: var(--typ-liste);
+  font-weight: 600;
+}
+.af-s-wort {
+  color: var(--typ-bool);
+  font-weight: 600;
+}
+.af-s-op {
+  color: var(--zweit);
+  font-weight: 600;
+}
+.af-s-klammer {
+  color: var(--text-3);
+}
+
+/* Fehlerstelle: Kästchen mit Wellenlinie genau am Zeichen, Blase darunter */
+/* Das Kästchen trägt ein geschütztes Leerzeichen, damit die Wellenlinie
+   gezeichnet wird; die Schreibmarke liegt darüber und verschiebt nichts. */
+.af-fehlerzeichen {
+  position: relative;
+  background: var(--fehler-weich);
+  text-decoration: underline wavy var(--fehler);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.af-fehlerzeichen .af-schreibmarke {
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  margin: 0;
+}
+.af-zeile.fehler .af-zn {
+  color: var(--fehler);
+  font-weight: 600;
+}
+/* Die Spalte steht in --spalte (Zeichen vor der Fehlerstelle); 1ch misst in
+   der Codeschrift, deshalb rückt die Hülle ein und nicht die Blase selbst. */
+.af-blase-zeile {
+  display: block;
+  padding: 6px 0 var(--a1) calc(var(--spalte, 0) * 1ch);
+  white-space: normal;
+}
+.af-blase {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  position: relative;
+  padding: var(--a1) var(--a2);
+  background: var(--fehler-weich);
+  color: var(--fehler);
+  font-family: var(--schrift);
+  font-size: var(--klein);
+  font-weight: 500;
+  line-height: 1.35;
+  box-shadow: var(--schatten-ruhig);
+}
+.af-blase::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -6px;
+  width: 12px;
+  height: 6px;
+  background: var(--fehler-weich);
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+.af-hinweis {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+
+/* ----- 3. Ergebnis -------------------------------------------------------- */
+
+.af-json {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  line-height: 1.55;
+}
+.af-stueck {
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr);
+  gap: var(--a2);
+  padding: var(--a1) var(--a3);
+}
+.af-stueck + .af-stueck {
+  box-shadow: inset 0 1px 0 var(--rand-1);
+}
+.af-stueck-nr {
+  text-align: right;
+  color: var(--text-3);
+  font-size: var(--marke);
+  user-select: none;
+}
+.af-stueck pre {
+  margin: 0;
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.af-ende {
+  padding: var(--a2) var(--a3);
+  color: var(--text-3);
+  font-family: var(--schrift);
+  font-size: var(--marke);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+}
+
+/* Veraltet: letztes gültiges Ergebnis bleibt sichtbar, aber gedimmt */
+.af-veraltet .af-json > * {
+  opacity: 0.45;
+}
+
+/* Fehlerzeile im Fuß ersetzt die Aktionen, solange der Ausdruck ungültig ist */
+.af-fehlerzeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  flex: 1;
+  min-width: 0;
+  padding: var(--a1) var(--a1) var(--a1) var(--a3);
+  background: var(--fehler-weich);
+  color: var(--fehler);
+  font-size: var(--klein);
+  font-weight: 500;
+}
+.af-fehlerzeile .af-vorschlag {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  color: var(--text-1);
+  font-weight: 400;
+}
+
+/* ----- 4. Treffer im Baum ------------------------------------------------- */
+
+.knoten.af-treffer {
+  background: var(--zweit-weich);
+}
+.knoten.af-treffer:hover {
+  background: var(--akzent-weich);
+}
+.knoten.af-treffer.gewaehlt {
+  background: var(--flaeche-hervor);
+}
+.af-mark {
+  padding: 0 3px;
+  background: var(--warn-weich);
+  color: var(--warn);
+  font-weight: 600;
+}
+.af-treffer-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+  font-size: var(--klein);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.af-treffer-nav .knopf {
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  width: calc(var(--knopf-hoehe) - 6px);
+}
+
+/* ----- 5. SQL: verfügbare Tabellen und Ergebnistabelle -------------------- */
+
+.af-tabellen {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--flaeche-panel);
+  box-shadow: var(--kante);
+  font-size: var(--klein);
+}
+.af-tab-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--zeile);
+  padding: 0 var(--a2);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  white-space: nowrap;
+  cursor: pointer;
+  min-width: 0;
+}
+.af-tab-kopf > i {
+  color: var(--text-3);
+  width: 14px;
+  text-align: center;
+  flex: none;
+}
+.af-tab-kopf .af-tab-name {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--typ-objekt);
+}
+.af-tab-kopf .af-tab-quelle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  color: var(--text-3);
+}
+.af-tab-kopf .rechts {
+  margin-left: auto;
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.af-tab-notiz {
+  padding: var(--a1) var(--a2) var(--a1) calc(var(--a2) + 22px);
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.af-spalte {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--zeile) - 4px);
+  padding: 0 var(--a2) 0 calc(var(--a2) + 22px);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.af-spalte:hover {
+  background: var(--akzent-weich);
+}
+.af-spalte .mono {
+  color: var(--text-1);
+}
+.af-spalte .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+}
+.af-typ {
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+
+/* Band über der Ergebnistabelle */
+.af-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  margin: var(--a3);
+  padding: var(--a2) var(--a2) var(--a2) var(--a3);
+  background: var(--warn-weich);
+  color: var(--warn);
+  font-size: var(--klein);
+}
+.af-band > i {
+  flex: none;
+}
+.af-band .af-band-text {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.af-band .af-band-text span {
+  color: var(--text-1);
+}
+
+/* Ergebnistabelle: Kopf klebt bündig oben am Rollfeld (.inhalt) */
+.af-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.af-tabelle th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: inset 0 -1px 0 var(--rand-2);
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.af-tabelle th .af-typ {
+  font-weight: 400;
+  margin-left: var(--a1);
+}
+.af-tabelle td {
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  white-space: nowrap;
+}
+.af-tabelle tbody tr:nth-child(even) td {
+  background: var(--flaeche-wechsel);
+}
+.af-tabelle tbody tr:hover td {
+  background: var(--akzent-weich);
+}
+.af-tabelle tbody tr.gewaehlt td {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .af-tabelle tbody tr.gewaehlt td {
+  background: var(--akzent-weich);
+}
+.af-tabelle .zahl {
+  text-align: right;
+  font-family: var(--schrift-mono);
+}
+.af-tabelle .idx {
+  width: 1%;
+  color: var(--text-3);
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+}
+.af-tabelle .af-anteil {
+  width: 40%;
+  min-width: 120px;
+}
+.af-balken {
+  display: block;
+  height: 8px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.af-balken span {
+  display: block;
+  height: 100%;
+  background: var(--akzent-flaeche);
+}
+.af-leer {
+  color: var(--warn);
+  background: var(--warn-weich);
+  padding: 0 2px;
+}
+.af-titel {
+  font-size: var(--gross);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.af-ort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  font-size: var(--klein);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* Spickzettel im Inspektor: hervorgehobene Zeile */
+.paare .af-spick-hervor {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .paare .af-spick-hervor {
+  background: var(--akzent-weich);
+}
+

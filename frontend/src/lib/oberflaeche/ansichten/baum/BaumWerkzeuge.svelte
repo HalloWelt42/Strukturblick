@@ -9,6 +9,8 @@
     zustand,
     teile,
     treffer,
+    ausAbfrage,
+    gewaehlterKnoten,
     liest,
     onwaehlen,
     onweiter,
@@ -17,10 +19,15 @@
     /** Pfad des Gewählten, null wenn nichts gewählt ist */
     teile: readonly Teil[] | null;
     treffer: Suchergebnis | null;
+    /** Die Treffer stammen aus der Abfrage, nicht aus dem Suchfeld */
+    ausAbfrage: boolean;
+    gewaehlterKnoten: number;
     liest: boolean;
     onwaehlen: (zeiger: string) => void;
     onweiter: (rueckwaerts: boolean) => void;
   } = $props();
+
+  const stelle = $derived(treffer ? treffer.knoten.indexOf(gewaehlterKnoten) : -1);
 
   function taste(e: KeyboardEvent): void {
     if (e.key === "Enter") {
@@ -50,7 +57,15 @@
       <input placeholder="Im Baum suchen" aria-label="Im Baum suchen" spellcheck="false" bind:value={zustand.suche} onkeydown={taste} />
     </label>
     {#if treffer}
-      <span class="abzeichen" class:zweit={treffer.anzahl > 0} role="status">{treffer.anzahl} Treffer</span>
+      {#if treffer.anzahl > 0}
+        <div class="af-treffer-nav">
+          <button class="knopf nur-symbol" title="Voriger Treffer (⇧ F3)" onclick={() => onweiter(true)}><i class="fa-solid fa-chevron-up"></i></button>
+          <span role="status" title={ausAbfrage ? "Treffer der Abfrage" : "Treffer der Suche"}>{#if ausAbfrage}<i class="fa-solid fa-terminal"></i> {/if}{stelle >= 0 ? `Treffer ${stelle + 1} von ${treffer.anzahl}` : `${treffer.anzahl} Treffer`}</span>
+          <button class="knopf nur-symbol" title="Nächster Treffer (F3)" onclick={() => onweiter(false)}><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+      {:else}
+        <span class="abzeichen" role="status">0 Treffer</span>
+      {/if}
       <div class="segment">
         <button class:aktiv={zustand.nurTreffer} aria-pressed={zustand.nurTreffer} onclick={() => (zustand.nurTreffer = !zustand.nurTreffer)}>Nur Treffer</button>
       </div>
@@ -82,5 +97,8 @@
   }
   .suche {
     width: 190px;
+  }
+  .af-treffer-nav .fa-terminal {
+    color: var(--akzent);
   }
 </style>

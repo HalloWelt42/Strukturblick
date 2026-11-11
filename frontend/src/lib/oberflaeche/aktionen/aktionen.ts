@@ -8,6 +8,7 @@
 import { KEIN, SCHREIBWEISEN, SCHREIBWEISE_NAME, knotenZu, schreiben, teileVon, type Schreibweise } from "../../kern";
 import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
 import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
+import { abfrage, SPRACHEN } from "../../zustand/abfrage.svelte";
 import { einstellungen, SCHRIFTSTUFEN, THEMEN } from "../../zustand/einstellungen.svelte";
 import { meldungen } from "../../zustand/meldungen.svelte";
 import { zugang } from "../../zustand/zugang.svelte";
@@ -184,6 +185,28 @@ const PFADE: readonly Aktion[] = SCHREIBWEISEN.map((w) => ({
   },
 }));
 
+const ABFRAGE: readonly Aktion[] = [
+  {
+    kennung: "abfrage",
+    get titel() {
+      return abfrage.offen ? "Abfrage einklappen" : "Abfrage öffnen";
+    },
+    beschreibung: "jq, SQL, JSONPath und Suche, Ergebnis beim Tippen",
+    symbol: "fa-terminal",
+    tasten: [{ taste: "e", befehl: true, alt: true }],
+    verfuegbar: imBlatt,
+    ausfuehren: () => (abfrage.offen ? abfrage.schliessen() : abfrage.oeffnen()),
+  },
+  ...SPRACHEN.map((x) => ({
+    kennung: `abfrage-${x.kennung}`,
+    titel: `Abfrage mit ${x.name}`,
+    beschreibung: x.ueberAlle ? "Über alle geöffneten Dokumente" : "Auf dem offenen Dokument",
+    symbol: "fa-terminal",
+    verfuegbar: imBlatt,
+    ausfuehren: () => abfrage.oeffnen(x.kennung),
+  })),
+];
+
 const ANZEIGE: readonly Aktion[] = [
   ...THEMEN.map((t) => ({
     kennung: `thema-${t.kennung}`,
@@ -216,7 +239,7 @@ const ZUGANG: readonly Aktion[] = [
   },
 ];
 
-export const AKTIONEN: readonly Aktion[] = [...VERLAUF, ...DOKUMENTE, ...ANSICHT_WAHL, ...PFADE, ...ANZEIGE, ...ZUGANG];
+export const AKTIONEN: readonly Aktion[] = [...VERLAUF, ...DOKUMENTE, ...ANSICHT_WAHL, ...ABFRAGE, ...PFADE, ...ANZEIGE, ...ZUGANG];
 
 export function aktion(kennung: string): Aktion {
   const a = AKTIONEN.find((x) => x.kennung === kennung);

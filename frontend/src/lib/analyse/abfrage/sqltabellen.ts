@@ -4,7 +4,8 @@
 // einfacher Werte zu JSON-Text. Rein, ohne Browser und ohne SQL-Maschine: das Einspielen macht der Dienst.
 
 export type SqlTyp = "INTEGER" | "REAL" | "TEXT";
-export type Zellwert = string | number | null;
+export type { Zellwert } from "../../kern/abfrage";
+import type { Zellwert } from "../../kern/abfrage";
 
 export interface SqlSpalte {
   readonly name: string;

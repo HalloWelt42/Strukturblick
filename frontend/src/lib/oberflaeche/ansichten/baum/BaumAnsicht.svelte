@@ -3,8 +3,9 @@
   // virtualisierte Baum. Liest nur ihr Blatt; ihr Zustand (Ebene, Aufgeklapptes, Suche, Rollstand) liegt im Blatt.
   import { untrack } from "svelte";
   import { KEIN, knotenZu, teileVon, zeigerVon } from "../../../kern";
-  import { naechsterTreffer, suchen } from "../../../analyse/baumsuche";
+  import { naechsterTreffer, suchen, trefferAus } from "../../../analyse/baumsuche";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+  import { abfrage } from "../../../zustand/abfrage.svelte";
   import { lesestand } from "../../bausteine/lesestand.svelte";
   import { BaumZustand } from "./baumZustand.svelte";
   import BaumWerkzeuge from "./BaumWerkzeuge.svelte";
@@ -30,7 +31,14 @@
     const zeit = setTimeout(() => (gesucht = s), s.trim() ? SUCHEN_NACH_MS : 0);
     return () => clearTimeout(zeit);
   });
-  const treffer = $derived(index ? suchen(index, text, gesucht) : null);
+  // Eigene Suche im Baum geht vor; sonst die Treffer der Abfrage, wenn sie aus genau diesem Stand stammen
+  const abfrageZeiger = $derived(abfrage.trefferFuer(blatt));
+  const treffer = $derived.by(() => {
+    if (!index) return null;
+    if (gesucht.trim() || !abfrageZeiger) return suchen(index, text, gesucht);
+    return trefferAus(index, abfrageZeiger.map((z) => knotenZu(index, text, z)));
+  });
+  const ausAbfrage = $derived(!gesucht.trim() && abfrageZeiger !== null);
 
   const fehlertext = $derived(stand?.analyse.diagnosen.find((d) => d.schwere === "fehler")?.meldung ?? blatt.lesefehler);
 
@@ -41,7 +49,9 @@
   }
 </script>
 
-<BaumWerkzeuge {zustand} {teile} {treffer} liest={stand !== null && !stand.aktuell} onwaehlen={(z) => blatt.waehlen(z)} onweiter={weiter} />
+<svelte:window onkeydown={(e) => { if (e.key === "F3" && treffer) { e.preventDefault(); weiter(e.shiftKey); } }} />
+
+<BaumWerkzeuge {zustand} {teile} {treffer} {ausAbfrage} {gewaehlterKnoten} liest={stand !== null && !stand.aktuell} onwaehlen={(z) => blatt.waehlen(z)} onweiter={weiter} />
 
 {#if index && stand}
   <BaumListe {blatt} {zustand} {index} {text} aktuell={stand.aktuell} {treffer} {gewaehlterKnoten} />
