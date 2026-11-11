@@ -2,6 +2,7 @@
   // Fenster mit dem Hinweis bei jedem Start (STB-29): Nutzung, Daten, Beta, Beispiele, dazu der Weg zu allen Lizenzen.
   // Escape oder "Verstanden" schließt; der Fokus liegt gleich auf "Verstanden".
   import { ABSCHNITTE, FASSUNG_TEXT, starthinweis } from "../../zustand/starthinweis.svelte";
+  import { URHEBER } from "../../zustand/app";
 
   let knopf: HTMLButtonElement | undefined = $state();
   $effect(() => knopf?.focus());
@@ -25,7 +26,10 @@
     </section>
   {/each}
   <div class="hinweis-fuss">
-    <a class="knopf still" href="./lizenzen.txt" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines"></i> Lizenz und Lizenzen der verwendeten Bausteine</a>
+    <span class="hinweis-links">
+      <a class="knopf still profil" href={URHEBER.profil} target="_blank" rel="noopener" title="Profil von {URHEBER.name} mit dem Quelltext (neuer Tab)"><i class="fa-brands fa-github"></i> {URHEBER.name}</a>
+      <a class="knopf still" href="./lizenzen.txt" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines"></i> Lizenz und Lizenzen der verwendeten Bausteine</a>
+    </span>
     <button class="knopf primaer" bind:this={knopf} onclick={() => starthinweis.schliessen()}><i class="fa-solid fa-check"></i> Verstanden</button>
   </div>
 </div>
@@ -94,7 +98,17 @@
     padding-top: var(--a2);
   }
   /* Der lange Link bricht auf schmalen Bildschirmen um, statt über den Rand zu ragen */
-  .hinweis-fuss > a {
+  .hinweis-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--a1) var(--a2);
+    min-width: 0;
+  }
+  .profil {
+    font-size: var(--klein);
+  }
+  .hinweis-links > a {
     min-width: 0;
     max-width: 100%;
     height: auto;

@@ -1,7 +1,7 @@
 <script lang="ts">
   // Fuß: Zustand des aktiven Dokuments (Format, Größe, Stand, Befunde, abgelegt) und Fassung.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
-  import { FASSUNG } from "../../zustand/app";
+  import { FASSUNG, URHEBER } from "../../zustand/app";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const a = $derived(blatt?.analyse ?? null);
@@ -37,6 +37,17 @@
     {#if blatt}
       <span class="teil"><span class="punkt" class:warn={!blatt.gespeichert}></span> {blatt.gespeichert ? "Abgelegt" : "Wird abgelegt"}</span>
     {/if}
+    <a class="teil profil" href={URHEBER.profil} target="_blank" rel="noopener" title="Profil von {URHEBER.name} mit dem Quelltext (neuer Tab)"><i class="fa-brands fa-github"></i> {URHEBER.name}</a>
     <span class="teil mono">{FASSUNG}</span>
   </span>
 </footer>
+
+<style>
+  .profil {
+    color: inherit;
+    text-decoration: none;
+  }
+  .profil:hover {
+    color: var(--akzent);
+  }
+</style>
