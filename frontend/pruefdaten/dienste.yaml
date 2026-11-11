@@ -1,4 +1,4 @@
-# Dienste im Heimnetz, gelesen von der Leitstelle
+# Dienste des Webshops vom Hofladen Lindenhof, gelesen von der Überwachung
 version: 3
 standard: &standard
   neustart: immer
@@ -8,14 +8,20 @@ standard: &standard
     versuche: 3
 
 dienste:
-  - name: ablage
+  - name: katalog
     <<: *standard
-    port: 8420
-    pfad: /ablage
+    port: 8080
+    pfad: /katalog
     gesundheit: *gesundheit
-  - name: leitstelle
+  - name: kasse
     <<: *standard
-    port: 8531
-    pfad: /leitstelle
+    port: 8081
+    pfad: /kasse
     aktiv: true
-    notiz: "Läuft auf dem Mac, 128 GB"
+    notiz: "Zahlung per Rechnung oder Lastschrift"
+  - name: versand
+    <<: *standard
+    port: 8082
+    pfad: /versand
+    aktiv: false
+    notiz: "Abholung im Hofladen, Versand ab Frühjahr"

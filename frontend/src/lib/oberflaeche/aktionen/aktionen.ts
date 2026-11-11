@@ -9,6 +9,7 @@ import { KEIN, SCHREIBWEISEN, SCHREIBWEISE_NAME, knotenZu, schreiben, teileVon, 
 import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
 import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
 import { abfrage, SPRACHEN } from "../../zustand/abfrage.svelte";
+import { beispieleOeffnen, BEISPIEL_ORDNER } from "../../zustand/beispiele";
 import { einstellungen, SCHRIFTSTUFEN, THEMEN } from "../../zustand/einstellungen.svelte";
 import { meldungen } from "../../zustand/meldungen.svelte";
 import { zugang } from "../../zustand/zugang.svelte";
@@ -103,6 +104,14 @@ const DOKUMENTE: readonly Aktion[] = [
         for (const d of dateien) await arbeitsplatz.dateiOeffnen(d, ordner);
       });
     },
+  },
+  {
+    kennung: "beispiele",
+    titel: "Beispiele öffnen",
+    beschreibung: `Erfundene Daten zum Üben (Bestellungen, Kunden, Dienste) im Ordner ${BEISPIEL_ORDNER}`,
+    symbol: "fa-flask",
+    verfuegbar: () => true,
+    ausfuehren: () => void beispieleOeffnen(),
   },
   {
     kennung: "ablegen",

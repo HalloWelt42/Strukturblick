@@ -2,6 +2,7 @@
   // Rechte Spalte der Seite Ablage: das gewählte Dokument, Sichern und Einspielen aller Dokumente, Papierkorb.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { ablageverwaltung, PAPIERKORB_TAGE } from "../../zustand/ablageverwaltung.svelte";
+  import { beispieleOeffnen, BEISPIEL_ORDNER } from "../../zustand/beispiele";
   import { dateiWaehlen, herunterladen } from "../schale/dateien";
   import { groesse, zeitpunkt, type Ablageauswahl } from "./auswahl.svelte";
 
@@ -66,6 +67,14 @@
       <div class="knopf-reihe abstand">
         <button class="knopf" disabled={sichert || !arbeitsplatz.dokumente.length} onclick={sichern}><i class="fa-solid fa-download"></i> Alles sichern</button>
         <button class="knopf" onclick={einspielen}><i class="fa-solid fa-upload"></i> Einspielen</button>
+      </div>
+    </div>
+
+    <div class="karte">
+      <div class="karte-titel">Beispiele zum Üben</div>
+      <p class="klein text-3">Erfundene Bestellungen, Kunden und Dienste im Ordner {BEISPIEL_ORDNER}. Schon vorhandene werden nur geöffnet; frisch anfangen: die Beispiele in den Papierkorb legen.</p>
+      <div class="knopf-reihe abstand">
+        <button class="knopf" onclick={() => void beispieleOeffnen()}><i class="fa-solid fa-flask"></i> Beispiele öffnen</button>
       </div>
     </div>
 

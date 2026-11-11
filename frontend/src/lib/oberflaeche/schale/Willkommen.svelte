@@ -3,6 +3,7 @@
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { FORMATE } from "../../formate/registrierung";
   import { dateiWaehlen } from "./dateien";
+  import { beispieleOeffnen, BEISPIELE } from "../../zustand/beispiele";
 
   let eingefuegt = $state("");
 
@@ -21,6 +22,7 @@
     <div class="knopf-reihe">
       <button class="knopf primaer" onclick={oeffnen}><i class="fa-solid fa-folder-open"></i> Datei öffnen</button>
       <button class="knopf" onclick={() => void arbeitsplatz.neu("unbenannt", "")}><i class="fa-solid fa-file"></i> Leeres Dokument</button>
+      <button class="knopf" title={BEISPIELE.map((b) => `${b.name}: ${b.beschreibung}`).join("\n")} onclick={() => void beispieleOeffnen()}><i class="fa-solid fa-flask"></i> Beispiele zum Üben</button>
     </div>
     <label class="einfuegen">
       <span class="karte-titel">Text einfügen</span>
