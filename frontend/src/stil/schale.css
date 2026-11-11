@@ -187,6 +187,19 @@
   color: var(--text-1);
   font-weight: 600;
 }
+/* Eintrag als Knopf (Werkzeuge): ohne Rahmen und Füllung des Browsers */
+button.eintrag {
+  width: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+}
+button.eintrag:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
 .eintrag.aktiv > i:first-child {
   color: var(--akzent);
   text-shadow: 0 0 calc(10px * var(--leuchten)) var(--akzent-flaeche);
@@ -223,6 +236,10 @@
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
+}
+/* Segment des offenen Werkzeugs (oder Abfrageergebnisses): schrumpft nie, die Ansichten daneben rollen */
+.ansicht-kopf .segment.offen-segment {
+  flex: none;
 }
 .werkzeugzeile {
   display: flex;

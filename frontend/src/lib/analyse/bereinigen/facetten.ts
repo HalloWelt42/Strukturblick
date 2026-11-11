@@ -50,6 +50,26 @@ export function facettenart(t: Tabelle, index: Strukturindex, text: string, spal
   return "werte";
 }
 
+/** Höchstens so viele verschiedene Werte hat eine Spalte, die als Facette vorgeschlagen wird */
+const VORSCHLAG_HOECHSTENS_WERTE = 50;
+
+/**
+ * Facetten für den Anfang: Datum und Zahlen immer, Text nur mit wenigen verschiedenen Werten (Ort, Stand, Art), nie
+ * Spalten, in denen fast jeder Wert anders ist (Namen, Kennungen). In Spaltenreihenfolge, höchstens `hoechstens`.
+ */
+export function vorgeschlageneFacetten(t: Tabelle, index: Strukturindex, text: string, hoechstens = 4): string[] {
+  const vorschlag: string[] = [];
+  for (let j = 0; j < t.spalten.length && vorschlag.length < hoechstens; j++) {
+    const art = facettenart(t, index, text, j);
+    if (art === "werte") {
+      const n = werteZaehlen(t, index, text, j).length;
+      if (n < 2 || n > VORSCHLAG_HOECHSTENS_WERTE || n > t.zeilen.length / 2) continue;
+    }
+    vorschlag.push(t.spalten[j].name);
+  }
+  return vorschlag;
+}
+
 /** Texte einer Zelle: einfacher Wert als einer, Liste als ihre einfachen Einträge, leer als "" */
 function texteDerZelle(index: Strukturindex, text: string, k: number): string[] {
   if (k === KEIN || index.art[k] === KnotenArt.nichts) return [""];

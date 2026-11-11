@@ -33,6 +33,8 @@ export class Arbeitsblatt {
   liest = $state(false);
   gespeichert = $state(true);
   platz = $state<Platz>({ art: "ansicht", kennung: "baum" });
+  /** Ansicht vor dem Öffnen eines Werkzeugs (dahin führt Schließen zurück) */
+  ansichtVorher = $state("tabelle");
   /** Gewählte Stelle als JSON Pointer, null wenn nichts gewählt */
   gewaehlt = $state<string | null>(null);
 
@@ -101,8 +103,14 @@ export class Arbeitsblatt {
   waehlen(zeiger: string | null): void { this.gewaehlt = zeiger; }
   zeigen(platz: Platz): void {
     if (platz.art === this.platz.art && platz.kennung === this.platz.kennung) return;
+    if (this.platz.art === "ansicht") this.ansichtVorher = this.platz.kennung;
     this.platz = platz;
     this.speichernPlanen();
+  }
+
+  /** Offenes Werkzeug schließen: zurück zur Ansicht davor */
+  werkzeugSchliessen(): void {
+    if (this.platz.art === "werkzeug") this.zeigen({ art: "ansicht", kennung: this.ansichtVorher });
   }
 
   /** Beobachter für Textänderungen (Editor übernimmt sie, statt den ganzen Text neu zu setzen) */

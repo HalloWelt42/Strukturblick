@@ -3,7 +3,7 @@
   // Herunterladen; der Ordnerknopf öffnet die Seite Ablage.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
-  import { aktion } from "../aktionen/aktionen";
+  import { aktion, WERKZEUG_WAHL } from "../aktionen/aktionen";
   import { knopfTitel } from "../aktionen/tastatur";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
@@ -21,6 +21,7 @@
   const oeffnen = aktion("datei-oeffnen");
   const laden = aktion("herunterladen");
   const verwalten = aktion("ablage");
+  const offenesWerkzeug = $derived(!ablageOffen && blatt?.platz.art === "werkzeug" ? `werkzeug-${blatt.platz.kennung}` : null);
 </script>
 
 <aside class="leiste">
@@ -50,6 +51,12 @@
         </a>
       {/each}
     {/if}
+    <div class="leiste-titel">Prüfen und umbauen</div>
+    {#each WERKZEUG_WAHL as w (w.kennung)}
+      <button class="eintrag" class:aktiv={offenesWerkzeug === w.kennung} disabled={!w.verfuegbar()} title={w.verfuegbar() ? w.beschreibung : "Erst ein Dokument öffnen"} onclick={() => w.ausfuehren()}>
+        <i class="fa-solid {w.symbol}"></i><span class="name">{w.titel}</span>
+      </button>
+    {/each}
   </div>
   <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>{arbeitsplatz.ablage.hinweis}</span></div>
 </aside>

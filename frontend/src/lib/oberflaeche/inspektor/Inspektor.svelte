@@ -1,6 +1,7 @@
 <script lang="ts">
   // Rechte Spalte nach dem Entwurf (entwuerfe/arbeitsplatz.html): das Gewählte, Pfad kopieren, alle Werte dieses Pfads
-  // und der Verlauf. Folgt `blatt.gewaehlt`, gleich aus welcher Ansicht gewählt wurde.
+  // und der Verlauf. Folgt `blatt.gewaehlt`, gleich aus welcher Ansicht gewählt wurde. Ist ein Werkzeug offen, zeigt
+  // die Spalte dessen Karten (aus der Registrierung der Werkzeuge).
   import { KEIN, knotenZu, teileVon } from "../../kern";
   import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
   import { lesestand } from "../bausteine/lesestand.svelte";
@@ -9,6 +10,7 @@
   import KartePfad from "./KartePfad.svelte";
   import KarteWerte from "./KarteWerte.svelte";
   import KarteVerlauf from "./KarteVerlauf.svelte";
+  import { werkzeug } from "../werkzeuge/registrierung";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
 
@@ -19,11 +21,14 @@
   const text = $derived(stand?.text ?? "");
   const k = $derived(index && blatt.gewaehlt !== null ? knotenZu(index, text, blatt.gewaehlt) : KEIN);
   const teile = $derived(index && k !== KEIN ? teileVon(index, text, k) : null);
+  const WerkzeugKarten = $derived(blatt.platz.art === "werkzeug" ? werkzeug(blatt.platz.kennung)?.inspektor : undefined);
 </script>
 
 <aside class="inspektor" aria-label="Inspektor">
   <div class="inspektor-feld">
-    {#if index && stand && teile && k !== KEIN}
+    {#if WerkzeugKarten}
+      <WerkzeugKarten {blatt} />
+    {:else if index && stand && teile && k !== KEIN}
       {#key k}
         <KarteGewaehlt {blatt} {index} {text} {k} aktuell={stand.aktuell} />
       {/key}

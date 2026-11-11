@@ -3,6 +3,8 @@
 // benachbarter Buchstaben, findet vertauschte und fehlende Buchstaben) und Tippfehler-Abstand (höchstens zwei Änderungen).
 // Ergebnis sind Gruppen von Schreibweisen mit Vorschlag für den Zielwert. Rein, ohne Browser.
 
+import { inhalt, istBehaelter, KEIN, KnotenArt, type Strukturindex } from "../../kern/strukturindex";
+import { zelle, zellZeiger, type Tabelle } from "../tabelle";
 import type { Wertzaehlung } from "./facetten";
 
 export type Verfahren = "kern" | "paare" | "abstand";
@@ -26,6 +28,11 @@ const PAARE_SCHWELLE = 0.8;
 const ABSTAND_HOECHSTENS = 2;
 /** Kürzere Werte vergleichen die unscharfen Verfahren nicht (zu viele Zufallstreffer) */
 const MINDESTLAENGE = 4;
+/** Die unscharfen Verfahren vergleichen jeden Wert mit jedem; darüber dauerte das zu lange */
+export const UNSCHARF_HOECHSTENS = 1500;
+
+/** Geht das Verfahren bei so vielen verschiedenen Werten? */
+export const verfahrenMoeglich = (verfahren: Verfahren, verschiedene: number): boolean => verfahren === "kern" || verschiedene <= UNSCHARF_HOECHSTENS;
 
 /** Kern eines Werts: klein, nur Buchstaben und Ziffern */
 export const kern = (s: string): string => s.toLocaleLowerCase("de").replace(/[^\p{L}\p{N}]+/gu, "");
@@ -40,9 +47,9 @@ function paare(s: string): Map<string, number> {
 }
 
 /** Dice-Koeffizient über Buchstabenpaare (0 bis 1) */
-export function paarAehnlichkeit(a: string, b: string): number {
-  const pa = paare(a);
-  const pb = paare(b);
+export const paarAehnlichkeit = (a: string, b: string): number => diceVon(paare(a), paare(b));
+
+function diceVon(pa: ReadonlyMap<string, number>, pb: ReadonlyMap<string, number>): number {
   let gemeinsam = 0;
   let summe = 0;
   for (const n of pa.values()) summe += n;
@@ -95,11 +102,13 @@ export function gruppenFinden(werte: readonly Wertzaehlung[], verfahren: Verfahr
     kerne.forEach((k, i) => nachKern.set(k, [...(nachKern.get(k) ?? []), i]));
     teile = [...nachKern.values()];
   } else {
+    if (!verfahrenMoeglich(verfahren, gefuellt.length)) return [];
     const lang = (i: number) => kerne[i].length >= MINDESTLAENGE;
+    const paareJe = verfahren === "paare" ? kerne.map(paare) : [];
     teile = verbinden(gefuellt, (i, j) => {
       if (kerne[i] === kerne[j]) return true;
       if (!lang(i) || !lang(j)) return false;
-      return verfahren === "paare" ? paarAehnlichkeit(kerne[i], kerne[j]) >= PAARE_SCHWELLE : abstand(kerne[i], kerne[j]) <= ABSTAND_HOECHSTENS;
+      return verfahren === "paare" ? diceVon(paareJe[i], paareJe[j]) >= PAARE_SCHWELLE : abstand(kerne[i], kerne[j]) <= ABSTAND_HOECHSTENS;
     });
   }
   return teile
@@ -109,4 +118,34 @@ export function gruppenFinden(werte: readonly Wertzaehlung[], verfahren: Verfahr
       return { varianten, ziel: zielVon(varianten) };
     })
     .sort((a, b) => b.varianten.reduce((s, v) => s + v.anzahl, 0) - a.varianten.reduce((s, v) => s + v.anzahl, 0));
+}
+
+export interface Ersetzung {
+  readonly zeile: number;
+  readonly zeiger: string;
+  readonly vorher: string;
+  readonly nachher: string;
+}
+
+/**
+ * Zellen einer Spalte, deren Wert laut `karte` (vorher -> nachher) ersetzt wird; in Listen jeder passende Eintrag.
+ * In Textreihenfolge.
+ */
+export function ersetzungen(t: Tabelle, index: Strukturindex, text: string, spalte: number, karte: ReadonlyMap<string, string>): Ersetzung[] {
+  const aus: Ersetzung[] = [];
+  if (!karte.size) return aus;
+  const pruefen = (zeile: number, k: number, zeiger: string) => {
+    if (istBehaelter(index.art[k]) || index.art[k] === KnotenArt.nichts) return;
+    const vorher = inhalt(index, text, k);
+    const nachher = karte.get(vorher);
+    if (nachher !== undefined && nachher !== vorher) aus.push({ zeile, zeiger, vorher, nachher });
+  };
+  for (let i = 0; i < t.zeilen.length; i++) {
+    const k = zelle(t, index, i, spalte);
+    if (k === KEIN) continue;
+    const zeiger = zellZeiger(t, i, spalte);
+    if (index.art[k] !== KnotenArt.liste) pruefen(i, k, zeiger);
+    else for (let c = index.erstesKind[k], n = 0; c !== KEIN; c = index.naechstes[c], n++) pruefen(i, c, `${zeiger}/${n}`);
+  }
+  return aus;
 }

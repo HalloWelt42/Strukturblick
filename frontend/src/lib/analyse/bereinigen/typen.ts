@@ -38,6 +38,8 @@ export interface Typvorschlag {
   readonly unlesbar: readonly Unlesbar[];
   /** Bei "text-bleibt": wie viele Werte als Zahl ihre führende Null verlören */
   readonly fuehrendeNullen: number;
+  /** Bei "text-bleibt": die ersten Werte mit führender Null, zum Zeigen */
+  readonly nullBeispiele: readonly { readonly zeile: number; readonly wert: string }[];
 }
 
 export interface Spaltentyp {
@@ -46,6 +48,9 @@ export interface Spaltentyp {
   readonly erkannt: string;
   readonly vorschlag: Vorschlagsart | null;
 }
+
+/** So viele Beispiele mit führender Null nennt ein Vorschlag "bleibt Text" */
+const NULL_BEISPIELE = 5;
 
 /** Ab diesem Anteil passender Werte gibt es einen Vorschlag; der Rest erscheint als nicht lesbar */
 export const VORSCHLAG_ANTEIL = 0.8;
@@ -125,7 +130,7 @@ export function vorschlagFuer(t: Tabelle, index: Strukturindex, text: string, sp
     return {
       spalte: name, art: "betrag", stehtAls: "Text", erkannt: "Betrag, deutsches Format",
       erklaerung: 'Punkt trennt die Tausender, Komma die Nachkommastellen. Gelesen wird "1.234,50" als 1234.50.',
-      aenderungen, bleiben: 0, unlesbar, fuehrendeNullen: 0,
+      aenderungen, bleiben: 0, unlesbar, fuehrendeNullen: 0, nullBeispiele: [],
     };
   }
 
@@ -143,17 +148,19 @@ export function vorschlagFuer(t: Tabelle, index: Strukturindex, text: string, sp
     return {
       spalte: name, art: "datum", stehtAls: "Text", erkannt: aenderungen.length && bleiben ? "Datum, 2 Formate gemischt" : "Datum TT.MM.JJJJ",
       erklaerung: `${bleiben} Werte stehen schon als JJJJ-MM-TT und bleiben. ${aenderungen.length} stehen als TT.MM.JJJJ und werden umgestellt. TT.MM.JJJJ wird immer als Tag, Monat, Jahr gelesen.`,
-      aenderungen, bleiben, unlesbar, fuehrendeNullen: 0,
+      aenderungen, bleiben, unlesbar, fuehrendeNullen: 0, nullBeispiele: [],
     };
   }
 
   // sieht aus wie Zahl: mit führenden Nullen (Postleitzahl, Kundennummer) bleibt es Text
-  const fuehrendeNullen = zellen.filter((z) => /^0\d/.test(z.s.trim())).length;
+  const mitNull = zellen.filter((z) => /^0\d/.test(z.s.trim()));
+  const fuehrendeNullen = mitNull.length;
   if (!fuehrendeNullen) return null;
   return {
     spalte: name, art: "text-bleibt", stehtAls: "Text", erkannt: "Text, sieht aus wie Zahl",
     erklaerung: "Sieht aus wie eine Zahl, ist aber eher eine Nummer (etwa Postleitzahl). Sie bleibt Text.",
     aenderungen: [], bleiben: zellen.length, unlesbar: [], fuehrendeNullen,
+    nullBeispiele: mitNull.slice(0, NULL_BEISPIELE).map((z) => ({ zeile: z.zeile, wert: z.s })),
   };
 }
 

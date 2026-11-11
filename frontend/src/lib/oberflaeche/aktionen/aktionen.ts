@@ -15,6 +15,7 @@ import { einstellungen, SCHRIFTSTUFEN, THEMEN } from "../../zustand/einstellunge
 import { meldungen } from "../../zustand/meldungen.svelte";
 import { zugang } from "../../zustand/zugang.svelte";
 import { ANSICHTEN } from "../ansichten/registrierung";
+import { WERKZEUGE } from "../werkzeuge/registrierung";
 import { dateiWaehlen, herunterladen } from "../schale/dateien";
 import type { Tasten } from "../palette/tasten";
 
@@ -180,6 +181,18 @@ export const ANSICHT_WAHL: readonly Aktion[] = ANSICHTEN.map((a, i) => ({
   },
 }));
 
+export const WERKZEUG_WAHL: readonly Aktion[] = WERKZEUGE.map((w) => ({
+  kennung: `werkzeug-${w.kennung}`,
+  titel: w.titel,
+  beschreibung: w.beschreibung,
+  symbol: w.symbol,
+  verfuegbar: () => blatt() !== null,
+  ausfuehren: () => {
+    ablageverwaltung.schliessen();
+    blatt()?.zeigen({ art: "werkzeug", kennung: w.kennung });
+  },
+}));
+
 const PFADE: readonly Aktion[] = SCHREIBWEISEN.map((w) => ({
   kennung: `pfad-${w}`,
   titel: `Pfad als ${SCHREIBWEISE_NAME[w]} kopieren`,
@@ -257,7 +270,7 @@ const ZUGANG: readonly Aktion[] = [
   },
 ];
 
-export const AKTIONEN: readonly Aktion[] = [...VERLAUF, ...DOKUMENTE, ...ANSICHT_WAHL, ...ABFRAGE, ...PFADE, ...ANZEIGE, ...ZUGANG];
+export const AKTIONEN: readonly Aktion[] = [...VERLAUF, ...DOKUMENTE, ...ANSICHT_WAHL, ...WERKZEUG_WAHL, ...ABFRAGE, ...PFADE, ...ANZEIGE, ...ZUGANG];
 
 export function aktion(kennung: string): Aktion {
   const a = AKTIONEN.find((x) => x.kennung === kennung);

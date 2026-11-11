@@ -3,8 +3,8 @@
 import { describe, expect, it } from "vitest";
 import { format } from "../../formate/registrierung";
 import { tabelleBauen } from "../tabelle";
-import { abstand, gruppenFinden, kern, paarAehnlichkeit } from "./aehnlich";
-import { datumLesen, facettenart, monatsVerteilung, werteZaehlen, zahlenVerteilung, zeilenFiltern } from "./facetten";
+import { abstand, ersetzungen, gruppenFinden, kern, paarAehnlichkeit, verfahrenMoeglich } from "./aehnlich";
+import { datumLesen, facettenart, monatsVerteilung, vorgeschlageneFacetten, werteZaehlen, zahlenVerteilung, zeilenFiltern } from "./facetten";
 import { betragAlsZahl, datumAlsIso, spaltentypen, vorschlagFuer } from "./typen";
 
 const CSV = [
@@ -45,6 +45,16 @@ describe("Facetten", () => {
     expect(e.schritte).toEqual([4, 2]);
     expect([...e.zeilen]).toEqual([0, 2]);
   });
+
+  it("zählt Einträge von Listen in der Zelle einzeln und filtert danach", () => {
+    const json = '[{"tags":["rot","blau"]},{"tags":["blau"]},{"tags":[]},{"x":1}]';
+    const ix = format("json").lesen(json).index!;
+    const tj = tabelleBauen(ix, json, 0);
+    const tags = tj.spalteNach.get("tags")!;
+    expect(werteZaehlen(tj, ix, json, tags).map((w) => `${w.wert}:${w.anzahl}`).sort()).toEqual([":2", "blau:2", "rot:1"]);
+    expect([...zeilenFiltern(tj, ix, json, [{ spalte: "tags", auswahl: { art: "werte", werte: ["blau"] } }]).zeilen]).toEqual([0, 1]);
+    expect(vorgeschlageneFacetten(t, index, CSV)).toEqual(["plz", "angelegt"]); // umsatz: zu wenig lesbare Beträge, sieben verschiedene Texte
+  });
 });
 
 describe("Ähnliche Werte", () => {
@@ -64,6 +74,17 @@ describe("Ähnliche Werte", () => {
     const g = gruppenFinden([{ wert: "Leipzig", anzahl: 5 }, { wert: "Lepzig", anzahl: 1 }, { wert: "Dresden", anzahl: 3 }], "abstand");
     expect(g).toHaveLength(1);
     expect(g[0]).toMatchObject({ ziel: "Leipzig" });
+  });
+
+  it("findet die zu ersetzenden Zellen, auch Einträge in Listen", () => {
+    const e = ersetzungen(t, index, CSV, sp("ort"), new Map([["leipzig", "Leipzig"], ["Leipzig ", "Leipzig"], ["Leipzig", "Leipzig"]]));
+    expect(e.map((x) => [x.zeile, x.zeiger, x.vorher])).toEqual([[1, "/1/ort", "leipzig"], [2, "/2/ort", "Leipzig "]]);
+    const json = '[{"tags":["rot","Rot"]},{"tags":["blau"]}]';
+    const ix = format("json").lesen(json).index!;
+    const tj = tabelleBauen(ix, json, 0);
+    expect(ersetzungen(tj, ix, json, 0, new Map([["Rot", "rot"]])).map((x) => x.zeiger)).toEqual(["/0/tags/1"]);
+    expect(verfahrenMoeglich("paare", 5000)).toBe(false);
+    expect(verfahrenMoeglich("kern", 5000)).toBe(true);
   });
 });
 
