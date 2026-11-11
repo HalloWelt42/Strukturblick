@@ -100,3 +100,28 @@ describe("Ausgabe", () => {
     expect(JSON.parse(zeilenAusgeben(["ort", "n"], [["Leipzig", 2]], "json"))).toEqual([{ ort: "Leipzig", n: 2 }]);
   });
 });
+
+describe("Ergänzung mit Bezug auf die Daten", async () => {
+  const { jqPfadVorSchreibmarke, jsonpathPfadVorSchreibmarke, schluesselAm } = await import("./ergaenzung");
+  const json = '{"shop": "x", "bestellungen": [{"nr": "B-1", "kunde": {"name": "Ole", "plz": "1"}, "bezahlt": true}, {"nr": "B-2", "kunde": {"name": "Ines", "stadt": "L"}}]}';
+  const index = lesen("json", json);
+  const am = (p: ReturnType<typeof jqPfadVorSchreibmarke>) => schluesselAm(index, json, p);
+
+  it("schlägt in jq die Felder an der Stelle vor", () => {
+    expect(am(jqPfadVorSchreibmarke("."))).toEqual(["shop", "bestellungen"]);
+    expect(am(jqPfadVorSchreibmarke(".bestellungen[]."))).toEqual(["nr", "kunde", "bezahlt"]);
+    expect(am(jqPfadVorSchreibmarke(".bestellungen[].kunde.na"))).toEqual(["name", "plz", "stadt"]);
+    expect(am(jqPfadVorSchreibmarke(".bestellungen[] | select(.be"))).toEqual(["nr", "kunde", "bezahlt"]);
+    expect(am(jqPfadVorSchreibmarke(".bestellungen | map(.kunde."))).toEqual(["name", "plz", "stadt"]);
+  });
+
+  it("fällt ohne erkennbaren Pfad auf alle Schlüssel zurück", () => {
+    expect(jqPfadVorSchreibmarke("{a: 1} | .")).toBeNull();
+    expect(am(null)).toContain("plz");
+  });
+
+  it("kennt JSONPath mit Stern und Filter", () => {
+    expect(am(jsonpathPfadVorSchreibmarke("$.bestellungen[*]."))).toEqual(["nr", "kunde", "bezahlt"]);
+    expect(am(jsonpathPfadVorSchreibmarke("$.bestellungen[?(@.bezahlt)].kunde."))).toEqual(["name", "plz", "stadt"]);
+  });
+});

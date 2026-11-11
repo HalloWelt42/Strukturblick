@@ -7,7 +7,7 @@ import { Decoration, EditorView, highlightActiveLine, highlightActiveLineGutter,
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { HighlightStyle, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
 import { acceptCompletion, autocompletion, completionKeymap, type CompletionSource } from "@codemirror/autocomplete";
-import { sql, SQLite } from "@codemirror/lang-sql";
+import { keywordCompletionSource, schemaCompletionSource, sql, SQLite } from "@codemirror/lang-sql";
 import { tags as t } from "@lezer/highlight";
 
 // ----- jq als einfache Stromsprache ----------------------------------------------------------------------------------
@@ -119,28 +119,51 @@ export type Hervorhebung = "jq" | "sql" | "text";
 
 export interface Feldaufbau {
   readonly hervorhebung: Hervorhebung;
+  readonly ergaenzung: "felder" | "sql" | null;
   readonly beispiel: string;
   /** SQL: Tabellen mit Spalten für die Ergänzung */
   readonly schema: Readonly<Record<string, readonly string[]>>;
-  /** jq: Schlüssel des Dokuments für die Ergänzung nach einem Punkt */
-  readonly schluessel: () => readonly string[];
+  /** jq und JSONPath: Felder des Dokuments an der Stelle, auf die der Text vor der Schreibmarke zeigt */
+  readonly felderAn: (vor: string) => readonly string[];
 }
 
 export const sprachFach = new Compartment();
 
-const jqErgaenzung = (schluessel: () => readonly string[]): CompletionSource => (ctx) => {
+/** Felder nach einem Punkt; Schlüssel, die kein einfacher Name sind, setzt jq in Anführungszeichen */
+const felderErgaenzung = (felderAn: Feldaufbau["felderAn"], jq: boolean): CompletionSource => (ctx) => {
   const vor = ctx.matchBefore(/\.[\p{L}\w]*/u);
   if (!vor || (vor.from === vor.to && !ctx.explicit)) return null;
-  return { from: vor.from + 1, options: schluessel().map((label) => ({ label, type: "property" })), validFor: /^[\p{L}\w]*$/u };
+  const felder = felderAn(ctx.state.sliceDoc(0, ctx.pos));
+  const options = felder.map((label, i) => ({ label, type: "property", boost: -i / 1000, apply: jq && !/^[\p{L}_][\p{L}\p{N}_]*$/u.test(label) ? JSON.stringify(label) : label }));
+  return { from: vor.from + 1, options, validFor: /^[\p{L}\w]*$/u };
+};
+
+/** Spalten ohne Tabellenvorsatz: alle Spalten aller Tabellen, mit der Tabelle als Zusatz, vor den Schlüsselwörtern.
+ *  Die SQL-Sprache selbst ergänzt Spalten nur nach "tabelle." oder für eine feste Standardtabelle. */
+const spaltenErgaenzung = (schema: Feldaufbau["schema"]): CompletionSource => (ctx) => {
+  const vor = ctx.matchBefore(/[\p{L}\w]+/u);
+  if (!vor || /\.$/.test(ctx.state.sliceDoc(Math.max(0, vor.from - 1), vor.from))) return null;
+  const spalten = new Map<string, string[]>();
+  for (const [tabelle, namen] of Object.entries(schema)) for (const n of namen) spalten.set(n, [...(spalten.get(n) ?? []), tabelle]);
+  const options = [
+    ...[...spalten].map(([label, tabellen]) => ({ label, type: "property", detail: tabellen.join(", "), boost: 2 })),
+    ...Object.keys(schema).map((label) => ({ label, type: "type", detail: "Tabelle", boost: 1 })),
+  ];
+  return { from: vor.from, options, validFor: /^[\p{L}\w]*$/u };
 };
 
 export function sprachTeile(a: Feldaufbau): Extension {
+  const schema = Object.fromEntries(Object.entries(a.schema).map(([k, v]) => [k, [...v]]));
   const fuerSprache =
     a.hervorhebung === "sql"
-      ? [sql({ dialect: SQLite, schema: Object.fromEntries(Object.entries(a.schema).map(([k, v]) => [k, [...v]])), upperCaseKeywords: true }), autocompletion({ icons: false })]
-      : a.hervorhebung === "jq"
-        ? [jqSprache, autocompletion({ icons: false, override: [jqErgaenzung(a.schluessel)] })]
-        : [];
+      ? [
+          sql({ dialect: SQLite, schema, upperCaseKeywords: true }),
+          autocompletion({ icons: false, override: [spaltenErgaenzung(a.schema), schemaCompletionSource({ dialect: SQLite, schema }), keywordCompletionSource(SQLite, true)] }),
+        ]
+      : [
+          a.hervorhebung === "jq" ? jqSprache : [],
+          a.ergaenzung === "felder" ? autocompletion({ icons: false, override: [felderErgaenzung(a.felderAn, a.hervorhebung === "jq")] }) : [],
+        ];
   return [fuerSprache, placeholder(a.beispiel)];
 }
 

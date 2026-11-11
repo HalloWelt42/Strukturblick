@@ -36,7 +36,9 @@ export function tastaturAnmelden(): () => void {
     if (palette.offen) return;                 // die Palette bedient ihre Tasten selbst
     const feld = imFeld(e.target);
     for (const a of AKTIONEN) {
-      if (!a.tasten?.some((t) => passt(t, e, MAC)) || (feld && !a.ueberall)) continue;
+      const t = a.tasten?.find((x) => passt(x, e, MAC));
+      // Am Mac tippt ⌥ ⌘ nie ein Zeichen, das Kürzel gilt also auch im Feld; sonst ist Strg Alt zugleich AltGr (€, @)
+      if (!t || (feld && !a.ueberall && !(MAC && t.befehl && t.alt))) continue;
       e.preventDefault();
       e.stopPropagation();
       if (a.verfuegbar()) a.ausfuehren();

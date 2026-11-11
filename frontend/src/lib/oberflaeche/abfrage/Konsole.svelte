@@ -3,7 +3,8 @@
   // Ausdruck, Ergebnis beim Tippen; bei einem Fehler bleibt das letzte gültige Ergebnis gedimmt stehen. SQL zeigt die
   // Tabellen neben dem Ausdruck, sein Ergebnis belegt die Ansicht (Haupt). Eingeklappt bleibt eine Leiste.
   import "./abfrage.css";
-  import { kinderVon, KEIN, schluessel, sprache as spracheVon } from "../../kern";
+  import { sprache as spracheVon } from "../../kern";
+  import { pfadVorSchreibmarke, schluesselAm } from "../../analyse/abfrage/ergaenzung";
   import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { abfrage, SPRACHEN, type Gemerkt } from "../../zustand/abfrage.svelte";
@@ -33,26 +34,17 @@
   const ergebnis = $derived(gezeigt?.ausgang.ok ? gezeigt.ausgang.ergebnis : null);
   const dauer = $derived(gezeigt?.ausgang.ok ? gezeigt.ausgang.dauer : 0);
   const treffer = $derived(abfrage.trefferFuer(blatt)?.length ?? null);
+  // Gibt es ein letztes gültiges Ergebnis, das auch zu sehen ist? (SQL ohne Ausdruck liefert nur die Tabellen)
+  const gueltigesZeigbar = $derived(!!gueltig?.ausgang.ok && gueltig.ausgang.ergebnis.art !== "dokument" && (gueltig.ausgang.ergebnis.art === "werte" || gueltig.ausgang.ergebnis.spalten.length > 0));
 
   const schema = $derived(ergebnis?.art === "tabelle" ? Object.fromEntries(ergebnis.tabellen.map((t) => [t.name, t.spalten.map((x) => x.name)])) : {});
-  const aufbau = $derived({ hervorhebung: s.hervorhebung, beispiel: s.beispiel, schema, schluessel: () => schluesselListe() });
+  const aufbau = $derived({ hervorhebung: s.hervorhebung, ergaenzung: s.ergaenzung, beispiel: s.beispiel, schema, felderAn });
   const fehlerstelle = $derived(fehler && fehler.zeile !== null ? { meldung: fehler.meldung, zeile: fehler.zeile, spalte: fehler.spalte ?? 1 } : null);
 
-  /** Schlüssel des Dokuments für die Ergänzung in jq, häufigste Ebenen zuerst, höchstens 500 */
-  function schluesselListe(): string[] {
+  /** Felder des Dokuments an der Stelle, auf die der Text vor der Schreibmarke zeigt (jq, JSONPath) */
+  function felderAn(vor: string): readonly string[] {
     const index = blatt.analyse?.index;
-    if (!index) return [];
-    const gesehen = new Set<string>();
-    const offen = [0];
-    while (offen.length && gesehen.size < 500) {
-      const k = offen.shift()!;
-      for (const c of kinderVon(index, k)) {
-        const n = schluessel(index, blatt.analyseText, c);
-        if (n !== null) gesehen.add(n);
-        if (index.erstesKind[c] !== KEIN) offen.push(c);
-      }
-    }
-    return [...gesehen];
+    return index ? schluesselAm(index, blatt.analyseText, pfadVorSchreibmarke(s.kennung, vor)) : [];
   }
 
   function springen(zeiger: string): void {
@@ -156,7 +148,7 @@
         />
         <div class="af-hinweis">
           Ergebnis beim Tippen.
-          {#if s.kennung === "sql" || s.kennung === "jq"}<span class="taste">Tab</span> übernimmt Vorschläge,{/if}
+          {#if s.ergaenzung}<span class="taste">Tab</span> übernimmt Vorschläge,{/if}
           <span class="taste">{befehl}</span><span class="taste">Enter</span> neues Dokument.
         </div>
       </div>
@@ -187,7 +179,7 @@
       {#if fehler}
         <div class="af-fehlerzeile" role="alert">
           <i class="fa-solid fa-circle-exclamation"></i>
-          <span>{fehler.meldung.replace(/\.?$/, ".")}{#if gueltig} {s.kennung === "sql" ? "Oben" : "Rechts"} steht das letzte gültige Ergebnis.{/if}</span>
+          <span>{fehler.meldung.replace(/\.?$/, ".")}{#if gueltigesZeigbar}{" "}{s.kennung === "sql" ? "Oben" : "Rechts"} steht das letzte gültige Ergebnis.{/if}</span>
         </div>
       {:else if s.kennung === "sql"}
         <span>Jedes geöffnete Dokument ist eine Tabelle; Listen in JSON werden zu eigenen Tabellen entfaltet.</span>

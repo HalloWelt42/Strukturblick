@@ -12,13 +12,15 @@ export interface Sprache {
   readonly beispiel: string;
   /** Sprache der Hervorhebung im Feld */
   readonly hervorhebung: "jq" | "sql" | "text";
+  /** Was das Feld vorschlägt: Felder des Dokuments an der Schreibmarke, Tabellen und Spalten, oder nichts */
+  readonly ergaenzung: "felder" | "sql" | null;
 }
 
 export const SPRACHEN: readonly Sprache[] = [
-  { kennung: "jq", name: "jq", ueberAlle: false, beispiel: ".bestellungen[] | select(.bezahlt | not) | .nr", hervorhebung: "jq" },
-  { kennung: "sql", name: "SQL", ueberAlle: true, beispiel: "SELECT * FROM tabelle LIMIT 20", hervorhebung: "sql" },
-  { kennung: "jsonpath", name: "JSONPath", ueberAlle: false, beispiel: "$.bestellungen[?(@.bezahlt == false)].nr", hervorhebung: "text" },
-  { kennung: "suche", name: "Suche", ueberAlle: false, beispiel: "Text in Schlüsseln und Werten", hervorhebung: "text" },
+  { kennung: "jq", name: "jq", ueberAlle: false, beispiel: ".bestellungen[] | select(.bezahlt | not) | .nr", hervorhebung: "jq", ergaenzung: "felder" },
+  { kennung: "sql", name: "SQL", ueberAlle: true, beispiel: "SELECT * FROM tabelle LIMIT 20", hervorhebung: "sql", ergaenzung: "sql" },
+  { kennung: "jsonpath", name: "JSONPath", ueberAlle: false, beispiel: "$.bestellungen[?(@.bezahlt == false)].nr", hervorhebung: "text", ergaenzung: "felder" },
+  { kennung: "suche", name: "Suche", ueberAlle: false, beispiel: "Text in Schlüsseln und Werten", hervorhebung: "text", ergaenzung: null },
 ];
 
 export const sprache = (k: SprachKennung): Sprache => SPRACHEN.find((s) => s.kennung === k) ?? SPRACHEN[0];

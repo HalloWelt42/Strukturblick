@@ -8,88 +8,181 @@
     {
       "nr": 1,
       "sprechtext": "Unten im Hauptbereich wartet die Abfrage. Sie kennt vier Sprachen: jq, SQL, JSONPath und eine einfache Suche. Alles rechnet hier im Browser, nichts geht an einen Server.",
-      "ziel": { "anker": "abfrage-leiste", "notbehelf": ".konsole-leiste" },
-      "aktion": { "art": "zeigen" },
+      "ziel": {
+        "anker": "abfrage-leiste",
+        "notbehelf": ".konsole-leiste"
+      },
+      "aktion": {
+        "art": "zeigen"
+      },
       "erwartung": "Leiste mit den Sprachen jq, SQL, JSONPath, Suche und dem Knopf Öffnen",
       "geprueft": "2026-11-11, Bauart ohne Server, 1440 x 900"
     },
     {
       "nr": 2,
       "sprechtext": "Mit Wahltaste, Befehlstaste und E geht sie auf. Sie belegt dann die untere Hälfte, die Höhe lässt sich am Griff ziehen.",
-      "ziel": { "anker": "abfrage-leiste", "notbehelf": ".konsole-leiste" },
-      "aktion": { "art": "taste", "kuerzel": "⌥ ⌘ E" },
+      "ziel": {
+        "anker": "abfrage-leiste",
+        "notbehelf": ".konsole-leiste"
+      },
+      "aktion": {
+        "art": "taste",
+        "kuerzel": "⌥ ⌘ E"
+      },
       "erwartung": "Konsole offen, Sprache jq gewählt, Feld Ausdruck mit Schreibmarke",
       "geprueft": "2026-11-11"
     },
     {
       "nr": 3,
+      "sprechtext": "Beim Tippen schlägt das Feld die Felder vor, die es an dieser Stelle in den Daten wirklich gibt. Nach Bestellungen, Kunde und einem Punkt sind das Name, Postleitzahl und Stadt. Tab übernimmt.",
+      "ziel": {
+        "anker": "abfrage-ausdruck",
+        "notbehelf": ".af-konsole .cm-content"
+      },
+      "aktion": {
+        "art": "tippen",
+        "text": ".bestellungen[].kunde.",
+        "danach": "Tab"
+      },
+      "erwartung": "Vorschläge name, plz, stadt; Tab setzt name ein",
+      "geprueft": "2026-11-11, Bauart ohne Server"
+    },
+    {
+      "nr": 4,
       "sprechtext": "Welche Bestellungen sind noch nicht bezahlt? In jq schreibe ich: nimm jede Bestellung, behalte die unbezahlten, und zeig mir Nummer und Kundenname.",
-      "ziel": { "anker": "abfrage-ausdruck", "notbehelf": ".af-konsole .cm-content" },
-      "aktion": { "art": "tippen", "text": ".bestellungen[] | select(.bezahlt | not) | {nr, kunde: .kunde.name}" },
+      "ziel": {
+        "anker": "abfrage-ausdruck",
+        "notbehelf": ".af-konsole .cm-content"
+      },
+      "aktion": {
+        "art": "tippen",
+        "text": ".bestellungen[] | select(.bezahlt | not) | {nr, kunde: .kunde.name}"
+      },
       "erwartung": "Abzeichen gültig, Ergebnis aktuell in wenigen Millisekunden, 7 Ergebnisse, im Baum oben Treffer mit Pfeilen",
       "geprueft": "2026-11-11"
     },
     {
-      "nr": 4,
+      "nr": 5,
       "sprechtext": "Das Ergebnis steht rechts, und der Baum zeigt, wo die Treffer im Dokument liegen. Mit F3 springe ich von Treffer zu Treffer.",
-      "ziel": { "anker": "baum-treffer", "notbehelf": ".af-treffer-nav" },
-      "aktion": { "art": "taste", "kuerzel": "F3" },
+      "ziel": {
+        "anker": "baum-treffer",
+        "notbehelf": ".af-treffer-nav"
+      },
+      "aktion": {
+        "art": "taste",
+        "kuerzel": "F3"
+      },
       "erwartung": "Treffer 1 von 7, die Bestellung ist im Baum gewählt, der Inspektor zeigt sie",
       "geprueft": "2026-11-11"
     },
     {
-      "nr": 5,
+      "nr": 6,
       "sprechtext": "Ein Tippfehler macht nichts kaputt. Der Fehler steht genau an der Stelle, und rechts bleibt das letzte gültige Ergebnis gedimmt stehen.",
-      "ziel": { "anker": "abfrage-ausdruck", "notbehelf": ".af-konsole .cm-content" },
-      "aktion": { "art": "tippen", "text": " | .summe +" },
+      "ziel": {
+        "anker": "abfrage-ausdruck",
+        "notbehelf": ".af-konsole .cm-content"
+      },
+      "aktion": {
+        "art": "tippen",
+        "text": " | .summe +"
+      },
       "erwartung": "Abzeichen 1 Fehler, Blase an der Fehlerstelle, Ergebnis veraltet und gedimmt, Fußzeile: Ausdruck unvollständig",
       "geprueft": "2026-11-11"
     },
     {
-      "nr": 6,
+      "nr": 7,
       "sprechtext": "Die Suche findet Text in Schlüsseln und Werten, auf Wunsch als regulärer Ausdruck. Jeder Fund nennt seinen Ort, ein Klick springt dorthin.",
-      "ziel": { "anker": "abfrage-sprache-suche", "notbehelf": ".af-kopf .segment button: Suche" },
-      "aktion": { "art": "klicken" },
+      "ziel": {
+        "anker": "abfrage-sprache-suche",
+        "notbehelf": ".af-kopf .segment button: Suche"
+      },
+      "aktion": {
+        "art": "klicken"
+      },
       "erwartung": "Sprache Suche, daneben die Schalter Punkt-Stern und Aa",
       "geprueft": "2026-11-11"
     },
     {
-      "nr": 7,
+      "nr": 8,
       "sprechtext": "Ich suche alle Bestellungen aus Leipzig oder Halle.",
-      "ziel": { "anker": "abfrage-ausdruck", "notbehelf": ".af-konsole .cm-content" },
-      "aktion": { "art": "tippen", "text": "^(Leipzig|Halle.*)$", "vorher": "Schalter Punkt-Stern (regulärer Ausdruck) einschalten" },
+      "ziel": {
+        "anker": "abfrage-ausdruck",
+        "notbehelf": ".af-konsole .cm-content"
+      },
+      "aktion": {
+        "art": "tippen",
+        "text": "^(Leipzig|Halle.*)$",
+        "vorher": "Schalter Punkt-Stern (regulärer Ausdruck) einschalten"
+      },
       "erwartung": "56 Ergebnisse, jeder mit Ort wie .bestellungen[0].kunde.stadt",
       "geprueft": "2026-11-11"
     },
     {
-      "nr": 8,
+      "nr": 9,
       "sprechtext": "Jetzt SQL. Jedes geöffnete Dokument ist eine Tabelle. Listen darin werden zu eigenen Tabellen: die Positionen jeder Bestellung zum Beispiel, mit der Bestellnummer als Verweis.",
-      "ziel": { "anker": "abfrage-sprache-sql", "notbehelf": ".af-kopf .segment button: SQL" },
-      "aktion": { "art": "klicken" },
+      "ziel": {
+        "anker": "abfrage-sprache-sql",
+        "notbehelf": ".af-kopf .segment button: SQL"
+      },
+      "aktion": {
+        "art": "klicken"
+      },
       "erwartung": "Links die Tabellen bestellungen, positionen, kunden, dienste mit Spalten und Arten",
       "geprueft": "2026-11-11"
     },
     {
-      "nr": 9,
+      "nr": 10,
+      "sprechtext": "Auch in SQL kennt das Feld die echten Spalten. Kun getippt, und es bietet Kundenname, Postleitzahl und Stadt an, jeweils mit der Tabelle, in der sie stehen.",
+      "ziel": {
+        "anker": "abfrage-ausdruck",
+        "notbehelf": ".af-konsole .cm-content"
+      },
+      "aktion": {
+        "art": "tippen",
+        "text": "SELECT kun"
+      },
+      "erwartung": "Vorschläge kunde_name, kunde_plz, kunde_stadt mit den Tabellen bestellungen",
+      "geprueft": "2026-11-11, Bauart ohne Server"
+    },
+    {
+      "nr": 11,
       "sprechtext": "Wie viel Umsatz kommt aus welcher Stadt? Bestellungen und Positionen verbinde ich über die Nummer, gruppiere nach Stadt und sortiere nach Umsatz.",
-      "ziel": { "anker": "abfrage-ausdruck", "notbehelf": ".af-konsole .cm-content" },
-      "aktion": { "art": "tippen", "text": "SELECT b.kunde_stadt AS ort, count(DISTINCT b.nr) AS bestellungen, round(sum(p.menge * p.preis), 2) AS umsatz FROM bestellungen b JOIN positionen p ON p.nr = b.nr GROUP BY 1 ORDER BY umsatz DESC" },
+      "ziel": {
+        "anker": "abfrage-ausdruck",
+        "notbehelf": ".af-konsole .cm-content"
+      },
+      "aktion": {
+        "art": "tippen",
+        "text": "SELECT b.kunde_stadt AS ort, count(DISTINCT b.nr) AS bestellungen, round(sum(p.menge * p.preis), 2) AS umsatz FROM bestellungen b JOIN positionen p ON p.nr = b.nr GROUP BY 1 ORDER BY umsatz DESC"
+      },
       "erwartung": "Das Ergebnis belegt die Ansicht (Segment Abfrageergebnis): 5 Zeilen, Leipzig vorn, Balken zum Vergleich",
       "geprueft": "2026-11-11"
     },
     {
-      "nr": 10,
+      "nr": 12,
       "sprechtext": "Jedes Ergebnis lässt sich mitnehmen: als neues Dokument, das gleich als Tabelle aufgeht, oder als Datei in JSON, NDJSON oder CSV.",
-      "ziel": { "anker": "abfrage-herunterladen", "notbehelf": "Knopf Herunterladen im Kopf des Ergebnisses" },
-      "aktion": { "art": "zeigen" },
+      "ziel": {
+        "anker": "abfrage-herunterladen",
+        "notbehelf": "Knopf Herunterladen im Kopf des Ergebnisses"
+      },
+      "aktion": {
+        "art": "zeigen"
+      },
       "erwartung": "Menü mit JSON, NDJSON, CSV",
       "geprueft": "2026-11-11 (Menü geprüft; das Herunterladen selbst nicht, die Prüfumgebung lädt nichts herunter)"
     },
     {
-      "nr": 11,
+      "nr": 13,
       "sprechtext": "Und wenn eine Abfrage aus dem Ruder läuft, bricht sie nach zehn Sekunden von selbst ab. Danach geht es sofort normal weiter.",
-      "ziel": { "anker": "abfrage-ausdruck", "notbehelf": ".af-konsole .cm-content" },
-      "aktion": { "art": "tippen", "text": "last(range(1e12))", "vorher": "Sprache jq wählen" },
+      "ziel": {
+        "anker": "abfrage-ausdruck",
+        "notbehelf": ".af-konsole .cm-content"
+      },
+      "aktion": {
+        "art": "tippen",
+        "text": "last(range(1e12))",
+        "vorher": "Sprache jq wählen"
+      },
       "erwartung": "Nach 10 s: Nach 10 s abgebrochen (Zeitgrenze); die nächste Abfrage rechnet wieder",
       "geprueft": "2026-11-11"
     }
