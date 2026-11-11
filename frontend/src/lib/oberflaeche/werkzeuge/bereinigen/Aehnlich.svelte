@@ -3,7 +3,7 @@
   // Zielwert je Gruppe wählen oder eintippen, Gruppen ausnehmen; unten die Vorschau und Übernehmen als ein Vorgang.
   import { ersetzungen, VERFAHREN, verfahrenMoeglich, UNSCHARF_HOECHSTENS } from "../../../analyse/bereinigen/aehnlich";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
-  import { gruppenSchluessel, type BereinigenZustand, type Tabellenstand } from "./bereinigenZustand.svelte";
+  import { gruppenSchluessel, erklaerungVon, type BereinigenZustand, type Tabellenstand } from "./bereinigenZustand.svelte";
   import { zellenSetzen } from "./vorgaenge";
   import { anzahl } from "../../ansichten/tabelle/zahlen";
   import GruppenTafel from "./GruppenTafel.svelte";
@@ -26,6 +26,7 @@
 
 <div class="inhalt">
   <div class="br-flaeche">
+    <p class="br-erklaerung">{erklaerungVon("aehnlich")}</p>
     <section>
       <h2 class="br-abschnitt-titel">Verfahren</h2>
       <div class="br-verfahren">

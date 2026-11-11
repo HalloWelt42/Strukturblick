@@ -948,3 +948,12 @@ button.br-sprung:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Ein Satz, was der Reiter tut (für alle, die das Fachwort nicht kennen) */
+.br-erklaerung {
+  margin: var(--a2) var(--a1) 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.br-flaeche > .br-erklaerung {
+  margin: 0;
+}

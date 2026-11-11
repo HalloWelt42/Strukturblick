@@ -27,7 +27,7 @@
   <div class="werkzeugzeile">
     <nav class="segment" aria-label="Bereinigen">
       {#each REITER as r (r.kennung)}
-        <button class:aktiv={z.reiter === r.kennung} onclick={() => (z.reiter = r.kennung)}><i class="fa-solid {r.symbol}"></i><span>{r.titel}</span></button>
+        <button class:aktiv={z.reiter === r.kennung} title={r.erklaerung} onclick={() => (z.reiter = r.kennung)}><i class="fa-solid {r.symbol}"></i><span>{r.titel}</span></button>
       {/each}
     </nav>
     {#if s}

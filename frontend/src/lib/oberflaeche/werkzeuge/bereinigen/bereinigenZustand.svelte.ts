@@ -12,11 +12,23 @@ import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
 
 export type Reiter = "facetten" | "aehnlich" | "typen";
 
-export const REITER: readonly { readonly kennung: Reiter; readonly titel: string; readonly symbol: string }[] = [
-  { kennung: "facetten", titel: "Facetten", symbol: "fa-filter" },
-  { kennung: "aehnlich", titel: "Ähnliche Werte", symbol: "fa-object-group" },
-  { kennung: "typen", titel: "Typen", symbol: "fa-shapes" },
+/** Reiter mit Erklärung für Menschen, die das Fachwort nicht kennen (erscheint im Reiter selbst und beim Darüberfahren) */
+export const REITER: readonly { readonly kennung: Reiter; readonly titel: string; readonly symbol: string; readonly erklaerung: string }[] = [
+  {
+    kennung: "facetten", titel: "Facetten", symbol: "fa-filter",
+    erklaerung: "Eine Facette zählt, welche Werte in einer Spalte stehen und wie oft. Ein Klick auf einen Wert zeigt nur noch die Zeilen mit diesem Wert; mehrere Facetten filtern zusammen.",
+  },
+  {
+    kennung: "aehnlich", titel: "Ähnliche Werte", symbol: "fa-object-group",
+    erklaerung: "Findet verschiedene Schreibweisen desselben Werts, etwa Leipzig, leipzig und Leipzig mit Leerzeichen, und macht auf Wunsch eine daraus.",
+  },
+  {
+    kennung: "typen", titel: "Typen", symbol: "fa-shapes",
+    erklaerung: "Der Typ sagt, wie ein Wert gemeint ist: Text, Zahl, Betrag oder Datum. Hier steht, was erkannt wurde, und was sich einheitlich umschreiben ließe.",
+  },
 ];
+
+export const erklaerungVon = (r: Reiter): string => REITER.find((x) => x.kennung === r)!.erklaerung;
 
 /** Was gerade zu sehen ist: noch nichts gelesen, nicht lesbar, keine Liste, oder die Tabelle zur Analyse */
 export type Bereinigungsstand =

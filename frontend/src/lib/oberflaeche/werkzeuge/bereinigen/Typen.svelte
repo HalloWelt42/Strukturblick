@@ -3,7 +3,7 @@
   // mit Vorschau. Nichts wird von selbst umgewandelt; jedes Umwandeln ist ein eigener Vorgang im Verlauf.
   import type { Spaltentyp, Vorschlagsart } from "../../../analyse/bereinigen/typen";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
-  import type { BereinigenZustand, Tabellenstand } from "./bereinigenZustand.svelte";
+  import { erklaerungVon, type BereinigenZustand, type Tabellenstand } from "./bereinigenZustand.svelte";
   import TypTafel from "./TypTafel.svelte";
 
   let { blatt, z, s, typen }: { blatt: Arbeitsblatt; z: BereinigenZustand; s: Tabellenstand; typen: readonly Spaltentyp[] } = $props();
@@ -15,6 +15,7 @@
 
 <div class="inhalt">
   <div class="br-flaeche">
+    <p class="br-erklaerung">{erklaerungVon("typen")}</p>
     <section>
       <h2 class="br-abschnitt-titel">Spalten in {blatt.name} {#if textOhneTypen}<span class="br-rechts text-3">{s.analyse.format.name} kennt nur Text, die Typen liest Strukturblick</span>{/if}</h2>
       <div class="br-uebersicht">
