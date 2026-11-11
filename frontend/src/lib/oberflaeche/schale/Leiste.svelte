@@ -45,16 +45,19 @@
     {#if arbeitsplatz.dokumente.length || ablageverwaltung.ordner.length}
       <div class="leiste-titel">Dokumente</div>
       {#each oben as d (d.kennung)}
-        <a
-          class="eintrag"
-          class:aktiv={!ablageOffen && blatt?.kennung === d.kennung}
-          href="#{d.kennung}"
-          title={d.name}
-          onclick={(e) => { e.preventDefault(); void arbeitsplatz.ausAblageOeffnen(d.kennung); }}
-        >
-          <i class="fa-solid fa-file-lines"></i><span class="name">{d.name}</span>
-          <span class="rechts">{#if offen.has(d.kennung)}<span class="abzeichen" title="Als Reiter geöffnet">offen</span>{/if}</span>
-        </a>
+        <div class="dok-zeile">
+          <a
+            class="eintrag"
+            class:aktiv={!ablageOffen && blatt?.kennung === d.kennung}
+            href="#{d.kennung}"
+            title={d.name}
+            onclick={(e) => { e.preventDefault(); void arbeitsplatz.ausAblageOeffnen(d.kennung); }}
+          >
+            <i class="fa-solid fa-file-lines"></i><span class="name">{d.name}</span>
+            <span class="rechts">{#if offen.has(d.kennung)}<span class="abzeichen" title="Als Reiter geöffnet">offen</span>{/if}</span>
+          </a>
+          <button class="knopf still nur-symbol dok-weg" title="{d.name} in den Papierkorb (Rückgängig in der Meldung)" aria-label="{d.name} in den Papierkorb" onclick={() => void ablageverwaltung.entfernen([d.kennung])}><i class="fa-solid fa-trash-can"></i></button>
+        </div>
       {/each}
       {#each ablageverwaltung.ordner as o (o)}
         <a class="eintrag" class:aktiv={ablageOffen && ablageverwaltung.ordnerWahl === o} href="#{o}" title="Ordner {o}" onclick={(e) => { e.preventDefault(); ordnerOeffnen(o); }}>
@@ -96,5 +99,33 @@
   }
   .leiste-fuss span {
     white-space: normal;
+  }
+  /* Papierkorb je Dokument: erscheint beim Darüberfahren und mit der Tastatur; auf Touch-Geräten immer */
+  .dok-zeile {
+    position: relative;
+  }
+  .dok-weg {
+    position: absolute;
+    top: 50%;
+    right: var(--a1);
+    translate: 0 -50%;
+    opacity: 0;
+  }
+  .dok-zeile:hover .dok-weg,
+  .dok-weg:focus-visible {
+    opacity: 1;
+  }
+  .dok-zeile:hover .rechts {
+    visibility: hidden;
+  }
+  @media (hover: none) {
+    .dok-weg {
+      opacity: 1;
+    }
+  }
+  @media (max-width: 899px) {
+    .dok-weg {
+      display: none;
+    }
   }
 </style>

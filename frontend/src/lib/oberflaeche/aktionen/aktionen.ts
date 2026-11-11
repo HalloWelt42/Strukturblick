@@ -128,6 +128,20 @@ const DOKUMENTE: readonly Aktion[] = [
     ausfuehren: () => void arbeitsplatz.allesSpeichern().then(() => meldungen.zeigen({ text: "Alles abgelegt", art: "erfolg" })),
   },
   {
+    kennung: "papierkorb",
+    titel: "Dokument in den Papierkorb",
+    get beschreibung() {
+      const b = blatt();
+      return b ? `${b.name} schließen und in den Papierkorb legen (Rückgängig in der Meldung, 30 Tage wiederherstellbar)` : "Das offene Dokument";
+    },
+    symbol: "fa-trash-can",
+    verfuegbar: () => blatt() !== null,
+    ausfuehren: () => {
+      const b = blatt();
+      if (b) void ablageverwaltung.entfernen([b.kennung]);
+    },
+  },
+  {
     kennung: "herunterladen",
     titel: "Dokument herunterladen",
     get beschreibung() {
