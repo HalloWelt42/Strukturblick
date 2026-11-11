@@ -9,6 +9,7 @@
   import Willkommen from "./lib/oberflaeche/schale/Willkommen.svelte";
   import Inspektor from "./lib/oberflaeche/inspektor/Inspektor.svelte";
   import Meldung from "./lib/oberflaeche/bausteine/Meldung.svelte";
+  import Kontextmenue from "./lib/oberflaeche/bausteine/Kontextmenue.svelte";
   import Ablagezone from "./lib/oberflaeche/schale/Ablagezone.svelte";
   import { tastaturAnmelden } from "./lib/oberflaeche/aktionen/tastatur";
   import Palette from "./lib/oberflaeche/palette/Palette.svelte";
@@ -68,5 +69,6 @@
 {#if palette.offen}<Palette />{/if}
 {/if}
 <Meldung />
+<Kontextmenue />
 {#if starthinweis.offen}<StartHinweis />{/if}
 

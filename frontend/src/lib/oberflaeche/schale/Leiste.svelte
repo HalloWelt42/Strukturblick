@@ -7,6 +7,10 @@
   import { WERKZEUGE } from "../werkzeuge/registrierung";
   import { rezepte } from "../../zustand/rezepte.svelte";
   import { knopfTitel } from "../aktionen/tastatur";
+  import { kontext } from "../bausteine/kontextstand.svelte";
+  import { dokumentMenue, ordnerMenue } from "../aktionen/kontextmenues";
+  import { fokussieren } from "../bausteine/fokus";
+  import { leistenStand } from "./leistenStand.svelte";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const offen = $derived(new Set(arbeitsplatz.blaetter.map((b) => b.kennung)));
@@ -14,6 +18,27 @@
   const oben = $derived(arbeitsplatz.dokumente.filter((d) => !d.ordner));
   const anzahl = (o: string): number => arbeitsplatz.dokumente.filter((d) => d.ordner === o).length;
   const ablageOffen = $derived(arbeitsplatz.seite === "ablage");
+
+  // ----- Umbenennen an Ort und Stelle (aus dem Kontextmenü oder mit F2) -----
+  const umbenennt = (art: "dokument" | "ordner", wert: string): boolean => {
+    const u = leistenStand.umbenennen;
+    return u !== null && u.art === art && (u.art === "dokument" ? u.kennung : u.name) === wert;
+  };
+
+  function umbenennenFertig(e: Event): void {
+    const u = leistenStand.umbenennen;
+    if (!u) return;
+    leistenStand.umbenennen = null;
+    const neu = (e.currentTarget as HTMLInputElement).value.trim();
+    if (!neu) return;
+    if (u.art === "dokument") void ablageverwaltung.umbenennen(u.kennung, neu);
+    else if (neu !== u.name) void ablageverwaltung.ordnerUmbenennen(u.name, neu);
+  }
+
+  function umbenennenTaste(e: KeyboardEvent): void {
+    if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur();
+    else if (e.key === "Escape") leistenStand.umbenennen = null;
+  }
 
   function ordnerOeffnen(o: string): void {
     ablageverwaltung.ordnerWahl = o;
@@ -45,24 +70,33 @@
     {#if arbeitsplatz.dokumente.length || ablageverwaltung.ordner.length}
       <div class="leiste-titel">Dokumente</div>
       {#each oben as d (d.kennung)}
-        <div class="dok-zeile">
-          <a
-            class="eintrag"
-            class:aktiv={!ablageOffen && blatt?.kennung === d.kennung}
-            href="#{d.kennung}"
-            title={d.name}
-            onclick={(e) => { e.preventDefault(); void arbeitsplatz.ausAblageOeffnen(d.kennung); }}
-          >
-            <i class="fa-solid fa-file-lines"></i><span class="name">{d.name}</span>
-            <span class="rechts">{#if offen.has(d.kennung)}<span class="abzeichen" title="Als Reiter geöffnet">offen</span>{/if}</span>
-          </a>
-          <button class="knopf still nur-symbol dok-weg" title="{d.name} in den Papierkorb (Rückgängig in der Meldung)" aria-label="{d.name} in den Papierkorb" onclick={() => void ablageverwaltung.entfernen([d.kennung])}><i class="fa-solid fa-trash-can"></i></button>
-        </div>
+        {#if umbenennt("dokument", d.kennung)}
+          <label class="eintrag umbenennen"><i class="fa-solid fa-file-lines"></i><input value={d.name} aria-label="Neuer Name für {d.name}" use:fokussieren onkeydown={umbenennenTaste} onblur={umbenennenFertig} /></label>
+        {:else}
+          <div class="dok-zeile" use:kontext={() => dokumentMenue(d, () => (leistenStand.umbenennen = { art: "dokument", kennung: d.kennung }))}>
+            <a
+              class="eintrag"
+              class:aktiv={!ablageOffen && blatt?.kennung === d.kennung}
+              href="#{d.kennung}"
+              title="{d.name} (Rechtsklick: Menü, F2: Umbenennen)"
+              onclick={(e) => { e.preventDefault(); void arbeitsplatz.ausAblageOeffnen(d.kennung); }}
+              onkeydown={(e) => e.key === "F2" && (e.preventDefault(), (leistenStand.umbenennen = { art: "dokument", kennung: d.kennung }))}
+            >
+              <i class="fa-solid fa-file-lines"></i><span class="name">{d.name}</span>
+              <span class="rechts">{#if offen.has(d.kennung)}<span class="abzeichen" title="Als Reiter geöffnet">offen</span>{/if}</span>
+            </a>
+            <button class="knopf still nur-symbol dok-weg" title="{d.name} in den Papierkorb (Rückgängig in der Meldung)" aria-label="{d.name} in den Papierkorb" onclick={() => void ablageverwaltung.entfernen([d.kennung])}><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        {/if}
       {/each}
       {#each ablageverwaltung.ordner as o (o)}
-        <a class="eintrag" class:aktiv={ablageOffen && ablageverwaltung.ordnerWahl === o} href="#{o}" title="Ordner {o}" onclick={(e) => { e.preventDefault(); ordnerOeffnen(o); }}>
-          <i class="fa-solid fa-folder"></i><span class="name">{o}</span><span class="rechts"><span class="text-3 klein mono">{anzahl(o)}</span></span>
-        </a>
+        {#if umbenennt("ordner", o)}
+          <label class="eintrag umbenennen"><i class="fa-solid fa-folder"></i><input value={o} aria-label="Neuer Name für Ordner {o}" use:fokussieren onkeydown={umbenennenTaste} onblur={umbenennenFertig} /></label>
+        {:else}
+          <a class="eintrag" class:aktiv={ablageOffen && ablageverwaltung.ordnerWahl === o} href="#{o}" title="Ordner {o} (Rechtsklick: Menü, F2: Umbenennen)" onclick={(e) => { e.preventDefault(); ordnerOeffnen(o); }} onkeydown={(e) => e.key === "F2" && (e.preventDefault(), (leistenStand.umbenennen = { art: "ordner", name: o }))} use:kontext={() => ordnerMenue(o)}>
+            <i class="fa-solid fa-folder"></i><span class="name">{o}</span><span class="rechts"><span class="text-3 klein mono">{anzahl(o)}</span></span>
+          </a>
+        {/if}
       {/each}
     {/if}
     <div class="leiste-titel">Prüfen und umbauen</div>
@@ -99,6 +133,21 @@
   }
   .leiste-fuss span {
     white-space: normal;
+  }
+  /* Umbenennen an Ort und Stelle: das Feld nimmt die Zeile ein */
+  .umbenennen input {
+    flex: 1;
+    min-width: 0;
+    height: calc(var(--zeile) - 6px);
+    padding: 0 var(--a1);
+    border: 0;
+    background: var(--flaeche-eingabe);
+    box-shadow: var(--vertieft), 0 0 0 2px var(--akzent-flaeche);
+    font: inherit;
+    color: var(--text-1);
+  }
+  .umbenennen input:focus {
+    outline: 0;
   }
   /* Papierkorb je Dokument: erscheint beim Darüberfahren und mit der Tastatur; auf Touch-Geräten immer */
   .dok-zeile {

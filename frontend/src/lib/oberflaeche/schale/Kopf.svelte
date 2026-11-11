@@ -2,6 +2,8 @@
   // Kopf: Marke, Reiter der offenen Dokumente, Rückgängig und Wiederholen, Befehlspalette, Anzeige (Thema, Schrift).
   // Die Knöpfe führen Aktionen aus dem Register aus; Titel und Kürzel kommen von dort.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
+  import { kontext } from "../bausteine/kontextstand.svelte";
+  import { reiterMenue } from "../aktionen/kontextmenues";
   import { aktion } from "../aktionen/aktionen";
   import { knopfTitel, paletteKappen } from "../aktionen/tastatur";
   import { palette } from "../palette/palettenstand.svelte";
@@ -18,7 +20,7 @@
   <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
   <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
     {#each arbeitsplatz.blaetter as b (b.kennung)}
-      <div class="reiter" class:aktiv={b === blatt} role="tab" aria-selected={b === blatt} title={b.name}>
+      <div class="reiter" class:aktiv={b === blatt} role="tab" aria-selected={b === blatt} title="{b.name} (Rechtsklick: Menü)" use:kontext={() => reiterMenue(b)}>
         <button class="reiter-knopf" onclick={() => arbeitsplatz.waehlen(b)}>
           <i class="fa-solid fa-file-lines"></i><span class="name">{b.name}</span>
         </button>

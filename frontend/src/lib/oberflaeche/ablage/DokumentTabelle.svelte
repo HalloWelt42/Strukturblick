@@ -2,6 +2,8 @@
   // Dokumente eines Ordners: Haken zum Wählen (Umschalt/Cmd für mehrere), Doppelklick öffnet, Umbenennen in der Zeile;
   // darüber die Leiste für die Auswahl (Herunterladen, Verschieben, Papierkorb).
   import { fokussieren } from "../bausteine/fokus";
+  import { kontext } from "../bausteine/kontextstand.svelte";
+  import { dokumentMenue } from "../aktionen/kontextmenues";
   import type { Dokumentkopf } from "../../zustand/ablageverwaltung.svelte";
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
@@ -103,7 +105,7 @@
     </thead>
     <tbody>
       {#each dokumente as d (d.kennung)}
-        <tr class:gewaehlt={auswahl.istGewaehlt(d.kennung)} onclick={(e) => auswahl.umschalten(d.kennung, e.metaKey || e.ctrlKey || e.shiftKey)} ondblclick={() => void arbeitsplatz.ausAblageOeffnen(d.kennung)}>
+        <tr class:gewaehlt={auswahl.istGewaehlt(d.kennung)} onclick={(e) => auswahl.umschalten(d.kennung, e.metaKey || e.ctrlKey || e.shiftKey)} ondblclick={() => void arbeitsplatz.ausAblageOeffnen(d.kennung)} use:kontext={() => dokumentMenue(d, () => umbenennenBeginnen(d))}>
           <td><button class="vw-haken" class:an={auswahl.istGewaehlt(d.kennung)} aria-label="{d.name} wählen" onclick={(e) => { e.stopPropagation(); auswahl.umschalten(d.kennung, true); }}><i class="fa-solid fa-check"></i></button></td>
           <td class="vw-name-zelle">
             {#if auswahl.umbenennen === d.kennung}

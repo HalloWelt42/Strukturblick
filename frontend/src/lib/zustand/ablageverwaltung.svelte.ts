@@ -39,6 +39,8 @@ class Ablageverwaltung {
   papierkorb = $state.raw<Papierkorbeintrag[]>([]);
   /** Gewählter Ordner der Seite Ablage ("" = oberste Ebene, null = Papierkorb) */
   ordnerWahl = $state<string | null>("");
+  /** Von außen angestoßenes Umbenennen (Kontextmenü am Reiter): die Seite Ablage übernimmt es beim Öffnen */
+  umbenennenStarten = $state<string | null>(null);
 
   async neuLaden(): Promise<void> {
     const a = arbeitsplatz.ablage;
@@ -125,6 +127,17 @@ class Ablageverwaltung {
   async ordnerEntfernen(name: string): Promise<void> {
     if (await mitMeldung(() => arbeitsplatz.ablage.ordnerEntfernen(name))) this.ordnerWahl = "";
     await this.neuLaden();
+  }
+
+  /** Kopie im selben Ordner ("name Kopie.json"), öffnet als Reiter; Verlauf beginnt neu */
+  async duplizieren(kennung: string): Promise<void> {
+    const quelle = await this.textVon(kennung);
+    const kopf = arbeitsplatz.dokumente.find((d) => d.kennung === kennung);
+    if (!quelle) return;
+    const name = quelle.name.replace(/(\.[^.]+)?$/, (endung) => ` Kopie${endung}`);
+    const neu = await arbeitsplatz.neu(name, quelle.text, kopf?.ordner ?? "");
+    await this.neuLaden();
+    meldungen.zeigen({ text: `Kopie ${neu.name} angelegt`, art: "erfolg" });
   }
 
   /** Text eines Dokuments zum Herunterladen (offene Blätter mit ihrem aktuellen Stand) */

@@ -16,6 +16,13 @@
   import AblageInspektor from "./AblageInspektor.svelte";
 
   const auswahl = new Ablageauswahl();
+  // Umbenennen, das ein Kontextmenü außerhalb der Seite angestoßen hat
+  $effect(() => {
+    const k = ablageverwaltung.umbenennenStarten;
+    if (k === null) return;
+    auswahl.umbenennen = k;
+    ablageverwaltung.umbenennenStarten = null;
+  });
   let neuerOrdner = $state<string | null>(null);
 
   onMount(() => void ablageverwaltung.neuLaden());
