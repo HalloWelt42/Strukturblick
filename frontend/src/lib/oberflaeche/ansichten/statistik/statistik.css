@@ -1,0 +1,242 @@
+/* Ansicht Statistik (nach entwuerfe/teile/ansichten.css, Teil Statistik): Kennzahlen, Typband, Feldprofil,
+   Histogramm und Muster. Gemeinsames in ../ansichten.css. */
+
+/* ----- 2. Statistik -------------------------------------------------------- */
+
+.an-kennzahlen {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--a3);
+}
+.an-kachel {
+  min-width: 0;
+  padding: var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.an-kachel-wert {
+  font-size: var(--kennzahl);
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.an-einheit {
+  margin-left: var(--a1);
+  font-size: var(--klein);
+  font-weight: 500;
+  color: var(--text-3);
+}
+.an-kachel-name {
+  margin-top: var(--a1);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* Typverteilung als geteiltes Band */
+.an-typband {
+  display: flex;
+  gap: 2px;
+  height: calc(var(--zeile) / 2);
+  margin-bottom: var(--a3);
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.an-typband > span {
+  width: var(--anteil);
+  background-color: var(--an-farbe);
+  background-image: var(--erhaben);
+}
+
+/* Feld-Profil: echte Tabelle, Kopf und Werte teilen dieselbe Spalte und
+   dieselbe Ausrichtung (Zahlen rechts, Text links). Rollt seitlich im eigenen Feld. */
+.an-tabellenfeld {
+  overflow-x: auto;
+  margin: 0 calc(var(--a3) * -1) calc(var(--a3) * -1);
+}
+.an-profil {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.an-profil th,
+.an-profil td {
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.an-profil th {
+  font-size: var(--marke);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-2);
+}
+.an-profil td {
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.an-profil .an-zahl {
+  text-align: right;
+  font-family: var(--schrift-mono);
+  font-variant-numeric: tabular-nums;
+}
+.an-profil th.an-zahl {
+  font-family: var(--schrift);
+}
+.an-profil tbody tr {
+  cursor: pointer;
+}
+.an-profil tbody tr:nth-child(even) {
+  background-color: var(--flaeche-wechsel);
+}
+.an-profil tbody tr:hover {
+  background-color: var(--akzent-weich);
+}
+.an-profil tbody tr.an-gewaehlt {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .an-profil tbody tr.an-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+.an-feldname {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--typ-schluessel);
+}
+.an-feldname .an-vorsilbe {
+  font-weight: 400;
+  color: var(--text-3);
+}
+.an-feldname .an-ziel {
+  margin-left: var(--a2);
+  color: var(--akzent);
+}
+.an-leer-wert {
+  color: var(--text-3);
+}
+
+/* Histogramm aus CSS: Achse links, Säulen, Klassen darunter */
+.an-histo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: calc(var(--zeile) * 6) auto auto;
+  column-gap: var(--a2);
+  padding-top: var(--a4);
+  font-size: var(--klein);
+}
+.an-histo-achse {
+  position: relative;
+  min-width: 4ch;
+  font-family: var(--schrift-mono);
+  color: var(--text-3);
+}
+.an-histo-achse span {
+  position: absolute;
+  right: 0;
+  bottom: var(--y);
+  translate: 0 50%;
+  line-height: 1;
+}
+.an-histo-flaeche {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--a2);
+  padding: 0 var(--a2);
+  background-image: linear-gradient(to top, var(--rand-1) 1px, transparent 1px);
+  background-size: 100% 25%;
+  box-shadow: inset 0 0 0 1px var(--rand-1);
+}
+.an-saeule {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: var(--h);
+  background-color: var(--akzent-flaeche);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  cursor: pointer;
+}
+.an-saeule:hover {
+  background-color: var(--akzent);
+}
+.an-saeule b {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  translate: -50% -2px;
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+.an-histo-klassen {
+  grid-column: 2;
+  display: flex;
+  gap: var(--a2);
+  padding: var(--a1) var(--a2) 0;
+}
+.an-histo-klassen span {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  font-family: var(--schrift-mono);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.an-histo-titel {
+  grid-column: 2;
+  margin-top: var(--a1);
+  text-align: center;
+  color: var(--text-3);
+}
+
+/* Muster: erkannte Eigenschaften einzelner Felder */
+.an-muster {
+  display: grid;
+  gap: var(--a2);
+}
+.an-muster-eintrag {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--a1) var(--a3);
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.an-muster-eintrag:hover {
+  background-color: var(--akzent-weich);
+}
+.an-muster-eintrag > i {
+  width: 1.4em;
+  margin-top: 0.2em;
+  text-align: center;
+  color: var(--akzent);
+}
+.an-muster-name {
+  font-weight: 600;
+}
+.an-muster-text {
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+@container an-raum (max-width: 899px) {
+  .an-kennzahlen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@container an-raum (max-width: 1049px) {
+  .an-reihe {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

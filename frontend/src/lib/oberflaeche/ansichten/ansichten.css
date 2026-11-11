@@ -1,0 +1,155 @@
+/* Gemeinsame Bausteine der Ansichten Statistik, Struktur, Graph und Vergleich (nach entwuerfe/teile/ansichten.css,
+   Präfix .an-): Fläche mit Tafeln, Reihen, Hinweisband, Typfarben und Legende. Ansichtseigenes liegt daneben. */
+
+/* ----- 1. Gemeinsam -------------------------------------------------------- */
+
+/* Inhaltsfeld als Container: die Ansichten messen ihre eigene Breite */
+.an-raum {
+  container: an-raum / inline-size;
+}
+
+/* Fläche mit Tafeln, rollt im Inhaltsfeld (kein klebender Kopf) */
+.an-flaeche {
+  display: grid;
+  gap: var(--a3);
+  padding: var(--a3);
+  align-content: start;
+}
+.an-tafel {
+  min-width: 0;
+  padding: var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.an-tafel-fuss {
+  margin: 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.an-reihe {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--a3);
+}
+.an-oben {
+  margin-top: var(--a3);
+}
+.an-wertfeld-klein {
+  font-size: var(--klein);
+}
+.an-code-block {
+  margin: 0;
+  font-size: var(--klein);
+  white-space: pre;
+  overflow-x: auto;
+  overflow-wrap: normal;
+  line-height: 1.5;
+}
+
+/* Werkzeugzeile, die bei wenig Platz umbricht */
+.an-umbruch {
+  flex-wrap: wrap;
+}
+.an-zeilen-name {
+  font-size: var(--klein);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* Hinweisband unter der Werkzeugzeile */
+.an-hinweis {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  background: var(--flaeche-hervor);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  font-size: var(--klein);
+  color: var(--text-1);
+}
+.an-hinweis > i {
+  color: var(--akzent);
+}
+.an-hinweis .rechts {
+  margin-left: auto;
+  color: var(--text-2);
+}
+
+/* Gewählt: dieselbe Fläche wie der gewählte Knoten im Baum */
+.an-gewaehlt {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .an-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+
+/* Typfarben als Fläche (Typband, Legende) */
+.an-f-objekt {
+  --an-farbe: var(--typ-objekt);
+}
+.an-f-liste {
+  --an-farbe: var(--typ-liste);
+}
+.an-f-text {
+  --an-farbe: var(--typ-text);
+}
+.an-f-zahl {
+  --an-farbe: var(--typ-zahl);
+}
+.an-f-bool {
+  --an-farbe: var(--typ-bool);
+}
+.an-f-null {
+  --an-farbe: var(--typ-null);
+}
+.an-farbe {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  flex: none;
+  background: var(--an-farbe);
+}
+
+/* Legende: Einträge in einer Zeile, bricht um */
+.an-legende {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a5);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.an-legende > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  white-space: nowrap;
+}
+.an-legende b {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+/* ----- In der App ---------------------------------------------------------- */
+
+.an-ansicht {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.an-leer {
+  padding: var(--a4);
+}
+button.an-muster-eintrag {
+  width: 100%;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}

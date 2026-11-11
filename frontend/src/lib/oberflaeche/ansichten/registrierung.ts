@@ -1,11 +1,12 @@
 // Registrierung der Ansichten: die eine Liste, aus der die Ansichtswahl entsteht (keine hart geschriebenen Reiter).
-// Neue Ansichten (Statistik, Struktur, Graph, Vergleich) melden sich in Stufe 7 hier an.
+// Neue Ansichten melden sich hier an (Stufe 7: Statistik, danach Struktur, Graph, Vergleich).
 
 import type { Component } from "svelte";
 import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
 import BaumAnsicht from "./baum/BaumAnsicht.svelte";
 import EditorAnsicht from "./editor/EditorAnsicht.svelte";
 import TabellenAnsicht from "./tabelle/TabellenAnsicht.svelte";
+import StatistikAnsicht from "./statistik/StatistikAnsicht.svelte";
 
 export interface Ansicht {
   readonly kennung: string;
@@ -18,6 +19,7 @@ export const ANSICHTEN: readonly Ansicht[] = [
   { kennung: "baum", titel: "Baum", symbol: "fa-folder-tree", komponente: BaumAnsicht },
   { kennung: "editor", titel: "Editor", symbol: "fa-code", komponente: EditorAnsicht },
   { kennung: "tabelle", titel: "Tabelle", symbol: "fa-table", komponente: TabellenAnsicht },
+  { kennung: "statistik", titel: "Statistik", symbol: "fa-chart-column", komponente: StatistikAnsicht },
 ];
 
 export const ansicht = (kennung: string): Ansicht => ANSICHTEN.find((a) => a.kennung === kennung) ?? ANSICHTEN[0];

@@ -32,10 +32,12 @@ export function spanne(zahlen: ArrayLike<number>): { min: number; max: number } 
   return { min, max };
 }
 
-export function klassenBilden(zahlen: ArrayLike<number>, ziel = 12): Klassen {
+/** `ganz`: nur ganze Zahlen, dann ist der Schritt mindestens 1 (sonst entstehen leere halbe Klassen) */
+export function klassenBilden(zahlen: ArrayLike<number>, ziel = 12, ganz = false): Klassen {
   const s = spanne(zahlen);
   if (!s) return { klassen: [], schritt: 1 };
-  const schritt = schrittFuer(s.max - s.min, ziel);
+  const roh = schrittFuer(s.max - s.min, ziel);
+  const schritt = ganz ? Math.max(1, roh) : roh;
   const anfang = Math.floor(s.min / schritt) * schritt;
   const anzahl = Math.max(1, Math.floor((s.max - anfang) / schritt) + 1);
   const zaehler = new Array<number>(anzahl).fill(0);
