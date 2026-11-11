@@ -3,7 +3,9 @@
 // Speichern nichts zurückschreibt.
 
 import { Ablagefehler, ordnerNameGueltig, type AbgelegtesDokument, type Papierkorbeintrag } from "../dienste/ablage";
+import { rezeptLesen, type Rezept } from "../analyse/rezepte/rezept";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
+import { rezepte } from "./rezepte.svelte";
 import { meldungen } from "./meldungen.svelte";
 
 // Für die Oberfläche (sie greift nicht direkt auf Dienste zu, Regel A1)
@@ -16,6 +18,8 @@ export interface Sicherung {
   readonly erstellt: string;
   readonly ordner: readonly string[];
   readonly dokumente: readonly AbgelegtesDokument[];
+  /** Rezepte (seit STB-7; ältere Sicherungen haben keine) */
+  readonly rezepte?: readonly Rezept[];
 }
 
 const neueKennung = (): string => globalThis.crypto.randomUUID();
@@ -139,10 +143,11 @@ class Ablageverwaltung {
       const d = await arbeitsplatz.ablage.laden(kopf.kennung);
       if (d) dokumente.push(d);
     }
-    return { art: "strukturblick-sicherung", fassung: 1, erstellt: new Date().toISOString(), ordner: this.ordner, dokumente };
+    const alleRezepte = await arbeitsplatz.ablage.rezepte();
+    return { art: "strukturblick-sicherung", fassung: 1, erstellt: new Date().toISOString(), ordner: this.ordner, dokumente, rezepte: alleRezepte };
   }
 
-  /** Sicherung einspielen: kommt zu den vorhandenen Dokumenten dazu (neue Kennungen), nichts wird überschrieben. */
+  /** Sicherung einspielen: kommt zu den vorhandenen Dokumenten und Rezepten dazu (neue Kennungen), nichts wird überschrieben. */
   async einspielen(inhalt: string): Promise<void> {
     let s: Sicherung;
     try {
@@ -156,9 +161,15 @@ class Ablageverwaltung {
     const ok = await mitMeldung(async () => {
       for (const o of s.ordner ?? []) if (!vorhanden.has(o) && ordnerNameGueltig(o)) await arbeitsplatz.ablage.ordnerAnlegen(o);
       for (const d of s.dokumente) await arbeitsplatz.ablage.speichern({ ...d, kennung: neueKennung() });
+      for (const roh of s.rezepte ?? []) {
+        const r = rezeptLesen(roh);
+        if (r.ok) await arbeitsplatz.ablage.rezeptSpeichern({ ...r.rezept, kennung: neueKennung() });
+      }
     });
     await this.neuLaden();
-    if (ok) meldungen.zeigen({ text: `${s.dokumente.length} Dokumente aus der Sicherung übernommen`, art: "erfolg" });
+    await rezepte.laden();
+    const anzahlRezepte = s.rezepte?.length ?? 0;
+    if (ok) meldungen.zeigen({ text: `${s.dokumente.length} Dokumente${anzahlRezepte ? ` und ${anzahlRezepte} Rezepte` : ""} aus der Sicherung übernommen`, art: "erfolg" });
   }
 }
 

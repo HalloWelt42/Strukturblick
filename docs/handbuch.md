@@ -77,6 +77,15 @@ auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz
 
 Jedes Übernehmen ist genau ein Vorgang im Verlauf und lässt sich rückgängig machen.
 
+Rezepte (Leiste, Abschnitt "Rezepte") wiederholen das Aufräumen an der nächsten Datei gleicher Bauart. Jeder
+Vorgang aus Bereinigen merkt sich im Verlauf, was fachlich geschah (Spalte und Regel, nie Stellen im Text);
+"Neues Rezept aus dem Verlauf" macht aus den gewählten Vorgängen Schritte. Schritte lassen sich ausschalten,
+verschieben und entfernen, bei Betrag und Datum gilt für nicht lesbare Werte "stehen lassen" oder "leer setzen".
+"Anwenden" läuft auf dem offenen Dokument: erst die Prüfung der Spalten (fehlt eine, wird nur ihr Schritt
+übersprungen, zusätzliche bleiben), dann die Vorschau je Schritt, dann als neues Dokument im selben Ordner oder als
+ein Vorgang im Dokument. Rezepte liegen in der Ablage (auf pi5b je Konto, ohne Server im Browser) und lassen sich
+einzeln als Datei herunterladen.
+
 Die Befehlspalette (⌘ K, unter Windows und Linux Strg K, oder das Suchfeld oben rechts) findet Befehle, Dokumente,
 Ordner und Ansichten mit unscharfer Suche; zuletzt Benutztes steht oben, jeder Befehl zeigt sein Tastenkürzel. Die
 Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
@@ -154,7 +163,8 @@ verschieben; die Leiste zeigt den Ordner.
 Die Datenbank sichert der Appkern nach seiner Regel nach {{wurzel}}/sicherungen. Zurückspielen: App anhalten
 (`docker compose -f compose.pi.yml stop strukturblick` in {{wurzel}}), Kopie als `daten/strukturblick.sqlite`
 ablegen, starten. Prüfen: nach dem Anmelden sind die Dokumente in der Leiste wie vorher. Die Bauart ohne Server hat
-keine Sicherung auf dem Server: dort in der Ablage "Alles sichern" wählen und die Datei aufheben; auf einem anderen
+keine Sicherung auf dem Server: dort in der Ablage "Alles sichern" wählen (Dokumente samt Verlauf und Rezepte) und die
+Datei aufheben; auf einem anderen
 Gerät oder nach dem Leeren des Browsers holt "Einspielen" alles zurück. Das geht auch zwischen den Bauarten.
 
 ## Wenn etwas klemmt

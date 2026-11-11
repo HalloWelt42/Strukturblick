@@ -56,8 +56,14 @@ describe("Ablageverwaltung", () => {
 
   it("spielt eine Sicherung zusätzlich ein, mit neuen Kennungen und den Ordnern", async () => {
     await ablageverwaltung.ordnerAnlegen("Leer");
+    await arbeitsplatz.ablage.rezeptSpeichern({
+      kennung: "00000000-0000-4000-8000-000000000009", name: "Kunden säubern", spalten: ["ort"], quelle: "kunden.json",
+      schritte: [{ art: "ersetzen", spalte: "ort", karte: [{ vorher: "Lpz.", nachher: "Leipzig" }], an: true }],
+      angelegt: "2026-11-11T20:00:00.000Z", geaendert: "2026-11-11T20:00:00.000Z", zuletzt: [],
+    });
     const sicherung = await ablageverwaltung.sicherung();
     expect(sicherung.dokumente).toHaveLength(2);
+    expect(sicherung.rezepte).toHaveLength(1);
 
     const ziel = new SpeicherAblage();
     await ziel.speichern(dokument("x", "vorhanden.json"));
@@ -69,6 +75,9 @@ describe("Ablageverwaltung", () => {
     expect(arbeitsplatz.dokumente.every((d) => !["a", "b"].includes(d.kennung))).toBe(true);
     expect(ablageverwaltung.ordner).toEqual(["Import", "Leer"]);
     expect((await ziel.laden(arbeitsplatz.dokumente.find((d) => d.name === "kunden.json")!.kennung))?.text).toBe('{"name":"kunden.json"}');
+    const rezepte = await ziel.rezepte();
+    expect(rezepte.map((r) => r.name)).toEqual(["Kunden säubern"]);
+    expect(rezepte[0].kennung).not.toBe("00000000-0000-4000-8000-000000000009");
   });
 
   it("weist fremde Dateien beim Einspielen ab", async () => {

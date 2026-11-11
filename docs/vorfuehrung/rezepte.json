@@ -1,0 +1,65 @@
+{
+  "kapitel": "rezepte",
+  "titel": "Aufräumen wiederholen",
+  "ticket": "STB-7",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, kunden.csv aktiv im Werkzeug Bereinigen, keine Änderungen im Verlauf; kunden-auswahl.csv geöffnet (Kapitel exportieren)",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Jeden Monat kommt ein neuer Kundenexport mit denselben Fehlern. Ich räume einmal auf und merke mir die Schritte. Erst führe ich in ort die ähnlichen Werte zusammen.",
+      "ziel": { "anker": "aehnlich-uebernehmen", "notbehelf": "Reiter Ähnliche Werte, Knopf Übernehmen in der Leiste unten" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Meldung ort: ähnliche Werte zusammengeführt (151 Zellen)",
+      "geprueft": "2026-11-11, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Dann wandle ich im Reiter Typen den Umsatz in Beträge um und stelle die Datumsangaben auf Jahr-Monat-Tag um. Jeder Vorgang landet im Verlauf, mit dem, was fachlich geschah.",
+      "ziel": { "anker": "typ-umwandeln", "notbehelf": "Reiter Typen, Knöpfe Umwandeln bei umsatz und angelegt" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Verlauf mit 3 Vorgängen aus Bereinigen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "In der Leiste unter Rezepte öffne ich alle Rezepte und wähle Neues Rezept aus dem Verlauf. Jeder Vorgang wird ein Schritt; was ich nicht will, schalte ich aus.",
+      "ziel": { "anker": "rezept-aus-verlauf", "notbehelf": "Leiste, Abschnitt Rezepte, Listenknopf; dann Neues Rezept aus dem Verlauf" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Drei Vorgänge mit Schaltern: ort zusammenführen, umsatz als Betrag, angelegt vereinheitlichen; Name kunden säubern",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Gespeichert ist ein Rezept mit drei Schritten. Es merkt sich Spalten und Regeln, nicht Stellen im Text, und dazu die Spalten, die es erwartet.",
+      "ziel": { "anker": "rezept-speichern", "notbehelf": "Knopf Rezept speichern" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Rezept kunden säubern in der Leiste, Seite mit Schritten und erwarteten Spalten",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Rechts steht, worauf es sich anwenden lässt. Ich nehme kunden-auswahl.csv, eine andere Datei gleicher Bauart.",
+      "ziel": { "anker": "anwenden-auf", "notbehelf": "Inspektor, Karte Anwenden auf, Eintrag kunden-auswahl.csv" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Spalten prüfen: Passt, alle erwarteten Spalten da; Vorschau je Schritt mit Zahlen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 6,
+      "sprechtext": "Erst die Prüfung: Alle Spalten sind da. Fehlte eine, würde nur ihr Schritt übersprungen. Dann die Vorschau je Schritt: welche Werte wozu werden und wie oft.",
+      "ziel": { "anker": "rezept-vorschau", "notbehelf": "Abschnitt 2. Vorschau je Schritt" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "ort zusammenführen 89 Zellen; umsatz als Betrag 142 Zellen; Zielname kunden-auswahl-sauber.csv",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 7,
+      "sprechtext": "Als neues Dokument entsteht kunden-auswahl-sauber.csv; das Original bleibt, wie es ist. Ins Dokument wäre ein einziger Vorgang im Verlauf, den Rückgängig wieder zurücknimmt.",
+      "ziel": { "anker": "rezept-uebernehmen", "notbehelf": "Knopf Übernehmen in der Leiste 3. Ergebnis" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Reiter kunden-auswahl-sauber.csv in der Tabelle, Spalte ort mit einem Wert; Meldung Rezept kunden säubern angewendet",
+      "geprueft": "2026-11-11"
+    }
+  ]
+}
