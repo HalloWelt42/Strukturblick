@@ -1,0 +1,41 @@
+{
+  "kapitel": "statistik",
+  "titel": "Daten auf einen Blick",
+  "ticket": "STB-31",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json aktiv",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Die Ansicht Statistik zeigt ein Dokument, ohne dass ich es lesen muss: 2.472 Knoten, fünf Ebenen tief, 62 Kilobyte, und wie viele Objekte, Listen und Texte darin stecken.",
+      "ziel": { "anker": "ansicht-statistik", "notbehelf": "Ansichtswahl, vierter Knopf Statistik (⌥ ⌘ 4)" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Kacheln Knoten 2.472, Tiefe 5, Größe 62 KB; Typverteilung als Band",
+      "geprueft": "2026-11-11, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Das Feld-Profil beschreibt jedes Feld der Bestellungen, auch verschachtelte wie kunde.plz und positionen[].preis: Typ, wie oft es vorkommt, wie viele verschiedene Werte, die Spanne und wie oft es leer ist.",
+      "ziel": { "anker": "statistik-profil", "notbehelf": "Tafel Feld-Profil" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Zeilen nr, datum, kunde.name, kunde.plz, kunde.stadt, positionen, positionen[].artikel, positionen[].menge, positionen[].preis, bezahlt, notiz",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Ein Klick auf positionen[].preis: Das Histogramm zeigt die Preise in Klassen, und rechts im Inspektor stehen alle Werte dieses Pfads mit Spanne und den häufigsten Preisen.",
+      "ziel": { "anker": "statistik-feld", "notbehelf": "Zeile positionen[].preis im Feld-Profil" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Zeile markiert, Histogramm positionen[].preis mit 297 Werten, Inspektor Alle Werte dieses Pfads, Spanne 2.49 bis 8.5",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Unter Muster fällt auf, was sich als Schlüssel eignet, wo Datumsangaben stehen und welche Nummern nur nach Zahl aussehen. Bei den Kunden etwa die Postleitzahlen mit führender Null.",
+      "ziel": { "anker": "statistik-muster", "notbehelf": "Tafel Muster unter dem Histogramm" },
+      "aktion": { "art": "zeigen", "vorher": "kunden.csv, Ansicht Statistik" },
+      "erwartung": "Muster Datum bei angelegt, sieht aus wie Zahl bei plz (bleibt Text)",
+      "geprueft": "2026-11-11"
+    }
+  ]
+}

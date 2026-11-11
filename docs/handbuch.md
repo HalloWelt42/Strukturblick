@@ -60,6 +60,12 @@ Tabelle nimmt genau die sichtbaren Zeilen (Filter und Sortierung wie angezeigt),
 Treffernavigation des Baums die Treffer der Suche oder Abfrage (einzelne Werte mit ihrem Pfad). Beides geht als
 Datei (JSON, NDJSON, CSV) oder als neues Dokument in der Ablage, im selben Ordner wie die Quelle.
 
+Die Ansicht Statistik (⌥ ⌘ 4) zeigt Kennzahlen des Dokuments (Knoten, Tiefe, Größe, Arten) und je Feld der Liste,
+die auch die Tabelle zeigt, Typ, Vorkommen, verschiedene Werte, Textlänge, Spanne (bei Beträgen nach Zahl, bei
+Datum nach Datum) und den Leer-Anteil (fehlt, null oder leer). Verschachtelte Felder stehen als Musterpfad da
+(positionen[].preis). Ein Klick auf ein Feld zeigt sein Histogramm und im Inspektor alle Werte dieses Pfads; Muster
+nennen Schlüssel, Datumsangaben und Nummern mit führender Null.
+
 Das Werkzeug Bereinigen (Leiste, "Prüfen und umbauen", oder die Befehlspalette) arbeitet auf der Liste, die
 auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz im Segment geschlossen wird:
 
