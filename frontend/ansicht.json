@@ -1,0 +1,6 @@
+{
+  "rahmen": false,
+  "seiten": [
+    { "name": "start", "pfad": "/" }
+  ]
+}
