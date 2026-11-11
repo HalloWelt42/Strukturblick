@@ -5,6 +5,8 @@
 import { defineConfig } from "vitest/config";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { lizenzenPlugin } from "./lizenzen/sammeln.ts";
 
 const FASSUNG = (JSON.parse(readFileSync(new URL("../version.json", import.meta.url), "utf8")) as { version: string }).version;
 const fassungEinsetzen = {
@@ -14,7 +16,7 @@ const fassungEinsetzen = {
 
 export default defineConfig({
   base: "./",
-  plugins: [svelte(), fassungEinsetzen],
+  plugins: [svelte(), fassungEinsetzen, lizenzenPlugin(fileURLToPath(new URL(".", import.meta.url)))],
   define: {
     __APP_FASSUNG__: JSON.stringify(FASSUNG),
   },

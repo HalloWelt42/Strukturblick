@@ -10,6 +10,7 @@ import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
 import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
 import { abfrage, SPRACHEN } from "../../zustand/abfrage.svelte";
 import { beispieleOeffnen, BEISPIEL_ORDNER } from "../../zustand/beispiele";
+import { starthinweis } from "../../zustand/starthinweis.svelte";
 import { einstellungen, SCHRIFTSTUFEN, THEMEN } from "../../zustand/einstellungen.svelte";
 import { meldungen } from "../../zustand/meldungen.svelte";
 import { zugang } from "../../zustand/zugang.svelte";
@@ -236,6 +237,14 @@ const ANZEIGE: readonly Aktion[] = [
 ];
 
 const ZUGANG: readonly Aktion[] = [
+  {
+    kennung: "ueber",
+    titel: "Über Strukturblick",
+    beschreibung: "Nutzung, Datenschutz, Betaphase und Lizenzen",
+    symbol: "fa-circle-info",
+    verfuegbar: () => true,
+    ausfuehren: () => starthinweis.oeffnen(),
+  },
   {
     kennung: "abmelden",
     titel: "Abmelden",

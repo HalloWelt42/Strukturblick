@@ -15,6 +15,8 @@
   import { palette } from "./lib/oberflaeche/palette/palettenstand.svelte";
   import Zugangsseite from "./lib/oberflaeche/schale/Zugangsseite.svelte";
   import Startanzeige from "./lib/oberflaeche/schale/Startanzeige.svelte";
+  import StartHinweis from "./lib/oberflaeche/schale/StartHinweis.svelte";
+  import { starthinweis } from "./lib/zustand/starthinweis.svelte";
   import AblageSeite from "./lib/oberflaeche/ablage/AblageSeite.svelte";
   import { zugang } from "./lib/zustand/zugang.svelte";
 
@@ -66,4 +68,5 @@
 {#if palette.offen}<Palette />{/if}
 {/if}
 <Meldung />
+{#if starthinweis.offen}<StartHinweis />{/if}
 

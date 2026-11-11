@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends git ca-certific
     git config --global url."https://github.com/".insteadOf "ssh://git@github.com/" && \
     git config --global --add url."https://github.com/".insteadOf "git@github.com:"
 WORKDIR /bau
-COPY version.json ./
+# version.json für die Fassung, LICENSE für lizenzen.txt (frontend/lizenzen/sammeln.ts)
+COPY version.json LICENSE ./
 COPY frontend/package.json frontend/package-lock.json ./frontend/
 RUN cd frontend && npm ci --no-audit --no-fund
 COPY frontend ./frontend

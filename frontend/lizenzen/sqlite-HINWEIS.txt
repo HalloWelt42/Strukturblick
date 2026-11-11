@@ -1,0 +1,4 @@
+SQLite ist gemeinfrei (public domain). Die Autoren von SQLite haben auf alle Urheberrechte verzichtet; es gibt keine
+Lizenzbedingungen. Quelle: https://www.sqlite.org/copyright.html
+
+sql.js, das SQLite für den Browser übersetzt, steht unter der MIT-Lizenz (siehe Eintrag sql.js).

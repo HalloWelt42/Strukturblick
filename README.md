@@ -48,6 +48,9 @@ Wenn dir das Projekt gefällt, kannst du hier "Danke sagen":
 
 ## Lizenz
 
-Nicht-kommerzielle Lizenz v1.0 - siehe [LICENSE](LICENSE).
+Nicht-kommerzielle Lizenz v1.0 - siehe [LICENSE](LICENSE). Kostenfrei ist nur die private, nicht-kommerzielle
+Nutzung. Die Lizenzen aller mitgelieferten Bausteine anderer Urheber liegen jeder gebauten Fassung als `lizenzen.txt`
+bei (beim Bau aus den Paketen gesammelt, dazu die in WebAssembly eingebetteten Teile: jq mit decNumber, Oniguruma,
+SQLite).
 
 Copyright (c) 2026 HalloWelt42

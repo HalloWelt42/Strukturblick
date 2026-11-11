@@ -11,7 +11,7 @@ schluessel_orte:
   - "pi5b: `{{wurzel}}/.env`: Adresse und App-Schlüssel der Kellerwolke als feste Einstellung, vom Ausrollen gesetzt"
   - "pi5b: `{{wurzel}}/zertifikate/`: Blattzertifikat mit Schlüssel aus der Hausstelle (vom Ausrollen)"
 einrichten: einrichten.sh
-stand: 36092f8
+stand: f4da234
 ---
 
 # Strukturblick
@@ -28,6 +28,12 @@ Die Seite Ablage (Ordnerknopf oben in der Leiste) verwaltet die Dokumente: Ordne
 Verschieben, Herunterladen, mehrere auf einmal wählen. Entfernen legt in den Papierkorb, die Meldung bietet
 Rückgängig; nach 30 Tagen löscht die Ablage dort endgültig. "Alles sichern" schreibt alle Dokumente samt Verlauf und
 Ordnern in eine Datei, "Einspielen" fügt eine solche Datei hinzu, ohne Vorhandenes zu überschreiben.
+
+Bei jedem Start und Neuladen erscheint ein Hinweis: Nutzung nur privat und kostenfrei (Copyright HalloWelt42),
+was mit den Daten geschieht (ohne Server: nichts verlässt den Browser; mit Server: Ablage auf pi5b, gerechnet im
+Browser), Betaphase und dass die Beispiele erfunden sind. Von dort führt ein Link zu `lizenzen.txt` mit der eigenen
+Lizenz und den Lizenzen aller Bausteine; der Bau sammelt sie selbst (frontend/lizenzen/sammeln.ts). Später jederzeit
+über die Palette: "Über Strukturblick".
 
 Zum Üben gibt es erfundene Beispieldaten: "Beispiele zum Üben" auf der Startseite, in der Ablage oder über die
 Befehlspalette ("Beispiele öffnen"). Sie landen im Ordner Beispiele der eigenen Ablage: bestellungen.json (128
