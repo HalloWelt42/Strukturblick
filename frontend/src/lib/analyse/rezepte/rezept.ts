@@ -23,6 +23,10 @@ export const REZEPTSCHRITT = z.discriminatedUnion("art", [
   z.object({ art: z.literal("datum"), spalte, unlesbar, an }),
   /** Nur Zeilen behalten, die zu allen Filtern passen (Facetten) */
   z.object({ art: z.literal("behalten"), filter: z.array(z.object({ spalte, auswahl })).min(1), an }),
+  /** Doppelte Zeilen auflösen: gleich in `spalten` (leer: ganze Zeile), es bleibt die Zeile nach `behalten` */
+  z.object({ art: z.literal("duplikate"), spalten: z.array(spalte), behalten: z.enum(["erste", "letzte", "meiste"]), an }),
+  /** Eine Spalte aus allen Einträgen entfernen */
+  z.object({ art: z.literal("spalte-entfernen"), spalte, an }),
 ]);
 
 export type Rezeptschritt = z.infer<typeof REZEPTSCHRITT>;
@@ -56,11 +60,15 @@ export function schrittTitel(s: Rezeptschritt): string {
     case "betrag": return `${s.spalte} als Betrag`;
     case "datum": return `${s.spalte} vereinheitlichen`;
     case "behalten": return `Zeilen nach ${s.filter.map((f) => f.spalte).join(", ")} behalten`;
+    case "duplikate": return s.spalten.length ? `Duplikate nach ${s.spalten.join(", ")}` : "Doppelte Zeilen";
+    case "spalte-entfernen": return `Spalte ${s.spalte} entfernen`;
   }
 }
 
 /** Art eines Schritts als Abzeichen */
-export const SCHRITT_ART: Record<Rezeptschritt["art"], string> = { ersetzen: "Bereinigen", betrag: "Typ", datum: "Datum", behalten: "Zeilen" };
+export const SCHRITT_ART: Record<Rezeptschritt["art"], string> = { ersetzen: "Bereinigen", betrag: "Typ", datum: "Datum", behalten: "Zeilen", duplikate: "Zeilen", "spalte-entfernen": "Spalten" };
+
+const BEHALTEN_TEXT = { erste: "die erste Zeile", letzte: "die letzte Zeile", meiste: "die Zeile mit den meisten Angaben" } as const;
 
 /** Ein Satz, was der Schritt tut */
 export function schrittErklaerung(s: Rezeptschritt): string {
@@ -70,8 +78,14 @@ export function schrittErklaerung(s: Rezeptschritt): string {
     case "betrag": return `Beträge wie 1.234,50 werden zur Zahl 1234.50.${rest}`;
     case "datum": return `Alle Daten als Jahr-Monat-Tag, TT.MM.JJJJ wird umgestellt.${rest}`;
     case "behalten": return `Es bleiben nur Zeilen, die zu ${s.filter.length === 1 ? "dem Filter" : `allen ${s.filter.length} Filtern`} passen; die übrigen entfallen.`;
+    case "duplikate": return `${s.spalten.length ? `Gleiche ${s.spalten.join(", ")}` : "Ganz gleiche Zeilen"}: ${BEHALTEN_TEXT[s.behalten]} bleibt.`;
+    case "spalte-entfernen": return `${s.spalte} fällt aus allen Einträgen weg.`;
   }
 }
 
 /** Spalten, die ein Schritt braucht */
-export const schrittSpalten = (s: Rezeptschritt): string[] => (s.art === "behalten" ? [...new Set(s.filter.map((f) => f.spalte))] : [s.spalte]);
+export function schrittSpalten(s: Rezeptschritt): string[] {
+  if (s.art === "behalten") return [...new Set(s.filter.map((f) => f.spalte))];
+  if (s.art === "duplikate") return [...s.spalten];
+  return [s.spalte];
+}

@@ -69,6 +69,25 @@ describe("Rezepte ausführen", () => {
   });
 });
 
+describe("Rezeptschritte Duplikate und Spalte entfernen", () => {
+  const DOPPELT = ["kundennr;name;ort", "K-1;Ole;Leipzig", "K-2;Ines;Dresden", "K-1;Ole;", ""].join("\n");
+
+  it("löst Duplikate nach Regel auf und entfernt Spalten samt Kopfzelle", () => {
+    const lauf = rezeptAusfuehren(rezept([
+      { art: "duplikate", spalten: ["kundennr"], behalten: "meiste", an: true },
+      { art: "spalte-entfernen", spalte: "name", an: true },
+    ]), DOPPELT, format("csv"));
+    expect(lauf.text).toBe(["kundennr;ort", "K-1;Leipzig", "K-2;Dresden", ""].join("\n"));
+    expect(lauf.plaene.map((p) => (p.status === "ok" ? `${p.zeilen}/${p.spalten ?? 0}` : p.status))).toEqual(["1/0", "0/1"]);
+  });
+
+  it("überspringt Spalte entfernen, wenn die Spalte fehlt", () => {
+    const lauf = rezeptAusfuehren(rezept([{ art: "spalte-entfernen", spalte: "telefon", an: true }]), DOPPELT, format("csv"));
+    expect(lauf.plaene[0]).toMatchObject({ status: "uebersprungen" });
+    expect(lauf.text).toBe(DOPPELT);
+  });
+});
+
 describe("Rezepte lesen", () => {
   it("nimmt gültige Rezepte und weist anderes mit Grund ab", () => {
     expect(rezeptLesen(rezept([ORT])).ok).toBe(true);

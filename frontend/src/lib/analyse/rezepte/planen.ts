@@ -9,6 +9,7 @@ import { listeFinden, tabelleBauen, zelle, zellZeiger, type Tabelle } from "../t
 import { ersetzungen } from "../bereinigen/aehnlich";
 import { zeilenFiltern, type Filterergebnis } from "../bereinigen/facetten";
 import { betragAlsZahl, datumAlsIso } from "../bereinigen/typen";
+import { duplikateFinden, vorauswahl, wegfallendeDuplikate } from "../duplikate";
 import { schrittSpalten, type Rezeptschritt } from "./rezept";
 
 export interface Beispiel {
@@ -32,6 +33,8 @@ export type Plan =
       readonly befehl: Befehlsaufruf | null;
       readonly zellen: number;
       readonly zeilen: number;
+      /** Entfallende Spalten (Spalte entfernen) */
+      readonly spalten?: number;
       /** Nicht lesbare Werte (Betrag, Datum) */
       readonly unlesbar: number;
       readonly beispiele: readonly Beispiel[];
@@ -87,7 +90,23 @@ export function schrittPlanen(schritt: Rezeptschritt, index: Strukturindex, text
     };
   }
 
+  if (schritt.art === "duplikate") {
+    const gruppen = duplikateFinden(t, index, text, schritt.spalten.map((s) => t.spalteNach.get(s)!));
+    const stellen = wegfallendeDuplikate(gruppen, (g) => vorauswahl(t, index, text, g, schritt.behalten));
+    return {
+      status: "ok",
+      befehl: stellen.length ? { kennung: "eintraege.entfernen", werte: { liste: zeigerAus(t.listeTeile), stellen } } : null,
+      zellen: 0, zeilen: stellen.length, unlesbar: 0,
+      beispiele: gruppen.slice(0, BEISPIELE).map((g) => ({ vorher: g.wert || "gleiche Zeile", nachher: `${g.zeilen.length - 1} von ${g.zeilen.length} entfallen`, anzahl: 1 })),
+    };
+  }
+
   const j = t.spalteNach.get(schritt.spalte)!;
+  if (schritt.art === "spalte-entfernen") {
+    let zellen = 0;
+    for (let i = 0; i < t.zeilen.length; i++) if (zelle(t, index, i, j) !== KEIN) zellen++;
+    return { status: "ok", befehl: { kennung: "spalte.entfernen", werte: { liste: zeigerAus(t.listeTeile), spalte: schritt.spalte } }, zellen, zeilen: 0, spalten: 1, unlesbar: 0, beispiele: [] };
+  }
   if (schritt.art === "ersetzen") {
     const e = ersetzungen(t, index, text, j, new Map(schritt.karte.map((p) => [p.vorher, p.nachher])));
     return {
