@@ -1,0 +1,41 @@
+{
+  "kapitel": "duplikate",
+  "titel": "Doppeltes auflösen",
+  "ticket": "STB-33",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, kunden.csv aktiv in der Ansicht Tabelle, keine Änderungen im Verlauf",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Die Tabelle merkt von selbst, dass kundennr fast überall verschieden ist, also ein Schlüssel. Am Knopf Duplikate prüfen steht, wie oft er doppelt vorkommt: einmal.",
+      "ziel": { "anker": "tabelle-duplikate", "notbehelf": "Knopf mit Symbol zwei Blätter in der Werkzeugzeile der Tabelle, Abzeichen 1" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Blatt Doppelte kundennr, 1 Gruppe, K-10005 mit 2 Zeilen, Unterschied in telefon",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Gelb markiert ist, worin sich die beiden Zeilen unterscheiden: die Telefonnummer. Nach der Vorauswahl bleibt die erste Zeile; ich nehme stattdessen die zweite.",
+      "ziel": { "anker": "duplikat-wahl", "notbehelf": "Knopf wird entfernt in der zweiten Zeile der Gruppe" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Zeile 1.215 bleibt, Vorauswahl Eigene Wahl",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Übernehmen entfernt die andere Zeile als ein Vorgang. Aus 1.214 werden 1.213 Zeilen, und Rückgängig holt sie zurück.",
+      "ziel": { "anker": "duplikat-uebernehmen", "notbehelf": "Knopf Übernehmen im Fuß des Blatts" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "1.213 von 1.213 Zeilen; Verlauf Doppelte kundennr aufgelöst (1 Zeile entfernt)",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Brauche ich eine Spalte nicht, wähle ich ihren Kopf und entferne sie. Bei einer CSV verschwindet auch die Kopfzelle, sonst bleibt alles, wie es war.",
+      "ziel": { "anker": "spalte-entfernen", "notbehelf": "Kopf der Spalte plz anklicken, dann Knopf mit Papierkorb in der Werkzeugzeile" },
+      "aktion": { "art": "klicken", "vorher": "Rückgängig in der Meldung" },
+      "erwartung": "Spalte plz weg, 105 KB statt 113 KB, Verlauf Spalte plz entfernt",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

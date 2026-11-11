@@ -60,6 +60,14 @@ Tabelle nimmt genau die sichtbaren Zeilen (Filter und Sortierung wie angezeigt),
 Treffernavigation des Baums die Treffer der Suche oder Abfrage (einzelne Werte mit ihrem Pfad). Beides geht als
 Datei (JSON, NDJSON, CSV) oder als neues Dokument in der Ablage, im selben Ordner wie die Quelle.
 
+In der Tabelle zählt "Duplikate prüfen" doppelte Zeilen nach der Spalte, die als Schlüssel taugt (immer gefüllt,
+fast überall verschieden, Namen wie nr oder id zuerst). Das Blatt zeigt je Gruppe die Zeilen mit markierten
+Unterschieden; gleich sein müssen der Schlüssel, die ganze Zeile oder gewählte Spalten, und es bleibt die erste, die
+letzte oder die Zeile mit den meisten Angaben, oder eine von Hand gewählte. Ist eine Spalte gewählt (Klick auf den
+Kopf), entfernt der Knopf mit dem Papierkorb sie aus allen Einträgen, bei CSV samt Kopfzelle. Beides ist ein
+Vorgang im Verlauf und landet als Schritt in Rezepten (eigene Wahl bei Duplikaten nicht, sie gilt nur für diese
+Datei).
+
 Die Ansicht Statistik (⌥ ⌘ 4) zeigt Kennzahlen des Dokuments (Knoten, Tiefe, Größe, Arten) und je Feld der Liste,
 die auch die Tabelle zeigt, Typ, Vorkommen, verschiedene Werte, Textlänge, Spanne (bei Beträgen nach Zahl, bei
 Datum nach Datum) und den Leer-Anteil (fehlt, null oder leer). Verschachtelte Felder stehen als Musterpfad da
