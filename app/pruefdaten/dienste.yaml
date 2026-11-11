@@ -1,0 +1,21 @@
+# Dienste im Heimnetz, gelesen von der Leitstelle
+version: 3
+standard: &standard
+  neustart: immer
+  gesundheit: &gesundheit
+    pfad: /gesund
+    intervall: 30s
+    versuche: 3
+
+dienste:
+  - name: ablage
+    <<: *standard
+    port: 8420
+    pfad: /ablage
+    gesundheit: *gesundheit
+  - name: leitstelle
+    <<: *standard
+    port: 8531
+    pfad: /leitstelle
+    aktiv: true
+    notiz: "Läuft auf dem Mac, 128 GB"

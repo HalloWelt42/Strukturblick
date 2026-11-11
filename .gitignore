@@ -11,3 +11,5 @@ dist/
 .vite/
 *.egg-info/
 .claude/
+dist-eigenstaendig/
+app/pruefdaten/gross/

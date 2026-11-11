@@ -1,0 +1,199 @@
+/* Aus den abgenommenen Entwürfen übernommen (entwuerfe/stil.css, STB-2); Änderungen zuerst dort, dann hier. */
+
+/* ----- 1. Marken ---------------------------------------------------------- */
+
+:root {
+  /* Rohpalette des Nutzers (nur hier, nie direkt in Bausteinen) */
+  --roh-anthrazit: #4a4a4a;
+  --roh-silber: #cbcbcb;
+  --roh-creme: #ffffe3;
+  --roh-blaugrau: #6d8196;
+  --roh-ocker: #96826d;      /* Komplement zu Blaugrau */
+  --roh-lavendel: #e3e3ff;   /* Komplement zu Creme */
+
+  /* Schriften: Barlow für Texte, JetBrains Mono für Werte, Pfade und Code */
+  --schrift: "Barlow", system-ui, -apple-system, sans-serif;
+  --schrift-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Ecken: alles kantig, nur Knöpfe leicht gerundet */
+  --r-knopf: 3px;
+
+  /* Abstände */
+  --a1: 4px;
+  --a2: 8px;
+  --a3: 12px;
+  --a4: 16px;
+  --a5: 24px;
+  --a6: 32px;
+
+  --schnell: 0.12s ease;
+
+  /* Plastik (HiFi): Licht von oben links, Glanz und Tiefe als Regler */
+  --glanz: 1;
+  --tiefe: 1;
+}
+
+/* Schriftstufen wie im Appkern: gross = Grundschrift, klein = Nebenangaben,
+   marke = Etiketten und Zähler (nie kleiner). Vorgabe: mittel (17 px). */
+:root,
+[data-schrift="mittel"] {
+  --gross: 17px;
+  --klein: 15px;
+  --marke: 15px;
+  --titel: 21px;
+  --seitentitel: 26px;
+  --kennzahl: 27px;
+  --zeile: 34px;        /* Zeile in Baum, Tabelle, Listen */
+  --knopf-hoehe: 38px;
+  --kopf-hoehe: 56px;
+  --leiste-breite: 264px;
+  --inspektor-breite: 340px;
+  --fuss-hoehe: 36px;
+}
+[data-schrift="klein"] {
+  --gross: 16px;
+  --klein: 14px;
+  --marke: 13px;
+  --titel: 19px;
+  --seitentitel: 24px;
+  --kennzahl: 24px;
+  --zeile: 31px;
+  --knopf-hoehe: 34px;
+  --kopf-hoehe: 52px;
+  --leiste-breite: 240px;
+  --inspektor-breite: 320px;
+  --fuss-hoehe: 32px;
+}
+[data-schrift="gross"] {
+  --gross: 18px;
+  --klein: 16px;
+  --marke: 15px;
+  --titel: 22px;
+  --seitentitel: 28px;
+  --kennzahl: 30px;
+  --zeile: 37px;
+  --knopf-hoehe: 42px;
+  --kopf-hoehe: 60px;
+  --leiste-breite: 284px;
+  --inspektor-breite: 368px;
+  --fuss-hoehe: 40px;
+}
+
+/* Mittelton (Vorgabe): weder hell noch dunkel. Farben für Zustände und Typen
+   gegenüber 0.x in Kontrast und Leuchtkraft angehoben (Nutzer 11.11.2026, alte
+   Palette am Ticket STB-2); Text auf Flächen mindestens 4,5:1, Abzeichen auf
+   einfachen Farben statt Transparenz. */
+:root,
+:root[data-theme="mittelton"] {
+  --flaeche-seite: #a6a6a6;
+  --flaeche-leiste: #979797;
+  --flaeche-panel: var(--roh-silber);
+  --flaeche-panel-2: #bdbdbd;
+  --flaeche-eingabe: #d8d8d1;
+  --flaeche-hervor: var(--roh-creme);
+  --flaeche-wechsel: rgba(0, 0, 0, 0.03);
+  --mulde: #b3b3b0;
+
+  --text-1: #222222;
+  --text-2: #3e3e3e;
+  --text-3: #575757;
+  --text-invers: #ececec;
+
+  --rand-1: rgba(20, 20, 20, 0.22);
+  --rand-2: rgba(20, 20, 20, 0.38);
+
+  --akzent: #2f5478;
+  --akzent-flaeche: #3c6690;
+  --akzent-weich: #b8cbe0;
+  --auf-akzent: #f2f4f6;
+  --zweit: #5e4728;
+  --zweit-weich: #dccaa9;
+
+  --gut: #1d5a30;
+  --gut-weich: #b5d9bd;
+  --warn: #5e4205;
+  --warn-weich: #ecd391;
+  --fehler: #82291f;
+  --fehler-weich: #e6b7b1;
+
+  /* Typfarben für Baum und Syntax */
+  --typ-objekt: #2f5478;
+  --typ-liste: #563c88;
+  --typ-text: #285c20;
+  --typ-zahl: #77480f;
+  --typ-bool: #84285a;
+  --typ-null: #5c5c5c;
+  --typ-schluessel: #222222;
+
+  --diff-hinzu: rgba(60, 150, 90, 0.38);
+  --diff-weg: rgba(200, 80, 70, 0.36);
+  --diff-geaendert: rgba(214, 160, 40, 0.4);
+
+  --schatten-ruhig: 0 1px 2px rgba(20, 20, 20, 0.16), 0 8px 18px -6px rgba(20, 20, 20, 0.22);
+  --schatten-schwebend: 0 18px 50px -10px rgba(20, 20, 20, 0.45);
+  --leuchten: 0.35;
+}
+
+/* Dunkel: aus Anthrazit abgeleitet, Akzente aufgehellt */
+:root[data-theme="dunkel"] {
+  --flaeche-seite: #232323;
+  --flaeche-leiste: #2b2b2b;
+  --flaeche-panel: #353535;
+  --flaeche-panel-2: #404040;
+  --flaeche-eingabe: #2a2a2a;
+  --flaeche-hervor: rgba(255, 255, 227, 0.14);
+  --flaeche-wechsel: rgba(255, 255, 255, 0.025);
+  --mulde: #1c1c1c;
+
+  --text-1: #e8e8e8;
+  --text-2: #cbcbcb;
+  --text-3: #a3a3a3;
+  --text-invers: #232323;
+
+  --rand-1: rgba(255, 255, 255, 0.12);
+  --rand-2: rgba(255, 255, 255, 0.24);
+
+  --akzent: #9fc4ea;
+  --akzent-flaeche: #5b85b0;
+  --akzent-weich: #33475e;
+  --auf-akzent: #f2f4f6;
+  --zweit: #e0c08f;
+  --zweit-weich: #4b4131;
+
+  --gut: #7fd69a;
+  --gut-weich: #2c4a35;
+  --warn: #f0c46a;
+  --warn-weich: #4f4124;
+  --fehler: #f08f86;
+  --fehler-weich: #563330;
+
+  --typ-objekt: #9fc4ea;
+  --typ-liste: #c3a6ef;
+  --typ-text: #9fd88a;
+  --typ-zahl: #ebba7c;
+  --typ-bool: #ee9cc4;
+  --typ-null: #969696;
+  --typ-schluessel: #e8e8e8;
+
+  --diff-hinzu: rgba(80, 180, 110, 0.32);
+  --diff-weg: rgba(220, 100, 90, 0.34);
+  --diff-geaendert: rgba(230, 175, 60, 0.3);
+
+  --schatten-ruhig: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 18px -6px rgba(0, 0, 0, 0.5);
+  --schatten-schwebend: 0 18px 50px -10px rgba(0, 0, 0, 0.7);
+  --leuchten: 1;
+}
+
+/* Plastik, abgeleitet aus den Marken */
+:root {
+  --erhaben: linear-gradient(180deg, rgb(255 255 255 / calc(0.10 * var(--glanz))), rgb(0 0 0 / calc(0.08 * var(--tiefe))));
+  --kante: inset 0 1px 0 rgb(255 255 255 / calc(0.14 * var(--glanz))), 0 0 0 1px var(--rand-1);
+  --vertieft: inset 0 calc(2px * var(--tiefe)) 5px rgb(0 0 0 / calc(0.28 * var(--tiefe))),
+    inset 0 -1px 0 rgb(255 255 255 / calc(0.10 * var(--glanz))), inset 0 0 0 1px rgb(0 0 0 / 0.14);
+}
+:root[data-theme="dunkel"] {
+  --kante: inset 0 1px 0 rgb(255 255 255 / calc(0.07 * var(--glanz))), 0 0 0 1px var(--rand-1);
+  --vertieft: inset 0 calc(2px * var(--tiefe)) 5px rgb(0 0 0 / calc(0.55 * var(--tiefe))),
+    inset 0 -1px 0 rgb(255 255 255 / calc(0.07 * var(--glanz))), inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+

@@ -1,0 +1,3155 @@
+{
+  "shop": "Hofladen Lindenhof",
+  "stand": "2026-11-10T08:15:00+01:00",
+  "bestellungen": [
+    {
+      "nr": "B-24017",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Marta Demir",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24018",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Marta Kowalski",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 4,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24019",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Greta Lange",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24020",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Sophie Lorenz",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24021",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Sophie Lorenz",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24022",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Marta Lange",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": false,
+      "notiz": null
+    },
+    {
+      "nr": "B-24023",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Clara Nguyen",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 3,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24024",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Sophie Hoffmann",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24025",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Tobias Wagner",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24026",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Greta Lorenz",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24027",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Ole Lange",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 3,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24028",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Jana Lorenz",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24029",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Greta Seidel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 3,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24030",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Jonas Arslan",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 2,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24031",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Sophie Demir",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24032",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Clara Krüger",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 6,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24033",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Marta Demir",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 4,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24034",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Jonas Kowalski",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24035",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Erik Arslan",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24036",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Karl Arslan",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 3,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24037",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Sophie Seidel",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 6,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": false,
+      "notiz": null
+    },
+    {
+      "nr": "B-24038",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Sophie Wagner",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 5,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24039",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Petra Krüger",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24040",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Mehmet Wagner",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 6,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 3,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24041",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Petra Arslan",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24042",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Aylin Wagner",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 6,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24043",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Clara Schulze",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 3,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 1,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24044",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Tobias Seidel",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 2,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24045",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Clara Schulze",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24046",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Clara Lange",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 2,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24047",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Jana Arslan",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24048",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Tobias Brandt",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 5,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24049",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Mehmet Wagner",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 5,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24050",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Sophie Arslan",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24051",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Clara Arslan",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 3,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 4,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 5,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24052",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Lena Arslan",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24053",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Karl Wagner",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24054",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Anna Kowalski",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 2,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24055",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Aylin Hoffmann",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24056",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Mehmet Arslan",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24057",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Karl Weiß",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 1,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": false,
+      "notiz": null
+    },
+    {
+      "nr": "B-24058",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Sophie Seidel",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24059",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Clara Schulze",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24060",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Clara Weiß",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24061",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Jana Seidel",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 5,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24062",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Ole Nguyen",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24063",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Ole Weiß",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 6,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24064",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Anna Krüger",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 1,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24065",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Lena Vogel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 6,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24066",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Anna Vogel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 2,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24067",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Jana Weiß",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24068",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Ole Weiß",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24069",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Jonas Demir",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 2,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24070",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Karl Lorenz",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24071",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Erik Wagner",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 2,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 5,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 5,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24072",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Jonas Lorenz",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 6,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 5,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24073",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Erik Vogel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 5,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24074",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Ole Vogel",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 1,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24075",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Greta Krüger",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24076",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Mehmet Weiß",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 6,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24077",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Marta Arslan",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24078",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Karl Vogel",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 2,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24079",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Karl Vogel",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 1,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24080",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Clara Kowalski",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 4,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24081",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Karl Arslan",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24082",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Ole Schulze",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 5,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24083",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Jonas Hansen",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 4,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": false,
+      "notiz": null
+    },
+    {
+      "nr": "B-24084",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Jonas Demir",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 3,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24085",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Karl Demir",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24086",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Clara Weiß",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24087",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Aylin Nguyen",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 5,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24088",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Jana Seidel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24089",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Mehmet Lange",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24090",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Karl Weiß",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 4,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 4,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 3,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24091",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Ole Vogel",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24092",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Ole Krüger",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24093",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Aylin Weiß",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24094",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Karl Lange",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 3,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 4,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24095",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Lena Vogel",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 2,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24096",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Tobias Arslan",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": false,
+      "notiz": null
+    },
+    {
+      "nr": "B-24097",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Marta Lorenz",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 2,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24098",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Jonas Wagner",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 1,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24099",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Marta Weiß",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24100",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Mehmet Weiß",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 1,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 5,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24101",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Jonas Brandt",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 4,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24102",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Greta Hoffmann",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24103",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Jonas Wagner",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24104",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Petra Arslan",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 3,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 2,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24105",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Tobias Hansen",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 4,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24106",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Tobias Hansen",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 1,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24107",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Greta Seidel",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 3,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 2,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 2,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24108",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Marta Demir",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24109",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Marta Brandt",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 3,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24110",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Petra Wagner",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24111",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Clara Seidel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24112",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Anna Schulze",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24113",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Jana Wagner",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24114",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Clara Hoffmann",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24115",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Karl Lorenz",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 6,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24116",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Petra Hoffmann",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24117",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Sophie Demir",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 5,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24118",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Marta Nguyen",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 5,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24119",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Tobias Seidel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 4,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24120",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Karl Nguyen",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 3,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 3,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24121",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Marta Hoffmann",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24122",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Jonas Kowalski",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 6,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 4,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": false,
+      "notiz": null
+    },
+    {
+      "nr": "B-24123",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Erik Lange",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 1,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 2,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 5,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24124",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Jonas Kowalski",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 3,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24125",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Jonas Nguyen",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24126",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Greta Demir",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24127",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Mehmet Kowalski",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 5,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24128",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Ole Hoffmann",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24129",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Lena Hoffmann",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 6,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 3,
+          "preis": 3.8
+        }
+      ],
+      "bezahlt": false,
+      "notiz": null
+    },
+    {
+      "nr": "B-24130",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Lena Seidel",
+        "plz": "06108",
+        "stadt": "Halle (Saale)"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24131",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Ole Vogel",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 1,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24132",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Ole Krüger",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 2,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 3,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 3,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24133",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Jana Vogel",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 3,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24134",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Tobias Lorenz",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24135",
+      "datum": "2026-11-09",
+      "kunde": {
+        "name": "Lena Demir",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 2,
+          "preis": 4.2
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24136",
+      "datum": "2026-11-10",
+      "kunde": {
+        "name": "Jonas Vogel",
+        "plz": "01067",
+        "stadt": "Dresden"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24137",
+      "datum": "2026-11-01",
+      "kunde": {
+        "name": "Greta Demir",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 5,
+          "preis": 8.5
+        },
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 2,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 4,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 4,
+          "preis": 6.9
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24138",
+      "datum": "2026-11-02",
+      "kunde": {
+        "name": "Mehmet Nguyen",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 4,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24139",
+      "datum": "2026-11-03",
+      "kunde": {
+        "name": "Ole Demir",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Kartoffeln 2,5 kg",
+          "menge": 1,
+          "preis": 4.2
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 1,
+          "preis": 3.95
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24140",
+      "datum": "2026-11-04",
+      "kunde": {
+        "name": "Ole Kowalski",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 6,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24141",
+      "datum": "2026-11-05",
+      "kunde": {
+        "name": "Jana Hoffmann",
+        "plz": "20095",
+        "stadt": "Hamburg"
+      },
+      "positionen": [
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 5,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24142",
+      "datum": "2026-11-06",
+      "kunde": {
+        "name": "Anna Lorenz",
+        "plz": "04109",
+        "stadt": "Leipzig"
+      },
+      "positionen": [
+        {
+          "artikel": "Honig 500 g",
+          "menge": 6,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": "Bitte klingeln"
+    },
+    {
+      "nr": "B-24143",
+      "datum": "2026-11-07",
+      "kunde": {
+        "name": "Ole Demir",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Bergkäse 300 g",
+          "menge": 3,
+          "preis": 6.9
+        },
+        {
+          "artikel": "Brot Dinkel",
+          "menge": 5,
+          "preis": 3.95
+        },
+        {
+          "artikel": "Apfelsaft naturtrüb 1 l",
+          "menge": 3,
+          "preis": 2.49
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    },
+    {
+      "nr": "B-24144",
+      "datum": "2026-11-08",
+      "kunde": {
+        "name": "Tobias Weiß",
+        "plz": "10115",
+        "stadt": "Berlin"
+      },
+      "positionen": [
+        {
+          "artikel": "Hofeier 10 Stück",
+          "menge": 4,
+          "preis": 3.8
+        },
+        {
+          "artikel": "Honig 500 g",
+          "menge": 2,
+          "preis": 8.5
+        }
+      ],
+      "bezahlt": true,
+      "notiz": null
+    }
+  ]
+}

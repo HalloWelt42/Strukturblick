@@ -1,0 +1,277 @@
+/* Aus den abgenommenen Entwürfen übernommen (entwuerfe/stil.css, STB-2); Änderungen zuerst dort, dann hier. */
+
+/* ----- 7. Telefon (eigene Ansicht, keine verkleinerte Schale) ------------- */
+/* Oben nur der sichere Rand des Systems, unten kein Abstand über dem
+   Home-Balken; Berührflächen ab 44 px, Eingaben ab 17 px (kein Zoom). */
+
+.buehne {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: flex-start;
+  padding: 32px;
+  min-height: 100vh;
+}
+.buehne-titel {
+  margin: 0 0 12px;
+  font-size: var(--klein);
+  color: var(--text-2);
+  max-width: 390px;
+}
+.telefon {
+  width: 390px;
+  height: 844px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--flaeche-panel);
+  box-shadow: 0 0 0 10px #161616, 0 24px 60px rgba(0, 0, 0, 0.4);
+  border-radius: 46px;
+}
+.t-status {
+  height: 47px; /* steht für env(safe-area-inset-top) */
+  flex: none;
+  background-color: var(--flaeche-leiste);
+}
+.t-kopf {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: 52px;
+  padding: 0 var(--a2) var(--a2);
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  position: relative;
+  z-index: 2;
+}
+.t-kopf h1 {
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.t-kopf .knopf {
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+}
+.t-pfad {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  padding: 6px var(--a2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  white-space: nowrap;
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.t-pfad a {
+  padding: 6px 8px;
+  color: var(--text-2);
+}
+.t-pfad a.letzter {
+  color: var(--akzent);
+  font-weight: 600;
+}
+.t-pfad .trenner {
+  align-self: center;
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+.t-inhalt {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: clip;
+}
+.t-suche {
+  padding: var(--a2);
+}
+.t-suche .feld {
+  min-height: 46px;
+  font-size: var(--gross);
+}
+.t-gruppe {
+  padding: var(--a4) var(--a3) 6px;
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.t-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  min-height: 58px;
+  padding: 8px var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  color: var(--text-1);
+  text-decoration: none;
+}
+.t-zeile > i:first-child {
+  width: 24px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 1.1em;
+  flex: none;
+}
+.t-zeile .t-text {
+  flex: 1;
+  min-width: 0;
+}
+.t-zeile .t-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.t-zeile .t-meta {
+  font-size: var(--klein);
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.t-zeile .t-wert {
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.t-zeile .rechts {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  color: var(--text-3);
+}
+.t-zeile.gewaehlt {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .t-zeile.gewaehlt {
+  background: var(--akzent-weich);
+}
+.t-reiter {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  padding: 4px 4px 0; /* unten kein Abstand: die Leiste steht ganz unten */
+}
+.t-reiter a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 56px;
+  justify-content: center;
+  font-size: var(--marke);
+  color: var(--text-3);
+  text-decoration: none;
+}
+.t-reiter a i {
+  font-size: 22px;
+}
+.t-reiter a.aktiv {
+  color: var(--akzent);
+  font-weight: 600;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  text-shadow: 0 0 calc(10px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 55%, transparent);
+}
+
+/* Blatt von unten (Wert ändern) */
+.t-abdunkeln {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 5;
+}
+.t-blatt {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  padding: var(--a4) var(--a3) var(--a4);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+  display: flex;
+  flex-direction: column;
+  gap: var(--a3);
+}
+.t-blatt h2 {
+  margin: 0;
+  font-size: var(--titel);
+}
+.t-blatt .feld {
+  min-height: 52px;
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+}
+.t-blatt .knopf {
+  min-height: 48px;
+  justify-content: center;
+  flex: 1;
+  font-size: var(--gross);
+}
+.t-band {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: var(--a2);
+  padding: 6px 6px 6px var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  font-size: var(--klein);
+}
+.t-band > i {
+  color: var(--gut);
+}
+.t-band .knopf {
+  margin-left: auto;
+  min-height: 44px;
+}
+.t-karte-satz {
+  margin: var(--a2);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.t-karte-satz .t-zeile {
+  min-height: 52px;
+}
+.t-blaettern {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.t-blaettern .knopf {
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+}
+.t-blaettern .mitte {
+  flex: 1;
+  text-align: center;
+}

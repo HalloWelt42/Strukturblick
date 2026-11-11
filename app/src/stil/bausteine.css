@@ -1,0 +1,214 @@
+/* Aus den abgenommenen Entwürfen übernommen (entwuerfe/stil.css, STB-2); Änderungen zuerst dort, dann hier. */
+
+/* ----- 2. Grundlagen ------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+body {
+  font-family: var(--schrift);
+  font-size: var(--gross);
+  line-height: 1.4;
+  color: var(--text-1);
+  background: var(--flaeche-seite);
+  -webkit-font-smoothing: antialiased;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+.mono {
+  font-family: var(--schrift-mono);
+}
+.text-3 {
+  color: var(--text-3);
+}
+.klein {
+  font-size: var(--klein);
+}
+
+/* ----- 3. Bausteine: Knöpfe, Segmente, Felder, Abzeichen ------------------ */
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--knopf-hoehe);
+  padding: 0 var(--a3);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), 0 1px 2px rgb(0 0 0 / calc(0.25 * var(--tiefe)));
+  font-size: var(--klein);
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform var(--schnell), box-shadow var(--schnell);
+}
+.knopf:hover {
+  background-color: var(--flaeche-panel);
+}
+.knopf:active {
+  transform: translateY(1px);
+  background-image: none;
+  box-shadow: var(--vertieft);
+}
+.knopf.primaer {
+  background-color: var(--akzent-flaeche);
+  color: var(--auf-akzent);
+  box-shadow: var(--kante), 0 1px 2px rgb(0 0 0 / 0.3),
+    0 0 calc(16px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 40%, transparent);
+}
+.knopf.still {
+  background: transparent;
+  box-shadow: none;
+}
+.knopf.still:hover {
+  background: var(--akzent-weich);
+}
+.knopf.nur-symbol {
+  width: var(--knopf-hoehe);
+  padding: 0;
+  justify-content: center;
+}
+.knopf:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.knopf .zahl {
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.taste {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0 6px;
+  border-radius: var(--r-knopf);
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text-2);
+}
+
+/* Segment: eingelassene Schiene, gewählter Teil erhaben mit leuchtender Schrift */
+.segment {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  border-radius: var(--r-knopf);
+}
+.segment > * {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  padding: 0 var(--a3);
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  font-size: var(--klein);
+  font-weight: 500;
+  color: var(--text-2);
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+.segment > *:hover {
+  color: var(--text-1);
+}
+.segment > .aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), 0 1px 3px rgb(0 0 0 / calc(0.3 * var(--tiefe)));
+  color: var(--akzent);
+  text-shadow: 0 0 calc(10px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 55%, transparent);
+}
+
+.feld {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--knopf-hoehe);
+  padding: 0 var(--a3);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: var(--text-1);
+  font-size: var(--gross);
+  min-width: 0;
+}
+.feld input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: 0;
+}
+.feld input::placeholder {
+  color: var(--text-3);
+}
+.feld > i {
+  color: var(--text-3);
+}
+
+.abzeichen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  padding: 1px 7px;
+  background: var(--akzent-weich);
+  color: var(--akzent);
+  font-size: var(--marke);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.abzeichen.gut {
+  background: var(--gut-weich);
+  color: var(--gut);
+}
+.abzeichen.warn {
+  background: var(--warn-weich);
+  color: var(--warn);
+}
+.abzeichen.fehler {
+  background: var(--fehler-weich);
+  color: var(--fehler);
+}
+.abzeichen.zweit {
+  background: var(--zweit-weich);
+  color: var(--zweit);
+}
+
+.punkt {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--gut);
+  box-shadow: 0 0 calc(8px * var(--leuchten)) var(--gut);
+  flex: none;
+}
+.punkt.warn {
+  background: var(--warn);
+  box-shadow: 0 0 calc(8px * var(--leuchten)) var(--warn);
+}
+

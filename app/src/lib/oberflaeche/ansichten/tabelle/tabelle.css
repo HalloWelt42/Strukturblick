@@ -1,0 +1,403 @@
+/* Tabelle nach entwuerfe/teile/tabelle.css (Abschnitte 1 und 2), für das virtualisierte Raster aus Zeilen mit
+   gemeinsamen Spalten (CSS-Raster statt table). Nur Marken, Schriftgrößen über die Stufen, kantig. */
+
+.tb-ansicht {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----- Werkzeugzeile --------------------------------------------------------- */
+
+.tb-werkzeugzeile {
+  flex-wrap: wrap;
+  container: tb-werkzeug / inline-size;
+}
+.tb-werkzeugzeile > .pfad {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+/* Teile des Pfads sind Knöpfe (wählen die Stelle), sehen aber aus wie .pfad a */
+.tb-pfadteil {
+  padding: 2px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+}
+.tb-pfadteil:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+.tb-pfadteil.letzter {
+  color: var(--akzent);
+  font-weight: 600;
+}
+.tb-filter {
+  flex: 1 1 calc(var(--klein) * 14);
+  max-width: calc(var(--klein) * 26);
+}
+.tb-filter input {
+  font-family: var(--schrift-mono);
+}
+.tb-zaehler {
+  font-size: var(--klein);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.tb-zaehler strong {
+  color: var(--text-1);
+}
+.tb-dialekt {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+}
+.tb-dialekt-menue {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 10;
+  display: grid;
+  gap: var(--a2);
+  min-width: max-content;
+  padding: var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+}
+.tb-dialekt-menue .karte-titel {
+  margin: 0;
+}
+
+@container tb-werkzeug (max-width: 980px) {
+  .tb-lang {
+    display: none;
+  }
+}
+
+/* ----- Hinweise statt Tabelle ------------------------------------------------ */
+
+.tb-hinweis {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--a3);
+  padding: var(--a6) var(--a4);
+  color: var(--text-2);
+  text-align: center;
+}
+.tb-hinweis > i {
+  font-size: var(--kennzahl);
+  color: var(--text-3);
+}
+.tb-hinweis > i.tb-hinweis-warn {
+  color: var(--warn);
+}
+.tb-keine {
+  padding: var(--a4) var(--a3);
+  color: var(--text-3);
+  font-size: var(--klein);
+}
+
+/* ----- Raster ------------------------------------------------------------------ */
+/* Rollt in .inhalt in beide Richtungen. Kopf klebt oben bündig, Zeilennummer und erste Spalte kleben links. Flächen
+   der klebenden Zellen sind deckend, das Zebra liegt als Bild darüber. */
+
+.tb-rollfeld {
+  outline: 0;
+}
+.tb-rollfeld:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--akzent-weich);
+}
+.tb-raster {
+  --tb-nr-breite: calc(var(--klein) * 4.4);
+  width: max-content;
+  min-width: 100%;
+  font-size: var(--gross);
+  font-variant-numeric: tabular-nums;
+}
+.tb-kopfzeile,
+.tb-zeile {
+  display: grid;
+  grid-template-columns: var(--tb-spalten);
+}
+.tb-zeile {
+  height: var(--zeile);
+}
+.tb-kopfzeile > *,
+.tb-zeile > * {
+  min-width: 0;
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-panel);
+  box-shadow: inset -1px -1px 0 var(--rand-1);
+  white-space: nowrap;
+}
+.tb-zeile.tb-wechsel > * {
+  background-image: linear-gradient(var(--flaeche-wechsel), var(--flaeche-wechsel));
+}
+
+/* Kopf */
+.tb-kopfzeile {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+.tb-kopfzeile > * {
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: inset -1px -1px 0 var(--rand-2);
+}
+.tb-kopfzelle {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Zeilennummer und erste Spalte */
+.tb-raster .tb-nr {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 var(--a2);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+  cursor: pointer;
+}
+.tb-raster .tb-fix {
+  position: sticky;
+  left: var(--tb-nr-breite);
+  z-index: 1;
+}
+.tb-zeile > .tb-nr,
+.tb-zeile > .tb-fix {
+  background-color: var(--flaeche-panel-2);
+}
+.tb-kopfzeile > .tb-nr {
+  align-items: flex-end;
+  padding-bottom: var(--a2);
+  cursor: default;
+}
+.tb-zeile:hover > .tb-nr,
+.tb-zeile.tb-zeile-aktiv > .tb-nr {
+  background-color: var(--akzent-weich);
+  color: var(--akzent);
+}
+
+/* Spaltenkopf: Name allein in der ersten Reihe, darunter Typ, Profil, Balken */
+.tb-kopf {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+.tb-name {
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+.tb-typzeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+  min-width: 0;
+}
+.tb-typzeile .abzeichen {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tb-kopf-knopf {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--knopf-hoehe) - 10px);
+  height: calc(var(--knopf-hoehe) - 12px);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  flex: none;
+}
+.tb-kopf-knopf:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+.tb-kopf-knopf.aktiv {
+  color: var(--akzent);
+}
+.tb-profil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--a2);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* Kleiner Verteilungsbalken: Anteile der häufigsten Werte und der leeren */
+.tb-anteil {
+  display: flex;
+  height: 8px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  overflow: hidden;
+}
+.tb-anteil span {
+  display: block;
+  height: 100%;
+}
+.tb-f1 {
+  background: var(--akzent-flaeche);
+}
+.tb-f2 {
+  background: var(--zweit);
+}
+.tb-f3 {
+  background: var(--typ-liste);
+}
+.tb-f4 {
+  background: var(--typ-text);
+}
+.tb-fleer {
+  background: var(--warn);
+}
+
+/* Griff für die Spaltenbreite am rechten Rand des Kopfs */
+.tb-greifer {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  z-index: 2;
+  width: 8px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: col-resize;
+  touch-action: none;
+}
+.tb-greifer:hover,
+.tb-greifer:focus-visible {
+  outline: 0;
+  background: linear-gradient(90deg, transparent 3px, var(--akzent-flaeche) 3px, var(--akzent-flaeche) 5px, transparent 5px);
+}
+
+/* Gewählte Spalte */
+.tb-kopfzeile > .tb-kopfzelle.tb-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+.tb-gewaehlt .tb-name {
+  color: var(--akzent);
+}
+.tb-zeile > .tb-zelle.tb-gewaehlt {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .tb-zeile > .tb-zelle.tb-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+
+/* Zellen */
+.tb-zelle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow: hidden;
+  cursor: default;
+}
+.tb-zelle.tb-rechts {
+  justify-content: flex-end;
+}
+.tb-wert {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tb-verschachtelt {
+  font-size: var(--klein);
+}
+.tb-zeile > .tb-zelle.tb-aktiv {
+  outline: 2px solid var(--akzent-flaeche);
+  outline-offset: -2px;
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .tb-zeile > .tb-zelle.tb-aktiv {
+  background-color: var(--akzent-weich);
+}
+.tb-leer {
+  color: var(--text-3);
+  font-style: italic;
+  font-size: var(--klein);
+}
+.tb-leerzeichen {
+  display: inline-block;
+  flex: none;
+  width: 0.55em;
+  height: 1.1em;
+  background: var(--warn-weich);
+  box-shadow: inset 0 0 0 1px var(--warn);
+}
+
+/* Eben geänderte Zelle: gilt sofort, Rückgängig in Meldung und Kopf */
+.tb-zeile > .tb-zelle.tb-geaendert {
+  background-color: var(--warn-weich);
+  background-image: none;
+}
+.tb-geaendert-zeichen {
+  flex: none;
+  margin-left: var(--a2);
+  color: var(--warn);
+  font-size: var(--marke);
+}
+
+/* Zelle in Bearbeitung */
+.tb-zeile > .tb-zelle.tb-bearbeiten {
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  padding: 0 3px;
+  outline: 2px solid var(--akzent-flaeche);
+  outline-offset: -2px;
+}
+.tb-eingabe {
+  flex: 1;
+  min-width: 0;
+  height: calc(var(--zeile) - 6px);
+  padding: 0 var(--a2);
+  border: 0;
+  outline: 0;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: var(--text-1);
+}
+.tb-eingabe::selection {
+  background: var(--akzent-flaeche);
+  color: var(--auf-akzent);
+}
+.tb-tipp {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a1) var(--a2);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+}

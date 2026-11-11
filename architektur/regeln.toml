@@ -1,0 +1,100 @@
+# Harte Architekturregeln von Strukturblick 2.0 (STB-3). Geprüft vom Appkern (python -m appkern.werkzeuge regeln) vor
+# jedem Commit. Eine Regel ändern oder umgehen geht nur mit Zustimmung des Nutzers: Ausnahmen stehen in
+# architektur/ausnahmen.toml und gelten erst, wenn der Nutzer am Ticket "Ausnahme freigegeben: <Regel>" kommentiert hat.
+# Begründungen: docs/ARCHITEKTUR.md. Die alte Fassung (frontend/, backend/) und die Entwürfe (entwuerfe/, mockups/) sind
+# keine Bauteile von 2.0 und von den Bauregeln ausgenommen.
+
+[freigabe]
+pinnwand = "https://192.168.178.49:8420/api/v1"
+schluessel = "~/.config/pinnwand/helfer.schluessel"
+stichwort = "Ausnahme freigegeben"
+
+# ----- Schichten -----------------------------------------------------------------------------------------------------
+
+[[regel]]
+kennung = "A1"
+titel = "Schichten der App"
+art = "schichten"
+warum = "Der Text ist die eine Wahrheit; Kern, Formate und Analyse kennen keine Oberfläche, die Oberfläche greift nur über den Zustand auf Dienste zu. So bleibt jede Schicht testbar und austauschbar (Leitgedanken 2, 4, 9)."
+dateien = ["app/src/**"]
+schichten = [
+  { name = "kern", dateien = ["app/src/lib/kern/**"] },
+  { name = "formate", dateien = ["app/src/lib/formate/**"] },
+  { name = "analyse", dateien = ["app/src/lib/analyse/**"] },
+  { name = "dienste", dateien = ["app/src/lib/dienste/**"] },
+  { name = "zustand", dateien = ["app/src/lib/zustand/**"] },
+  { name = "oberflaeche", dateien = ["app/src/lib/oberflaeche/**", "app/src/App.svelte", "app/src/main.ts"] },
+]
+erlaubt = { formate = ["kern"], analyse = ["kern", "formate"], dienste = ["kern", "formate", "analyse"], zustand = ["kern", "formate", "analyse", "dienste"], oberflaeche = ["zustand", "kern", "formate", "analyse"] }
+
+[[regel]]
+kennung = "A2"
+titel = "Kern, Formate und Analyse ohne Browser"
+art = "verboten"
+warum = "Sie laufen im Worker, in Tests und später auf dem Server (Leitgedanke 9)."
+dateien = ["app/src/lib/kern/**", "app/src/lib/formate/**", "app/src/lib/analyse/**"]
+ausser = ["**/*.test.ts"]
+muster = '\b(document|window|navigator|localStorage|sessionStorage|indexedDB|fetch)\b'
+
+[[regel]]
+kennung = "A3"
+titel = "Kein Neu-Serialisieren bei Einzeländerungen"
+art = "verboten"
+warum = "Eine Änderung aus Baum oder Tabelle ist eine Textänderung an bekannter Stelle; ganze Dokumente neu zu schreiben hat in 0.x Dialekt, Kommentare und Editor-Änderungen vernichtet (Leitgedanke 1)."
+dateien = ["app/src/lib/kern/befehle/**", "app/src/lib/oberflaeche/**", "app/src/lib/zustand/**"]
+ausser = ["**/*.test.ts"]
+muster = '\bJSON\.stringify\(\s*(dok|dokument|wurzel|daten|zeilen)\b'
+
+[[regel]]
+kennung = "A4"
+titel = "Keine Sonderfälle für Formate in Oberfläche und Zustand"
+art = "verboten"
+warum = "Was ein Format kann, sagt sein Vertrag (Fähigkeiten); die Oberfläche fragt dort nach (Leitgedanke 7)."
+dateien = ["app/src/lib/oberflaeche/**", "app/src/lib/zustand/**"]
+ausser = ["**/*.test.ts"]
+muster = '''(format|formatId|kennung)\s*(===|!==|==)\s*['"](json|ndjson|csv|yaml|toml|xml|xlsx)['"]|case\s+['"](json|ndjson|csv|yaml|toml|xml|xlsx)['"]'''
+
+[[regel]]
+kennung = "A5"
+titel = "Kein globaler Griff zum aktiven Dokument in Ansichten"
+art = "verboten"
+warum = "Ansichten bekommen ihr Arbeitsblatt als Eigenschaft; ein globaler Zugriff war in 0.x die Ursache für Ergebnisse beim falschen Tab (Leitgedanke 4)."
+dateien = ["app/src/lib/oberflaeche/ansichten/**", "app/src/lib/oberflaeche/werkzeuge/**", "app/src/lib/oberflaeche/inspektor/**"]
+ausser = ["**/*.test.ts"]
+muster = '\b(aktivesBlatt|aktiverTab)\b'
+
+# ----- KI nur über die Leitstelle ----------------------------------------------------------------------------------------
+
+[[regel]]
+kennung = "K1"
+titel = "Kein direkter Weg zu KI-Diensten"
+art = "verboten"
+warum = "KI läuft nur über die Leitstelle (Hausregel); die App nennt weder Modelle noch Endpunkte von Sprachmodellen."
+dateien = ["app/src/**", "server/**"]
+muster = '(:1234\b|/v1/chat/completions|ollama|lmstudio|mlx_lm)'
+
+# ----- Grundregeln -------------------------------------------------------------------------------------------------------
+
+[[regel]]
+kennung = "G1"
+titel = "Keine Bibliotheken aus dem Netz"
+art = "verboten"
+warum = "Schriften, Symbole und Bibliotheken kommen über npm; die Bauart ohne Server muss ohne fremde Netze laufen."
+dateien = ["app/src/**", "app/*.html"]
+muster = 'https?://(cdn|unpkg|cdnjs|fonts\.googleapis|fonts\.gstatic|use\.fontawesome|esm\.sh)'
+
+[[regel]]
+kennung = "G2"
+titel = "Kleine Dateien"
+art = "zeilen"
+warum = "Lesbarkeit und eine Verantwortung je Einheit; TabellenAnsicht mit 1810 Zeilen war in 0.x ein Grund für die Fehler."
+dateien = ["app/src/**/*.ts", "app/src/**/*.svelte"]
+ausser = ["**/*.test.ts"]
+hoechstens = 400
+
+[[regel]]
+kennung = "G3"
+titel = "Architektur und Plan sind da"
+art = "pflicht"
+warum = "Erst das Design, dann der Bau; Entscheidungen haben einen festen Ort."
+dateien = ["docs/ARCHITEKTUR.md", "docs/PLAN.md", "architektur/regeln.toml", "version.json"]

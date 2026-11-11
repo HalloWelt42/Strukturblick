@@ -1,0 +1,174 @@
+/* Ansicht Editor nach entwuerfe/editor.html (teile/tabelle.css, Abschnitt Editor). Nur Marken; das Innere von
+   CodeMirror gestaltet erweiterungen.ts (EditorView.theme), ebenfalls nur über Marken. */
+
+/* ----- Werkzeugzeile: schmal verschwinden die Beschriftungen, danach bricht sie um ----- */
+.ed-werkzeugzeile {
+  flex-wrap: wrap;
+  container: ed-werkzeug / inline-size;
+}
+.ed-suche {
+  width: calc(var(--klein) * 15);
+}
+.ed-suche input {
+  font-family: var(--schrift-mono);
+}
+@container ed-werkzeug (max-width: 980px) {
+  .ed-lang {
+    display: none;
+  }
+}
+
+/* Formatwahl: kleine Tafel unter dem Knopf */
+.ed-formatwahl {
+  position: relative;
+}
+.ed-menue {
+  position: absolute;
+  left: 0;
+  top: calc(100% + var(--a2));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: calc(var(--klein) * 16);
+  margin: 0;
+  padding: var(--a1);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+}
+.ed-menue button {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  padding: 0 var(--a2);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background: transparent;
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--klein);
+  text-align: left;
+  cursor: pointer;
+}
+.ed-menue button:hover {
+  background: var(--akzent-weich);
+}
+.ed-menue button.aktiv {
+  color: var(--akzent);
+  font-weight: 600;
+}
+.ed-menue button > i {
+  width: 1.2em;
+  color: var(--text-3);
+}
+.ed-menue .rechts {
+  margin-left: auto;
+  padding-left: var(--a3);
+  font-size: var(--marke);
+  font-weight: 400;
+}
+
+/* ----- Editorfläche: CodeMirror rollt selbst, die Fläche nur die Größe ----- */
+.inhalt.ed-inhalt {
+  --ed-schrift: var(--klein);
+  --ed-cursorzeile: var(--flaeche-hervor);
+  display: flex;
+  overflow: hidden;
+}
+:root[data-theme="dunkel"] .ed-inhalt {
+  --ed-cursorzeile: var(--akzent-weich);
+}
+.ed-inhalt > .cm-editor {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ----- Diagnoseliste unter dem Editor ----- */
+.ed-diagnose {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--zeile) * 5);
+  background-color: var(--flaeche-panel-2);
+  box-shadow: inset 0 1px 0 var(--rand-2);
+}
+.ed-diagnose-kopf {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  min-height: var(--zeile);
+  padding: var(--a1) var(--a3);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.ed-diagnose-kopf .abzeichen {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+.ed-diagnose-kopf .rechts {
+  margin-left: auto;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.ed-diagnose-liste {
+  min-height: 0;
+  overflow-y: auto;
+}
+.ed-befund {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a3);
+  min-height: var(--zeile);
+  padding: 2px var(--a3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+  font-size: var(--klein);
+  color: var(--text-1);
+}
+.ed-befund:hover {
+  background: var(--akzent-weich);
+}
+.ed-befund button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ed-sprung {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-1);
+}
+.ed-befund:hover .ed-sprung {
+  text-decoration: underline;
+}
+.ed-befund .ed-ort {
+  font-family: var(--schrift-mono);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.ed-fehler-zeichen {
+  color: var(--fehler);
+}
+.ed-warnung-zeichen {
+  color: var(--warn);
+}
+.ed-hinweis-zeichen {
+  color: var(--akzent);
+}
+.ed-befund.ed-mehr {
+  display: block;
+}
+.ed-befund.ed-mehr:hover {
+  background: none;
+}
