@@ -4,7 +4,7 @@
   import type { Gruppe } from "../../../analyse/bereinigen/aehnlich";
   import { gruppenSchluessel, type BereinigenZustand } from "./bereinigenZustand.svelte";
   import { anzahl } from "../../ansichten/tabelle/zahlen";
-  import WertText from "./WertText.svelte";
+  import WertText from "../../bausteine/WertText.svelte";
 
   let { z, spalte, g }: { z: BereinigenZustand; spalte: string; g: Gruppe } = $props();
 

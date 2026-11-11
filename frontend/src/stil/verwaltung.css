@@ -1,0 +1,129 @@
+/* Verwaltungsseiten (nach entwuerfe/teile/verwaltung.css): gemeinsame Bausteine von Ablage, Rezepten und künftigen
+   Einstellungen. Zweiteiliges Layout mit Seitenspalte, Seite mit Titel und Abschnitten, Schalter, Tafel. Seiteneigenes
+   liegt neben der jeweiligen Seite (ablage.css, rezepte.css). */
+
+.vw-seite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a4);
+  max-width: 1120px;
+  padding: var(--a4) var(--a5) var(--a6);
+}
+
+.vw-tafel {
+  padding: var(--a4);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  min-width: 0;
+}
+
+.vw-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+  min-width: 0;
+}
+
+.vw-titel > i {
+  color: var(--akzent);
+}
+
+.vw-titel .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a2);
+  font-size: var(--klein);
+  font-weight: 500;
+}
+
+.vw-unter {
+  margin: var(--a1) 0 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+.vw-abschnitt {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: 0 0 var(--a2);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+
+.vw-abschnitt .rechts {
+  margin-left: auto;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.vw-hilfe {
+  margin: var(--a2) 0 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+.vw-zweiteilig {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.vw-seitenspalte {
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--a2);
+  background: var(--flaeche-panel-2);
+}
+
+.vw-hauptspalte {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.vw-schalter {
+  display: inline-flex;
+  align-items: center;
+  width: 46px;
+  height: 26px;
+  padding: 3px;
+  flex: none;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  cursor: pointer;
+}
+
+.vw-schalter::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+}
+
+.vw-schalter.an {
+  justify-content: flex-end;
+  background: var(--akzent-flaeche);
+}
+
+@media (max-width: 1279px) {
+  .vw-zweiteilig {
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1099px) {
+  .vw-seite {
+    padding: var(--a3) var(--a3) var(--a5);
+  }
+}

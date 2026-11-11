@@ -5,12 +5,16 @@ import type { Component } from "svelte";
 import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
 import BereinigenWerkzeug from "./bereinigen/BereinigenWerkzeug.svelte";
 import BereinigenInspektor from "./bereinigen/BereinigenInspektor.svelte";
+import RezepteWerkzeug from "./rezepte/RezepteWerkzeug.svelte";
+import RezepteInspektor from "./rezepte/RezepteInspektor.svelte";
 
 export interface Werkzeug {
   readonly kennung: string;
   readonly titel: string;
   readonly beschreibung: string;
   readonly symbol: string;               // Font-Awesome-Klasse
+  /** Wo die Leiste es zeigt: unter "Prüfen und umbauen" oder als Kopf des Abschnitts Rezepte */
+  readonly abschnitt: "pruefen" | "rezepte";
   readonly komponente: Component<{ blatt: Arbeitsblatt }>;
   /** Karten der rechten Spalte, solange das Werkzeug offen ist */
   readonly inspektor: Component<{ blatt: Arbeitsblatt }>;
@@ -22,8 +26,18 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     titel: "Bereinigen",
     beschreibung: "Facetten zum Filtern, ähnliche Schreibweisen zusammenführen, Typen vorschlagen",
     symbol: "fa-broom",
+    abschnitt: "pruefen",
     komponente: BereinigenWerkzeug,
     inspektor: BereinigenInspektor,
+  },
+  {
+    kennung: "rezepte",
+    titel: "Rezepte",
+    beschreibung: "Aufräumschritte speichern und auf die nächste Datei gleicher Bauart anwenden",
+    symbol: "fa-scroll",
+    abschnitt: "rezepte",
+    komponente: RezepteWerkzeug,
+    inspektor: RezepteInspektor,
   },
 ];
 

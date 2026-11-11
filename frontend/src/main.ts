@@ -8,6 +8,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./stil/marken.css";
 import "./stil/bausteine.css";
 import "./stil/schale.css";
+import "./stil/verwaltung.css";
 import { mount } from "svelte";
 import App from "./App.svelte";
 

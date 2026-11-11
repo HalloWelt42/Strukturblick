@@ -3,7 +3,9 @@
   // Herunterladen; der Ordnerknopf öffnet die Seite Ablage.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
-  import { aktion, WERKZEUG_WAHL } from "../aktionen/aktionen";
+  import { aktion } from "../aktionen/aktionen";
+  import { WERKZEUGE } from "../werkzeuge/registrierung";
+  import { rezepte } from "../../zustand/rezepte.svelte";
   import { knopfTitel } from "../aktionen/tastatur";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
@@ -21,7 +23,16 @@
   const oeffnen = aktion("datei-oeffnen");
   const laden = aktion("herunterladen");
   const verwalten = aktion("ablage");
-  const offenesWerkzeug = $derived(!ablageOffen && blatt?.platz.art === "werkzeug" ? `werkzeug-${blatt.platz.kennung}` : null);
+  const offenesWerkzeug = $derived(!ablageOffen && blatt?.platz.art === "werkzeug" ? blatt.platz.kennung : null);
+  const werkzeugAktion = (kennung: string) => aktion(`werkzeug-${kennung}`);
+  const rezepteAktion = werkzeugAktion("rezepte");
+  rezepte.sicherGeladen();
+
+  function rezeptOeffnen(kennung: string): void {
+    if (!blatt) return;
+    ablageverwaltung.schliessen();
+    rezepte.oeffnen(blatt, kennung);
+  }
 </script>
 
 <aside class="leiste">
@@ -52,10 +63,19 @@
       {/each}
     {/if}
     <div class="leiste-titel">Prüfen und umbauen</div>
-    {#each WERKZEUG_WAHL as w (w.kennung)}
-      <button class="eintrag" class:aktiv={offenesWerkzeug === w.kennung} disabled={!w.verfuegbar()} title={w.verfuegbar() ? w.beschreibung : "Erst ein Dokument öffnen"} onclick={() => w.ausfuehren()}>
+    {#each WERKZEUGE.filter((w) => w.abschnitt === "pruefen") as w (w.kennung)}
+      {@const a = werkzeugAktion(w.kennung)}
+      <button class="eintrag" class:aktiv={offenesWerkzeug === w.kennung} disabled={!a.verfuegbar()} title={a.verfuegbar() ? w.beschreibung : "Erst ein Dokument öffnen"} onclick={() => a.ausfuehren()}>
         <i class="fa-solid {w.symbol}"></i><span class="name">{w.titel}</span>
       </button>
+    {/each}
+    <div class="leiste-titel">Rezepte <span class="rechts"><button class="knopf still nur-symbol" class:aktiv-knopf={offenesWerkzeug === "rezepte"} disabled={!rezepteAktion.verfuegbar()} title={rezepteAktion.verfuegbar() ? "Alle Rezepte" : "Erst ein Dokument öffnen"} onclick={() => rezepteAktion.ausfuehren()}><i class="fa-solid fa-list"></i></button></span></div>
+    {#each rezepte.liste as r (r.kennung)}
+      <button class="eintrag" class:aktiv={offenesWerkzeug === "rezepte" && rezepte.aktuell?.kennung === r.kennung} disabled={!blatt} title={blatt ? `${r.name}: ${r.schritte.length} Schritte, aus ${r.quelle}` : "Erst ein Dokument öffnen"} onclick={() => rezeptOeffnen(r.kennung)}>
+        <i class="fa-solid fa-scroll"></i><span class="name">{r.name}</span><span class="rechts"><span class="text-3 klein mono">{r.schritte.length}</span></span>
+      </button>
+    {:else}
+      <button class="eintrag" disabled={!rezepteAktion.verfuegbar()} title="Was Rezepte sind und wie eins entsteht" onclick={() => rezepteAktion.ausfuehren()}><i class="fa-solid fa-scroll"></i><span class="name text-3">Noch keine Rezepte</span></button>
     {/each}
   </div>
   <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>{arbeitsplatz.ablage.hinweis}</span></div>

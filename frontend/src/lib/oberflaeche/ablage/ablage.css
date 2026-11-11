@@ -21,26 +21,6 @@
   color: var(--text-3);
 }
 
-.vw-zweiteilig {
-  display: grid;
-  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
-  height: 100%;
-  min-height: 0;
-}
-
-.vw-seitenspalte {
-  min-height: 0;
-  overflow-y: auto;
-  padding: var(--a2);
-  background: var(--flaeche-panel-2);
-}
-
-.vw-hauptspalte {
-  min-height: 0;
-  min-width: 0;
-  overflow-y: auto;
-}
-
 .vw-hauptspalte.vw-gestapelt {
   display: flex;
   flex-direction: column;
@@ -244,11 +224,6 @@
   font-size: var(--klein);
 }
 
-@media (max-width: 1279px) {
-  .vw-zweiteilig {
-    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
-  }
-}
 
 @media (max-width: 899px) {
   .vw-anmeldung > span {

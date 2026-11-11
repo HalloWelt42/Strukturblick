@@ -5,7 +5,7 @@
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import type { BereinigenZustand, Tabellenstand } from "./bereinigenZustand.svelte";
   import { anzahl } from "../../ansichten/tabelle/zahlen";
-  import WertText from "./WertText.svelte";
+  import WertText from "../../bausteine/WertText.svelte";
 
   let { blatt, z, s }: { blatt: Arbeitsblatt; z: BereinigenZustand; s: Tabellenstand } = $props();
 

@@ -1,0 +1,486 @@
+/* Werkzeug Rezepte (nach entwuerfe/teile/verwaltung.css, Teile Rezepte und Anwenden): Rezeptliste, Schritte mit
+   Zuordnungen, erwartete Spalten, Vorschau je Schritt und die Entscheidung am Fuß. Gemeinsames in stil/verwaltung.css. */
+
+.vw-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+}
+
+.vw-aktionen .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+
+.knopf.vw-knapp {
+  min-height: calc(var(--zeile) - 6px);
+}
+
+.knopf.nur-symbol.vw-knapp {
+  width: calc(var(--zeile) - 6px);
+}
+
+.vw-zeilentext {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+.vw-zeilentext strong {
+  color: var(--text-1);
+}
+
+.vw-wert {
+  display: inline-block;
+  padding: 0 6px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  white-space: pre;
+}
+
+.vw-vorher,
+.vw-nachher {
+  display: inline-block;
+  min-width: 0;
+  padding: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  font-family: var(--schrift-mono);
+}
+
+.vw-vorher {
+  background: var(--diff-weg);
+}
+
+.vw-nachher {
+  background: var(--diff-hinzu);
+}
+
+.vw-pfeil {
+  flex: none;
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+
+.vw-wahl-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+}
+
+.vw-wahl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  padding: var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--text-1);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vw-wahl:hover {
+  background-color: var(--flaeche-panel);
+}
+
+.vw-wahl.aktiv {
+  background-color: var(--flaeche-hervor);
+}
+
+:root[data-theme="dunkel"] .vw-wahl.aktiv {
+  background-color: var(--akzent-weich);
+}
+
+.vw-wahl-name {
+  display: block;
+  font-weight: 600;
+}
+
+.vw-wahl.aktiv .vw-wahl-name {
+  color: var(--akzent);
+}
+
+.vw-wahl-info {
+  display: block;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+.vw-rezept {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px var(--a2);
+  padding: var(--a2);
+  color: var(--text-2);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vw-rezept:hover {
+  background: var(--flaeche-wechsel);
+  color: var(--text-1);
+}
+
+.vw-rezept > i {
+  width: 20px;
+  text-align: center;
+  color: var(--text-3);
+}
+
+.vw-rezept-name {
+  font-weight: 600;
+  color: var(--text-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vw-rezept-info {
+  grid-column: 2 / -1;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+.vw-rezept.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+}
+
+.vw-rezept.aktiv > i {
+  color: var(--akzent);
+}
+
+.vw-schritte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+}
+
+.vw-schritt {
+  display: grid;
+  grid-template-columns: 2.2ch auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  padding: var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+
+.vw-schritt-nr {
+  font-family: var(--schrift-mono);
+  font-size: var(--titel);
+  color: var(--text-3);
+  text-align: right;
+}
+
+.vw-schritt-text {
+  min-width: 0;
+}
+
+.vw-schritt-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  font-weight: 600;
+}
+
+.vw-schritt-was {
+  margin-top: 2px;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+.vw-schritt-knoepfe {
+  display: flex;
+  gap: var(--a1);
+}
+
+.vw-schritt.vw-offen {
+  background-color: var(--flaeche-panel-2);
+}
+
+.vw-bearbeiten {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+  padding: var(--a3);
+  background: var(--flaeche-panel);
+  box-shadow: var(--vertieft);
+}
+
+.vw-feldzeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+}
+
+.vw-feldname {
+  min-width: 10em;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+.vw-zuordnung {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  margin-top: var(--a1);
+}
+
+.vw-spaltenmarken {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--a2);
+}
+
+.vw-spaltenmarke {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+
+.vw-spaltenmarke > i {
+  color: var(--gut);
+}
+
+.vw-spaltenmarke .rechts {
+  margin-left: auto;
+  font-family: var(--schrift);
+  font-size: var(--marke);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.vw-spaltenmarke.fehlt {
+  background: var(--fehler-weich);
+  color: var(--fehler);
+}
+
+.vw-spaltenmarke.fehlt > i,
+.vw-spaltenmarke.fehlt .rechts {
+  color: var(--fehler);
+}
+
+.vw-spaltenmarke.zusatz {
+  background: var(--zweit-weich);
+  color: var(--zweit);
+}
+
+.vw-spaltenmarke.zusatz > i,
+.vw-spaltenmarke.zusatz .rechts {
+  color: var(--zweit);
+}
+
+.vw-urteil {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  margin-bottom: var(--a3);
+  padding: var(--a2) var(--a3);
+  background: var(--gut-weich);
+  color: var(--gut);
+  font-weight: 600;
+}
+
+.vw-urteil .rechts {
+  margin-left: auto;
+}
+
+.vw-vorschau-schritt {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+
+.vw-vorschau-kopf {
+  display: grid;
+  grid-template-columns: 2.2ch minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  padding: var(--a2) var(--a3);
+  min-height: var(--knopf-hoehe);
+}
+
+.vw-vorschau-kopf .vw-schritt-nr {
+  font-size: var(--gross);
+}
+
+.vw-vorschau-kopf .rechts {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+
+.vw-vorschau-schritt.uebersprungen .vw-vorschau-kopf {
+  color: var(--text-3);
+}
+
+.vw-vorschau-schritt.uebersprungen .vw-schritt-name {
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+.vw-beispiele {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+
+.vw-beispiele td {
+  padding: 3px var(--a3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+  white-space: nowrap;
+}
+
+.vw-beispiele td:first-child {
+  padding-left: calc(2.2ch + var(--a3) * 2);
+}
+
+.vw-beispiele .vw-anzahl-zelle {
+  width: 1%;
+  text-align: right;
+  font-family: var(--schrift-mono);
+  color: var(--text-3);
+}
+
+.vw-beispiele .vw-pfeil-zelle {
+  width: 1%;
+  color: var(--text-3);
+}
+
+.vw-beispiele .vw-luft {
+  width: 100%;
+}
+
+.vw-entscheidung {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  padding: var(--a2) var(--a3);
+  flex: none;
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--klein);
+}
+
+.vw-entscheidung .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+}
+
+.vw-entscheidung .feld {
+  width: 300px;
+  max-width: 100%;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+
+@media (max-width: 1279px) {
+  .vw-spaltenmarken {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ----- In der App ---------------------------------------------------------- */
+
+.rz-ansicht {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.rz-ansicht > .inhalt {
+  overflow: auto;
+}
+/* Bedienteile als Knöpfe: ohne Rahmen und Füllung des Browsers */
+button.vw-rezept,
+button.vw-wahl,
+button.vw-schalter {
+  border: 0;
+  margin: 0;
+  font: inherit;
+  text-align: left;
+}
+button.vw-rezept {
+  width: 100%;
+  background: transparent;
+}
+button.vw-wahl {
+  width: 100%;
+}
+.vw-rezept.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+}
+.vw-rezept.aktiv > i {
+  color: var(--akzent);
+}
+.vw-wahl-liste + .vw-hilfe {
+  margin-top: var(--a3);
+}
+/* Ausgeschalteter Schritt: gedämpft, bleibt bedienbar */
+.vw-schritt.rz-aus .vw-schritt-text {
+  opacity: 0.55;
+}
+.rz-titel-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rz-name {
+  flex: 1 1 auto;
+  max-width: 480px;
+  font-size: var(--gross);
+}
+.rz-meldung {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--a3);
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--a6) var(--a4);
+  color: var(--text-2);
+  text-align: center;
+}
+.rz-meldung > i {
+  font-size: var(--kennzahl);
+  color: var(--text-3);
+}
+.rz-meldung > p {
+  margin: 0;
+}

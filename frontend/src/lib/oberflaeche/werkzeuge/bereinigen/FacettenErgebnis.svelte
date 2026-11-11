@@ -8,7 +8,7 @@
   import { ZEILEN_JE_SEITE, type BereinigenZustand, type Tabellenstand } from "./bereinigenZustand.svelte";
   import { alsNeuesDokument, zeilenBehalten } from "./vorgaenge";
   import { anzahl } from "../../ansichten/tabelle/zahlen";
-  import WertText from "./WertText.svelte";
+  import WertText from "../../bausteine/WertText.svelte";
 
   let { blatt, z, s }: { blatt: Arbeitsblatt; z: BereinigenZustand; s: Tabellenstand } = $props();
 
