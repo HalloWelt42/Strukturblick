@@ -1,4 +1,4 @@
-"""Bestand von Strukturblick in der Datenbank der App: Dokumente und Arbeitsstand je Konto. Die einzige Stelle, die
+"""Bestand von Strukturblick in der Datenbank der App: Dokumente, Arbeitsstand und Rezepte je Konto. Die einzige Stelle, die
 SQL kennt. Jedes Konto sieht nur seine eigenen Dokumente."""
 
 from __future__ import annotations
@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 from appkern.datenbank import Datenbank
 
-from .modelle import Arbeitsstand, Dokument, Dokumentkopf, Papierkorbeintrag
+from .modelle import Arbeitsstand, Dokument, Dokumentkopf, Papierkorbeintrag, Rezept
 
 STUFEN = [
     """
@@ -37,7 +37,20 @@ STUFEN = [
         PRIMARY KEY (konto, name)
     );
     """,
+    # Stufe 3 (STB-7): Rezepte
+    """
+    CREATE TABLE rezepte (
+        konto TEXT NOT NULL,
+        kennung TEXT NOT NULL,
+        geaendert TEXT NOT NULL,
+        inhalt TEXT NOT NULL,
+        PRIMARY KEY (konto, kennung)
+    );
+    """,
 ]
+
+#: So viele Rezepte hält ein Konto höchstens
+REZEPTE_HOECHSTENS = 500
 
 #: So lange bleibt ein entferntes Dokument im Papierkorb
 PAPIERKORB_TAGE = 30
@@ -147,3 +160,24 @@ class Bestand:
             "INSERT INTO arbeitsstaende (konto, inhalt) VALUES (?, ?) ON CONFLICT (konto) DO UPDATE SET inhalt = excluded.inhalt",
             (konto, stand.model_dump_json()),
         )
+
+    async def rezepte(self, konto: str) -> list[Rezept]:
+        zeilen = await self.db.zeilen("SELECT inhalt FROM rezepte WHERE konto = ? ORDER BY geaendert DESC", (konto,))
+        return [Rezept.model_validate_json(z["inhalt"]) for z in zeilen]
+
+    async def rezept_speichern(self, konto: str, rezept: Rezept) -> None:
+        vorhanden = await self.db.zeile("SELECT 1 FROM rezepte WHERE konto = ? AND kennung = ?", (konto, rezept.kennung))
+        if not vorhanden:
+            anzahl = await self.db.zeile("SELECT COUNT(*) AS n FROM rezepte WHERE konto = ?", (konto,))
+            if anzahl and anzahl["n"] >= REZEPTE_HOECHSTENS:
+                raise Ablagefehler(f"Höchstens {REZEPTE_HOECHSTENS} Rezepte je Konto")
+        await self.db.ausfuehren(
+            "INSERT INTO rezepte (konto, kennung, geaendert, inhalt) VALUES (?, ?, ?, ?) "
+            "ON CONFLICT (konto, kennung) DO UPDATE SET geaendert = excluded.geaendert, inhalt = excluded.inhalt",
+            (konto, rezept.kennung, rezept.geaendert, rezept.model_dump_json()),
+        )
+
+    async def rezept_entfernen(self, konto: str, kennung: str) -> bool:
+        vorhanden = await self.db.zeile("SELECT 1 FROM rezepte WHERE konto = ? AND kennung = ?", (konto, kennung))
+        await self.db.ausfuehren("DELETE FROM rezepte WHERE konto = ? AND kennung = ?", (konto, kennung))
+        return vorhanden is not None

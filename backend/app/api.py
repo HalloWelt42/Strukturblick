@@ -7,10 +7,13 @@ from appkern.anmeldung.dienst import Konto
 from appkern.app import Geruest
 
 from .bestand import Ablagefehler, Bestand
-from .modelle import KENNUNG, ORDNER, Aenderung, Arbeitsstand, Dokument, Dokumentkopf, Ordnername, Papierkorbeintrag
+from .modelle import KENNUNG, ORDNER, Aenderung, Arbeitsstand, Dokument, Dokumentkopf, Ordnername, Papierkorbeintrag, Rezept
 
 #: Größtes Dokument, das die Ablage annimmt (Zeichen); darüber lehnt sie mit 413 ab
 GROESSTES_DOKUMENT = 100 * 1024 * 1024
+
+#: Größtes Rezept (Zeichen als JSON); Rezepte sind klein, auch mit langen Ersetzungslisten
+GROESSTES_REZEPT = 1024 * 1024
 
 
 def router(geruest: Geruest, bestand: Bestand) -> APIRouter:
@@ -101,6 +104,28 @@ def router(geruest: Geruest, bestand: Bestand) -> APIRouter:
     @r.put("/arbeitsstand", status_code=204)
     async def arbeitsstand_speichern(stand: Arbeitsstand, konto: Konto = pflicht) -> Response:
         await bestand.arbeitsstand_speichern(konto.id, stand)
+        return Response(status_code=204)
+
+    @r.get("/rezepte", response_model=list[Rezept])
+    async def rezepte(konto: Konto = pflicht) -> list[Rezept]:
+        return await bestand.rezepte(konto.id)
+
+    @r.put("/rezepte/{kennung}", status_code=204)
+    async def rezept_speichern(rezept: Rezept, kennung: str = Path(pattern=KENNUNG), konto: Konto = pflicht) -> Response:
+        if rezept.kennung != kennung:
+            raise HTTPException(400, "Kennung im Pfad und im Rezept weichen ab")
+        if len(rezept.model_dump_json()) > GROESSTES_REZEPT:
+            raise HTTPException(413, f"Das Rezept ist größer als {GROESSTES_REZEPT // 1048576} MB")
+        try:
+            await bestand.rezept_speichern(konto.id, rezept)
+        except Ablagefehler as f:
+            raise HTTPException(409, str(f)) from f
+        return Response(status_code=204)
+
+    @r.delete("/rezepte/{kennung}", status_code=204)
+    async def rezept_entfernen(kennung: str = Path(pattern=KENNUNG), konto: Konto = pflicht) -> Response:
+        if not await bestand.rezept_entfernen(konto.id, kennung):
+            raise HTTPException(404, "Das Rezept gibt es nicht")
         return Response(status_code=204)
 
     return r

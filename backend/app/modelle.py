@@ -3,7 +3,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 #: Kennungen sind UUIDs der Oberfläche
 KENNUNG = r"^[0-9a-fA-F-]{36}$"
@@ -65,3 +65,15 @@ class Ordnername(BaseModel):
 class Arbeitsstand(BaseModel):
     offen: list[str] = Field(default_factory=list, max_length=200)
     aktiv: str | None = None
+
+
+class Rezept(BaseModel):
+    """Rezept (STB-7): benannte Schritte zum Bereinigen. Der Server prüft Kennung, Namen und Größe; die Schritte liest
+    allein die Oberfläche (frontend/src/lib/analyse/rezepte/rezept.ts), weitere Felder reisen unverändert mit."""
+
+    model_config = ConfigDict(extra="allow")
+
+    kennung: str = Field(pattern=KENNUNG)
+    name: str = Field(min_length=1, max_length=120)
+    geaendert: str = Field(max_length=40)
+    schritte: list[dict[str, object]] = Field(default_factory=list, max_length=200)

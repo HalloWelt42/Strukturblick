@@ -20,7 +20,8 @@
   async function uebernehmen(): Promise<void> {
     const titel = `${spalte}: ähnliche Werte zusammengeführt (${anzahl(aenderungen.length)} Zellen)`;
     // Ausgenommene Gruppen bleiben ausgenommen (ihr Schlüssel hängt an den Schreibweisen, nicht an der Revision)
-    await zellenSetzen(blatt, aenderungen.map((a) => ({ zeiger: a.zeiger, neu: { art: "text", wert: a.nachher } })), titel);
+    const schritt = { art: "ersetzen" as const, spalte, karte: [...karte].map(([vorher, nachher]) => ({ vorher, nachher })), an: true };
+    await zellenSetzen(blatt, aenderungen.map((a) => ({ zeiger: a.zeiger, neu: { art: "text", wert: a.nachher } })), titel, schritt);
   }
 </script>
 

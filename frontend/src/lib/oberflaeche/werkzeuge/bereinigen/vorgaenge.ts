@@ -4,6 +4,8 @@
 
 import type { NeuerWert } from "../../../kern/format";
 import type { Filterergebnis } from "../../../analyse/bereinigen/facetten";
+import { wegfallende } from "../../../analyse/rezepte/planen";
+import type { Rezeptschritt } from "../../../analyse/rezepte/rezept";
 import { sichtWerte, werteAusgeben, type Ausgabeformat } from "../../../analyse/ausgabe";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
 import { arbeitsplatz } from "../../../zustand/arbeitsplatz.svelte";
@@ -13,21 +15,17 @@ import type { BereinigenZustand, Tabellenstand } from "./bereinigenZustand.svelt
 
 const ORT = "Bereinigen";
 
-/** Stellen der Zeilen, die beim Behalten wegfallen */
-export function wegfallende(s: Tabellenstand, ergebnis: Filterergebnis): number[] {
-  const bleiben = new Uint8Array(s.tabelle.zeilen.length);
-  for (const i of ergebnis.zeilen) bleiben[i] = 1;
-  const weg: number[] = [];
-  for (let i = 0; i < bleiben.length; i++) if (!bleiben[i]) weg.push(i);
-  return weg;
-}
+/** Schlichte Daten aus Zustandswerten (der Verlauf wird abgelegt und darf keine Beobachter-Hüllen tragen) */
+const schlicht = <T>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
 
 /** Nur die gefilterten Zeilen behalten: die übrigen Einträge verschwinden aus dem Text, alles andere bleibt. */
 export async function zeilenBehalten(blatt: Arbeitsblatt, z: BereinigenZustand, s: Tabellenstand, ergebnis: Filterergebnis): Promise<void> {
-  const stellen = wegfallende(s, ergebnis);
+  const stellen = wegfallende(s.tabelle, ergebnis);
   if (!stellen.length || !ergebnis.zeilen.length) return;
   const titel = `Bereinigen: ${anzahl(ergebnis.zeilen.length)} von ${anzahl(s.tabelle.zeilen.length)} Zeilen behalten`;
-  const e = await blatt.ausfuehrenMitMeldung("eintraege.entfernen", { liste: s.listeZeiger, stellen, titel }, { ort: ORT });
+  // Die Filter sind dieselbe Form wie im Rezept; nur "readonly" unterscheidet die Typen
+  const rezeptschritt = schlicht({ art: "behalten" as const, filter: z.filter.filter((f) => s.tabelle.spalteNach.has(f.spalte)), an: true }) as Rezeptschritt;
+  const e = await blatt.ausfuehrenMitMeldung("eintraege.entfernen", { liste: s.listeZeiger, stellen, titel }, { ort: ORT, rezeptschritt });
   if (e.ok) z.filterLeeren();
 }
 
@@ -46,9 +44,9 @@ export interface Zellwechsel {
   readonly neu: NeuerWert;
 }
 
-/** Viele Zellen in einem Vorgang setzen (Zusammenführen, Umwandeln) */
-export async function zellenSetzen(blatt: Arbeitsblatt, aenderungen: readonly Zellwechsel[], titel: string): Promise<boolean> {
+/** Viele Zellen in einem Vorgang setzen (Zusammenführen, Umwandeln); der fachliche Schritt reist für Rezepte mit */
+export async function zellenSetzen(blatt: Arbeitsblatt, aenderungen: readonly Zellwechsel[], titel: string, rezeptschritt: Rezeptschritt): Promise<boolean> {
   if (!aenderungen.length) return false;
-  const e = await blatt.ausfuehrenMitMeldung("werte.setzen", { aenderungen, titel }, { ort: ORT });
+  const e = await blatt.ausfuehrenMitMeldung("werte.setzen", { aenderungen, titel }, { ort: ORT, rezeptschritt: schlicht(rezeptschritt) });
   return e.ok;
 }

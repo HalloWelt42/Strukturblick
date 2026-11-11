@@ -1,7 +1,8 @@
 // Ablage im Arbeitsspeicher: hält Dokumente nur, solange das Fenster offen ist. Ausweg, wenn der Browser kein Speichern
 // erlaubt (privates Fenster, gesperrter Speicher), damit die App trotzdem startet; dazu dient sie Tests als Ablage.
 
-import { Ablagefehler, ordnerNameGueltig, type Ablage, type AbgelegtesDokument, type Arbeitsstand, type Dokumentkopf, type Papierkorbeintrag } from "./ablage";
+import { Ablagefehler, ordnerNameGueltig, rezepteOrdnen, type Ablage, type AbgelegtesDokument, type Arbeitsstand, type Dokumentkopf, type Papierkorbeintrag } from "./ablage";
+import type { Rezept } from "../analyse/rezepte/rezept";
 
 type Gespeichert = AbgelegtesDokument & { readonly geloescht?: string };
 
@@ -10,6 +11,7 @@ export class SpeicherAblage implements Ablage {
   readonly hinweis: string;
   private readonly dokumente = new Map<string, Gespeichert>();
   private readonly ordnerNamen = new Set<string>();
+  private readonly rezeptListe = new Map<string, Rezept>();
   private stand: Arbeitsstand = { offen: [], aktiv: null };
 
   constructor(ort = "Nur in diesem Fenster", hinweis = "Der Browser erlaubt hier kein Speichern: Beim Schließen gehen die Dokumente verloren. Sichern per Herunterladen oder in der Ablage mit Alles sichern.") {
@@ -75,5 +77,14 @@ export class SpeicherAblage implements Ablage {
   }
   async arbeitsstandSpeichern(s: Arbeitsstand): Promise<void> {
     this.stand = s;
+  }
+  async rezepte(): Promise<Rezept[]> {
+    return rezepteOrdnen([...this.rezeptListe.values()]);
+  }
+  async rezeptSpeichern(r: Rezept): Promise<void> {
+    this.rezeptListe.set(r.kennung, structuredClone(r));
+  }
+  async rezeptEntfernen(kennung: string): Promise<void> {
+    this.rezeptListe.delete(kennung);
   }
 }

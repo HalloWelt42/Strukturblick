@@ -122,3 +122,25 @@ async def test_ordner(client):
     await client.patch(f"/api/v1/dokumente/{KENNUNG}", headers=h, json={"ordner": ""})
     assert (await client.delete("/api/v1/ordner/Import", headers=h)).status_code == 204
     assert (await client.get("/api/v1/ordner", headers=h)).json() == []
+
+
+def rezept(kennung: str = KENNUNG, geaendert: str = "2026-11-11T21:00:00+01:00") -> dict:
+    return {"kennung": kennung, "name": "Kunden säubern", "geaendert": geaendert, "angelegt": geaendert, "quelle": "kunden.csv",
+            "spalten": ["ort"], "zuletzt": [], "schritte": [{"art": "ersetzen", "spalte": "ort", "karte": [{"vorher": "lpz", "nachher": "Leipzig"}], "an": True}]}
+
+
+async def test_rezepte(client):
+    h = await anmelden(client)
+    assert (await client.get("/api/v1/rezepte")).status_code == 401
+    assert (await client.get("/api/v1/rezepte", headers=h)).json() == []
+    assert (await client.put(f"/api/v1/rezepte/{KENNUNG}", headers=h, json=rezept())).status_code == 204
+    assert (await client.put(f"/api/v1/rezepte/{ZWEITE}", headers=h, json=rezept(ZWEITE, "2026-11-12T08:00:00+01:00"))).status_code == 204
+    liste = (await client.get("/api/v1/rezepte", headers=h)).json()
+    assert [r["kennung"] for r in liste] == [ZWEITE, KENNUNG]
+    # Felder, die nur die Oberfläche liest, reisen unverändert mit
+    assert liste[1]["schritte"][0]["karte"] == [{"vorher": "lpz", "nachher": "Leipzig"}] and liste[1]["quelle"] == "kunden.csv"
+    assert (await client.put(f"/api/v1/rezepte/{ZWEITE}", headers=h, json=rezept())).status_code == 400
+    assert (await client.put(f"/api/v1/rezepte/{KENNUNG}", headers=h, json={**rezept(), "name": ""})).status_code == 422
+    assert (await client.delete(f"/api/v1/rezepte/{ZWEITE}", headers=h)).status_code == 204
+    assert (await client.delete(f"/api/v1/rezepte/{ZWEITE}", headers=h)).status_code == 404
+    assert [r["kennung"] for r in (await client.get("/api/v1/rezepte", headers=h)).json()] == [KENNUNG]

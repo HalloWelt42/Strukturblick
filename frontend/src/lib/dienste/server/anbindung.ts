@@ -3,7 +3,8 @@
 // damit die Bauart ohne Server nichts davon enthält.
 
 import { hole, json } from "appkern-oberflaeche";
-import { Ablagefehler, type Ablage, type AbgelegtesDokument, type Arbeitsstand, type Dokumentkopf, type Papierkorbeintrag } from "../ablage";
+import { Ablagefehler, rezepteOrdnen, type Ablage, type AbgelegtesDokument, type Arbeitsstand, type Dokumentkopf, type Papierkorbeintrag } from "../ablage";
+import type { Rezept } from "../../analyse/rezepte/rezept";
 
 export {
   sitzung,
@@ -26,6 +27,7 @@ const SPEICHERN_ZEITGRENZE_MS = 120_000;
 
 const pfad = (kennung: string): string => `/dokumente/${encodeURIComponent(kennung)}`;
 const ordnerPfad = (name: string): string => `/ordner/${encodeURIComponent(name)}`;
+const rezeptPfad = (kennung: string): string => `/rezepte/${encodeURIComponent(kennung)}`;
 
 /** Fachliche Ablehnung des Servers (409 Konflikt, 400 ungültig) als Ablagefehler mit seiner Meldung */
 async function fachlich<T>(arbeit: Promise<T>): Promise<T> {
@@ -101,5 +103,17 @@ export class ServerAblage implements Ablage {
 
   async arbeitsstandSpeichern(stand: Arbeitsstand): Promise<void> {
     await hole<void>("/arbeitsstand", { method: "PUT", ...json(stand) });
+  }
+
+  async rezepte(): Promise<Rezept[]> {
+    return rezepteOrdnen(await hole<unknown[]>("/rezepte"));
+  }
+
+  async rezeptSpeichern(r: Rezept): Promise<void> {
+    await fachlich(hole<void>(rezeptPfad(r.kennung), { method: "PUT", ...json(r) }));
+  }
+
+  async rezeptEntfernen(kennung: string): Promise<void> {
+    await fachlich(hole<void>(rezeptPfad(kennung), { method: "DELETE" }));
   }
 }

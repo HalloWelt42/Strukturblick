@@ -1,8 +1,10 @@
 // Ablage im Browser (IndexedDB). Liegt nur in diesem Browser; gesichert wird per Herunterladen.
 // Datenbankstufe 2 (STB-18): Ordner und Papierkorb; Dokumente der Stufe 1 bleiben, ohne Ordner und nicht entfernt.
+// Datenbankstufe 3 (STB-7): Rezepte.
 
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
-import { abgelaufen, Ablagefehler, ordnerNameGueltig, type Ablage, type AbgelegtesDokument, type Arbeitsstand, type Dokumentkopf, type Papierkorbeintrag } from "./ablage";
+import type { Rezept } from "../analyse/rezepte/rezept";
+import { abgelaufen, Ablagefehler, ordnerNameGueltig, rezepteOrdnen, type Ablage, type AbgelegtesDokument, type Arbeitsstand, type Dokumentkopf, type Papierkorbeintrag } from "./ablage";
 
 /** So liegt ein Dokument in der Datenbank: das Dokument, dazu wann es entfernt wurde ("" = nicht entfernt). */
 type Gespeichert = AbgelegtesDokument & { readonly geloescht?: string };
@@ -11,10 +13,11 @@ interface Schema extends DBSchema {
   dokumente: { key: string; value: Gespeichert };
   stand: { key: string; value: Arbeitsstand };
   ordner: { key: string; value: { name: string } };
+  rezepte: { key: string; value: Rezept };
 }
 
 const DATENBANK = "strukturblick-2";
-const STUFE = 2;
+const STUFE = 3;
 
 /** Was beim Öffnen der Datenbank geschieht, für die Anzeige im Zustand */
 export interface Ablageereignisse {
@@ -46,6 +49,7 @@ export class BrowserAblage implements Ablage {
           d.createObjectStore("stand");
         }
         if (alt < 2) d.createObjectStore("ordner", { keyPath: "name" });
+        if (alt < 3) d.createObjectStore("rezepte", { keyPath: "kennung" });
       },
       // Ältere Fassungen reagieren nicht auf einen Umstieg: dann warten, bis ihr Tab zu ist, und es sagen
       blocked: () => {
@@ -159,5 +163,17 @@ export class BrowserAblage implements Ablage {
 
   async arbeitsstandSpeichern(stand: Arbeitsstand): Promise<void> {
     await (await this.oeffnen()).put("stand", stand, "arbeitsplatz");
+  }
+
+  async rezepte(): Promise<Rezept[]> {
+    return rezepteOrdnen(await (await this.oeffnen()).getAll("rezepte"));
+  }
+
+  async rezeptSpeichern(r: Rezept): Promise<void> {
+    await (await this.oeffnen()).put("rezepte", r);
+  }
+
+  async rezeptEntfernen(kennung: string): Promise<void> {
+    await (await this.oeffnen()).delete("rezepte", kennung);
   }
 }

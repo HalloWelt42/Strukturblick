@@ -4,6 +4,7 @@
 
 import type { FormatKennung, Leseoptionen } from "../kern/format";
 import type { Verlauf } from "../kern/verlauf";
+import { rezeptLesen, type Rezept } from "../analyse/rezepte/rezept";
 
 export const PAPIERKORB_TAGE = 30;
 
@@ -60,7 +61,19 @@ export interface Ablage {
   ordnerEntfernen(name: string): Promise<void>;
   arbeitsstand(): Promise<Arbeitsstand>;
   arbeitsstandSpeichern(stand: Arbeitsstand): Promise<void>;
+  /** Rezepte (STB-7) des Kontos, zuletzt geänderte zuerst; nicht lesbare bleiben weg */
+  rezepte(): Promise<Rezept[]>;
+  rezeptSpeichern(rezept: Rezept): Promise<void>;
+  /** Endgültig (Rezepte lassen sich vorher herunterladen) */
+  rezeptEntfernen(kennung: string): Promise<void>;
 }
+
+/** Gespeicherte Rezepte prüfen und ordnen: nur gültige, zuletzt geänderte zuerst */
+export const rezepteOrdnen = (roh: readonly unknown[]): Rezept[] =>
+  roh.flatMap((r) => {
+    const g = rezeptLesen(r);
+    return g.ok ? [g.rezept] : [];
+  }).sort((a, b) => b.geaendert.localeCompare(a.geaendert));
 
 /** Fachlicher Fehler der Ablage (Ordner nicht leer, Name doppelt); der Zustand meldet ihn. */
 export class Ablagefehler extends Error {}

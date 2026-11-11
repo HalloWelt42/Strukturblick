@@ -52,8 +52,8 @@ describe("BrowserAblage", () => {
     let abgeloest = 0;
     const ablage = ablageMit({ abgeloest: () => abgeloest++ });
     await ablage.liste();
-    // eine neuere Fassung will auf Stufe 3; diese Ablage schließt auf das Ereignis hin
-    const neu = openDB(NAME, 3, { upgrade() {} });
+    // eine neuere Fassung will eine Stufe höher; diese Ablage schließt auf das Ereignis hin
+    const neu = openDB(NAME, 99, { upgrade() {} });
     await warten(50);
     expect(abgeloest).toBe(1);
     await ablage.schliessen();
@@ -64,5 +64,21 @@ describe("BrowserAblage", () => {
     const ablage = ablageMit();
     await ablage.ordnerAnlegen("Import");
     expect(await ablage.ordner()).toEqual(["Import"]);
+  });
+
+  it("hält Rezepte (Stufe 3): speichern, geordnet lesen, Ungültiges weglassen, entfernen", async () => {
+    const ablage = ablageMit();
+    const rezept = (kennung: string, geaendert: string) => ({
+      kennung, name: "Kunden säubern", schritte: [{ art: "datum" as const, spalte: "angelegt", unlesbar: "lassen" as const, an: true }],
+      spalten: ["angelegt"], quelle: "kunden.csv", angelegt: geaendert, geaendert, zuletzt: [],
+    });
+    await ablage.rezeptSpeichern(rezept("00000000-0000-4000-8000-000000000001", "2026-11-01T00:00:00Z"));
+    await ablage.rezeptSpeichern(rezept("00000000-0000-4000-8000-000000000002", "2026-11-05T00:00:00Z"));
+    const db = await openDB(NAME);
+    await db.put("rezepte", { kennung: "kaputt", name: "" });
+    db.close();
+    expect((await ablage.rezepte()).map((r) => r.kennung.slice(-1))).toEqual(["2", "1"]);
+    await ablage.rezeptEntfernen("00000000-0000-4000-8000-000000000002");
+    expect((await ablage.rezepte()).length).toBe(1);
   });
 });

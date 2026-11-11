@@ -22,7 +22,9 @@
   async function umwandeln(): Promise<void> {
     if (!v) return;
     const liste = [...v.aenderungen.map((a) => ({ zeiger: a.zeiger, neu: a.neu })), ...(z.unlesbarLeeren ? v.unlesbar.map((u) => ({ zeiger: u.zeiger, neu: leer })) : [])];
-    await zellenSetzen(blatt, liste, `${spalte}: als ${ziel} umgewandelt (${anzahl(liste.length)} Zellen)`);
+    if (v.art === "text-bleibt") return;
+    const schritt = { art: v.art, spalte, unlesbar: z.unlesbarLeeren ? ("leeren" as const) : ("lassen" as const), an: true };
+    await zellenSetzen(blatt, liste, `${spalte}: als ${ziel} umgewandelt (${anzahl(liste.length)} Zellen)`, schritt);
   }
 </script>
 
