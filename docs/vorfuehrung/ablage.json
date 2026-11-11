@@ -1,0 +1,65 @@
+{
+  "kapitel": "ablage",
+  "titel": "Dokumente ordnen",
+  "ticket": "STB-18",
+  "rolle": "erzaehler",
+  "voraussetzung": "Demosatz geöffnet, Ansicht beliebig",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Alle Dokumente liegen in der Ablage. Der Ordnerknopf oben in der Leiste öffnet ihre Verwaltung.",
+      "ziel": { "anker": "ablage-oeffnen", "notbehelf": "Knopf Ablage verwalten in .leiste-titel" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Seite Ablage: links Ordner und Papierkorb, Mitte die Dokumente, rechts Sichern und Papierkorb",
+      "geprueft": "2026-11-11, Bauart ohne Server und auf pi5b"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Für den Kundenimport lege ich einen Ordner an.",
+      "ziel": { "anker": "ablage-neuer-ordner", "notbehelf": "Knopf Neuer Ordner" },
+      "aktion": { "art": "tippen", "text": "Kundenimport", "vorher": "Neuer Ordner klicken", "danach": "Enter" },
+      "erwartung": "Ordner Kundenimport gewählt, auch in der Leiste links",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Die Kundenliste kommt hinein: Haken setzen, Verschieben, Ordner wählen.",
+      "ziel": { "anker": "ablage-verschieben", "notbehelf": "Haken bei kunden.csv, dann Knopf Verschieben" },
+      "aktion": { "art": "klicken", "vorher": "kunden.csv wählen" },
+      "erwartung": "Meldung 1 Dokument nach Kundenimport verschoben; die Leiste zeigt den Ordner mit 1",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Umbenennen geht direkt in der Zeile. Ist das Dokument offen, zieht sein Reiter mit.",
+      "ziel": { "anker": "ablage-umbenennen", "notbehelf": "Knopf Umbenennen in der Auswahlleiste" },
+      "aktion": { "art": "tippen", "text": "kunden-november.csv", "danach": "Enter" },
+      "erwartung": "Neuer Name in Liste und Reiter",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Weg damit? Es landet im Papierkorb, und die Meldung bietet zwölf Sekunden lang Rückgängig an.",
+      "ziel": { "anker": "ablage-papierkorb", "notbehelf": "Knopf In den Papierkorb" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Meldung mit Rückgängig; nach Rückgängig ist das Dokument mit Inhalt zurück",
+      "geprueft": "2026-11-11, auch auf pi5b"
+    },
+    {
+      "nr": 6,
+      "sprechtext": "Endgültig gelöscht wird nur im Papierkorb, und nur nach einer Rückfrage. Sonst räumt die Ablage nach dreißig Tagen selbst auf.",
+      "ziel": { "anker": "ablage-endgueltig", "notbehelf": "Papierkorb, Knopf Endgültig entfernen" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Rückfrage in der Fläche: Ja, endgültig oder Abbrechen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 7,
+      "sprechtext": "Alles sichern schreibt alle Dokumente samt Verlauf in eine Datei. Einspielen holt sie zurück, auch auf einem anderen Gerät, ohne etwas zu überschreiben.",
+      "ziel": { "anker": "ablage-sichern", "notbehelf": "Karte Sichern rechts" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Knöpfe Alles sichern und Einspielen",
+      "geprueft": "2026-11-11 (Logik durch Tests; Dateidialog und Herunterladen nicht im Browser)"
+    }
+  ]
+}

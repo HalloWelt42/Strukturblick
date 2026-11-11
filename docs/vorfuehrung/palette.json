@@ -1,0 +1,57 @@
+{
+  "kapitel": "palette",
+  "titel": "Alles über die Tastatur",
+  "ticket": "STB-16",
+  "rolle": "erzaehler",
+  "voraussetzung": "Demosatz geöffnet, bestellungen.json aktiv, Ansicht Tabelle",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Oben rechts sitzt das Feld für Befehle. Schneller geht es mit Befehlstaste und K, von überall, auch aus dem Editor.",
+      "ziel": { "anker": "befehl-feld", "notbehelf": ".befehl-feld" },
+      "aktion": { "art": "taste", "kuerzel": "⌘ K" },
+      "erwartung": "Palette offen, darunter Befehle, Dokumente, Ansichten, jeder Befehl mit seinem Kürzel",
+      "geprueft": "2026-11-11, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Ein paar Buchstaben genügen. Für tab steht die Tabelle ganz oben, weil sie am besten passt.",
+      "ziel": { "anker": "palette-feld", "notbehelf": ".pl-eingabe input" },
+      "aktion": { "art": "tippen", "text": "tab" },
+      "erwartung": "Gruppe Ansichten vorn mit Tabelle, die getroffenen Buchstaben hervorgehoben",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Ich wechsle zum Baum: baum tippen, Enter. Die Palette merkt sich, was ich benutze, und zeigt es beim nächsten Mal oben.",
+      "ziel": { "anker": "palette-feld", "notbehelf": ".pl-eingabe input" },
+      "aktion": { "art": "tippen", "text": "baum", "danach": "Enter" },
+      "erwartung": "Ansicht Baum; beim nächsten Öffnen steht Baum unter Zuletzt benutzt",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Die Ansichten haben eigene Kürzel: Wahltaste, Befehlstaste und eine Ziffer. Zwei ist der Editor.",
+      "ziel": { "anker": "ansicht-wahl", "notbehelf": ".ansicht-kopf .segment" },
+      "aktion": { "art": "taste", "kuerzel": "⌥ ⌘ 2" },
+      "erwartung": "Ansicht Editor",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Auch Rückgängig steht in der Palette, mit dem, was rückgängig gemacht wird. Danach bin ich wieder genau dort, wo ich war, hier im Editor.",
+      "ziel": { "anker": "palette-feld", "notbehelf": ".pl-eingabe input" },
+      "aktion": { "art": "tippen", "text": "rück", "vorher": "im Editor etwas ändern, dann ⌘ K", "danach": "Enter" },
+      "erwartung": "Änderung zurückgenommen, Wiederholen bietet sie an, Schreibmarke wieder im Editor",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 6,
+      "sprechtext": "Ist im Baum etwas gewählt, kopiert die Palette seinen Pfad in jeder Schreibweise, etwa für jq.",
+      "ziel": { "anker": "palette-feld", "notbehelf": ".pl-eingabe input" },
+      "aktion": { "art": "tippen", "text": "pfad jq", "vorher": "im Baum den Knoten stand wählen, dann ⌘ K" },
+      "erwartung": "Pfad als jq kopieren mit .stand in der Beschreibung",
+      "geprueft": "2026-11-11 (Eintrag geprüft; Kopieren nicht, die Prüfumgebung sperrt die Zwischenablage)"
+    }
+  ]
+}
