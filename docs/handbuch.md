@@ -42,6 +42,13 @@ zweites Öffnen zeigt die vorhandenen samt Änderungen; frisch anfangen: die Bei
 Quelle ist frontend/pruefdaten; Adressen unter example.org, Telefonnummern aus dem für Film und Fernsehen
 freigehaltenen Bereich 030 23125.
 
+Ein Rechtsklick (oder die Kontextmenü-Taste, Umschalt+F10) auf ein Dokument in Leiste oder Ablage öffnet das
+eigene Menü: Öffnen, Umbenennen (in der Leiste an Ort und Stelle, auch mit F2), Duplizieren, Verschieben nach (alle
+Ordner), Herunterladen, In den Papierkorb. Ordner bieten Neues Dokument darin, Umbenennen und Entfernen (nur leer),
+Reiter Schließen, Andere schließen und Im Ordner zeigen. Im Editor und in Eingabefeldern bleibt das Menü des
+Browsers mit Kopieren und Einfügen. Löschen geht außerdem über den Papierkorb neben jedem Dokument der Leiste und
+über die Befehlspalette ("Dokument in den Papierkorb").
+
 Die Abfrage am Fuß des Hauptbereichs (⌥ ⌘ E oder "Öffnen" in der Leiste) rechnet beim Tippen, ganz im Browser:
 
 - jq (echtes jq 1.8 als WebAssembly) und JSONPath auf dem offenen Dokument; die Treffer erscheinen im Baum

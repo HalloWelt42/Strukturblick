@@ -52,3 +52,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `statistik.json` | Daten auf einen Blick (STB-31) | durchgespielt 11.11.2026 |
 | `struktur.json` | Den Aufbau sehen (STB-32) | durchgespielt 12.11.2026 |
 | `duplikate.json` | Doppeltes auflösen (STB-33) | durchgespielt 12.11.2026 |
+| `kontextmenues.json` | Ordnen mit der rechten Maustaste (STB-36) | durchgespielt 12.11.2026 |

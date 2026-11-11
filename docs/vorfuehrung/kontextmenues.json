@@ -1,0 +1,41 @@
+{
+  "kapitel": "kontextmenues",
+  "titel": "Ordnen mit der rechten Maustaste",
+  "ticket": "STB-36",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet; ein eigenes Dokument und ein leerer Ordner in der Leiste",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Ein Rechtsklick auf ein Dokument in der Leiste öffnet das Menü von Strukturblick: öffnen, umbenennen, duplizieren, verschieben, herunterladen oder in den Papierkorb legen.",
+      "ziel": { "anker": "leiste-dokument", "notbehelf": "Rechtsklick auf ein Dokument unter Dokumente in der Leiste" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Menü mit Überschrift Dokumentname und sechs Einträgen",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Verschieben nach zeigt alle Ordner. Der Ort, an dem das Dokument schon liegt, ist ausgegraut.",
+      "ziel": { "anker": "menue-verschieben", "notbehelf": "Eintrag Verschieben nach" },
+      "aktion": { "art": "klicken", "vorher": "Ordner im Untermenü wählen" },
+      "erwartung": "Meldung 1 Dokument nach ... verschoben, Ordner zählt eins mehr",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Umbenennen geht an Ort und Stelle, auch mit F2 auf dem gewählten Dokument. Eingabe übernimmt, Escape bricht ab.",
+      "ziel": { "anker": "leiste-umbenennen", "notbehelf": "Dokument in der Leiste fokussieren, F2, Namen tippen, Eingabe" },
+      "aktion": { "art": "taste", "kuerzel": "F2" },
+      "erwartung": "Feld in der Zeile, danach neuer Name in Leiste und Reiter",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Auch Reiter und Ordner haben ihr Menü: Reiter schließen, andere schließen oder im Ordner zeigen; in einem Ordner ein neues Dokument anlegen. Einen Ordner mit Inhalt kann man nicht entfernen, das Menü sagt warum.",
+      "ziel": { "anker": "reiter-menue", "notbehelf": "Rechtsklick auf einen Reiter oben" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Reitermenü mit Schließen und Kürzel ⌥ ⌘ W; Ordnermenü mit ausgegrautem Ordner entfernen",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}
