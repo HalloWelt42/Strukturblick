@@ -10,10 +10,10 @@
     <script src="entwurf.js"></script>
     <style>
       body { overflow: auto; }
-      .galerie { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+      .galerie { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
       .galerie h1 { font-size: var(--seitentitel); margin: 0 0 6px; display: flex; gap: 12px; align-items: center; }
       .galerie h1 i { color: var(--akzent); }
-      .galerie > p { color: var(--text-2); margin: 0 0 24px; max-width: 70ch; }
+      .galerie > p { color: var(--text-2); margin: 0 0 8px; max-width: 75ch; }
       .g-liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 12px; }
       .g-karte { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; color: var(--text-1); text-decoration: none;
                  background-color: var(--flaeche-panel); background-image: var(--erhaben); box-shadow: var(--kante), var(--schatten-ruhig); }
@@ -21,7 +21,6 @@
       .g-karte strong { display: flex; gap: 10px; align-items: center; font-size: var(--titel); }
       .g-karte strong i { color: var(--akzent); width: 24px; text-align: center; }
       .g-karte span { color: var(--text-2); font-size: var(--klein); }
-      .g-karte.folgt { opacity: 0.55; pointer-events: none; }
       .g-gruppe { margin: 28px 0 10px; font-size: var(--marke); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
       .entwurf-leiste { left: auto; right: 16px; translate: none; bottom: auto; top: 16px; }
     </style>
@@ -29,23 +28,61 @@
   <body>
     <div class="galerie">
       <h1><i class="fa-solid fa-sitemap"></i> Strukturblick 2.0: Entwürfe</h1>
-      <p>Farben und kantiger Stil der freigegebenen Entwürfe, Schrift in drei Stufen (Klein 16, Mittel 17, Groß 18 px), Knöpfe und Segmente mit Lichtkante. Oben rechts lassen sich Thema und Schriftstufe umschalten; die Adresse merkt sich beides.</p>
+      <p>Farben und kantiger Stil der freigegebenen Entwürfe, Farben in Kontrast und Leuchtkraft angehoben, Schrift in drei Stufen (Klein 16, Mittel 17, Groß 18 px), Knöpfe und Segmente mit Lichtkante. Oben rechts lassen sich Thema und Schriftstufe umschalten; die Adresse merkt sich beides, auch beim Weiterklicken.</p>
+      <p>Bedienregeln: Immer ist genau eins gewählt, eine Ansicht oder ein Werkzeug. Einzelne Änderungen gelten sofort und lassen sich rückgängig machen. Massenänderungen zeigen zuerst eine Vorschau. Jeder Vorgang landet im Verlauf und kann als Rezept wiederverwendet werden.</p>
 
-      <div class="g-gruppe">Zur Abnahme: Richtung</div>
+      <div class="g-gruppe">Arbeitsplatz und Ansichten</div>
       <div class="g-liste">
-        <a class="g-karte" href="arbeitsplatz.html"><strong><i class="fa-solid fa-display"></i> Arbeitsplatz am Rechner</strong><span>Baum mit Pfad, Inspektor mit "Alle Werte dieses Pfads" und Pfad kopieren (jq, PHP, Python ...), Rückgängig und Verlauf im Kopf, Befehlspalette, Ablage auf pi5b, Abfrage unten.</span></a>
-        <a class="g-karte" href="telefon.html"><strong><i class="fa-solid fa-mobile-screen"></i> Telefon</strong><span>Eigene Ansicht: Dokumente, Ansehen Ebene für Ebene, Wert ändern im Blatt von unten, danach Rückgängig im Band.</span></a>
+        <a class="g-karte" href="arbeitsplatz.html"><strong><i class="fa-solid fa-folder-tree"></i> Baum</strong><span>Arbeitsplatz mit Pfad, Inspektor (Pfad kopieren, alle Werte dieses Pfads), Rückgängig, Verlauf, Befehlspalette, Ablage auf pi5b.</span></a>
+        <a class="g-karte" href="editor.html"><strong><i class="fa-solid fa-code"></i> Editor</strong><span>dienste.yaml mit Syntaxfarben, Falten, Warnung und Fehler samt Diagnoseliste.</span></a>
+        <a class="g-karte" href="tabelle.html"><strong><i class="fa-solid fa-table"></i> Tabelle</strong><span>Spaltenköpfe mit Typvorschlag und Profil, Zelle in Bearbeitung, eben geändert mit Rückgängig.</span></a>
+        <a class="g-karte" href="tabelle-duplikate.html"><strong><i class="fa-solid fa-clone"></i> Duplikate</strong><span>Doppelte Kundennummern: je Gruppe wählen, welche Zeile bleibt, mit Vorschau.</span></a>
+        <a class="g-karte" href="statistik.html"><strong><i class="fa-solid fa-chart-column"></i> Statistik</strong><span>Kennzahlen, Typverteilung, Feld-Profil mit sauber stehenden Spalten, Histogramm.</span></a>
+        <a class="g-karte" href="struktur.html"><strong><i class="fa-solid fa-diagram-project"></i> Struktur</strong><span>Typ-Diagramm mit Pflichtfeldern und Kardinalitäten, Export als JSON Schema.</span></a>
+        <a class="g-karte" href="graph.html"><strong><i class="fa-solid fa-circle-nodes"></i> Graph</strong><span>Ausschnitt um einen Fokus, Tiefe wählbar, Schlüssel in Dokumentreihenfolge.</span></a>
+        <a class="g-karte" href="vergleich.html"><strong><i class="fa-solid fa-code-compare"></i> Vergleich</strong><span>Abgleich über Schlüssel, Liste der Unterschiede, Ausgabe als JSON Patch.</span></a>
       </div>
 
-      <div class="g-gruppe">Folgen nach der Abnahme</div>
+      <div class="g-gruppe">Abfrage und Befehle</div>
       <div class="g-liste">
-        <span class="g-karte folgt"><strong><i class="fa-solid fa-table"></i> Tabelle</strong><span>Bearbeiten direkt mit Rückgängig, Spaltenprofil im Kopf, Facetten.</span></span>
-        <span class="g-karte folgt"><strong><i class="fa-solid fa-terminal"></i> Abfrage</strong><span>jq mit Ergebnis beim Tippen, SQL über mehrere Dokumente, JSONPath, XPath, Suche.</span></span>
-        <span class="g-karte folgt"><strong><i class="fa-solid fa-broom"></i> Bereinigen</strong><span>Facetten, ähnliche Schreibweisen zusammenführen, Typvorschläge.</span></span>
-        <span class="g-karte folgt"><strong><i class="fa-solid fa-scroll"></i> Rezepte und Verlauf</strong><span>Vorgänge ansehen, zurückspringen, als Rezept speichern und anwenden.</span></span>
-        <span class="g-karte folgt"><strong><i class="fa-solid fa-magnifying-glass"></i> Befehlspalette</strong><span>Alle Befehle mit Tastenkürzeln, zuletzt benutzte oben.</span></span>
-        <span class="g-karte folgt"><strong><i class="fa-solid fa-folder-open"></i> Ablage und Einstellungen</strong><span>Ordner auf pi5b, Schriftstufe, KI über die Leitstelle.</span></span>
-        <span class="g-karte folgt"><strong><i class="fa-solid fa-layer-group"></i> Übrige Ansichten</strong><span>Editor, Statistik, Struktur, Graph, Vergleich, Validieren, Konvertieren, Reparieren, Code, Testdaten.</span></span>
+        <a class="g-karte" href="abfrage.html"><strong><i class="fa-solid fa-terminal"></i> jq</strong><span>Ergebnis beim Tippen, Treffer im Baum markiert, als neues Dokument oder Rezeptschritt.</span></a>
+        <a class="g-karte" href="abfrage-sql.html"><strong><i class="fa-solid fa-database"></i> SQL</strong><span>SQL über alle geöffneten Dokumente mit Join, rechnet im Browser.</span></a>
+        <a class="g-karte" href="abfrage-fehler.html"><strong><i class="fa-solid fa-triangle-exclamation"></i> Abfrage mit Fehler</strong><span>Fehler genau an der Stelle, letztes gültiges Ergebnis bleibt gedimmt sichtbar.</span></a>
+        <a class="g-karte" href="palette.html"><strong><i class="fa-solid fa-magnifying-glass"></i> Befehlspalette</strong><span>Unscharfe Suche über Befehle, Dokumente, Ansichten und Rezepte, mit Tastenkürzeln.</span></a>
+      </div>
+
+      <div class="g-gruppe">Bereinigen, Verlauf und Rezepte</div>
+      <div class="g-liste">
+        <a class="g-karte" href="bereinigen.html"><strong><i class="fa-solid fa-filter"></i> Facetten</strong><span>Klickfilter für Ort, PLZ-Bereich, Monate und Umsatz, 184 von 2.318 Zeilen.</span></a>
+        <a class="g-karte" href="bereinigen-aehnlich.html"><strong><i class="fa-solid fa-broom"></i> Ähnliche Werte</strong><span>Leipzig, leipzig, "Leipzig " und Lpz. zusammenführen, mit Vorschau.</span></a>
+        <a class="g-karte" href="bereinigen-typen.html"><strong><i class="fa-solid fa-shapes"></i> Typen</strong><span>Typen nur als Vorschlag: PLZ bleibt Text, Beträge und Datumsformate mit Vorschau.</span></a>
+        <a class="g-karte" href="verlauf.html"><strong><i class="fa-solid fa-clock-rotate-left"></i> Verlauf</strong><span>Alle Vorgänge, zurückspringen ohne zu verlieren, Auswahl als Rezept speichern.</span></a>
+        <a class="g-karte" href="rezepte.html"><strong><i class="fa-solid fa-scroll"></i> Rezepte</strong><span>Gespeicherte Schritte ansehen und bearbeiten.</span></a>
+        <a class="g-karte" href="rezept-anwenden.html"><strong><i class="fa-solid fa-play"></i> Rezept anwenden</strong><span>Auf eine neue Datei: Spaltenprüfung, Vorschau je Schritt, dann übernehmen.</span></a>
+      </div>
+
+      <div class="g-gruppe">Werkzeuge</div>
+      <div class="g-liste">
+        <a class="g-karte" href="validieren.html"><strong><i class="fa-solid fa-clipboard-check"></i> Validieren</strong><span>Gegen JSON Schema, Befunde mit Pfad und Sprung zur Fundstelle.</span></a>
+        <a class="g-karte" href="konvertieren.html"><strong><i class="fa-solid fa-shuffle"></i> Konvertieren</strong><span>Nach CSV mit ehrlicher Verlustkarte vor dem Ergebnis.</span></a>
+        <a class="g-karte" href="reparatur.html"><strong><i class="fa-solid fa-screwdriver-wrench"></i> Reparieren</strong><span>NDJSON je Zeile: Befund, Vorschlag, Unterschied, nichts geht verloren.</span></a>
+        <a class="g-karte" href="codegen.html"><strong><i class="fa-solid fa-code"></i> Code erzeugen</strong><span>PHP 8.4, TypeScript, Python aus Daten oder Schema.</span></a>
+        <a class="g-karte" href="testdaten.html"><strong><i class="fa-solid fa-cubes"></i> Testdaten</strong><span>Spezifikation aus der Vorlage, gleicher Startwert ergibt gleiche Daten.</span></a>
+        <a class="g-karte" href="ki.html"><strong><i class="fa-solid fa-wand-magic-sparkles"></i> Mit KI</strong><span>Frage in Abfrage übersetzen, Probelauf, nichts ohne Klick (nur mit Server).</span></a>
+        <a class="g-karte" href="lexikon.html"><strong><i class="fa-solid fa-book-open"></i> Lexikon</strong><span>Schwebendes Nachschlagefenster mit Bezug zum gewählten Wert.</span></a>
+      </div>
+
+      <div class="g-gruppe">Ablage, Einstellungen, Bauarten</div>
+      <div class="g-liste">
+        <a class="g-karte" href="ablage.html"><strong><i class="fa-solid fa-folder-open"></i> Ablage auf pi5b</strong><span>Ordner, Dokumente, Ablagezone, Umbenennen, Papierkorb.</span></a>
+        <a class="g-karte" href="einstellungen.html"><strong><i class="fa-solid fa-gear"></i> Einstellungen</strong><span>Reiter Anzeige, KI, Grenzen, Ablage, Über, je mit eigener Adresse.</span></a>
+        <a class="g-karte" href="ohne-server.html"><strong><i class="fa-solid fa-globe"></i> Ohne Server</strong><span>Bauart für GitHub Pages: alles im Browser, Datei öffnen und herunterladen, keine KI.</span></a>
+      </div>
+
+      <div class="g-gruppe">Telefon</div>
+      <div class="g-liste">
+        <a class="g-karte" href="telefon.html"><strong><i class="fa-solid fa-mobile-screen"></i> Telefon 1</strong><span>Dokumente, Ansehen Ebene für Ebene, Wert ändern im Blatt, Rückgängig im Band.</span></a>
+        <a class="g-karte" href="telefon-2.html"><strong><i class="fa-solid fa-mobile-screen-button"></i> Telefon 2</strong><span>Tabelle als Karten, Suchen, Mehr mit Verlauf und Schrift, Datei öffnen ohne Server.</span></a>
       </div>
     </div>
   </body>

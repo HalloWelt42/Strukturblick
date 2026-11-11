@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Testdaten</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/erzeugen.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag aktiv" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment" aria-label="Offenes Werkzeug"><a class="aktiv"><i class="fa-solid fa-cubes"></i><span>Testdaten</span> <i class="fa-solid fa-xmark" title="Werkzeug schließen"></i></a></nav>
+        </div>
+        <div class="werkzeugzeile">
+          <span class="ez-werkzeug-info"><span class="abzeichen">CSV</span> Vorlage kunden.csv, 8 Spalten aus 2.318 Zeilen abgeleitet</span>
+          <div class="rechts">
+            <a class="knopf" href="ki.html" title="Mit KI: Testdaten vorschlagen"><i class="fa-solid fa-wand-magic-sparkles"></i> Von KI vorschlagen</a>
+            <button class="knopf"><i class="fa-solid fa-floppy-disk"></i> Spezifikation speichern</button>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="ez-flaeche">
+            <!-- Spezifikation -->
+            <section class="karte">
+              <div class="ez-karte-kopf">
+                <h2>Spezifikation</h2>
+                <span class="text-3 klein">Je Spalte ein Erzeuger, Einstellungen aus der Vorlage übernommen</span>
+                <span class="rechts"><button class="knopf"><i class="fa-solid fa-plus"></i> Feld hinzufügen</button></span>
+              </div>
+              <div class="ez-tabelle-feld">
+                <table class="ez-tabelle">
+                  <thead>
+                    <tr><th>Feld</th><th>Erzeuger</th><th>Einstellungen</th><th>Beispiel</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="ez-feldname">kundennr</td>
+                      <td><span class="ez-wahl">Laufende Nummer mit Muster <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke">Muster <b>K-#####</b></span><span class="ez-marke">ab <b>K-20001</b></span><span class="ez-marke">eindeutig</span></div></td>
+                      <td class="mono w-text">K-20001</td>
+                    </tr>
+                    <tr>
+                      <td class="ez-feldname">name</td>
+                      <td><span class="ez-wahl">Vor- und Nachname <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke">deutsche Namen</span><span class="ez-marke">ein Feld</span></div></td>
+                      <td class="mono w-text">Lena Hartmann</td>
+                    </tr>
+                    <tr class="gewaehlt">
+                      <td class="ez-feldname">plz</td>
+                      <td><span class="ez-wahl">Postleitzahl (Text, 5 Stellen) <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke">Gebiet <b>01 bis 09</b></span><span class="ez-marke">führende Null bleibt</span></div></td>
+                      <td class="mono w-text">"04109"</td>
+                    </tr>
+                    <tr>
+                      <td class="ez-feldname">ort</td>
+                      <td><span class="ez-wahl">Ort zur Postleitzahl <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke">Schreibvarianten <b>keine</b></span></div></td>
+                      <td class="mono w-text">Leipzig</td>
+                    </tr>
+                    <tr>
+                      <td class="ez-feldname">email</td>
+                      <td><span class="ez-wahl">E-Mail aus dem Namen <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke">Domain <b>beispiel.de</b></span></div></td>
+                      <td class="mono w-text">lena.hartmann@beispiel.de</td>
+                    </tr>
+                    <tr>
+                      <td class="ez-feldname">telefon</td>
+                      <td><span class="ez-wahl">Telefonnummer (Vorwahl zum Ort) <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke">Festnetz</span><span class="ez-marke">mit Leerzeichen</span></div></td>
+                      <td class="mono w-text">0341 5583214</td>
+                    </tr>
+                    <tr>
+                      <td class="ez-feldname">angelegt</td>
+                      <td><span class="ez-wahl">Datum <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke">von <b>2019-01-01</b></span><span class="ez-marke">bis <b>heute</b></span><span class="ez-marke">Schreibweise <b>2024-03-01</b></span></div></td>
+                      <td class="mono w-text">2021-06-14</td>
+                    </tr>
+                    <tr>
+                      <td class="ez-feldname">umsatz</td>
+                      <td><span class="ez-wahl">Betrag deutsch <i class="fa-solid fa-chevron-down"></i></span></td>
+                      <td><div class="ez-marken"><span class="ez-marke"><b>0,00</b> bis <b>9.800,00</b></span><span class="ez-marke">Tausenderpunkt</span></div></td>
+                      <td class="mono w-text">"1.087,15"</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="ez-hinweis"><i class="fa-solid fa-circle-info"></i><span>Die Vorlage schreibt <span class="mono">angelegt</span> mal als 2024-03-01, mal als 01.03.2024, und <span class="mono">ort</span> in mehreren Schreibweisen. Die Testdaten bleiben sauber, außer du stellst Schreibvarianten ein.</span></p>
+            </section>
+
+            <!-- Erzeugen -->
+            <section class="karte">
+              <div class="ez-karte-kopf"><h2>Erzeugen</h2></div>
+              <div class="ez-reihe">
+                <label class="ez-angabe schmal"><span class="ez-angabe-titel">Anzahl</span><span class="feld"><input value="500" /></span></label>
+                <label class="ez-angabe schmal"><span class="ez-angabe-titel">Startwert</span><span class="feld"><i class="fa-solid fa-dice"></i><input value="4711" /></span></label>
+                <div class="ez-angabe">
+                  <span class="ez-angabe-titel">Zielformat</span>
+                  <div class="segment"><a class="aktiv">CSV</a><a>JSON</a><a>NDJSON</a><a>YAML</a></div>
+                </div>
+                <label class="ez-angabe breit"><span class="ez-angabe-titel">Name</span><span class="feld"><input value="kunden-testdaten.csv" /></span></label>
+              </div>
+              <p class="ez-hinweis"><i class="fa-solid fa-dice"></i><span>Gleicher Startwert, gleiche Daten: mit 4711 entstehen jedes Mal genau diese 500 Zeilen. Trennzeichen Semikolon wie in der Vorlage.</span></p>
+
+              <div class="ez-lauf">
+                <div class="ez-lauf-kopf">
+                  <strong>Block 3 von 5</strong>
+                  <span class="text-3 klein">300 von 500 Datensätzen, je Block 100</span>
+                  <span class="rechts">60 %</span>
+                </div>
+                <div class="ez-bloecke" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                  <span class="fertig"></span><span class="fertig"></span><span class="laeuft" style="--anteil: 40%"></span><span></span><span></span>
+                </div>
+                <div class="ez-bloecke-text"><span>1</span><span>2</span><span class="aktiv">3</span><span>4</span><span>5</span></div>
+                <div class="ez-aktionen">
+                  <button class="knopf"><i class="fa-solid fa-pause"></i> Anhalten</button>
+                  <span class="text-3 klein">Fertig in etwa 2 s</span>
+                  <span class="rechts">
+                    <button class="knopf primaer" disabled title="Bereit nach Block 5"><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>
+                    <button class="knopf" disabled title="Bereit nach Block 5"><i class="fa-solid fa-download"></i> Herunterladen</button>
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Vorschau -->
+            <section class="karte">
+              <div class="ez-karte-kopf">
+                <h2>Vorschau</h2>
+                <span class="text-3 klein">Erste 5 von 300 bisher erzeugten Zeilen</span>
+                <div class="rechts"><div class="segment"><a class="aktiv">Tabelle</a><a>Text</a></div></div>
+              </div>
+              <div class="ez-tabelle-feld">
+                <table class="ez-tabelle">
+                  <thead>
+                    <tr><th>kundennr</th><th>name</th><th>plz</th><th>ort</th><th>email</th><th>telefon</th><th>angelegt</th><th class="zahl">umsatz</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td class="mono">K-20001</td><td>Lena Hartmann</td><td class="mono">04109</td><td>Leipzig</td><td class="mono">lena.hartmann@beispiel.de</td><td class="mono">0341 5583214</td><td class="mono">2021-06-14</td><td class="zahl">312,40</td></tr>
+                    <tr><td class="mono">K-20002</td><td>Jonas Weber</td><td class="mono">01067</td><td>Dresden</td><td class="mono">jonas.weber@beispiel.de</td><td class="mono">0351 4820937</td><td class="mono">2019-11-02</td><td class="zahl">1.087,15</td></tr>
+                    <tr><td class="mono">K-20003</td><td>Mia Schulte</td><td class="mono">06108</td><td>Halle (Saale)</td><td class="mono">mia.schulte@beispiel.de</td><td class="mono">0345 2290418</td><td class="mono">2024-03-01</td><td class="zahl">58,90</td></tr>
+                    <tr><td class="mono">K-20004</td><td>Emil Becker</td><td class="mono">04277</td><td>Leipzig</td><td class="mono">emil.becker@beispiel.de</td><td class="mono">0341 9917305</td><td class="mono">2022-08-23</td><td class="zahl">2.450,00</td></tr>
+                    <tr><td class="mono">K-20005</td><td>Hannah Wolf</td><td class="mono">09111</td><td>Chemnitz</td><td class="mono">hannah.wolf@beispiel.de</td><td class="mono">0371 6603182</td><td class="mono">2020-01-17</td><td class="zahl">0,00</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewählt <span class="rechts abzeichen">Feld</span></div>
+            <div class="wertfeld">plz</div>
+            <dl class="paare" style="margin: 10px 0 0">
+              <dt>Erzeuger</dt><dd>Postleitzahl (Text, 5 Stellen)</dd>
+              <dt>Gebiet</dt><dd class="mono">01 bis 09</dd>
+              <dt>Typ</dt><dd>Text, führende Null bleibt</dd>
+              <dt>Eindeutig</dt><dd>nein</dd>
+            </dl>
+            <div class="knopf-reihe" style="margin-top: 10px">
+              <button class="knopf"><i class="fa-solid fa-sliders"></i> Einstellungen</button>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">In der Vorlage <span class="rechts mono">2.318</span></div>
+            <dl class="paare">
+              <dt>Typ</dt><dd>immer Text, 5 Ziffern</dd>
+              <dt>Fehlt</dt><dd class="mono">0</dd>
+              <dt>Häufig</dt><dd class="mono">04109, 01067, 06108</dd>
+            </dl>
+            <p class="ez-hinweis"><i class="fa-solid fa-circle-check"></i><span>Als Zahl gelesen ginge die führende Null verloren, darum Text.</span></p>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Beispiele mit Startwert 4711</div>
+            <div class="verteilung">
+              <span class="mono">"04109"</span><span class="mono text-3">Leipzig</span>
+              <span class="mono">"01067"</span><span class="mono text-3">Dresden</span>
+              <span class="mono">"06108"</span><span class="mono text-3">Halle (Saale)</span>
+              <span class="mono">"04277"</span><span class="mono text-3">Leipzig</span>
+              <span class="mono">"09111"</span><span class="mono text-3">Chemnitz</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">CSV</span> 2.318 Zeilen</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

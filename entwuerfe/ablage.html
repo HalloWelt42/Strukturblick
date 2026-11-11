@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Ablage</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/verwaltung.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag aktiv"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment"><a class="aktiv"><i class="fa-solid fa-folder-open"></i><span>Ablage</span> <i class="fa-solid fa-xmark" title="Schließen"></i></a></nav>
+          <div class="vw-anmeldung"><i class="fa-solid fa-server"></i><span>Ablage auf pi5b, angemeldet als admin</span><button class="knopf still" title="Abmelden"><i class="fa-solid fa-power-off"></i></button></div>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="pfad" aria-label="Ordner"><a>Ablage</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span><a class="letzter">Kundenimport</a></nav>
+          <div class="rechts">
+            <label class="feld" style="width: 220px"><i class="fa-solid fa-magnifying-glass"></i><input placeholder="In der Ablage suchen" /></label>
+            <button class="knopf"><i class="fa-solid fa-folder-plus"></i><span class="nur-breit">Neuer Ordner</span></button>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="vw-zweiteilig">
+            <nav class="vw-seitenspalte vw-ordner" aria-label="Ordner">
+              <a class="eintrag"><i class="fa-solid fa-server"></i><span class="name">Ablage</span><span class="rechts">3</span></a>
+              <a class="eintrag aktiv" style="padding-left: 30px"><i class="fa-solid fa-folder-open"></i><span class="name">Kundenimport</span><span class="rechts">12</span></a>
+              <a class="eintrag" style="padding-left: 30px"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts">7</span></a>
+              <div class="vw-ordner-trenner"></div>
+              <a class="eintrag"><i class="fa-solid fa-trash-can"></i><span class="name">Papierkorb</span><span class="rechts">3</span></a>
+            </nav>
+            <div class="vw-hauptspalte vw-gestapelt">
+              <div class="vw-ablagezone">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Dateien hierher ziehen, sie landen in <strong>Kundenimport</strong>.</span>
+                <span class="rechts"><button class="knopf"><i class="fa-solid fa-folder-open"></i> Datei wählen</button></span>
+              </div>
+              <div class="vw-auswahl-leiste">
+                <span class="vw-anzahl">2 von 12 gewählt</span>
+                <button class="knopf"><i class="fa-solid fa-download"></i> Herunterladen</button>
+                <button class="knopf"><i class="fa-solid fa-arrow-right-to-bracket"></i> Verschieben</button>
+                <button class="knopf"><i class="fa-solid fa-trash-can"></i> In den Papierkorb</button>
+                <span class="rechts"><button class="knopf still">Auswahl aufheben</button></span>
+              </div>
+              <div class="vw-tabellenfeld">
+                <table class="vw-tabelle">
+                  <thead>
+                    <tr><th class="vw-schmal"><span class="vw-haken teils" title="Alle wählen"><i class="fa-solid fa-minus"></i></span></th><th>Name</th><th>Format</th><th class="vw-zahl-zelle">Größe</th><th class="vw-sortiert">Geändert <i class="fa-solid fa-arrow-down-wide-short"></i></th><th title="Gerät der letzten Änderung">Gerät</th><th class="vw-schmal"></th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-table"></i>shopexport-november.csv</span></td><td><span class="abzeichen">CSV</span></td><td class="vw-zahl-zelle">96 KB</td><td class="vw-leise">heute 08:02</td><td><span class="vw-dateiname"><i class="fa-solid fa-desktop"></i>Rechner Büro</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-table"></i>adressen-korrektur.csv</span></td><td><span class="abzeichen">CSV</span></td><td class="vw-zahl-zelle">7 KB</td><td class="vw-leise">06.11.2026 18:31</td><td><span class="vw-dateiname"><i class="fa-solid fa-mobile-screen"></i>Telefon</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-table"></i>shopexport-oktober-sauber.csv</span></td><td><span class="abzeichen">CSV</span></td><td class="vw-zahl-zelle">109 KB</td><td class="vw-leise">04.11.2026 16:52</td><td><span class="vw-dateiname"><i class="fa-solid fa-desktop"></i>Rechner Büro</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-table"></i>shopexport-oktober.csv</span></td><td><span class="abzeichen">CSV</span></td><td class="vw-zahl-zelle">118 KB</td><td class="vw-leise">04.11.2026 16:40</td><td><span class="vw-dateiname"><i class="fa-solid fa-desktop"></i>Rechner Büro</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-umbenennen"><input value="neukunden-oktober-2026.ndjson" aria-label="Neuer Name" /><button class="knopf primaer nur-symbol vw-knapp" title="Umbenennen"><i class="fa-solid fa-check"></i></button><button class="knopf still nur-symbol vw-knapp" title="Abbrechen"><i class="fa-solid fa-xmark"></i></button></span></td><td><span class="abzeichen">NDJSON</span></td><td class="vw-zahl-zelle">52 KB</td><td class="vw-leise">31.10.2026 09:15</td><td><span class="vw-dateiname"><i class="fa-solid fa-laptop"></i>Laptop</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-file-code"></i>kunde.schema.json</span></td><td><span class="abzeichen">JSON</span></td><td class="vw-zahl-zelle">4 KB</td><td class="vw-leise">28.10.2026 14:02</td><td><span class="vw-dateiname"><i class="fa-solid fa-desktop"></i>Rechner Büro</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-file-code"></i>dubletten.json</span></td><td><span class="abzeichen">JSON</span></td><td class="vw-zahl-zelle">12 KB</td><td class="vw-leise">22.10.2026 11:47</td><td><span class="vw-dateiname"><i class="fa-solid fa-laptop"></i>Laptop</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr class="gewaehlt"><td><span class="vw-haken an"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-table"></i>shopexport-september.csv</span></td><td><span class="abzeichen">CSV</span></td><td class="vw-zahl-zelle">104 KB</td><td class="vw-leise">02.10.2026 17:20</td><td><span class="vw-dateiname"><i class="fa-solid fa-desktop"></i>Rechner Büro</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-file-lines"></i>import-regeln.yaml</span></td><td><span class="abzeichen">YAML</span></td><td class="vw-zahl-zelle">3 KB</td><td class="vw-leise">19.09.2026 10:05</td><td><span class="vw-dateiname"><i class="fa-solid fa-laptop"></i>Laptop</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-code"></i>mailing-liste.xml</span></td><td><span class="abzeichen">XML</span></td><td class="vw-zahl-zelle">31 KB</td><td class="vw-leise">03.09.2026 08:44</td><td><span class="vw-dateiname"><i class="fa-solid fa-mobile-screen"></i>Telefon</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr class="gewaehlt"><td><span class="vw-haken an"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-table"></i>kunden-2025.csv</span></td><td><span class="abzeichen">CSV</span></td><td class="vw-zahl-zelle">388 KB</td><td class="vw-leise">12.01.2026 15:30</td><td><span class="vw-dateiname"><i class="fa-solid fa-laptop"></i>Laptop</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                    <tr><td><span class="vw-haken"><i class="fa-solid fa-check"></i></span></td><td><span class="vw-dateiname"><i class="fa-solid fa-table"></i>plz-orte.csv</span></td><td><span class="abzeichen">CSV</span></td><td class="vw-zahl-zelle">1,9 MB</td><td class="vw-leise">08.12.2025 20:10</td><td><span class="vw-dateiname"><i class="fa-solid fa-desktop"></i>Rechner Büro</span></td><td><button class="knopf still nur-symbol vw-knapp" title="Weitere Befehle"><i class="fa-solid fa-ellipsis-vertical"></i></button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewählt <span class="rechts abzeichen">2 Dokumente</span></div>
+            <dl class="paare">
+              <dt>Namen</dt><dd class="mono">shopexport-september.csv, kunden-2025.csv</dd>
+              <dt>Zusammen</dt><dd class="mono">492 KB</dd>
+              <dt>Geändert</dt><dd>12.01.2026 bis 02.10.2026</dd>
+              <dt>Geräte</dt><dd>Rechner Büro, Laptop</dd>
+            </dl>
+            <div class="knopf-reihe vw-hilfe">
+              <button class="knopf"><i class="fa-solid fa-folder-open"></i> Beide öffnen</button>
+              <a class="knopf" href="vergleich.html"><i class="fa-solid fa-code-compare"></i> Vergleichen</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Papierkorb <span class="rechts mono">3</span></div>
+            <p class="vw-hilfe">Zuletzt hineingelegt: kunden-alt.csv. Nach 30 Tagen wird endgültig gelöscht.</p>
+            <div class="knopf-reihe vw-hilfe"><button class="knopf"><i class="fa-solid fa-trash-can"></i> Papierkorb öffnen</button></div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Platz auf pi5b <span class="rechts mono">7,2 MB</span></div>
+            <div class="vw-belegung" title="7,2 MB belegt">
+              <span class="vw-teil-dokumente" style="width: 57%"></span><span class="vw-teil-verlauf" style="width: 36%"></span><span class="vw-teil-korb" style="width: 7%"></span>
+            </div>
+            <div class="vw-legende">
+              <span><span class="vw-farbe vw-teil-dokumente"></span>Dokumente 4,1 MB</span>
+              <span><span class="vw-farbe vw-teil-verlauf"></span>Verlauf 2,6 MB</span>
+              <span><span class="vw-farbe vw-teil-korb"></span>Papierkorb 0,5 MB</span>
+            </div>
+            <p class="vw-hilfe">Frei auf pi5b: 41,6 GB.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+    <div class="meldung"><i class="fa-solid fa-circle-check"></i> kunden-alt.csv liegt im Papierkorb <button class="knopf"><i class="fa-solid fa-rotate-left"></i> Rückgängig</button></div>
+  </body>
+</html>

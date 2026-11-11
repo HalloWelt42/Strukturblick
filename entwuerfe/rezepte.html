@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Rezepte</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/verwaltung.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag aktiv" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment"><a class="aktiv"><i class="fa-solid fa-scroll"></i><span>Rezepte</span> <i class="fa-solid fa-xmark" title="Schließen"></i></a></nav>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="pfad" aria-label="Pfad"><a>Rezepte</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span><a class="letzter">Shopexport säubern</a></nav>
+          <div class="rechts">
+            <a class="knopf" href="verlauf.html"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Neues Rezept aus dem Verlauf</span></a>
+            <a class="knopf primaer" href="rezept-anwenden.html"><i class="fa-solid fa-play"></i> Anwenden</a>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="vw-zweiteilig">
+            <nav class="vw-seitenspalte" aria-label="Rezepte">
+              <label class="feld"><i class="fa-solid fa-magnifying-glass"></i><input placeholder="Rezept suchen" /></label>
+              <a class="vw-rezept aktiv"><i class="fa-solid fa-scroll"></i><span class="vw-rezept-name">Shopexport säubern</span><span class="abzeichen">5</span><span class="vw-rezept-info">für CSV, zuletzt am 04.11.2026</span></a>
+              <a class="vw-rezept"><i class="fa-solid fa-scroll"></i><span class="vw-rezept-name">PLZ fünfstellig</span><span class="abzeichen">2</span><span class="vw-rezept-info">für CSV und JSON, zuletzt am 28.10.2026</span></a>
+            </nav>
+            <div class="vw-hauptspalte">
+              <div class="vw-seite">
+                <div>
+                  <h2 class="vw-titel"><i class="fa-solid fa-scroll"></i> Shopexport säubern <span class="rechts"><button class="knopf still"><i class="fa-solid fa-pen"></i> Umbenennen</button></span></h2>
+                  <p class="vw-unter">Aus dem Verlauf von kunden.csv, gespeichert am 04.11.2026. Die Schritte laufen von oben nach unten.</p>
+                </div>
+                <section>
+                  <h3 class="vw-abschnitt">Schritte <span class="rechts"><button class="knopf still vw-knapp"><i class="fa-solid fa-plus"></i> Schritt hinzufügen</button></span></h3>
+                  <div class="vw-schritte">
+                  <div class="vw-schritt">
+                    <span class="vw-schritt-nr">1</span>
+                    <span class="vw-schalter an" role="switch" aria-checked="true" title="Schritt ausschalten"></span>
+                    <div class="vw-schritt-text">
+                      <div class="vw-schritt-name">ort zusammenführen <span class="abzeichen zweit">Bereinigen</span></div>
+                      <div class="vw-zuordnung"><span class="vw-wert">leipzig</span><span class="vw-wert">Leipzig </span><span class="vw-wert">Lpz.</span><i class="fa-solid fa-arrow-right vw-pfeil"></i><span class="vw-wert">Leipzig</span></div>
+                      <div class="vw-zuordnung"><span class="vw-wert">dresden</span><i class="fa-solid fa-arrow-right vw-pfeil"></i><span class="vw-wert">Dresden</span></div>
+                      <div class="vw-zuordnung"><span class="vw-wert">Halle/Saale</span><i class="fa-solid fa-arrow-right vw-pfeil"></i><span class="vw-wert">Halle (Saale)</span></div>
+                    </div>
+                    <div class="vw-schritt-knoepfe"><button class="knopf still nur-symbol" title="Schritt bearbeiten"><i class="fa-solid fa-pen"></i></button><button class="knopf still nur-symbol" title="Ziehen zum Verschieben"><i class="fa-solid fa-grip-vertical"></i></button></div>
+                  </div>
+                  <div class="vw-schritt vw-offen">
+                    <span class="vw-schritt-nr">2</span>
+                    <span class="vw-schalter an" role="switch" aria-checked="true" title="Schritt ausschalten"></span>
+                    <div class="vw-schritt-text">
+                      <div class="vw-schritt-name">umsatz als Betrag <span class="abzeichen zweit">Typ</span></div>
+                      <div class="vw-schritt-was">Deutscher Text wird Zahl.</div>
+                    </div>
+                    <div class="vw-schritt-knoepfe"><button class="knopf still nur-symbol" title="Bearbeiten schließen"><i class="fa-solid fa-chevron-up"></i></button></div>
+                    <div class="vw-bearbeiten">
+                      <div class="vw-feldzeile"><span class="vw-feldname">Tausender</span><div class="segment"><a class="aktiv">Punkt</a><a>Leerzeichen</a><a>keiner</a></div></div>
+                      <div class="vw-feldzeile"><span class="vw-feldname">Dezimalzeichen</span><div class="segment"><a class="aktiv">Komma</a><a>Punkt</a></div></div>
+                      <div class="vw-feldzeile"><span class="vw-feldname">Nicht lesbar</span><div class="segment"><a class="aktiv">Zelle leer lassen</a><a>Rezept anhalten</a></div></div>
+                      <div class="vw-feldzeile"><span class="vw-feldname">Probe aus kunden.csv</span><span class="vw-vorher">"1.234,50"</span><i class="fa-solid fa-arrow-right vw-pfeil"></i><span class="vw-nachher">1234.5</span><span class="vw-vorher">"89,90"</span><i class="fa-solid fa-arrow-right vw-pfeil"></i><span class="vw-nachher">89.9</span></div>
+                      <div class="vw-aktionen"><span class="rechts"><button class="knopf">Abbrechen</button><button class="knopf primaer"><i class="fa-solid fa-check"></i> Schritt speichern</button></span></div>
+                    </div>
+                  </div>
+                  <div class="vw-schritt">
+                    <span class="vw-schritt-nr">3</span>
+                    <span class="vw-schalter an" role="switch" aria-checked="true" title="Schritt ausschalten"></span>
+                    <div class="vw-schritt-text">
+                      <div class="vw-schritt-name">angelegt vereinheitlichen <span class="abzeichen zweit">Datum</span></div>
+                      <div class="vw-schritt-was">Alle Daten als Jahr-Monat-Tag.</div>
+                      <div class="vw-zuordnung"><span class="vw-wert">01.03.2024</span><i class="fa-solid fa-arrow-right vw-pfeil"></i><span class="vw-wert">2024-03-01</span></div>
+                    </div>
+                    <div class="vw-schritt-knoepfe"><button class="knopf still nur-symbol" title="Schritt bearbeiten"><i class="fa-solid fa-pen"></i></button><button class="knopf still nur-symbol" title="Ziehen zum Verschieben"><i class="fa-solid fa-grip-vertical"></i></button></div>
+                  </div>
+                  <div class="vw-schritt">
+                    <span class="vw-schritt-nr">4</span>
+                    <span class="vw-schalter an" role="switch" aria-checked="true" title="Schritt ausschalten"></span>
+                    <div class="vw-schritt-text">
+                      <div class="vw-schritt-name">Duplikate nach kundennr <span class="abzeichen zweit">Zeilen</span></div>
+                      <div class="vw-schritt-was">Gleiche kundennr: die Zeile mit dem jüngsten angelegt bleibt.</div>
+                    </div>
+                    <div class="vw-schritt-knoepfe"><button class="knopf still nur-symbol" title="Schritt bearbeiten"><i class="fa-solid fa-pen"></i></button><button class="knopf still nur-symbol" title="Ziehen zum Verschieben"><i class="fa-solid fa-grip-vertical"></i></button></div>
+                  </div>
+                  <div class="vw-schritt">
+                    <span class="vw-schritt-nr">5</span>
+                    <span class="vw-schalter an" role="switch" aria-checked="true" title="Schritt ausschalten"></span>
+                    <div class="vw-schritt-text">
+                      <div class="vw-schritt-name">Spalte telefon entfernen <span class="abzeichen zweit">Spalten</span></div>
+                      <div class="vw-schritt-was">telefon fällt weg.</div>
+                    </div>
+                    <div class="vw-schritt-knoepfe"><button class="knopf still nur-symbol" title="Schritt bearbeiten"><i class="fa-solid fa-pen"></i></button><button class="knopf still nur-symbol" title="Ziehen zum Verschieben"><i class="fa-solid fa-grip-vertical"></i></button></div>
+                  </div>
+                  </div>
+                </section>
+                <section>
+                  <h3 class="vw-abschnitt">Erwartete Spalten <span class="rechts">8 Spalten, Trennzeichen Semikolon</span></h3>
+                  <div class="vw-spaltenmarken">
+                    <span class="vw-spaltenmarke">kundennr<span class="rechts">Schritt 4</span></span>
+                    <span class="vw-spaltenmarke">name</span>
+                    <span class="vw-spaltenmarke">plz</span>
+                    <span class="vw-spaltenmarke">ort<span class="rechts">Schritt 1</span></span>
+                    <span class="vw-spaltenmarke">email</span>
+                    <span class="vw-spaltenmarke">telefon<span class="rechts">Schritt 5</span></span>
+                    <span class="vw-spaltenmarke">angelegt<span class="rechts">Schritt 3</span></span>
+                    <span class="vw-spaltenmarke">umsatz<span class="rechts">Schritt 2</span></span>
+                  </div>
+                  <p class="vw-hilfe">Fehlt eine Spalte, wird nur der Schritt übersprungen, der sie braucht. Zusätzliche Spalten bleiben, wie sie sind.</p>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Anwenden auf</div>
+            <div class="vw-wahl-liste">
+              <a class="vw-wahl" href="rezept-anwenden.html"><i class="fa-solid fa-table text-3"></i><span><span class="vw-wahl-name">shopexport-november.csv</span><span class="vw-wahl-info">Kundenimport, 7 von 8 Spalten</span></span><i class="fa-solid fa-chevron-right text-3"></i></a>
+              <a class="vw-wahl" href="rezept-anwenden.html"><i class="fa-solid fa-table text-3"></i><span><span class="vw-wahl-name">kunden.csv</span><span class="vw-wahl-info">geöffnet, 8 von 8 Spalten</span></span><i class="fa-solid fa-chevron-right text-3"></i></a>
+            </div>
+            <div class="knopf-reihe vw-hilfe"><button class="knopf"><i class="fa-solid fa-folder-open"></i> Andere Datei wählen</button></div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Zuletzt angewendet</div>
+            <dl class="paare">
+              <dt class="mono">04.11.</dt><dd>shopexport-oktober.csv, als neues Dokument shopexport-oktober-sauber.csv</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Ablage</div>
+            <p class="vw-hilfe">Rezepte liegen auf pi5b und stehen auf jedem Gerät bereit.</p>
+            <div class="knopf-reihe vw-hilfe"><button class="knopf"><i class="fa-solid fa-download"></i> Als Datei herunterladen</button></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>

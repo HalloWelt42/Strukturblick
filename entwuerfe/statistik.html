@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Statistik</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/ansichten.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a class="aktiv"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="pfad" aria-label="Pfad">
+            <a class="letzter">$</a>
+          </nav>
+          <div class="rechts">
+            <span class="klein text-3">Ganzes Dokument, berechnet in 38 ms</span>
+            <button class="knopf"><i class="fa-solid fa-rotate"></i> Neu berechnen</button>
+          </div>
+        </div>
+
+        <div class="inhalt an-raum">
+          <div class="an-flaeche">
+            <!-- Kennzahlen -->
+            <div class="an-kennzahlen">
+              <div class="an-kachel"><div class="an-kachel-wert">2.621</div><div class="an-kachel-name">Knoten</div></div>
+              <div class="an-kachel" title="Tiefste Stelle: .bestellungen[].positionen[].preis"><div class="an-kachel-wert">5</div><div class="an-kachel-name">Tiefe</div></div>
+              <div class="an-kachel"><div class="an-kachel-wert">412<span class="an-einheit">KB</span></div><div class="an-kachel-name">Größe</div></div>
+              <div class="an-kachel"><div class="an-kachel-wert w-objekt">599</div><div class="an-kachel-name">Objekte</div></div>
+              <div class="an-kachel"><div class="an-kachel-wert w-liste">129</div><div class="an-kachel-name">Listen</div></div>
+              <div class="an-kachel"><div class="an-kachel-wert w-text">1.007</div><div class="an-kachel-name">Texte</div></div>
+            </div>
+
+            <!-- Typverteilung -->
+            <section class="an-tafel">
+              <div class="karte-titel">Typverteilung <span class="rechts klein">2.621 Werte</span></div>
+              <div class="an-typband" role="img" aria-label="Anteile der Typen an allen Werten">
+                <span class="an-f-objekt" style="--anteil: 22.9%" title="Objekt: 599"></span>
+                <span class="an-f-liste" style="--anteil: 4.9%" title="Liste: 129"></span>
+                <span class="an-f-text" style="--anteil: 38.4%" title="Text: 1.007"></span>
+                <span class="an-f-zahl" style="--anteil: 26.1%" title="Zahl: 684"></span>
+                <span class="an-f-bool" style="--anteil: 4.9%" title="Wahrheitswert: 128"></span>
+                <span class="an-f-null" style="--anteil: 2.8%" title="Null: 74"></span>
+              </div>
+              <div class="an-legende">
+                <span><i class="an-farbe an-f-objekt"></i>Objekt <b>599</b> <span class="text-3">22,9 %</span></span>
+                <span><i class="an-farbe an-f-liste"></i>Liste <b>129</b> <span class="text-3">4,9 %</span></span>
+                <span><i class="an-farbe an-f-text"></i>Text <b>1.007</b> <span class="text-3">38,4 %</span></span>
+                <span><i class="an-farbe an-f-zahl"></i>Zahl <b>684</b> <span class="text-3">26,1 %</span></span>
+                <span><i class="an-farbe an-f-bool"></i>Wahrheitswert <b>128</b> <span class="text-3">4,9 %</span></span>
+                <span><i class="an-farbe an-f-null"></i>Null <b>74</b> <span class="text-3">2,8 %</span></span>
+              </div>
+            </section>
+
+            <!-- Feld-Profil: Kopf und Werte stehen in derselben Spalte -->
+            <section class="an-tafel">
+              <div class="karte-titel">Feld-Profil <span class="rechts klein mono">.bestellungen[], 128 Einträge</span></div>
+              <div class="an-tabellenfeld">
+                <table class="an-profil">
+                  <thead>
+                    <tr>
+                      <th>Feld</th>
+                      <th>Typ</th>
+                      <th class="an-zahl">Vorkommen</th>
+                      <th class="an-zahl">Verschiedene</th>
+                      <th>Textlänge</th>
+                      <th>Bereich</th>
+                      <th class="an-zahl">Leer-Anteil</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="an-feldname">nr</td>
+                      <td class="w-text">Text</td>
+                      <td class="an-zahl">128</td>
+                      <td class="an-zahl">128</td>
+                      <td>7</td>
+                      <td class="mono">B-24017 bis B-24144</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname">datum</td>
+                      <td class="w-text">Text</td>
+                      <td class="an-zahl">128</td>
+                      <td class="an-zahl">41</td>
+                      <td>10</td>
+                      <td class="mono">2026-09-14 bis 2026-11-10</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname"><span class="an-vorsilbe">kunde.</span>name</td>
+                      <td class="w-text">Text</td>
+                      <td class="an-zahl">128</td>
+                      <td class="an-zahl">96</td>
+                      <td>8 bis 21</td>
+                      <td class="an-leer-wert">-</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname"><span class="an-vorsilbe">kunde.</span>plz</td>
+                      <td class="w-text">Text</td>
+                      <td class="an-zahl">128</td>
+                      <td class="an-zahl">54</td>
+                      <td>5</td>
+                      <td class="mono">01067 bis 99084</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname"><span class="an-vorsilbe">kunde.</span>stadt</td>
+                      <td class="w-text">Text</td>
+                      <td class="an-zahl">128</td>
+                      <td class="an-zahl">31</td>
+                      <td>4 bis 16</td>
+                      <td class="an-leer-wert">-</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname">positionen</td>
+                      <td class="w-liste">Liste</td>
+                      <td class="an-zahl">128</td>
+                      <td class="an-zahl an-leer-wert">-</td>
+                      <td class="an-leer-wert">-</td>
+                      <td>1 bis 6 Einträge</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname"><span class="an-vorsilbe">positionen[].</span>artikel</td>
+                      <td class="w-text">Text</td>
+                      <td class="an-zahl">342</td>
+                      <td class="an-zahl">47</td>
+                      <td>9 bis 28</td>
+                      <td class="an-leer-wert">-</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname"><span class="an-vorsilbe">positionen[].</span>menge</td>
+                      <td class="w-zahl">Zahl, ganz</td>
+                      <td class="an-zahl">342</td>
+                      <td class="an-zahl">12</td>
+                      <td class="an-leer-wert">-</td>
+                      <td class="mono">1 bis 24</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr class="an-gewaehlt" aria-selected="true">
+                      <td class="an-feldname"><span class="an-vorsilbe">positionen[].</span>preis<i class="fa-solid fa-location-crosshairs an-ziel" title="Im Inspektor"></i></td>
+                      <td class="w-zahl">Zahl</td>
+                      <td class="an-zahl">342</td>
+                      <td class="an-zahl">58</td>
+                      <td class="an-leer-wert">-</td>
+                      <td class="mono">0.89 bis 39.90</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname">bezahlt</td>
+                      <td class="w-bool">Wahrheitswert</td>
+                      <td class="an-zahl">128</td>
+                      <td class="an-zahl">2</td>
+                      <td class="an-leer-wert">-</td>
+                      <td class="mono">true 121, false 7</td>
+                      <td class="an-zahl an-leer-wert">0 %</td>
+                    </tr>
+                    <tr>
+                      <td class="an-feldname">notiz</td>
+                      <td class="w-text">Text oder Null</td>
+                      <td class="an-zahl">97</td>
+                      <td class="an-zahl">20</td>
+                      <td>6 bis 64</td>
+                      <td class="an-leer-wert">-</td>
+                      <td class="an-zahl" title="Fehlt in 31 Einträgen, null in 74"><span class="abzeichen warn">82 %</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <div class="an-reihe">
+              <!-- Histogramm des gewählten Felds -->
+              <section class="an-tafel">
+                <div class="karte-titel">Histogramm <span class="mono">positionen[].preis</span> <span class="rechts klein">342 Werte, Anzahl je Klasse</span></div>
+                <div class="an-histo">
+                  <div class="an-histo-achse" aria-hidden="true">
+                    <span style="--y: 0%">0</span>
+                    <span style="--y: 25%">50</span>
+                    <span style="--y: 50%">100</span>
+                    <span style="--y: 75%">150</span>
+                    <span style="--y: 100%">200</span>
+                  </div>
+                  <div class="an-histo-flaeche">
+                    <div class="an-saeule" style="--h: 91%" title="0 bis unter 5: 182"><b>182</b></div>
+                    <div class="an-saeule" style="--h: 40%" title="5 bis unter 10: 80"><b>80</b></div>
+                    <div class="an-saeule" style="--h: 19%" title="10 bis unter 15: 38"><b>38</b></div>
+                    <div class="an-saeule" style="--h: 9.5%" title="15 bis unter 20: 19"><b>19</b></div>
+                    <div class="an-saeule" style="--h: 5.5%" title="20 bis unter 25: 11"><b>11</b></div>
+                    <div class="an-saeule" style="--h: 3%" title="25 bis unter 30: 6"><b>6</b></div>
+                    <div class="an-saeule" style="--h: 2%" title="30 bis unter 35: 4"><b>4</b></div>
+                    <div class="an-saeule" style="--h: 1%" title="35 bis 40: 2"><b>2</b></div>
+                  </div>
+                  <div class="an-histo-klassen">
+                    <span>0-5</span><span>5-10</span><span>10-15</span><span>15-20</span><span>20-25</span><span>25-30</span><span>30-35</span><span>35-40</span>
+                  </div>
+                  <div class="an-histo-titel">preis, Klassenbreite 5</div>
+                </div>
+              </section>
+
+              <!-- Erkannte Muster -->
+              <section class="an-tafel">
+                <div class="karte-titel">Muster</div>
+                <div class="an-muster">
+                  <a class="an-muster-eintrag">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    <div><div class="an-muster-name">eindeutig</div><div class="an-muster-text"><span class="mono">nr</span>: 128 von 128 Werten verschieden, taugt als Schlüssel</div></div>
+                    <span class="abzeichen gut">100 %</span>
+                  </a>
+                  <a class="an-muster-eintrag">
+                    <i class="fa-solid fa-calendar"></i>
+                    <div><div class="an-muster-name">Datum</div><div class="an-muster-text"><span class="mono">datum</span>: alle in der Form JJJJ-MM-TT; <span class="mono">stand</span>: Datum und Zeit</div></div>
+                    <span class="abzeichen gut">100 %</span>
+                  </a>
+                  <a class="an-muster-eintrag">
+                    <i class="fa-solid fa-hashtag"></i>
+                    <div><div class="an-muster-name">sieht aus wie Zahl</div><div class="an-muster-text"><span class="mono">kunde.plz</span>: nur Ziffern, 19 mit führender Null. Bleibt Text.</div></div>
+                    <span class="abzeichen warn">Text</span>
+                  </a>
+                </div>
+              </section>
+            </div>
+            <p class="an-tafel-fuss">Klick auf ein Feld zeigt es im Inspektor und im Histogramm.</p>
+          </div>
+        </div>
+
+        <!-- Abfrage, eingeklappt -->
+        <div class="konsole-leiste">
+          <i class="fa-solid fa-terminal"></i>
+          <div class="segment">
+            <a class="aktiv">jq</a><a>SQL</a><a>JSONPath</a><a>Suche</a>
+          </div>
+          <span class="mono text-3" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0">.bestellungen[] | select(.bezahlt | not) | .nr</span>
+          <span class="rechts"><span class="abzeichen">7 Treffer</span><a class="knopf" href="abfrage.html"><i class="fa-solid fa-chevron-up"></i> Öffnen</a></span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewähltes Feld <span class="rechts abzeichen">Zahl</span></div>
+            <div class="wertfeld">positionen[].preis</div>
+            <dl class="paare an-oben">
+              <dt>Vorkommen</dt><dd class="mono">342 in 128 Bestellungen</dd>
+              <dt>Spanne</dt><dd class="mono">0.89 bis 39.90</dd>
+              <dt>Mittel</dt><dd class="mono">7.35</dd>
+              <dt>Median</dt><dd class="mono">3.80</dd>
+              <dt>Fehlt</dt><dd class="mono">0</dd>
+            </dl>
+            <div class="knopf-reihe an-oben">
+              <a class="knopf" href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i> Im Baum zeigen</a>
+              <a class="knopf" href="tabelle.html"><i class="fa-solid fa-table"></i> Als Tabelle</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Häufigste Werte <span class="rechts mono">58 verschiedene</span></div>
+            <div class="verteilung">
+              <span class="mono">2.49</span><span class="mono text-3">41</span><div class="balken"><span style="width: 92%"></span></div>
+              <span class="mono">3.80</span><span class="mono text-3">33</span><div class="balken"><span style="width: 74%"></span></div>
+              <span class="mono">6.90</span><span class="mono text-3">18</span><div class="balken"><span style="width: 40%"></span></div>
+            </div>
+            <div class="knopf-reihe an-oben">
+              <a class="knopf" href="bereinigen.html"><i class="fa-solid fa-filter"></i> Als Facette</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Pfad kopieren</div>
+            <div class="knopf-reihe">
+              <button class="knopf">jq</button>
+              <button class="knopf">JSONPath</button>
+              <button class="knopf">Zeiger</button>
+            </div>
+            <div class="wertfeld an-wertfeld-klein an-oben">.bestellungen[].positionen[].preis</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

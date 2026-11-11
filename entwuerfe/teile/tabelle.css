@@ -1,0 +1,780 @@
+/* ============================================================================
+   Strukturblick 2.0 - Bausteine Tabelle (.tb-) und Editor (.ed-)
+   Nur Marken aus stil.css, keine festen Farben, Schriftgrößen nur über die
+   Stufen, Höhen über --zeile und --knopf-hoehe. Kantig, Knöpfe 3 px.
+   ========================================================================== */
+
+/* ----- 1. Werkzeugzeile mit Umbruch (Tabelle und Editor) ------------------ */
+/* Schmal: Beschriftungen der Knöpfe verschwinden, danach bricht die Zeile um.
+   Gemessen wird die Zeile selbst, nicht das Fenster. */
+
+.tb-werkzeugzeile,
+.ed-werkzeugzeile {
+  flex-wrap: wrap;
+  container: tb-werkzeug / inline-size;
+}
+.tb-filter {
+  flex: 1 1 calc(var(--klein) * 14);
+  max-width: calc(var(--klein) * 26);
+}
+.tb-filter input {
+  font-family: var(--schrift-mono);
+}
+.tb-feld-name {
+  color: var(--text-3);
+  font-size: var(--klein);
+  white-space: nowrap;
+}
+.tb-feld-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--knopf-hoehe) - 12px);
+  height: calc(var(--knopf-hoehe) - 12px);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  flex: none;
+}
+.tb-feld-knopf:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+.tb-dialekt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+}
+.tb-gedrueckt {
+  background-image: none;
+  box-shadow: var(--vertieft);
+  color: var(--akzent);
+}
+.ed-suche {
+  width: calc(var(--klein) * 15);
+}
+
+@container tb-werkzeug (max-width: 980px) {
+  .tb-lang {
+    display: none;
+  }
+}
+@container tb-werkzeug (max-width: 620px) {
+  .tb-feld-name {
+    display: none;
+  }
+}
+
+/* ----- 2. Tabelle ---------------------------------------------------------- */
+/* Rollt in .inhalt in beide Richtungen. Kopf klebt oben (bündig, ohne Abstand
+   im Rollfeld), Zeilennummer und erste Spalte kleben links. Flächen der
+   klebenden Zellen sind deckend, das Zebra liegt als Bild darüber. */
+
+.tb-tabelle {
+  --tb-nr-breite: calc(var(--klein) * 4.4);
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  font-size: var(--gross);
+  font-variant-numeric: tabular-nums;
+}
+.tb-tabelle th,
+.tb-tabelle td {
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-panel);
+  box-shadow: inset -1px -1px 0 var(--rand-1);
+  text-align: left;
+  white-space: nowrap;
+}
+.tb-tabelle td {
+  height: var(--zeile);
+}
+.tb-tabelle tbody tr:nth-child(even) td {
+  background-image: linear-gradient(var(--flaeche-wechsel), var(--flaeche-wechsel));
+}
+.tb-tabelle thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  vertical-align: top;
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: inset -1px -1px 0 var(--rand-2);
+  font-weight: 400;
+}
+
+/* Zeilennummer und erste Spalte */
+.tb-tabelle .tb-nr {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: var(--tb-nr-breite);
+  min-width: var(--tb-nr-breite);
+  padding: 0 var(--a2);
+  text-align: right;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.tb-tabelle .tb-fix {
+  position: sticky;
+  left: var(--tb-nr-breite);
+  z-index: 1;
+}
+.tb-tabelle td.tb-nr,
+.tb-tabelle td.tb-fix {
+  background-color: var(--flaeche-panel-2);
+}
+.tb-tabelle thead .tb-nr,
+.tb-tabelle thead .tb-fix {
+  z-index: 4;
+}
+.tb-tabelle thead .tb-nr {
+  vertical-align: bottom;
+  padding-bottom: var(--a2);
+}
+.tb-tabelle tbody tr:hover .tb-nr {
+  background-color: var(--akzent-weich);
+  color: var(--akzent);
+}
+
+/* Spaltenbreiten: genug Platz, dass Name und Typ nie gekürzt werden */
+.tb-b12 {
+  min-width: calc(var(--klein) * 12);
+}
+.tb-b13 {
+  min-width: calc(var(--klein) * 13);
+}
+.tb-b18 {
+  min-width: calc(var(--klein) * 18);
+}
+
+/* Spaltenkopf: Name allein in der ersten Reihe, darunter Typ, Profil, Balken */
+.tb-kopf {
+  display: grid;
+  gap: 6px;
+}
+.tb-name {
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+.tb-typzeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+}
+.tb-kopf-knopf {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--knopf-hoehe) - 10px);
+  height: calc(var(--knopf-hoehe) - 12px);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  flex: none;
+}
+.tb-kopf-knopf:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+.tb-profil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--a2);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.tb-warnwert {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+/* Kleiner Verteilungsbalken: Anteile der häufigsten Werte ... */
+.tb-anteil {
+  display: flex;
+  height: 8px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  overflow: hidden;
+}
+.tb-anteil span {
+  display: block;
+  height: 100%;
+}
+.tb-f1 {
+  background: var(--akzent-flaeche);
+}
+.tb-f2 {
+  background: var(--zweit);
+}
+.tb-f3 {
+  background: var(--typ-liste);
+}
+.tb-f4 {
+  background: var(--typ-text);
+}
+.tb-fleer {
+  background: var(--warn);
+}
+/* ... oder Säulen über den Wertebereich */
+.tb-saeulen {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 20px;
+  padding: 0 1px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.tb-saeulen span {
+  flex: 1;
+  min-height: 1px;
+  background: var(--akzent-flaeche);
+}
+
+/* Gewählte Spalte */
+.tb-tabelle thead th.tb-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+.tb-gewaehlt .tb-name {
+  color: var(--akzent);
+}
+.tb-tabelle td.tb-gewaehlt {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .tb-tabelle td.tb-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+
+/* Zellen */
+.tb-tabelle td.tb-rechts {
+  text-align: right;
+}
+.tb-leer {
+  color: var(--text-3);
+  font-style: italic;
+  font-size: var(--klein);
+}
+.tb-leerzeichen {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: middle;
+  background: var(--warn-weich);
+  box-shadow: inset 0 -3px 0 var(--warn);
+}
+
+/* Eben geänderte Zelle: gilt sofort, Rückgängig in Meldung und Kopf */
+.tb-tabelle td.tb-geaendert {
+  background-color: var(--warn-weich);
+  background-image: none;
+}
+.tb-geaendert-zeichen {
+  margin-left: var(--a2);
+  color: var(--warn);
+  font-size: var(--marke);
+}
+
+/* Zelle in Bearbeitung */
+.tb-tabelle td.tb-bearbeiten {
+  position: relative;
+  z-index: 1;
+  padding: 0 3px;
+  outline: 2px solid var(--akzent-flaeche);
+  outline-offset: -2px;
+}
+.tb-eingabe {
+  display: flex;
+  align-items: center;
+  height: calc(var(--zeile) - 6px);
+  padding: 0 var(--a2);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+}
+.tb-markiert {
+  background: var(--akzent-flaeche);
+  color: var(--auf-akzent);
+}
+.tb-schreibmarke {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: var(--text-1);
+}
+.tb-tipp {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a1) var(--a2);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* Fußzeile der Tabelle */
+.tb-fuss {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  min-height: calc(var(--knopf-hoehe) + 8px);
+  padding: var(--a1) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  box-shadow: inset 0 1px 0 var(--rand-2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.tb-fuss strong {
+  color: var(--text-1);
+}
+.tb-fuss .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+}
+
+/* Meldung über Tabellenfuß und Konsole */
+.tb-meldung-hoch {
+  bottom: calc(var(--fuss-hoehe) + var(--knopf-hoehe) * 2 + 48px);
+}
+
+/* ----- 3. Inspektor der Tabelle --------------------------------------------- */
+
+.tb-weitere {
+  margin-top: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.tb-hinweis-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin-bottom: var(--a2);
+  font-weight: 600;
+}
+.tb-hinweis-titel i {
+  color: var(--warn);
+}
+.tb-varianten {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a1);
+  margin-bottom: var(--a2);
+}
+.tb-variante {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: 2px var(--a2);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+.tb-variante .tb-zahl {
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+.tb-text {
+  margin: 0 0 var(--a3);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+/* ----- 4. Duplikat-Blatt (eigenes Fenster im Seitenstil) ------------------ */
+
+.tb-abdunkeln {
+  position: fixed;
+  inset: 0;
+  z-index: 24;
+  background: var(--flaeche-seite);
+  opacity: 0.72;
+}
+.tb-blatt {
+  position: fixed;
+  z-index: 25;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(1080px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+}
+.tb-blatt-kopf,
+.tb-blatt-fuss {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  padding: var(--a3) var(--a4);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+}
+.tb-blatt-kopf {
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.tb-blatt-fuss {
+  box-shadow: inset 0 1px 0 var(--rand-1);
+}
+.tb-blatt-kopf > i:first-child {
+  color: var(--akzent);
+  font-size: var(--titel);
+}
+.tb-blatt-titel {
+  min-width: 0;
+}
+.tb-blatt-titel h2 {
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+}
+.tb-blatt-titel p {
+  margin: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.tb-blatt-kopf .rechts,
+.tb-blatt-fuss .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+.tb-blatt-inhalt {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--a3) var(--a4) var(--a4);
+}
+.tb-optionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.tb-legende {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.tb-muster {
+  display: inline-block;
+  width: 1.4em;
+  height: 1em;
+  background: var(--warn-weich);
+  box-shadow: inset 0 0 0 1px var(--rand-1);
+}
+
+.tb-gruppe {
+  margin-top: var(--a3);
+  background-color: var(--flaeche-panel-2);
+  box-shadow: var(--kante);
+}
+.tb-gruppe-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  padding: var(--a2) var(--a3);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.tb-gruppe-kopf .tb-schluessel {
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.tb-gruppe-kopf .rechts {
+  margin-left: auto;
+}
+.tb-gruppe-feld {
+  overflow-x: auto;
+}
+
+.tb-vergleich {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  font-size: var(--klein);
+  font-variant-numeric: tabular-nums;
+}
+.tb-vergleich th,
+.tb-vergleich td {
+  padding: 0 var(--a3);
+  height: var(--zeile);
+  background-color: var(--flaeche-panel);
+  box-shadow: inset -1px -1px 0 var(--rand-1);
+  text-align: left;
+  white-space: nowrap;
+}
+.tb-vergleich th {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--text-2);
+  background-color: var(--flaeche-panel-2);
+}
+.tb-vergleich td.tb-rechts {
+  text-align: right;
+}
+.tb-vergleich td.tb-anders {
+  background-color: var(--warn-weich);
+  color: var(--text-1);
+}
+.tb-vergleich tr.tb-weg td:not(.tb-wahl-zelle) {
+  color: var(--text-3);
+  text-decoration: line-through;
+}
+.tb-vergleich tr.tb-weg td.tb-anders {
+  color: var(--text-2);
+}
+.tb-wahl {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--zeile) - 6px);
+  padding: 0 var(--a2);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background: transparent;
+  font-size: var(--klein);
+  color: var(--text-2);
+  cursor: pointer;
+}
+.tb-wahl:hover {
+  background: var(--akzent-weich);
+}
+.tb-wahl.tb-bleibt {
+  color: var(--gut);
+  font-weight: 600;
+}
+.tb-vorschau {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+/* ----- 5. Editor ------------------------------------------------------------ */
+/* Rinne (Marke, Zeilennummer, Faltpfeil) klebt links, Code rollt seitlich in
+   .inhalt. Farben der Syntax über die Typmarken, Werte über .w-* aus stil.css. */
+
+.ed-editor {
+  width: max-content;
+  min-width: 100%;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+.ed-zeile {
+  display: flex;
+  min-height: calc(var(--zeile) * 0.78);
+  line-height: calc(var(--zeile) * 0.78);
+  white-space: pre;
+}
+.ed-rinne {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+  width: calc(var(--klein) * 5.2);
+  padding: 0 var(--a1);
+  background-color: var(--flaeche-panel-2);
+  box-shadow: inset -1px 0 0 var(--rand-1);
+  color: var(--text-3);
+}
+.ed-marke {
+  width: 1.1em;
+  text-align: center;
+  font-size: var(--marke);
+  flex: none;
+}
+.ed-nr {
+  flex: 1;
+  text-align: right;
+}
+.ed-falt {
+  width: 1.1em;
+  text-align: center;
+  font-size: var(--marke);
+  cursor: pointer;
+  flex: none;
+}
+.ed-falt:hover {
+  color: var(--akzent);
+}
+.ed-code {
+  flex: 1;
+  padding: 0 var(--a5) 0 var(--a3);
+}
+.ed-zeile.ed-mit-warnung .ed-rinne {
+  background-color: var(--warn-weich);
+  color: var(--warn);
+}
+.ed-zeile.ed-mit-fehler .ed-rinne {
+  background-color: var(--fehler-weich);
+  color: var(--fehler);
+}
+.ed-zeile.ed-cursorzeile .ed-code {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .ed-zeile.ed-cursorzeile .ed-code {
+  background-color: var(--akzent-weich);
+}
+.ed-zeile.ed-cursorzeile .ed-nr {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.ed-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.25em;
+  margin: 0 -1px;
+  vertical-align: middle;
+  background: var(--akzent-flaeche);
+}
+
+/* Syntax */
+.ed-schl {
+  color: var(--typ-schluessel);
+  font-weight: 600;
+}
+.ed-zeichen {
+  color: var(--text-3);
+}
+.ed-kommentar {
+  color: var(--text-3);
+  font-style: italic;
+}
+.ed-anker {
+  color: var(--typ-liste);
+  font-weight: 600;
+}
+.ed-verweis {
+  color: var(--typ-liste);
+}
+.ed-warnung {
+  text-decoration: underline wavy var(--warn);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.ed-fehler {
+  text-decoration: underline wavy var(--fehler);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.ed-gefaltet {
+  margin-left: var(--a2);
+  padding: 0 6px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift);
+  font-size: var(--marke);
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+/* Diagnoseliste unter dem Editor */
+.ed-diagnose {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--zeile) * 5);
+  background-color: var(--flaeche-panel-2);
+  box-shadow: inset 0 1px 0 var(--rand-2);
+}
+.ed-diagnose-kopf {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  min-height: var(--zeile);
+  padding: var(--a1) var(--a3);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.ed-diagnose-kopf .rechts {
+  margin-left: auto;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.ed-diagnose-liste {
+  min-height: 0;
+  overflow-y: auto;
+}
+.ed-befund {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--a3);
+  min-height: var(--zeile);
+  padding: 2px var(--a3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+  font-size: var(--klein);
+  color: var(--text-1);
+}
+.ed-befund:hover {
+  background: var(--akzent-weich);
+}
+.ed-sprung {
+  color: var(--text-1);
+  text-decoration: none;
+}
+.ed-befund:hover .ed-sprung {
+  text-decoration: underline;
+}
+.ed-befund .ed-ort {
+  font-family: var(--schrift-mono);
+  color: var(--text-3);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ed-befund .fa-circle-xmark {
+  color: var(--fehler);
+}
+.ed-befund .fa-triangle-exclamation {
+  color: var(--warn);
+}
+.ed-befund .knopf {
+  min-height: calc(var(--knopf-hoehe) - 8px);
+}

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Rezept anwenden</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/verwaltung.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-table"></i><span class="name">shopexport-november.csv</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag aktiv" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment"><a class="aktiv"><i class="fa-solid fa-scroll"></i><span>Rezept anwenden</span> <i class="fa-solid fa-xmark" title="Schließen"></i></a></nav>
+        </div>
+        <div class="werkzeugzeile">
+          <span class="vw-zeilentext"><strong>Shopexport säubern</strong> auf <span class="mono">shopexport-november.csv</span></span>
+          <div class="rechts">
+            <a class="knopf still" href="rezepte.html"><i class="fa-solid fa-scroll"></i> Rezept ansehen</a>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="vw-seite">
+            <section class="vw-tafel">
+              <h2 class="vw-abschnitt">1. Spalten prüfen <span class="rechts">1.046 Zeilen, 8 Spalten, Semikolon</span></h2>
+              <div class="vw-urteil"><i class="fa-solid fa-circle-check"></i> Passt: 7 von 8 Spalten <span class="abzeichen warn"><i class="fa-solid fa-triangle-exclamation"></i> telefon fehlt, Schritt 5 wird übersprungen</span></div>
+              <div class="vw-spaltenmarken">
+                  <span class="vw-spaltenmarke"><i class="fa-solid fa-check"></i>kundennr<span class="rechts">Schritt 4</span></span>
+                  <span class="vw-spaltenmarke"><i class="fa-solid fa-check"></i>name</span>
+                  <span class="vw-spaltenmarke"><i class="fa-solid fa-check"></i>plz</span>
+                  <span class="vw-spaltenmarke"><i class="fa-solid fa-check"></i>ort<span class="rechts">Schritt 1</span></span>
+                  <span class="vw-spaltenmarke"><i class="fa-solid fa-check"></i>email</span>
+                  <span class="vw-spaltenmarke fehlt"><i class="fa-solid fa-xmark"></i>telefon<span class="rechts">fehlt, Schritt 5</span></span>
+                  <span class="vw-spaltenmarke"><i class="fa-solid fa-check"></i>angelegt<span class="rechts">Schritt 3</span></span>
+                  <span class="vw-spaltenmarke"><i class="fa-solid fa-check"></i>umsatz<span class="rechts">Schritt 2</span></span>
+                  <span class="vw-spaltenmarke zusatz"><i class="fa-solid fa-plus"></i>gutschein<span class="rechts">neu, bleibt</span></span>
+              </div>
+            </section>
+
+            <section>
+              <h2 class="vw-abschnitt">2. Vorschau je Schritt <span class="rechts">1.648 Zellen ändern sich, 2 Zeilen entfallen</span></h2>
+              <div class="vw-schritte">
+                <div class="vw-vorschau-schritt">
+                  <div class="vw-vorschau-kopf"><span class="vw-schritt-nr">1</span><span class="vw-schritt-name">ort zusammenführen <span class="abzeichen zweit">Bereinigen</span></span><span class="rechts"><span class="abzeichen">214 Zellen</span></span></div>
+                  <table class="vw-beispiele">
+                    <tbody>
+                      <tr><td><span class="vw-vorher">leipzig</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">Leipzig</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle">96</td></tr>
+                      <tr><td><span class="vw-vorher">Lpz.</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">Leipzig</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle">41</td></tr>
+                      <tr><td><span class="vw-vorher">Leipzig </span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">Leipzig</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle">12</td></tr>
+                      <tr><td><span class="vw-vorher">dresden</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">Dresden</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle">38</td></tr>
+                      <tr><td><span class="vw-vorher">Halle/Saale</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">Halle (Saale)</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle">27</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="vw-vorschau-schritt">
+                  <div class="vw-vorschau-kopf"><span class="vw-schritt-nr">2</span><span class="vw-schritt-name">umsatz als Betrag <span class="abzeichen zweit">Typ</span></span><span class="rechts"><span class="abzeichen">1.046 Zellen</span></span></div>
+                  <table class="vw-beispiele">
+                    <tbody>
+                      <tr><td><span class="vw-vorher">"1.234,50"</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">1234.5</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle"></td></tr>
+                      <tr><td><span class="vw-vorher">"89,90"</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">89.9</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle"></td></tr>
+                      <tr><td><span class="vw-vorher">"12.040,00"</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">12040</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle"></td></tr>
+                      <tr><td><span class="vw-vorher">"k. A."</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="abzeichen warn">nicht lesbar, bleibt leer</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle">3</td></tr>
+                      <tr><td colspan="5" class="text-3">und 1.040 weitere Zellen</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="vw-vorschau-schritt">
+                  <div class="vw-vorschau-kopf"><span class="vw-schritt-nr">3</span><span class="vw-schritt-name">angelegt vereinheitlichen <span class="abzeichen zweit">Datum</span></span><span class="rechts"><span class="abzeichen">388 Zellen</span></span></div>
+                  <table class="vw-beispiele">
+                    <tbody>
+                      <tr><td><span class="vw-vorher">01.03.2024</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">2024-03-01</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle"></td></tr>
+                      <tr><td><span class="vw-vorher">15.10.2026</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="vw-nachher">2026-10-15</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle"></td></tr>
+                      <tr><td colspan="5" class="text-3">und 386 weitere Zellen</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="vw-vorschau-schritt">
+                  <div class="vw-vorschau-kopf"><span class="vw-schritt-nr">4</span><span class="vw-schritt-name">Duplikate nach kundennr <span class="abzeichen zweit">Zeilen</span></span><span class="rechts"><span class="abzeichen">2 Zeilen entfallen</span></span></div>
+                  <table class="vw-beispiele">
+                    <tbody>
+                      <tr><td><span class="vw-vorher">K-10482, angelegt 2024-03-01</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="text-3">entfällt, die Zeile vom 2026-11-02 bleibt</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle"></td></tr>
+                      <tr><td><span class="vw-vorher">K-11730, angelegt 2025-06-17</span></td><td class="vw-pfeil-zelle"><i class="fa-solid fa-arrow-right vw-pfeil"></i></td><td><span class="text-3">entfällt, die Zeile vom 2026-10-29 bleibt</span></td><td class="vw-luft"></td><td class="vw-anzahl-zelle"></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="vw-vorschau-schritt uebersprungen">
+                  <div class="vw-vorschau-kopf"><span class="vw-schritt-nr">5</span><span class="vw-schritt-name">Spalte telefon entfernen <span class="abzeichen zweit">Spalten</span></span><span class="rechts"><span class="abzeichen warn"><i class="fa-solid fa-forward"></i> übersprungen</span></span></div>
+                  <table class="vw-beispiele">
+                    <tbody>
+                      <tr><td colspan="5" class="text-3">Die Spalte telefon gibt es in dieser Datei nicht.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="vw-entscheidung">
+          <strong>3. Ergebnis</strong>
+          <div class="segment">
+            <a class="aktiv"><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</a>
+            <a><i class="fa-solid fa-file-pen"></i> Ins Dokument</a>
+          </div>
+          <label class="feld" title="Name des neuen Dokuments, landet in Kundenimport"><i class="fa-solid fa-file-csv"></i><input value="shopexport-november-sauber.csv" /></label>
+          <span class="rechts">
+            <a class="knopf" href="rezepte.html">Abbrechen</a>
+            <button class="knopf primaer"><i class="fa-solid fa-check"></i> Übernehmen</button>
+          </span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Datei</div>
+            <dl class="paare">
+              <dt>Name</dt><dd class="mono">shopexport-november.csv</dd>
+              <dt>Ordner</dt><dd>Kundenimport auf pi5b</dd>
+              <dt>Größe</dt><dd class="mono">96 KB, 1.046 Zeilen</dd>
+              <dt>Trennzeichen</dt><dd>Semikolon</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Rezept <span class="rechts abzeichen">5 Schritte</span></div>
+            <dl class="paare">
+              <dt class="mono">1</dt><dd>ort zusammenführen, 214 Zellen</dd>
+              <dt class="mono">2</dt><dd>umsatz als Betrag, 1.046 Zellen</dd>
+              <dt class="mono">3</dt><dd>angelegt vereinheitlichen, 388 Zellen</dd>
+              <dt class="mono">4</dt><dd>Duplikate nach kundennr, 2 Zeilen</dd>
+              <dt class="mono">5</dt><dd><span class="abzeichen warn">übersprungen</span> telefon entfernen</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Danach</div>
+            <p class="vw-hilfe">Das neue Dokument öffnet als Reiter und liegt in Kundenimport. Das Original bleibt, wie es ist.</p>
+            <p class="vw-hilfe">Ins Dokument: ein Vorgang im Verlauf, rückgängig mit <span class="taste">⌘</span><span class="taste">Z</span>.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">CSV</span> 96 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 1</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>

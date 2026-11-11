@@ -649,9 +649,17 @@ textarea {
   box-shadow: inset 0 -1px 0 var(--rand-1);
   flex: none;
   min-width: 0;
+  flex-wrap: wrap; /* zu viel für eine Zeile: rechte Gruppe rutscht in die nächste */
+}
+.werkzeugzeile .segment {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 .werkzeugzeile > .pfad {
   flex: 1 1 auto;
+  min-width: min(100%, 280px);
   justify-content: flex-end; /* zu lang: vorn kürzen, das Ende bleibt sichtbar */
 }
 .werkzeugzeile > .pfad > :first-child {
@@ -659,7 +667,9 @@ textarea {
 }
 .werkzeugzeile .rechts {
   margin-left: auto;
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  flex-wrap: wrap;
   display: flex;
   gap: var(--a2);
   align-items: center;
@@ -954,6 +964,13 @@ textarea {
   .ansicht-kopf .segment > :not(.aktiv) span {
     display: none;
   }
+  .konsole-leiste .segment > :not(.aktiv) {
+    display: none;
+  }
+}
+/* Ist ein Werkzeug offen, zeigt die Ansichtswahl daneben nur Symbole */
+.ansicht-kopf:has(> .segment + .segment) > .segment:first-child > :not(.aktiv) span {
+  display: none;
 }
 /* Unter 1100 px: Inspektor klappt als Tafel über den Inhalt */
 @media (max-width: 1099px) {

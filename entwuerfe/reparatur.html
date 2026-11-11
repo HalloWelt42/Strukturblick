@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Reparieren</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/werkzeuge.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-file-lines"></i><span class="name">import.ndjson</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag aktiv" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment" aria-label="Offenes Werkzeug">
+            <a class="aktiv"><i class="fa-solid fa-screwdriver-wrench"></i><span>Reparieren</span> <i class="fa-solid fa-xmark" title="Werkzeug schließen"></i></a>
+          </nav>
+        </div>
+
+        <div class="wz-optionen">
+          <div class="wz-option">
+            <span class="wz-etikett">Lesen als</span>
+            <nav class="segment" aria-label="Format">
+              <a class="aktiv" title="Ein Datensatz je Zeile">JSON Lines</a>
+              <a title="Ganze Datei als ein JSON-Dokument">JSON</a>
+            </nav>
+          </div>
+          <div class="wz-option">
+            <span class="abzeichen zweit">erkannt an der Endung .ndjson</span>
+          </div>
+          <div class="rechts">
+            <span class="wz-etikett"><i class="fa-solid fa-gears"></i> Feste Regeln, ohne KI: gleiche Datei, gleicher Vorschlag</span>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="wz-flaeche">
+            <div class="wz-band">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span><strong>2 von 3 Zeilen unverändert.</strong> In Zeile 2 werden 3 Zeichen ergänzt, gelöscht wird nichts.</span>
+            </div>
+
+            <div class="wz-raster wz-liste-breit">
+              <!-- Befund und Vorschlag je Zeile -->
+              <section class="wz-tafel">
+                <div class="wz-tafel-kopf">
+                  <i class="fa-solid fa-list-check"></i> Befund je Zeile
+                  <span class="rechts"><span class="abzeichen fehler">1 Zeile kaputt</span></span>
+                </div>
+                <div class="wz-tafel-feld">
+                  <div class="wz-befund wz-still">
+                    <span class="wz-zeile-nr">Zeile<strong>1</strong></span>
+                    <div class="wz-befund-kopf"><i class="fa-solid fa-circle-check wz-symbol gut"></i><span class="wz-meldung">In Ordnung</span></div>
+                    <div class="wz-befund-fuss"><span>K-10471, Ole Hansen, 5 Felder</span></div>
+                  </div>
+                  <div class="wz-befund gewaehlt">
+                    <span class="wz-zeile-nr">Zeile<strong>2</strong></span>
+                    <div class="wz-befund-kopf"><i class="fa-solid fa-circle-xmark wz-symbol fehler"></i><span class="wz-meldung">Nicht lesbar: 2 Fehler</span></div>
+                    <ul class="wz-befund-liste">
+                      <li><i class="fa-solid fa-circle-xmark wz-symbol fehler"></i><span><span class="mono">Spalte 22</span>: Komma fehlt nach <span class="mono">"K-10472"</span>. <b>Vorschlag:</b> Komma einfügen.</span></li>
+                      <li><i class="fa-solid fa-circle-xmark wz-symbol fehler"></i><span><span class="mono">Spalte 70</span>: Zeile endet mitten im Text. <b>Vorschlag:</b> Text und Objekt schließen mit <span class="mono">"}</span>.</span></li>
+                      <li><i class="fa-solid fa-triangle-exclamation wz-symbol warn"></i><span>Danach bleibt <span class="mono">ort</span> <span class="mono w-text">"Dresd"</span>, und <span class="mono">angelegt</span> fehlt. Nichts wird erfunden: bitte von Hand ergänzen.</span></li>
+                    </ul>
+                    <div class="wz-befund-fuss">
+                      <nav class="segment" aria-label="Zeile 2">
+                        <span class="aktiv">Vorschlag übernehmen</span>
+                        <span>Zeile so lassen</span>
+                      </nav>
+                    </div>
+                  </div>
+                  <div class="wz-befund wz-still">
+                    <span class="wz-zeile-nr">Zeile<strong>3</strong></span>
+                    <div class="wz-befund-kopf"><i class="fa-solid fa-circle-check wz-symbol gut"></i><span class="wz-meldung">In Ordnung</span></div>
+                    <div class="wz-befund-fuss"><span>K-10473, Karl Weiß, 5 Felder</span></div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Vorschau als Unterschied -->
+              <section class="wz-tafel">
+                <div class="wz-tafel-kopf">
+                  <i class="fa-solid fa-code-compare"></i> Vorschau als Unterschied
+                  <span class="rechts"><span class="abzeichen gut">+ 3 Zeichen</span><span class="abzeichen">0 gelöscht</span></span>
+                </div>
+                <div class="wz-tafel-feld wz-mulde">
+                  <div class="wz-code wz-umbruch">
+                    <div class="wz-z wz-ruhig"><span class="wz-nr">1</span><span class="wz-zeichen"> </span><span class="wz-t">{"kundennr":"K-10471","name":"Ole Hansen","plz":"06108","ort":"Halle (Saale)","angelegt":"2026-11-10"}</span></div>
+                    <div class="wz-z wz-weg"><span class="wz-nr">2</span><span class="wz-zeichen">-</span><span class="wz-t">{"kundennr":"K-10472"<span class="wz-falsch"> </span>"name":"Petra Nguyen","plz":"01067","ort":"Dresd</span></div>
+                    <div class="wz-z wz-hinzu"><span class="wz-nr">2</span><span class="wz-zeichen">+</span><span class="wz-t">{"kundennr":"K-10472"<span class="wz-neu">,</span> "name":"Petra Nguyen","plz":"01067","ort":"Dresd<span class="wz-neu">"}</span></span></div>
+                    <div class="wz-anmerkung warn"><i class="fa-solid fa-triangle-exclamation"></i><span><span class="mono">"Dresd"</span> ist vermutlich abgeschnitten, <span class="mono">angelegt</span> fehlt.</span></div>
+                    <div class="wz-z wz-ruhig"><span class="wz-nr">3</span><span class="wz-zeichen"> </span><span class="wz-t">{"kundennr":"K-10473","name":"Karl Weiß","plz":"04229","ort":"Leipzig","angelegt":"2026-11-10"}</span></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="wz-aktionen">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Danach 3 lesbare Zeilen. Rückgängig im Kopf und im Verlauf.</span>
+          <span class="rechts">
+            <button class="knopf"><i class="fa-solid fa-xmark"></i> Verwerfen</button>
+            <button class="knopf primaer"><i class="fa-solid fa-check"></i> Übernehmen</button>
+          </span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewählt: Zeile 2 <span class="rechts abzeichen fehler">nicht lesbar</span></div>
+            <div class="wertfeld klein" style="font-size: var(--klein)">{"kundennr":"K-10472" "name":"Petra Nguyen","plz":"01067","ort":"Dresd</div>
+            <dl class="paare" style="margin: 10px 0 0">
+              <dt>Länge</dt><dd class="mono">70 Zeichen</dd>
+              <dt>Lesbar bis</dt><dd class="mono">Spalte 21</dd>
+              <dt>Felder</dt><dd>kundennr, name, plz, ort <span class="text-3">(angelegt fehlt)</span></dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Was die Reparatur tut</div>
+            <p class="wz-satz">Sie ergänzt nur Zeichen, die zum Lesen fehlen: Komma, Anführungszeichen, Klammern. Werte werden nicht geraten.</p>
+            <p class="wz-satz wz-abstand">Übernehmen ist ein Schritt im Verlauf und lässt sich zurücknehmen.</p>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Datei</div>
+            <dl class="paare">
+              <dt>Name</dt><dd class="mono">import.ndjson</dd>
+              <dt>Ablage</dt><dd>Kundenimport auf pi5b</dd>
+              <dt>Zeilen</dt><dd class="mono">3, davon 1 kaputt</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Im Browser</div>
+            <p class="wz-satz">Die Reparatur rechnet ganz in diesem Browser; dafür gehen keine Daten an den Server.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON Lines</span> 0,3 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 1</span>
+        <span class="teil"><i class="fa-solid fa-circle-xmark" style="color: var(--fehler)"></i> Zeile 2 nicht lesbar</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 2 Minuten</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

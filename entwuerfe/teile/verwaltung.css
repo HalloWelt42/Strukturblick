@@ -1,0 +1,1006 @@
+/* ============================================================================
+   Strukturblick 2.0 - Bausteine der Verwaltung
+   Verlauf, Rezepte, Rezept anwenden, Ablage, Einstellungen und die Bauart ohne
+   Server. Präfix .vw-, nur Marken aus stil.css, keine festen Farben,
+   Schriftgrößen nur über Stufen, Ecken nur an Knöpfen.
+   ========================================================================== */
+
+/* ----- 1. Allgemein: Tafeln, Titel, Abschnitte ---------------------------- */
+
+/* Einspaltige Seite im Hauptbereich (Rollfeld ist .inhalt, ohne klebenden Kopf) */
+.vw-seite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a4);
+  max-width: 1120px;
+  padding: var(--a4) var(--a5) var(--a6);
+}
+.vw-tafel {
+  padding: var(--a4);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  min-width: 0;
+}
+.vw-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+  min-width: 0;
+}
+.vw-titel > i {
+  color: var(--akzent);
+}
+.vw-titel .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a2);
+  font-size: var(--klein);
+  font-weight: 500;
+}
+.vw-unter {
+  margin: var(--a1) 0 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.vw-abschnitt {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: 0 0 var(--a2);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.vw-abschnitt .rechts {
+  margin-left: auto;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.vw-hilfe {
+  margin: var(--a2) 0 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.vw-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+}
+.vw-aktionen .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+/* Kleiner Knopf für Tabellenzeilen und Listen */
+.knopf.vw-knapp {
+  min-height: calc(var(--zeile) - 6px);
+}
+.knopf.nur-symbol.vw-knapp {
+  width: calc(var(--zeile) - 6px);
+}
+
+/* Zweites Segment im Ansicht-Kopf: Anmeldung rechts */
+.vw-anmeldung {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.vw-anmeldung > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.vw-anmeldung > i {
+  color: var(--text-3);
+}
+
+/* Einzeiliger Text in der Werkzeugzeile, kürzt am Ende */
+.vw-zeilentext {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.vw-zeilentext strong {
+  color: var(--text-1);
+}
+
+/* Zwei Spalten im Hauptbereich: Liste links, Inhalt rechts, je eigenes Rollfeld */
+.vw-zweiteilig {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+.vw-seitenspalte {
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--a2);
+  background: var(--flaeche-panel-2);
+}
+.vw-hauptspalte {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+}
+.vw-hauptspalte.vw-gestapelt {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Haken (Mehrfachauswahl), kantig statt nativer Kästchen */
+.vw-haken {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: transparent;
+  font-size: var(--marke);
+  cursor: pointer;
+}
+.vw-haken.an {
+  background-color: var(--akzent-flaeche);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--auf-akzent);
+}
+.vw-haken.teils {
+  color: var(--text-2);
+}
+
+/* Schalter an/aus */
+.vw-schalter {
+  display: inline-flex;
+  align-items: center;
+  width: 46px;
+  height: 26px;
+  padding: 3px;
+  flex: none;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  cursor: pointer;
+}
+.vw-schalter::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+}
+.vw-schalter.an {
+  justify-content: flex-end;
+  background: var(--akzent-flaeche);
+}
+
+/* Werte als kleine Marken (vorher, nachher, Zuordnungen) */
+.vw-wert {
+  display: inline-block;
+  padding: 0 6px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  white-space: pre;
+}
+.vw-vorher,
+.vw-nachher {
+  display: inline-block;
+  min-width: 0;
+  padding: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  font-family: var(--schrift-mono);
+}
+.vw-vorher {
+  background: var(--diff-weg);
+}
+.vw-nachher {
+  background: var(--diff-hinzu);
+}
+.vw-pfeil {
+  flex: none;
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+
+/* Zeile mit Hinweis über dem Inhalt (etwa: älterer Stand sichtbar) */
+.vw-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a3);
+  padding: var(--a2) var(--a3);
+  flex: none;
+  min-width: 0;
+  background: var(--akzent-weich);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  font-size: var(--klein);
+  color: var(--text-1);
+}
+.vw-band > i {
+  color: var(--akzent);
+}
+.vw-band .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a2);
+  flex: none;
+}
+
+/* Leiste der Mehrfachauswahl; im Inspektor klebt sie bündig oben */
+.vw-auswahl-leiste {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  flex: none;
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--klein);
+}
+.vw-auswahl-leiste .vw-anzahl {
+  font-weight: 600;
+  margin-right: var(--a2);
+}
+.vw-auswahl-leiste .rechts {
+  margin-left: auto;
+}
+.vw-auswahl-leiste.vw-klebend {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 calc(-1 * var(--a3));
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+
+/* Auswahlkarten (eine Wahl aus mehreren) */
+.vw-wahl-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+}
+.vw-wahl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  padding: var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--text-1);
+  text-decoration: none;
+  cursor: pointer;
+}
+.vw-wahl:hover {
+  background-color: var(--flaeche-panel);
+}
+.vw-wahl.aktiv {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .vw-wahl.aktiv {
+  background-color: var(--akzent-weich);
+}
+.vw-wahl-name {
+  display: block;
+  font-weight: 600;
+}
+.vw-wahl.aktiv .vw-wahl-name {
+  color: var(--akzent);
+}
+.vw-wahl-info {
+  display: block;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.vw-wahl-zustand {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.punkt.vw-ruhig {
+  background: var(--text-3);
+  box-shadow: none;
+}
+
+/* Kleine Kennzahlen in Reihe */
+.vw-zahlen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a5);
+}
+.vw-zahl {
+  display: flex;
+  flex-direction: column;
+}
+.vw-zahl strong {
+  font-family: var(--schrift-mono);
+  font-size: var(--kennzahl);
+  font-weight: 500;
+  line-height: 1.2;
+}
+.vw-zahl span {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* ----- 2. Verlauf (im Inspektor) ------------------------------------------ */
+
+.vw-vorgaenge {
+  margin-top: var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.vw-vorgaenge > .karte-titel {
+  margin: 0;
+  padding: var(--a3) var(--a3) var(--a2);
+}
+.vw-vorgang {
+  display: grid;
+  grid-template-columns: auto 2.4ch minmax(0, 1fr);
+  align-items: start;
+  gap: 2px var(--a2);
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  color: var(--text-1);
+  text-decoration: none;
+  cursor: pointer;
+}
+.vw-vorgang:hover {
+  background: var(--akzent-weich);
+}
+.vw-vorgang > .vw-haken {
+  margin-top: 1px;
+}
+.vw-vorgang-nr {
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+  color: var(--text-3);
+  text-align: right;
+  line-height: 1.5;
+}
+.vw-vorgang-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.vw-vorgang-titel {
+  font-size: var(--klein);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.vw-vorgang-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.vw-vorgang-meta .mono {
+  color: var(--text-2);
+}
+.vw-vorher-nachher {
+  display: flex;
+  align-items: center;
+  gap: var(--a1);
+  min-width: 0;
+  font-size: var(--marke);
+}
+.vw-vorgang.gewaehlt {
+  background: var(--akzent-weich);
+}
+.vw-vorgang.aktuell {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .vw-vorgang.aktuell {
+  background: var(--akzent-weich);
+}
+/* Spätere Vorgänge nach einem Sprung zurück: grau, bleiben bis zur nächsten Änderung */
+.vw-vorgang.spaeter {
+  color: var(--text-3);
+}
+.vw-vorgang.spaeter .vw-vorher-nachher {
+  opacity: 0.55;
+}
+.vw-vorgang.spaeter .vw-vorgang-titel {
+  font-weight: 500;
+}
+
+/* ----- 3. Rezepte ---------------------------------------------------------- */
+
+.vw-rezept {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px var(--a2);
+  padding: var(--a2);
+  color: var(--text-2);
+  text-decoration: none;
+  cursor: pointer;
+}
+.vw-rezept:hover {
+  background: var(--flaeche-wechsel);
+  color: var(--text-1);
+}
+.vw-rezept > i {
+  width: 20px;
+  text-align: center;
+  color: var(--text-3);
+}
+.vw-rezept-name {
+  font-weight: 600;
+  color: var(--text-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vw-rezept-info {
+  grid-column: 2 / -1;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.vw-rezept.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+}
+.vw-rezept.aktiv > i {
+  color: var(--akzent);
+}
+
+.vw-schritte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+}
+.vw-schritt {
+  display: grid;
+  grid-template-columns: 2.2ch auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  padding: var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.vw-schritt-nr {
+  font-family: var(--schrift-mono);
+  font-size: var(--titel);
+  color: var(--text-3);
+  text-align: right;
+}
+.vw-schritt-text {
+  min-width: 0;
+}
+.vw-schritt-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  font-weight: 600;
+}
+.vw-schritt-was {
+  margin-top: 2px;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.vw-schritt-knoepfe {
+  display: flex;
+  gap: var(--a1);
+}
+.vw-schritt.vw-offen {
+  background-color: var(--flaeche-panel-2);
+}
+.vw-bearbeiten {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+  padding: var(--a3);
+  background: var(--flaeche-panel);
+  box-shadow: var(--vertieft);
+}
+.vw-feldzeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+}
+.vw-feldname {
+  min-width: 10em;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.vw-zuordnung {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  margin-top: var(--a1);
+}
+
+/* Erwartete Spalten und Spaltenprüfung */
+.vw-spaltenmarken {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--a2);
+}
+.vw-spaltenmarke {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+.vw-spaltenmarke > i {
+  color: var(--gut);
+}
+.vw-spaltenmarke .rechts {
+  margin-left: auto;
+  font-family: var(--schrift);
+  font-size: var(--marke);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.vw-spaltenmarke.fehlt {
+  background: var(--fehler-weich);
+  color: var(--fehler);
+}
+.vw-spaltenmarke.fehlt > i,
+.vw-spaltenmarke.fehlt .rechts {
+  color: var(--fehler);
+}
+.vw-spaltenmarke.zusatz {
+  background: var(--zweit-weich);
+  color: var(--zweit);
+}
+.vw-spaltenmarke.zusatz > i,
+.vw-spaltenmarke.zusatz .rechts {
+  color: var(--zweit);
+}
+
+/* ----- 4. Rezept anwenden -------------------------------------------------- */
+
+.vw-urteil {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  margin-bottom: var(--a3);
+  padding: var(--a2) var(--a3);
+  background: var(--gut-weich);
+  color: var(--gut);
+  font-weight: 600;
+}
+.vw-urteil .rechts {
+  margin-left: auto;
+}
+.vw-vorschau-schritt {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.vw-vorschau-kopf {
+  display: grid;
+  grid-template-columns: 2.2ch minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  padding: var(--a2) var(--a3);
+  min-height: var(--knopf-hoehe);
+}
+.vw-vorschau-kopf .vw-schritt-nr {
+  font-size: var(--gross);
+}
+.vw-vorschau-kopf .rechts {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+.vw-vorschau-schritt.uebersprungen .vw-vorschau-kopf {
+  color: var(--text-3);
+}
+.vw-vorschau-schritt.uebersprungen .vw-schritt-name {
+  text-decoration: line-through;
+  font-weight: 500;
+}
+.vw-beispiele {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.vw-beispiele td {
+  padding: 3px var(--a3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+  white-space: nowrap;
+}
+.vw-beispiele td:first-child {
+  padding-left: calc(2.2ch + var(--a3) * 2);
+}
+.vw-beispiele .vw-anzahl-zelle {
+  width: 1%;
+  text-align: right;
+  font-family: var(--schrift-mono);
+  color: var(--text-3);
+}
+.vw-beispiele .vw-pfeil-zelle {
+  width: 1%;
+  color: var(--text-3);
+}
+.vw-beispiele .vw-luft {
+  width: 100%;
+}
+
+/* Entscheidung unten im Hauptbereich: bleibt beim Rollen sichtbar */
+.vw-entscheidung {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  padding: var(--a2) var(--a3);
+  flex: none;
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--klein);
+}
+.vw-entscheidung .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+}
+.vw-entscheidung .feld {
+  width: 300px;
+  max-width: 100%;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+
+/* ----- 5. Ablage ----------------------------------------------------------- */
+
+.vw-ordner .eintrag .rechts {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.vw-ordner-trenner {
+  height: 1px;
+  margin: var(--a2) var(--a2);
+  background: var(--rand-1);
+}
+.vw-ablagezone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  margin: var(--a3);
+  padding: var(--a3) var(--a4);
+  flex: none;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.vw-ablagezone > i {
+  font-size: var(--titel);
+  color: var(--text-3);
+}
+.vw-ablagezone .rechts {
+  margin-left: auto;
+}
+.vw-tabellenfeld {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.vw-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.vw-tabelle th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: inset 0 -1px 0 var(--rand-2);
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.vw-tabelle th.vw-sortiert {
+  color: var(--akzent);
+}
+.vw-tabelle td {
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  white-space: nowrap;
+}
+.vw-tabelle tbody tr:hover td {
+  background: var(--flaeche-wechsel);
+}
+.vw-tabelle tr.gewaehlt td {
+  background: var(--akzent-weich);
+}
+.vw-tabelle .vw-schmal {
+  width: 1%;
+}
+.vw-tabelle .vw-zahl-zelle {
+  text-align: right;
+  font-family: var(--schrift-mono);
+}
+.vw-tabelle .vw-leise {
+  color: var(--text-3);
+}
+.vw-dateiname {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+}
+.vw-dateiname > i {
+  width: 18px;
+  text-align: center;
+  color: var(--text-3);
+}
+.vw-umbenennen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+}
+.vw-umbenennen input {
+  width: 26ch;
+  min-height: calc(var(--zeile) - 6px);
+  padding: 0 var(--a2);
+  border: 0;
+  outline: 0;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft), 0 0 0 2px var(--akzent-flaeche);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+
+/* Belegter Platz als Streifen mit Legende */
+.vw-belegung {
+  display: flex;
+  height: 14px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.vw-belegung > span {
+  display: block;
+  height: 100%;
+}
+.vw-teil-dokumente {
+  background: var(--akzent-flaeche);
+}
+.vw-teil-verlauf {
+  background: var(--typ-liste);
+}
+.vw-teil-korb {
+  background: var(--typ-zahl);
+}
+.vw-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a1) var(--a4);
+  margin-top: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.vw-legende > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+}
+.vw-legende .vw-farbe {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+/* ----- 6. Einstellungen ---------------------------------------------------- */
+
+.vw-adresse {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.vw-einstellung {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a4);
+  padding: var(--a3) 0;
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.vw-einstellung:last-child {
+  box-shadow: none;
+  padding-bottom: 0;
+}
+.vw-einstellung:first-of-type {
+  padding-top: 0;
+}
+.vw-einstellung-text {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.vw-einstellung-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  font-weight: 600;
+}
+.vw-einstellung-hilfe {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.vw-einstellung-wert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  max-width: 100%;
+}
+.vw-einstellung-voll {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+/* Schriftstufe: drei Proben, jede rechnet mit ihren eigenen Stufen */
+.vw-schriftproben {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--a3);
+}
+.vw-probe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+  min-width: 0;
+  padding: var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--gross);
+  color: var(--text-1);
+  text-decoration: none;
+  cursor: pointer;
+}
+.vw-probe.aktiv {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .vw-probe.aktiv {
+  background-color: var(--akzent-weich);
+}
+.vw-probe-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-weight: 600;
+}
+.vw-probe.aktiv .vw-probe-kopf {
+  color: var(--akzent);
+}
+.vw-probe-kopf .rechts {
+  margin-left: auto;
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+  font-weight: 400;
+  color: var(--text-3);
+}
+.vw-probe-baum {
+  overflow: hidden;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+.vw-probe-baum .knoten {
+  cursor: default;
+}
+
+/* ----- 7. Bauart ohne Server: Leiste "Dieser Browser" --------------------- */
+
+.vw-browser-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--a2);
+  margin: var(--a1) 0 var(--a2);
+  padding: var(--a2);
+  background: var(--warn-weich);
+  color: var(--warn);
+  font-size: var(--klein);
+  line-height: 1.3;
+}
+.vw-browser-hinweis > i {
+  margin-top: 2px;
+}
+.vw-leiste-knoepfe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a1);
+  margin-bottom: var(--a2);
+}
+
+/* ----- 8. Breiten ---------------------------------------------------------- */
+
+@media (max-width: 1279px) {
+  .vw-spaltenmarken {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .vw-zweiteilig {
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+  }
+}
+@media (max-width: 1099px) {
+  .vw-seite {
+    padding: var(--a3) var(--a3) var(--a5);
+  }
+}
+@media (max-width: 899px) {
+  .vw-anmeldung > span {
+    display: none;
+  }
+  .vw-leiste-knoepfe .knopf {
+    justify-content: center;
+    padding: 0;
+  }
+  .vw-leiste-knoepfe .knopf span,
+  .vw-browser-hinweis span {
+    display: none;
+  }
+  .vw-browser-hinweis {
+    justify-content: center;
+  }
+  .vw-schriftproben {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

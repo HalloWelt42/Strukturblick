@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Bereinigen</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/bereinigen.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag aktiv" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment br-werkzeug" aria-label="Offenes Werkzeug"><a class="aktiv"><i class="fa-solid fa-broom"></i><span>Bereinigen</span> <i class="fa-solid fa-xmark" title="Werkzeug schließen"></i></a></nav>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="segment" aria-label="Bereinigen">
+            <a class="aktiv"><i class="fa-solid fa-filter"></i><span>Facetten</span></a>
+            <a href="bereinigen-aehnlich.html"><i class="fa-solid fa-object-group"></i><span>Ähnliche Werte</span></a>
+            <a href="bereinigen-typen.html"><i class="fa-solid fa-shapes"></i><span>Typen</span></a>
+          </nav>
+          <div class="rechts">
+            <button class="knopf"><i class="fa-solid fa-plus"></i><span class="br-breit">Facette hinzufügen</span></button>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="br-facetten-raster">
+            <!-- Facettenspalten -->
+            <aside class="br-facetten" aria-label="Facetten">
+              <div class="br-spalten-titel">Facetten <span class="br-rechts text-3" title="Anzahl je Wert im ganzen Dokument">Anzahl im Dokument</span></div>
+
+              <!-- ort -->
+              <section class="br-facette">
+                <div class="br-facette-kopf">
+                  <strong>ort</strong><span class="abzeichen zweit">Text</span>
+                  <span class="br-rechts">
+                    <button class="knopf still nur-symbol" title="Auswahl in ort aufheben"><i class="fa-solid fa-filter-circle-xmark"></i></button>
+                    <button class="knopf still nur-symbol" title="Facette schließen"><i class="fa-solid fa-xmark"></i></button>
+                  </span>
+                </div>
+                <div class="segment" title="Reihenfolge"><a>Anzahl</a><a class="aktiv">A bis Z</a></div>
+                <ul class="br-werte">
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Berlin</span><span class="br-balken"><span style="width: 93%"></span></span><span class="br-anzahl">198</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Bremen</span><span class="br-balken"><span style="width: 30%"></span></span><span class="br-anzahl">64</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Dortmund</span><span class="br-balken"><span style="width: 33%"></span></span><span class="br-anzahl">71</span></li>
+                  <li class="br-wert an"><span class="br-haken an"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Dresden</span><span class="br-balken"><span style="width: 14%"></span></span><span class="br-anzahl">30</span></li>
+                  <li class="br-wert an"><span class="br-haken an"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">dresden</span><span class="br-balken"><span style="width: 13%"></span></span><span class="br-anzahl">27</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Düsseldorf</span><span class="br-balken"><span style="width: 38%"></span></span><span class="br-anzahl">82</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Essen</span><span class="br-balken"><span style="width: 27%"></span></span><span class="br-anzahl">58</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Frankfurt am Main</span><span class="br-balken"><span style="width: 57%"></span></span><span class="br-anzahl">121</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Halle (Saale)</span><span class="br-balken"><span style="width: 9%"></span></span><span class="br-anzahl">19</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Halle/Saale</span><span class="br-balken"><span style="width: 26%"></span></span><span class="br-anzahl">56</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Hamburg</span><span class="br-balken"><span style="width: 100%"></span></span><span class="br-anzahl">214</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Hannover</span><span class="br-balken"><span style="width: 45%"></span></span><span class="br-anzahl">96</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Köln</span><span class="br-balken"><span style="width: 67%"></span></span><span class="br-anzahl">143</span></li>
+                  <li class="br-wert an"><span class="br-haken an"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Leipzig</span><span class="br-balken"><span style="width: 24%"></span></span><span class="br-anzahl">52</span></li>
+                  <li class="br-wert an" title="Leerzeichen am Ende"><span class="br-haken an"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Leipzig<span class="br-leerzeichen"></span></span><span class="br-balken"><span style="width: 19%"></span></span><span class="br-anzahl">41</span></li>
+                  <li class="br-wert an"><span class="br-haken an"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">leipzig</span><span class="br-balken"><span style="width: 22%"></span></span><span class="br-anzahl">48</span></li>
+                  <li class="br-wert an"><span class="br-haken an"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">Lpz.</span><span class="br-balken"><span style="width: 18%"></span></span><span class="br-anzahl">39</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">München</span><span class="br-balken"><span style="width: 82%"></span></span><span class="br-anzahl">176</span></li>
+                </ul>
+                <div class="br-mehr"><i class="fa-solid fa-chevron-down"></i> Weitere 32 Werte</div>
+                <a class="br-hinweis" href="bereinigen-aehnlich.html"><i class="fa-solid fa-object-group"></i><span>Leipzig steht in 4 Schreibweisen, Dresden und Halle in je 2. Zusammenführen</span></a>
+              </section>
+
+              <!-- plz-Bereich -->
+              <section class="br-facette">
+                <div class="br-facette-kopf">
+                  <strong>plz</strong><span class="text-3 klein">Bereich</span>
+                  <span class="br-rechts"><button class="knopf still nur-symbol" title="Facette schließen"><i class="fa-solid fa-xmark"></i></button></span>
+                </div>
+                <ul class="br-werte">
+                  <li class="br-wert" title="Führende Null, steht als Text"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">0xxxx</span><span class="br-balken"><span style="width: 95%"></span></span><span class="br-anzahl">312</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">1xxxx</span><span class="br-balken"><span style="width: 73%"></span></span><span class="br-anzahl">241</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">2xxxx</span><span class="br-balken"><span style="width: 100%"></span></span><span class="br-anzahl">330</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">3xxxx</span><span class="br-balken"><span style="width: 65%"></span></span><span class="br-anzahl">214</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">4xxxx</span><span class="br-balken"><span style="width: 81%"></span></span><span class="br-anzahl">268</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">5xxxx</span><span class="br-balken"><span style="width: 79%"></span></span><span class="br-anzahl">262</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">6xxxx</span><span class="br-balken"><span style="width: 72%"></span></span><span class="br-anzahl">239</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">7xxxx</span><span class="br-balken"><span style="width: 58%"></span></span><span class="br-anzahl">191</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">8xxxx</span><span class="br-balken"><span style="width: 65%"></span></span><span class="br-anzahl">214</span></li>
+                  <li class="br-wert"><span class="br-haken"><i class="fa-solid fa-check"></i></span><span class="br-wert-text">9xxxx</span><span class="br-balken"><span style="width: 14%"></span></span><span class="br-anzahl">47</span></li>
+                </ul>
+              </section>
+
+              <!-- angelegt -->
+              <section class="br-facette">
+                <div class="br-facette-kopf">
+                  <strong>angelegt</strong><span class="abzeichen zweit">Datum</span>
+                  <span class="br-rechts">
+                    <button class="knopf still nur-symbol" title="Auswahl in angelegt aufheben"><i class="fa-solid fa-filter-circle-xmark"></i></button>
+                    <button class="knopf still nur-symbol" title="Facette schließen"><i class="fa-solid fa-xmark"></i></button>
+                  </span>
+                </div>
+                <div class="br-facette-unter">Gewählt <span class="mono">2025-01</span> bis <span class="mono">2026-10</span></div>
+                <div class="br-monate" role="img" aria-label="Neue Kunden je Monat, 2024-01 bis 2026-10">
+                  <span style="height: 46%" title="2024-01"></span>
+                  <span style="height: 51%" title="2024-02"></span>
+                  <span style="height: 67%" title="2024-03"></span>
+                  <span style="height: 57%" title="2024-04"></span>
+                  <span style="height: 62%" title="2024-05"></span>
+                  <span style="height: 54%" title="2024-06"></span>
+                  <span style="height: 49%" title="2024-07"></span>
+                  <span style="height: 44%" title="2024-08"></span>
+                  <span style="height: 60%" title="2024-09"></span>
+                  <span style="height: 71%" title="2024-10"></span>
+                  <span style="height: 74%" title="2024-11"></span>
+                  <span style="height: 55%" title="2024-12"></span>
+                  <span class="br-in" style="height: 63%" title="2025-01"></span>
+                  <span class="br-in" style="height: 70%" title="2025-02"></span>
+                  <span class="br-in" style="height: 80%" title="2025-03"></span>
+                  <span class="br-in" style="height: 73%" title="2025-04"></span>
+                  <span class="br-in" style="height: 77%" title="2025-05"></span>
+                  <span class="br-in" style="height: 67%" title="2025-06"></span>
+                  <span class="br-in" style="height: 59%" title="2025-07"></span>
+                  <span class="br-in" style="height: 56%" title="2025-08"></span>
+                  <span class="br-in" style="height: 76%" title="2025-09"></span>
+                  <span class="br-in" style="height: 85%" title="2025-10"></span>
+                  <span class="br-in" style="height: 90%" title="2025-11"></span>
+                  <span class="br-in" style="height: 71%" title="2025-12"></span>
+                  <span class="br-in" style="height: 78%" title="2026-01"></span>
+                  <span class="br-in" style="height: 83%" title="2026-02"></span>
+                  <span class="br-in" style="height: 96%" title="2026-03"></span>
+                  <span class="br-in" style="height: 88%" title="2026-04"></span>
+                  <span class="br-in" style="height: 91%" title="2026-05"></span>
+                  <span class="br-in" style="height: 84%" title="2026-06"></span>
+                  <span class="br-in" style="height: 74%" title="2026-07"></span>
+                  <span class="br-in" style="height: 70%" title="2026-08"></span>
+                  <span class="br-in" style="height: 89%" title="2026-09"></span>
+                  <span class="br-in" style="height: 100%" title="2026-10"></span>
+                </div>
+                <div class="br-achse br-achse-monate"><span>2024</span><span>2025</span><span>2026</span></div>
+                <a class="br-hinweis" href="bereinigen-typen.html" style="margin-top: var(--a2)"><i class="fa-solid fa-calendar-days"></i><span>Zwei Formate gelesen: 1.406 als JJJJ-MM-TT, 912 als TT.MM.JJJJ. Vereinheitlichen</span></a>
+              </section>
+
+              <!-- umsatz -->
+              <section class="br-facette">
+                <div class="br-facette-kopf">
+                  <strong>umsatz</strong><span class="abzeichen zweit" title="Aus Text gelesen, deutsches Format">Betrag</span>
+                  <span class="br-rechts">
+                    <button class="knopf still nur-symbol" title="Auswahl in umsatz aufheben"><i class="fa-solid fa-filter-circle-xmark"></i></button>
+                    <button class="knopf still nur-symbol" title="Facette schließen"><i class="fa-solid fa-xmark"></i></button>
+                  </span>
+                </div>
+                <div class="br-histo" role="img" aria-label="Umsatz in Schritten von 500, gewählt 500,00 bis 3.000,00">
+                  <span style="height: 85%" title="0 bis 500: 412 Werte"></span>
+                  <span class="br-in" style="height: 100%" title="500 bis 1.000: 486 Werte"></span>
+                  <span class="br-in" style="height: 76%" title="1.000 bis 1.500: 371 Werte"></span>
+                  <span class="br-in" style="height: 59%" title="1.500 bis 2.000: 288 Werte"></span>
+                  <span class="br-in" style="height: 44%" title="2.000 bis 2.500: 214 Werte"></span>
+                  <span class="br-in" style="height: 34%" title="2.500 bis 3.000: 163 Werte"></span>
+                  <span style="height: 23%" title="3.000 bis 3.500: 112 Werte"></span>
+                  <span style="height: 17%" title="3.500 bis 4.000: 84 Werte"></span>
+                  <span style="height: 13%" title="4.000 bis 4.500: 61 Werte"></span>
+                  <span style="height: 9%" title="4.500 bis 5.000: 43 Werte"></span>
+                  <span style="height: 6%" title="5.000 bis 5.500: 31 Werte"></span>
+                  <span style="height: 5%" title="5.500 bis 6.000: 22 Werte"></span>
+                  <span style="height: 6%" title="ab 6.000: 29 Werte"></span>
+                  <span class="br-griff" style="left: 7.69%" title="Untere Grenze ziehen"></span>
+                  <span class="br-griff" style="left: 46.15%" title="Obere Grenze ziehen"></span>
+                </div>
+                <div class="br-histo-achse"><span style="left: 0">0</span><span style="left: 46.15%; translate: -50% 0">3.000</span><span style="right: 0">6.000 und mehr</span></div>
+                <div class="br-spanne-felder">
+                  <label class="feld"><input value="500,00" aria-label="Umsatz von" /></label>
+                  <span>bis</span>
+                  <label class="feld"><input value="3.000,00" aria-label="Umsatz bis" /></label>
+                </div>
+                <a class="br-hinweis" href="bereinigen-typen.html" style="margin-top: var(--a2)"><i class="fa-solid fa-triangle-exclamation"></i><span>2 Werte nicht lesbar, sie fehlen hier. Ansehen</span></a>
+              </section>
+            </aside>
+
+            <!-- Gefilterte Zeilen -->
+            <section class="br-ergebnis">
+              <div class="br-chips" aria-label="Aktive Filter">
+                <span class="br-chip" title="Leipzig, leipzig, Leipzig mit Leerzeichen, Lpz., Dresden, dresden"><span class="br-chip-spalte">ort</span> 6 Werte <button title="Filter entfernen"><i class="fa-solid fa-xmark"></i></button></span>
+                <span class="br-chip"><span class="br-chip-spalte">angelegt</span> <span class="mono">2025-01</span> bis <span class="mono">2026-10</span> <button title="Filter entfernen"><i class="fa-solid fa-xmark"></i></button></span>
+                <span class="br-chip"><span class="br-chip-spalte">umsatz</span> <span class="mono">500,00</span> bis <span class="mono">3.000,00</span> <button title="Filter entfernen"><i class="fa-solid fa-xmark"></i></button></span>
+                <button class="knopf still"><i class="fa-solid fa-filter-circle-xmark"></i> Alle entfernen</button>
+              </div>
+              <div class="br-trefferzeile">
+                <span class="br-treffer"><strong>184</strong> von <span class="br-gesamt">2.318</span> Zeilen</span>
+                <span class="br-rechts">
+                  <button class="knopf"><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>
+                  <button class="knopf primaer"><i class="fa-solid fa-scissors"></i> Nur diese Zeilen behalten</button>
+                </span>
+              </div>
+              <div class="br-tabellenfeld">
+                <table class="br-tabelle">
+                  <thead>
+                    <tr>
+                      <th class="br-nr">Zeile</th>
+                      <th>kundennr</th>
+                      <th>name</th>
+                      <th>plz</th>
+                      <th class="br-gefiltert">ort<i class="fa-solid fa-filter"></i></th>
+                      <th>email</th>
+                      <th>telefon</th>
+                      <th class="br-gefiltert">angelegt<i class="fa-solid fa-filter"></i></th>
+                      <th class="br-gefiltert br-zahl">umsatz<i class="fa-solid fa-filter"></i></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td class="br-nr">1.204</td><td>K-11873</td><td class="br-text">Marta Kowalski</td><td class="w-text">04109</td><td>Leipzig</td><td>marta.kowalski@beispiel.de</td><td>0341 2290418</td><td>2025-01-14</td><td class="br-zahl">1.234,50</td></tr>
+                    <tr><td class="br-nr">1.219</td><td>K-11890</td><td class="br-text">Jonas Brandt</td><td class="w-text">01067</td><td>Dresden</td><td>j.brandt@netzpost.de</td><td>0351 4410273</td><td>03.02.2025</td><td class="br-zahl">689,90</td></tr>
+                    <tr><td class="br-nr">1.237</td><td>K-11902</td><td class="br-text">Aylin Demir</td><td class="w-text">04177</td><td title="Leerzeichen am Ende">Leipzig<span class="br-leerzeichen"></span></td><td>aylin.demir@beispiel.de</td><td>0176 44218930</td><td>2025-02-27</td><td class="br-zahl">2.410,00</td></tr>
+                    <tr><td class="br-nr">1.262</td><td>K-11935</td><td class="br-text">Ole Hansen</td><td class="w-text">04229</td><td>Lpz.</td><td>ole.hansen@musterpost.de</td><td>0341 8823104</td><td>17.04.2025</td><td class="br-zahl">512,75</td></tr>
+                    <tr><td class="br-nr">1.298</td><td>K-11961</td><td class="br-text">Petra Nguyen</td><td class="w-text">01099</td><td>dresden</td><td>p.nguyen@beispiel.de</td><td>0351 8027716</td><td>2025-05-23</td><td class="br-zahl">1.875,20</td></tr>
+                    <tr><td class="br-nr">1.316</td><td>K-11977</td><td class="br-text">Karl Weiß</td><td class="w-text">04155</td><td>leipzig</td><td>karl.weiss@netzpost.de</td><td>0341 9110482</td><td>08.07.2025</td><td class="br-zahl">940,00</td></tr>
+                    <tr><td class="br-nr">1.317</td><td>K-11978</td><td class="br-text">Karla Weißmann</td><td class="w-text">04155</td><td>Leipzig</td><td>k.weissmann@beispiel.de</td><td>0341 9110560</td><td>2025-07-08</td><td class="br-zahl">1.090,00</td></tr>
+                    <tr><td class="br-nr">1.355</td><td>K-12014</td><td class="br-text">Lena Hoffmann</td><td class="w-text">04275</td><td>leipzig</td><td>lena.hoffmann@musterpost.de</td><td>0341 3307921</td><td>2025-09-30</td><td class="br-zahl">2.980,00</td></tr>
+                    <tr><td class="br-nr">1.390</td><td>K-12046</td><td class="br-text">Mehmet Arslan</td><td class="w-text">01277</td><td>Dresden</td><td>m.arslan@beispiel.de</td><td>0351 2516044</td><td>11.11.2025</td><td class="br-zahl">1.102,40</td></tr>
+                    <tr><td class="br-nr">1.441</td><td>K-12101</td><td class="br-text">Sophie Krüger</td><td class="w-text">04103</td><td title="Leerzeichen am Ende">Leipzig<span class="br-leerzeichen"></span></td><td>sophie.krueger@netzpost.de</td><td>0341 7740158</td><td>2026-01-19</td><td class="br-zahl">765,00</td></tr>
+                    <tr><td class="br-nr">1.476</td><td>K-12133</td><td class="br-text">Tobias Lange</td><td class="w-text">04109</td><td>Leipzig</td><td>t.lange@beispiel.de</td><td>0341 6619203</td><td>02.04.2026</td><td class="br-zahl">2.215,30</td></tr>
+                    <tr><td class="br-nr">1.502</td><td>K-12170</td><td class="br-text">Greta Vogel</td><td class="w-text">04317</td><td>Lpz.</td><td>greta.vogel@musterpost.de</td><td>0341 5082277</td><td>2026-08-05</td><td class="br-zahl">1.348,60</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="br-blaettern">
+                <button class="knopf nur-symbol" title="Vorige Seite" disabled><i class="fa-solid fa-arrow-left"></i></button>
+                <span>Zeilen <span class="mono">1</span> bis <span class="mono">12</span> von <span class="mono">184</span></span>
+                <button class="knopf nur-symbol" title="Nächste Seite"><i class="fa-solid fa-arrow-right"></i></button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Treffer</div>
+            <div class="br-kennzahl"><strong>184</strong> von <span class="mono">2.318</span> Zeilen</div>
+            <dl class="paare" style="margin: 10px 0 0">
+              <dt>ort</dt><dd><span class="mono">237</span> Zeilen</dd>
+              <dt>+ angelegt</dt><dd><span class="mono">206</span> Zeilen</dd>
+              <dt>+ umsatz</dt><dd><span class="mono">184</span> Zeilen</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Vorschau <span class="rechts abzeichen warn">Nur diese Zeilen behalten</span></div>
+            <div class="br-anteil" title="184 bleiben, 2.134 werden entfernt"><span class="br-bleibt" style="width: 7.9%"></span><span class="br-weg" style="width: 92.1%"></span></div>
+            <dl class="paare">
+              <dt>Bleiben</dt><dd class="mono">184 Zeilen</dd>
+              <dt>Entfernt</dt><dd class="mono">2.134 Zeilen</dd>
+              <dt>Danach</dt><dd>Stand 15, ein Vorgang im Verlauf</dd>
+            </dl>
+            <p class="br-karten-text" style="margin-top: 10px">Lässt sich rückgängig machen. Lieber getrennt? "Als neues Dokument" legt eine Kopie mit den 184 Zeilen an, kunden.csv bleibt ganz.</p>
+            <div class="knopf-reihe">
+              <button class="knopf">Abbrechen</button>
+              <button class="knopf primaer"><i class="fa-solid fa-check"></i> Übernehmen</button>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Spalte ort <span class="rechts abzeichen zweit">Text</span></div>
+            <dl class="paare">
+              <dt>Verschieden</dt><dd class="mono">50 Werte</dd>
+              <dt>Leer</dt><dd class="mono">0</dd>
+              <dt>Auffällig</dt><dd>Leipzig in 4, Dresden und Halle in je 2 Schreibweisen</dd>
+            </dl>
+            <div class="knopf-reihe" style="margin-top: 10px">
+              <a class="knopf" href="bereinigen-aehnlich.html"><i class="fa-solid fa-object-group"></i> Ähnliche Werte</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">CSV</span> 2.318 Zeilen</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Abfrage</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/abfrage.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a class="aktiv"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="pfad" aria-label="Pfad">
+            <a>$</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>bestellungen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a class="letzter">[2]</a>
+          </nav>
+          <div class="rechts">
+            <div class="af-treffer-nav">
+              <button class="knopf nur-symbol" title="Voriger Treffer (⇧ F3)"><i class="fa-solid fa-chevron-up"></i></button>
+              <span>Treffer 1 von 7</span>
+              <button class="knopf nur-symbol" title="Nächster Treffer (F3)"><i class="fa-solid fa-chevron-down"></i></button>
+            </div>
+            <div class="segment" title="Was der Baum zeigt">
+              <a class="aktiv">Alle</a><a>Nur Treffer</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="baum" role="tree">
+            <div class="knoten" style="padding-left: 8px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="w-objekt">$</span><span class="art">Objekt</span><span class="info">3 Schlüssel</span></div>
+            <div class="knoten" style="padding-left: 30px"><span class="klapp"></span><span class="schl">shop</span><span class="w-text">"Hofladen Lindenhof"</span></div>
+            <div class="knoten" style="padding-left: 30px"><span class="klapp"></span><span class="schl">stand</span><span class="w-text">"2026-11-10T08:15:00+01:00"</span><span class="rechts"><span class="abzeichen zweit">Datum und Zeit</span></span></div>
+            <div class="knoten" style="padding-left: 30px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="schl">bestellungen</span><span class="art">Liste</span><span class="info">128 Einträge, 7 Treffer</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[0]</span><span class="art">Objekt</span><span class="info">nr "B-24017", kunde "Jonas Brandt", 2 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[1]</span><span class="art">Objekt</span><span class="info">nr "B-24018", kunde "Marta Kowalski", 3 Positionen</span></div>
+            <div class="knoten af-treffer gewaehlt" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="idx">[2]</span><span class="art">Objekt</span><span class="info">6 Schlüssel</span><span class="rechts"><span class="abzeichen zweit">Treffer 1</span></span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">nr</span><span class="w-text">"B-24019"</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">datum</span><span class="w-text">"2026-11-09"</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="schl">kunde</span><span class="art">Objekt</span><span class="info">name "Ole Hansen", plz "04315", stadt "Leipzig"</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="schl">positionen</span><span class="art">Liste</span><span class="info">artikel "Honig 500 g", menge 3, preis 7.9</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">bezahlt</span><span class="af-mark w-bool">false</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">notiz</span><span class="w-text">"zahlt bei Abholung"</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[3]</span><span class="art">Objekt</span><span class="info">nr "B-24020", kunde "Petra Nguyen", 4 Positionen</span></div>
+            <div class="knoten af-treffer" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[4]</span><span class="art">Objekt</span><span class="info">nr "B-24021", kunde "Karl Weiß", <span class="af-mark">bezahlt false</span></span><span class="rechts"><span class="abzeichen zweit">Treffer 2</span></span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[5]</span><span class="art">Objekt</span><span class="info">nr "B-24022", kunde "Aylin Demir", 3 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[6]</span><span class="art">Objekt</span><span class="info">nr "B-24023", kunde "Frank Seidel", 1 Position</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[7]</span><span class="art">Objekt</span><span class="info">nr "B-24024", kunde "Lea Schubert", 2 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[8]</span><span class="art">Objekt</span><span class="info">nr "B-24025", kunde "Ömer Kaya", 3 Positionen</span></div>
+            <div class="knoten af-treffer" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[9]</span><span class="art">Objekt</span><span class="info">nr "B-24026", kunde "Svenja Albrecht", <span class="af-mark">bezahlt false</span></span><span class="rechts"><span class="abzeichen zweit">Treffer 3</span></span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[10]</span><span class="art">Objekt</span><span class="info">nr "B-24027", kunde "Jan Krüger", 1 Position</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[11]</span><span class="art">Objekt</span><span class="info">nr "B-24028", kunde "Hanna Wolf", 2 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[12]</span><span class="art">Objekt</span><span class="info">nr "B-24029", kunde "Paul Richter", 5 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[13]</span><span class="art">Objekt</span><span class="info">nr "B-24030", kunde "Mia Schröder", 2 Positionen</span></div>
+            <div class="knoten af-treffer" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[14]</span><span class="art">Objekt</span><span class="info">nr "B-24031", kunde "Mehmet Yilmaz", <span class="af-mark">bezahlt false</span></span><span class="rechts"><span class="abzeichen zweit">Treffer 4</span></span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[15]</span><span class="art">Objekt</span><span class="info">nr "B-24032", kunde "Tobias Lang", 2 Positionen</span></div>
+          </div>
+        </div>
+
+        <!-- Abfrage, aufgeklappt: Ziehgriff verstellt die Höhe -->
+        <div class="af-griff" title="Ziehen verstellt die Höhe der Abfrage"><i class="fa-solid fa-grip-lines"></i></div>
+        <section class="af-konsole" aria-label="Abfrage">
+          <div class="af-kopf">
+            <i class="fa-solid fa-terminal"></i>
+            <!-- XPath erscheint nur bei XML-Dokumenten -->
+            <nav class="segment" aria-label="Sprache">
+              <a class="aktiv" href="abfrage.html">jq</a><a href="abfrage-sql.html">SQL</a><a>JSONPath</a><a>Suche</a>
+            </nav>
+            <span class="af-quelle">auf <span class="mono">bestellungen.json</span></span>
+            <span class="rechts">
+              <a class="knopf still" title="Frühere Abfragen"><i class="fa-solid fa-clock-rotate-left"></i><span class="af-breit">Abfragen-Verlauf</span></a>
+              <a class="knopf still nur-symbol" href="arbeitsplatz.html" title="Abfrage einklappen"><i class="fa-solid fa-chevron-down"></i></a>
+            </span>
+          </div>
+
+          <div class="af-rumpf">
+            <div class="af-fach">
+              <div class="af-fach-kopf"><span class="af-etikett">Ausdruck</span><span class="rechts"><span class="abzeichen gut"><i class="fa-solid fa-check"></i> gültig</span></span></div>
+              <div class="af-editor" role="textbox" aria-label="jq-Ausdruck">
+                <div class="af-zeile"><span class="af-zn">1</span><code><span class="af-s-feld">.bestellungen</span><span class="af-s-op">[]</span></code></div>
+                <div class="af-zeile"><span class="af-zn">2</span><code><span class="af-s-op">|</span> <span class="af-s-fn">select</span><span class="af-s-klammer">(</span><span class="af-s-feld">.bezahlt</span> <span class="af-s-op">|</span> <span class="af-s-fn">not</span><span class="af-s-klammer">)</span></code></div>
+                <div class="af-zeile aktiv"><span class="af-zn">3</span><code><span class="af-s-op">|</span> <span class="af-s-klammer">{</span><span class="af-s-schl">nr</span>, <span class="af-s-schl">kunde</span>: <span class="af-s-feld">.kunde.name</span>, <span class="af-s-schl">summe</span>: <span class="af-s-klammer">([</span><span class="af-s-feld">.positionen</span><span class="af-s-op">[]</span> <span class="af-s-op">|</span> <span class="af-s-feld">.menge</span> <span class="af-s-op">*</span> <span class="af-s-feld">.preis</span><span class="af-s-klammer">]</span> <span class="af-s-op">|</span> <span class="af-s-fn">add</span><span class="af-s-klammer">)}</span><span class="af-schreibmarke"></span></code></div>
+              </div>
+              <div class="af-hinweis">Ergebnis beim Tippen. <span class="taste">Tab</span> ergänzt Namen, <span class="taste">⌘</span><span class="taste">Enter</span> legt ein neues Dokument an.</div>
+            </div>
+
+            <div class="af-fach">
+              <div class="af-fach-kopf">
+                <span class="af-etikett">Ergebnis</span>
+                <span class="abzeichen gut"><i class="fa-solid fa-bolt"></i> aktuell, 12 ms</span><span class="text-3 klein">7 Ergebnisse</span>
+                <span class="rechts"><button class="knopf still nur-symbol" title="Ergebnis kopieren"><i class="fa-solid fa-copy"></i></button></span>
+              </div>
+              <div class="af-json">
+                <div class="af-stueck"><span class="af-stueck-nr">1</span><pre><span class="af-s-klammer">{</span>
+  <span class="af-s-schl">"nr"</span>: <span class="w-text">"B-24019"</span>,
+  <span class="af-s-schl">"kunde"</span>: <span class="w-text">"Ole Hansen"</span>,
+  <span class="af-s-schl">"summe"</span>: <span class="w-zahl">23.7</span>
+<span class="af-s-klammer">}</span></pre></div>
+                <div class="af-stueck"><span class="af-stueck-nr">2</span><pre><span class="af-s-klammer">{</span>
+  <span class="af-s-schl">"nr"</span>: <span class="w-text">"B-24021"</span>,
+  <span class="af-s-schl">"kunde"</span>: <span class="w-text">"Karl Weiß"</span>,
+  <span class="af-s-schl">"summe"</span>: <span class="w-zahl">41.38</span>
+<span class="af-s-klammer">}</span></pre></div>
+                <div class="af-stueck"><span class="af-stueck-nr">3</span><pre><span class="af-s-klammer">{</span>
+  <span class="af-s-schl">"nr"</span>: <span class="w-text">"B-24026"</span>,
+  <span class="af-s-schl">"kunde"</span>: <span class="w-text">"Svenja Albrecht"</span>,
+  <span class="af-s-schl">"summe"</span>: <span class="w-zahl">18.6</span>
+<span class="af-s-klammer">}</span></pre></div>
+                <div class="af-stueck"><span class="af-stueck-nr">4</span><pre><span class="af-s-klammer">{</span>
+  <span class="af-s-schl">"nr"</span>: <span class="w-text">"B-24031"</span>,
+  <span class="af-s-schl">"kunde"</span>: <span class="w-text">"Mehmet Yilmaz"</span>,
+  <span class="af-s-schl">"summe"</span>: <span class="w-zahl">64.15</span>
+<span class="af-s-klammer">}</span></pre></div>
+                <div class="af-stueck"><span class="af-stueck-nr">5</span><pre><span class="af-s-klammer">{</span>
+  <span class="af-s-schl">"nr"</span>: <span class="w-text">"B-24038"</span>,
+  <span class="af-s-schl">"kunde"</span>: <span class="w-text">"Lena Hoffmann"</span>,
+  <span class="af-s-schl">"summe"</span>: <span class="w-zahl">12.95</span>
+<span class="af-s-klammer">}</span></pre></div>
+                <div class="af-stueck"><span class="af-stueck-nr">6</span><pre><span class="af-s-klammer">{</span>
+  <span class="af-s-schl">"nr"</span>: <span class="w-text">"B-24052"</span>,
+  <span class="af-s-schl">"kunde"</span>: <span class="w-text">"Thomas Becker"</span>,
+  <span class="af-s-schl">"summe"</span>: <span class="w-zahl">87.4</span>
+<span class="af-s-klammer">}</span></pre></div>
+                <div class="af-stueck"><span class="af-stueck-nr">7</span><pre><span class="af-s-klammer">{</span>
+  <span class="af-s-schl">"nr"</span>: <span class="w-text">"B-24063"</span>,
+  <span class="af-s-schl">"kunde"</span>: <span class="w-text">"Ines Vogel"</span>,
+  <span class="af-s-schl">"summe"</span>: <span class="w-zahl">9.8</span>
+<span class="af-s-klammer">}</span></pre></div>
+                <div class="af-ende">Ende, 7 Ergebnisse aus 128 Bestellungen</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="af-fuss">
+            <button class="knopf"><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>
+            <a class="knopf" href="tabelle.html"><i class="fa-solid fa-table"></i> Als Tabelle</a>
+            <button class="knopf"><i class="fa-solid fa-bookmark"></i> In den Verlauf</button>
+            <a class="knopf" href="rezepte.html"><i class="fa-solid fa-scroll"></i> Speichern als Rezeptschritt</a>
+          </div>
+        </section>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+
+          <div class="karte">
+            <div class="karte-titel">Treffer 1 von 7 <span class="rechts abzeichen">Objekt</span></div>
+            <div class="mono text-3" style="font-size: var(--klein); margin-bottom: 8px">.bestellungen[2]</div>
+            <dl class="paare">
+              <dt>nr</dt><dd class="mono">B-24019</dd>
+              <dt>kunde</dt><dd class="mono">Ole Hansen</dd>
+              <dt>summe</dt><dd class="mono">23.7</dd>
+              <dt>Grund</dt><dd class="mono">bezahlt <span class="w-bool">false</span></dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">jq kurz</div>
+            <dl class="paare">
+              <dt class="mono">.name</dt><dd>Feld lesen</dd>
+              <dt class="mono">.[]</dt><dd>Jeden Eintrag einer Liste</dd>
+              <dt class="mono">select(b)</dt><dd>Nur wenn b wahr ist</dd>
+              <dt class="mono">map(f)</dt><dd>f auf jeden Eintrag</dd>
+              <dt class="mono">add</dt><dd>Zusammenzählen</dd>
+              <dt class="mono">length</dt><dd>Anzahl</dd>
+              <dt class="mono">group_by(.f)</dt><dd>Nach Feld gruppieren</dd>
+            </dl>
+            <div class="knopf-reihe" style="margin-top: 10px">
+              <a class="knopf" href="lexikon.html"><i class="fa-solid fa-book-open"></i> Mehr im Lexikon</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

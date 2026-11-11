@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Validieren</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/werkzeuge.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag aktiv" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment" aria-label="Offenes Werkzeug">
+            <a class="aktiv"><i class="fa-solid fa-clipboard-check"></i><span>Validieren</span> <i class="fa-solid fa-xmark" title="Werkzeug schließen"></i></a>
+          </nav>
+        </div>
+
+        <!-- Schema wählen. In der Fassung ohne Server heißt "Ablage" dort "Datei" (Datei öffnen). -->
+        <div class="wz-optionen">
+          <div class="wz-option">
+            <span class="wz-etikett">Schema</span>
+            <nav class="segment" aria-label="Herkunft des Schemas">
+              <a title="Ein geöffnetes Dokument als Schema nehmen"><i class="fa-solid fa-file-code"></i><span>Offenes Dokument</span></a>
+              <a class="aktiv"><i class="fa-solid fa-folder-open"></i><span>Ablage</span></a>
+              <a title="Schema aus den 128 Bestellungen ableiten"><i class="fa-solid fa-ruler-combined"></i><span>Aus den Daten</span></a>
+            </nav>
+          </div>
+          <div class="wz-option">
+            <button class="knopf" title="Anderes Schema aus der Ablage wählen"><i class="fa-solid fa-file-shield"></i><span class="mono">Schnittstellen / bestellung.schema.json</span><i class="fa-solid fa-caret-down text-3"></i></button>
+          </div>
+          <div class="rechts">
+            <button class="knopf" title="Nach einem Wechsel des Schemas"><i class="fa-solid fa-rotate"></i> Erneut prüfen</button>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="wz-flaeche">
+            <div class="wz-raster wz-liste-breit">
+              <!-- Befunde -->
+              <section class="wz-tafel">
+                <div class="wz-tafel-kopf">
+                  <i class="fa-solid fa-list-check"></i> Befunde
+                  <span class="rechts">
+                    <nav class="segment" aria-label="Befunde filtern">
+                      <a class="aktiv">Alle <span class="mono">3</span></a>
+                      <a>Fehler <span class="mono">2</span></a>
+                      <a>Warnungen <span class="mono">1</span></a>
+                    </nav>
+                  </span>
+                </div>
+                <div class="wz-tafel-feld">
+                  <a class="wz-befund gewaehlt" title="Springt zur Stelle in Editor und Baum">
+                    <i class="fa-solid fa-circle-xmark wz-symbol fehler"></i>
+                    <div class="wz-befund-kopf"><span class="abzeichen fehler">Fehler</span><span class="wz-pfad">/bestellungen/37/kunde/plz</span></div>
+                    <div class="wz-meldung">PLZ hat 4 statt 5 Ziffern</div>
+                    <dl class="wz-soll-ist">
+                      <dt>Erwartet</dt><dd>Text aus 5 Ziffern <span class="mono text-3">pattern ^[0-9]{5}$</span></dd>
+                      <dt>Gefunden</dt><dd class="mono w-text">"4109"</dd>
+                    </dl>
+                    <div class="wz-befund-fuss"><span>B-24054, Henrik Lange</span><span class="mono">Zeile 985, Spalte 16</span></div>
+                  </a>
+                  <a class="wz-befund" title="Springt zur Stelle in Editor und Baum">
+                    <i class="fa-solid fa-circle-xmark wz-symbol fehler"></i>
+                    <div class="wz-befund-kopf"><span class="abzeichen fehler">Fehler</span><span class="wz-pfad">/bestellungen/52/positionen/1/menge</span></div>
+                    <div class="wz-meldung">Menge 0 ist kleiner als das Minimum 1</div>
+                    <dl class="wz-soll-ist">
+                      <dt>Erwartet</dt><dd>ganze Zahl ab 1 <span class="mono text-3">minimum 1</span></dd>
+                      <dt>Gefunden</dt><dd class="mono w-zahl">0</dd>
+                    </dl>
+                    <div class="wz-befund-fuss"><span>B-24069, Hofeier 10 Stück</span><span class="mono">Zeile 1392, Spalte 20</span></div>
+                  </a>
+                  <a class="wz-befund" title="Springt zur Stelle in Editor und Baum">
+                    <i class="fa-solid fa-triangle-exclamation wz-symbol warn"></i>
+                    <div class="wz-befund-kopf"><span class="abzeichen warn">Warnung</span><span class="wz-pfad">/bestellungen/103/datum</span></div>
+                    <div class="wz-meldung">Datum nicht im Format JJJJ-MM-TT</div>
+                    <dl class="wz-soll-ist">
+                      <dt>Erwartet</dt><dd>Datum wie <span class="mono w-text">"2026-11-10"</span> <span class="mono text-3">format date</span></dd>
+                      <dt>Gefunden</dt><dd class="mono w-text">"10.11.2026"</dd>
+                    </dl>
+                    <div class="wz-befund-fuss"><span>Nur Warnung: format ist im Schema ein Hinweis, keine Pflicht</span><span class="mono">Zeile 2722, Spalte 16</span></div>
+                  </a>
+                </div>
+              </section>
+
+              <!-- Ausschnitt an der Fundstelle -->
+              <section class="wz-tafel">
+                <div class="wz-tafel-kopf">
+                  <i class="fa-solid fa-location-crosshairs"></i> Fundstelle
+                  <span class="rechts">
+                    <nav class="segment" aria-label="Fundstelle zeigen in">
+                      <a class="aktiv"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+                      <a><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+                    </nav>
+                    <a class="knopf" href="editor.html" title="Editor an dieser Stelle öffnen"><i class="fa-solid fa-arrow-up-right-from-square"></i> Öffnen</a>
+                  </span>
+                </div>
+                <div class="wz-tafel-feld wz-mulde">
+                  <div class="wz-code">
+                    <div class="wz-ausgelassen">Zeile 1 bis 979</div>
+                    <div class="wz-z"><span class="wz-nr">980</span><span class="wz-t">    {</span></div>
+                    <div class="wz-z"><span class="wz-nr">981</span><span class="wz-t">      <span class="wz-schl">"nr"</span><span class="wz-trenn">:</span> <span class="w-text">"B-24054"</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">982</span><span class="wz-t">      <span class="wz-schl">"datum"</span><span class="wz-trenn">:</span> <span class="w-text">"2026-11-09"</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">983</span><span class="wz-t">      <span class="wz-schl">"kunde"</span><span class="wz-trenn">:</span> {</span></div>
+                    <div class="wz-z"><span class="wz-nr">984</span><span class="wz-t">        <span class="wz-schl">"name"</span><span class="wz-trenn">:</span> <span class="w-text">"Henrik Lange"</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z wz-markiert"><span class="wz-nr">985</span><span class="wz-t">        <span class="wz-schl">"plz"</span><span class="wz-trenn">:</span> <span class="w-text wz-falsch">"4109"</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-anmerkung"><i class="fa-solid fa-circle-xmark"></i><span>PLZ hat 4 statt 5 Ziffern. Vermutlich fehlt die führende Null: <span class="mono">"04109"</span>.</span></div>
+                    <div class="wz-z"><span class="wz-nr">986</span><span class="wz-t">        <span class="wz-schl">"stadt"</span><span class="wz-trenn">:</span> <span class="w-text">"Leipzig"</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">987</span><span class="wz-t">      },</span></div>
+                    <div class="wz-z"><span class="wz-nr">988</span><span class="wz-t">      <span class="wz-schl">"positionen"</span><span class="wz-trenn">:</span> [</span></div>
+                    <div class="wz-z"><span class="wz-nr">989</span><span class="wz-t">        {</span></div>
+                    <div class="wz-z"><span class="wz-nr">990</span><span class="wz-t">          <span class="wz-schl">"artikel"</span><span class="wz-trenn">:</span> <span class="w-text">"Bergkäse 300 g"</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">991</span><span class="wz-t">          <span class="wz-schl">"menge"</span><span class="wz-trenn">:</span> <span class="w-zahl">2</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">992</span><span class="wz-t">          <span class="wz-schl">"preis"</span><span class="wz-trenn">:</span> <span class="w-zahl">6.9</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">993</span><span class="wz-t">        },</span></div>
+                    <div class="wz-z"><span class="wz-nr">994</span><span class="wz-t">        {</span></div>
+                    <div class="wz-z"><span class="wz-nr">995</span><span class="wz-t">          <span class="wz-schl">"artikel"</span><span class="wz-trenn">:</span> <span class="w-text">"Hofeier 10 Stück"</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">996</span><span class="wz-t">          <span class="wz-schl">"menge"</span><span class="wz-trenn">:</span> <span class="w-zahl">1</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">997</span><span class="wz-t">          <span class="wz-schl">"preis"</span><span class="wz-trenn">:</span> <span class="w-zahl">3.8</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">998</span><span class="wz-t">        }</span></div>
+                    <div class="wz-z"><span class="wz-nr">999</span><span class="wz-t">      ],</span></div>
+                    <div class="wz-z"><span class="wz-nr">1000</span><span class="wz-t">      <span class="wz-schl">"bezahlt"</span><span class="wz-trenn">:</span> <span class="w-bool">false</span><span class="wz-trenn">,</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">1001</span><span class="wz-t">      <span class="wz-schl">"notiz"</span><span class="wz-trenn">:</span> <span class="w-null">null</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">1002</span><span class="wz-t">    },</span></div>
+                    <div class="wz-ausgelassen">ab Zeile 1003</div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="wz-aktionen">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>125 von 128 Bestellungen ohne Befund. Prüft nach jeder Änderung neu.</span>
+          <span class="rechts">
+            <button class="knopf"><i class="fa-solid fa-download"></i> Bericht herunterladen</button>
+          </span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewählter Befund <span class="rechts abzeichen fehler">Fehler</span></div>
+            <div class="wertfeld w-text">"4109"</div>
+            <dl class="paare" style="margin: 10px 0 0">
+              <dt>Regel</dt><dd class="mono">pattern ^[0-9]{5}$</dd>
+              <dt>Im Schema</dt><dd class="mono">#/$defs/kunde/properties/plz</dd>
+              <dt>Bestellung</dt><dd>B-24054, Henrik Lange, Leipzig</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Beheben</div>
+            <p class="wz-satz">Nur diese Stelle: gilt sofort, Rückgängig im Kopf.</p>
+            <div class="knopf-reihe wz-abstand">
+              <button class="knopf"><i class="fa-solid fa-wrench"></i> Auf "04109" setzen</button>
+            </div>
+            <p class="wz-satz wz-abstand">Alle PLZ im Dokument: mit Vorschau.</p>
+            <div class="knopf-reihe wz-abstand">
+              <a class="knopf" href="rezepte.html"><i class="fa-solid fa-scroll"></i> Rezept PLZ fünfstellig</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Schema</div>
+            <dl class="paare">
+              <dt>Datei</dt><dd class="mono">bestellung.schema.json</dd>
+              <dt>Ablage</dt><dd>Schnittstellen auf pi5b</dd>
+              <dt>Fassung</dt><dd>JSON Schema 2020-12</dd>
+              <dt>Geprüft</dt><dd>128 Bestellungen in 0,2 s</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Im Browser</div>
+            <p class="wz-satz">Die Prüfung rechnet ganz in diesem Browser; dafür gehen keine Daten an den Server.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-xmark" style="color: var(--fehler)"></i> Schema: 2 Fehler, 1 Warnung</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Code erzeugen</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/werkzeuge.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag aktiv" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment" aria-label="Offenes Werkzeug">
+            <a class="aktiv"><i class="fa-solid fa-code"></i><span>Code erzeugen</span> <i class="fa-solid fa-xmark" title="Werkzeug schließen"></i></a>
+          </nav>
+        </div>
+
+        <div class="wz-optionen">
+          <div class="wz-option">
+            <span class="wz-etikett">Ziel</span>
+            <nav class="segment" aria-label="Zielsprache">
+              <a class="aktiv">PHP 8.4</a>
+              <a>TypeScript</a>
+              <a>Python (Pydantic)</a>
+              <a>Python (dataclasses)</a>
+            </nav>
+          </div>
+          <div class="wz-option">
+            <span class="wz-etikett">Aus</span>
+            <nav class="segment" aria-label="Quelle">
+              <a title="Typen aus den 128 Bestellungen ableiten">Daten</a>
+              <a class="aktiv" title="Schnittstellen / bestellung.schema.json">Schema</a>
+            </nav>
+          </div>
+        </div>
+        <div class="wz-optionen">
+          <div class="wz-option">
+            <span class="wz-etikett">Wurzelname</span>
+            <label class="feld wz-breite-kurz"><input value="Bestellungen" aria-label="Wurzelname" /></label>
+          </div>
+          <div class="wz-option">
+            <span class="wz-etikett">Namensraum</span>
+            <label class="feld wz-breite-mittel"><input value="Lindenhof\Bestellungen" aria-label="Namensraum" /></label>
+          </div>
+          <div class="wz-option">
+            <span class="wz-etikett">Klassen</span>
+            <nav class="segment" aria-label="Klassen">
+              <a class="aktiv" title="final readonly class">readonly</a>
+              <a>veränderbar</a>
+            </nav>
+          </div>
+          <div class="wz-option">
+            <span class="wz-etikett">Dateien</span>
+            <nav class="segment" aria-label="Dateien">
+              <a class="aktiv">Eine</a>
+              <a title="Je Klasse eine Datei nach PSR-4, als ZIP">Je Klasse</a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="wz-flaeche">
+            <section class="wz-tafel wz-fuellt">
+              <div class="wz-tafel-kopf">
+                <i class="fa-solid fa-file-code"></i> <span class="mono">Bestellungen.php</span>
+                <span class="rechts"><span class="abzeichen">4 Klassen</span><span class="abzeichen zweit">111 Zeilen</span></span>
+              </div>
+              <div class="wz-tafel-feld wz-mulde">
+                <div class="wz-code">
+                    <div class="wz-z"><span class="wz-nr">1</span><span class="wz-t"><span class="wz-sw">&lt;?php</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">2</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">3</span><span class="wz-t"><span class="wz-sw">declare</span>(strict_types=<span class="w-zahl">1</span>);</span></div>
+                    <div class="wz-z"><span class="wz-nr">4</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">5</span><span class="wz-t"><span class="wz-sw">namespace</span> <span class="wz-typ">Lindenhof\Bestellungen</span>;</span></div>
+                    <div class="wz-z"><span class="wz-nr">6</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">7</span><span class="wz-t"><span class="wz-sw">use</span> <span class="wz-typ">DateTimeImmutable</span>;</span></div>
+                    <div class="wz-z"><span class="wz-nr">8</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">9</span><span class="wz-t"><span class="wz-kom">// Erzeugt von Strukturblick 2.0.0 aus bestellung.schema.json</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">10</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">11</span><span class="wz-t"><span class="wz-sw">final</span> <span class="wz-sw">readonly</span> <span class="wz-sw">class</span> <span class="wz-typ">Bestellungen</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">12</span><span class="wz-t">{</span></div>
+                    <div class="wz-z"><span class="wz-nr">13</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">14</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">list&lt;Bestellung&gt;</span> $bestellungen</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">15</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">16</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">function</span> <span class="wz-fn">__construct</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">17</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">string</span> <span class="wz-var">$shop</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">18</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">DateTimeImmutable</span> <span class="wz-var">$stand</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">19</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">array</span> <span class="wz-var">$bestellungen</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">20</span><span class="wz-t">    ) {}</span></div>
+                    <div class="wz-z"><span class="wz-nr">21</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">22</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">23</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">array&lt;string, mixed&gt;</span> $daten</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">24</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">25</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">static</span> <span class="wz-sw">function</span> <span class="wz-fn">fromArray</span>(<span class="wz-typ">array</span> <span class="wz-var">$daten</span>): <span class="wz-typ">self</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">26</span><span class="wz-t">    {</span></div>
+                    <div class="wz-z"><span class="wz-nr">27</span><span class="wz-t">        <span class="wz-sw">return</span> <span class="wz-sw">new</span> <span class="wz-typ">self</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">28</span><span class="wz-t">            shop: <span class="wz-var">$daten</span>[<span class="w-text">'shop'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">29</span><span class="wz-t">            stand: <span class="wz-sw">new</span> <span class="wz-typ">DateTimeImmutable</span>(<span class="wz-var">$daten</span>[<span class="w-text">'stand'</span>]),</span></div>
+                    <div class="wz-z"><span class="wz-nr">30</span><span class="wz-t">            bestellungen: <span class="wz-fn">array_map</span>(<span class="wz-typ">Bestellung</span>::<span class="wz-fn">fromArray</span>(...), <span class="wz-var">$daten</span>[<span class="w-text">'bestellungen'</span>]),</span></div>
+                    <div class="wz-z"><span class="wz-nr">31</span><span class="wz-t">        );</span></div>
+                    <div class="wz-z"><span class="wz-nr">32</span><span class="wz-t">    }</span></div>
+                    <div class="wz-z"><span class="wz-nr">33</span><span class="wz-t">}</span></div>
+                    <div class="wz-z"><span class="wz-nr">34</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">35</span><span class="wz-t"><span class="wz-sw">final</span> <span class="wz-sw">readonly</span> <span class="wz-sw">class</span> <span class="wz-typ">Bestellung</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">36</span><span class="wz-t">{</span></div>
+                    <div class="wz-z"><span class="wz-nr">37</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">38</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">list&lt;Position&gt;</span> $positionen</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">39</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">40</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">function</span> <span class="wz-fn">__construct</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">41</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">string</span> <span class="wz-var">$nr</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">42</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">DateTimeImmutable</span> <span class="wz-var">$datum</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">43</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">Kunde</span> <span class="wz-var">$kunde</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">44</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">array</span> <span class="wz-var">$positionen</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">45</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">bool</span> <span class="wz-var">$bezahlt</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">46</span><span class="wz-t">        <span class="wz-sw">public</span> ?<span class="wz-typ">string</span> <span class="wz-var">$notiz</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">47</span><span class="wz-t">    ) {}</span></div>
+                    <div class="wz-z"><span class="wz-nr">48</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">49</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">50</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">array&lt;string, mixed&gt;</span> $daten</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">51</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">52</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">static</span> <span class="wz-sw">function</span> <span class="wz-fn">fromArray</span>(<span class="wz-typ">array</span> <span class="wz-var">$daten</span>): <span class="wz-typ">self</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">53</span><span class="wz-t">    {</span></div>
+                    <div class="wz-z"><span class="wz-nr">54</span><span class="wz-t">        <span class="wz-sw">return</span> <span class="wz-sw">new</span> <span class="wz-typ">self</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">55</span><span class="wz-t">            nr: <span class="wz-var">$daten</span>[<span class="w-text">'nr'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">56</span><span class="wz-t">            datum: <span class="wz-sw">new</span> <span class="wz-typ">DateTimeImmutable</span>(<span class="wz-var">$daten</span>[<span class="w-text">'datum'</span>]),</span></div>
+                    <div class="wz-z"><span class="wz-nr">57</span><span class="wz-t">            kunde: <span class="wz-typ">Kunde</span>::<span class="wz-fn">fromArray</span>(<span class="wz-var">$daten</span>[<span class="w-text">'kunde'</span>]),</span></div>
+                    <div class="wz-z"><span class="wz-nr">58</span><span class="wz-t">            positionen: <span class="wz-fn">array_map</span>(<span class="wz-typ">Position</span>::<span class="wz-fn">fromArray</span>(...), <span class="wz-var">$daten</span>[<span class="w-text">'positionen'</span>]),</span></div>
+                    <div class="wz-z"><span class="wz-nr">59</span><span class="wz-t">            bezahlt: <span class="wz-var">$daten</span>[<span class="w-text">'bezahlt'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">60</span><span class="wz-t">            notiz: <span class="wz-var">$daten</span>[<span class="w-text">'notiz'</span>] ?? <span class="wz-sw">null</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">61</span><span class="wz-t">        );</span></div>
+                    <div class="wz-z"><span class="wz-nr">62</span><span class="wz-t">    }</span></div>
+                    <div class="wz-z"><span class="wz-nr">63</span><span class="wz-t">}</span></div>
+                    <div class="wz-z"><span class="wz-nr">64</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">65</span><span class="wz-t"><span class="wz-sw">final</span> <span class="wz-sw">readonly</span> <span class="wz-sw">class</span> <span class="wz-typ">Kunde</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">66</span><span class="wz-t">{</span></div>
+                    <div class="wz-z"><span class="wz-nr">67</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">68</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">non-empty-string</span> $plz fünf Ziffern als Text, etwa "04109"</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">69</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">70</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">function</span> <span class="wz-fn">__construct</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">71</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">string</span> <span class="wz-var">$name</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">72</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">string</span> <span class="wz-var">$plz</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">73</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">string</span> <span class="wz-var">$stadt</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">74</span><span class="wz-t">    ) {}</span></div>
+                    <div class="wz-z"><span class="wz-nr">75</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">76</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">77</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">array&lt;string, mixed&gt;</span> $daten</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">78</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">79</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">static</span> <span class="wz-sw">function</span> <span class="wz-fn">fromArray</span>(<span class="wz-typ">array</span> <span class="wz-var">$daten</span>): <span class="wz-typ">self</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">80</span><span class="wz-t">    {</span></div>
+                    <div class="wz-z"><span class="wz-nr">81</span><span class="wz-t">        <span class="wz-sw">return</span> <span class="wz-sw">new</span> <span class="wz-typ">self</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">82</span><span class="wz-t">            name: <span class="wz-var">$daten</span>[<span class="w-text">'name'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">83</span><span class="wz-t">            plz: <span class="wz-var">$daten</span>[<span class="w-text">'plz'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">84</span><span class="wz-t">            stadt: <span class="wz-var">$daten</span>[<span class="w-text">'stadt'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">85</span><span class="wz-t">        );</span></div>
+                    <div class="wz-z"><span class="wz-nr">86</span><span class="wz-t">    }</span></div>
+                    <div class="wz-z"><span class="wz-nr">87</span><span class="wz-t">}</span></div>
+                    <div class="wz-z"><span class="wz-nr">88</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">89</span><span class="wz-t"><span class="wz-sw">final</span> <span class="wz-sw">readonly</span> <span class="wz-sw">class</span> <span class="wz-typ">Position</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">90</span><span class="wz-t">{</span></div>
+                    <div class="wz-z"><span class="wz-nr">91</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">92</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">positive-int</span> $menge</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">93</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">94</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">function</span> <span class="wz-fn">__construct</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">95</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">string</span> <span class="wz-var">$artikel</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">96</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">int</span> <span class="wz-var">$menge</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">97</span><span class="wz-t">        <span class="wz-sw">public</span> <span class="wz-typ">float</span> <span class="wz-var">$preis</span>,</span></div>
+                    <div class="wz-z"><span class="wz-nr">98</span><span class="wz-t">    ) {}</span></div>
+                    <div class="wz-z"><span class="wz-nr">99</span><span class="wz-t"></span></div>
+                    <div class="wz-z"><span class="wz-nr">100</span><span class="wz-t">    <span class="wz-kom">/**</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">101</span><span class="wz-t">     <span class="wz-kom">* <span class="wz-sw">@param</span> <span class="wz-typ">array&lt;string, mixed&gt;</span> $daten</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">102</span><span class="wz-t">     <span class="wz-kom">*/</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">103</span><span class="wz-t">    <span class="wz-sw">public</span> <span class="wz-sw">static</span> <span class="wz-sw">function</span> <span class="wz-fn">fromArray</span>(<span class="wz-typ">array</span> <span class="wz-var">$daten</span>): <span class="wz-typ">self</span></span></div>
+                    <div class="wz-z"><span class="wz-nr">104</span><span class="wz-t">    {</span></div>
+                    <div class="wz-z"><span class="wz-nr">105</span><span class="wz-t">        <span class="wz-sw">return</span> <span class="wz-sw">new</span> <span class="wz-typ">self</span>(</span></div>
+                    <div class="wz-z"><span class="wz-nr">106</span><span class="wz-t">            artikel: <span class="wz-var">$daten</span>[<span class="w-text">'artikel'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">107</span><span class="wz-t">            menge: <span class="wz-var">$daten</span>[<span class="w-text">'menge'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">108</span><span class="wz-t">            preis: <span class="wz-var">$daten</span>[<span class="w-text">'preis'</span>],</span></div>
+                    <div class="wz-z"><span class="wz-nr">109</span><span class="wz-t">        );</span></div>
+                    <div class="wz-z"><span class="wz-nr">110</span><span class="wz-t">    }</span></div>
+                    <div class="wz-z"><span class="wz-nr">111</span><span class="wz-t">}</span></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="wz-aktionen">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Grenzen aus dem Schema stehen als PHPDoc am Feld.</span>
+          <span class="rechts">
+            <button class="knopf"><i class="fa-solid fa-copy"></i> Kopieren</button>
+            <button class="knopf primaer"><i class="fa-solid fa-download"></i> Herunterladen</button>
+          </span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Erzeugt <span class="rechts abzeichen">PHP 8.4</span></div>
+            <dl class="paare">
+              <dt>Klassen</dt><dd>Bestellungen, Bestellung, Kunde, Position</dd>
+              <dt>Quelle</dt><dd class="mono">bestellung.schema.json</dd>
+              <dt>Datei</dt><dd class="mono">Bestellungen.php</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Vom Schema zum Typ</div>
+            <dl class="paare">
+              <dt class="mono">notiz</dt><dd><span class="mono">?string</span>, darf null sein</dd>
+              <dt class="mono">plz</dt><dd><span class="mono">string</span>, bleibt Text wegen der führenden Null</dd>
+              <dt class="mono">menge</dt><dd><span class="mono">int</span>, im PHPDoc <span class="mono">positive-int</span></dd>
+              <dt class="mono">preis</dt><dd><span class="mono">float</span></dd>
+              <dt class="mono">datum</dt><dd><span class="mono">DateTimeImmutable</span>, aus format date</dd>
+              <dt class="mono">positionen</dt><dd><span class="mono">array</span>, im PHPDoc <span class="mono">list&lt;Position&gt;</span></dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Einlesen</div>
+            <div class="wertfeld klein" style="font-size: var(--klein)">$daten = json_decode($json, true, flags: JSON_THROW_ON_ERROR);<br />$bestellungen = Bestellungen::fromArray($daten);</div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Im Browser</div>
+            <p class="wz-satz">Der Code entsteht ganz in diesem Browser; dafür gehen keine Daten an den Server.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

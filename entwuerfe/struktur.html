@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Struktur</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/ansichten.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a class="aktiv"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+        </div>
+        <div class="werkzeugzeile an-umbruch">
+          <div class="an-legende">
+            <span><b class="an-pflicht">*</b> in jedem Eintrag</span>
+            <span><span class="an-kante-zahl">1</span> genau eines</span>
+            <span><span class="an-kante-zahl">0..n</span> beliebig viele</span>
+          </div>
+          <div class="rechts">
+            <div class="an-zoom" title="Zoom">
+              <button class="knopf nur-symbol" title="Verkleinern"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+              <span class="an-zoom-wert">100 %</span>
+              <button class="knopf nur-symbol" title="Vergrößern"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+              <button class="knopf" title="Ganzes Diagramm ins Feld einpassen"><i class="fa-solid fa-expand"></i> Einpassen</button>
+            </div>
+            <button class="knopf primaer"><i class="fa-solid fa-file-export"></i> Als JSON Schema</button>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="an-leinwand an-weit">
+            <div class="an-zweig">
+              <!-- Wurzel -->
+              <div class="an-tk">
+                <div class="an-tk-kopf"><i class="fa-solid fa-cube w-objekt"></i><span class="an-tk-name">Wurzel</span><span class="an-tk-zahl" title="Vorkommen"><i class="fa-solid fa-layer-group"></i>1</span></div>
+                <div class="an-tk-felder">
+                  <span class="an-tk-feld">shop</span><span class="w-text">Text</span><span class="an-pflicht">*</span>
+                  <span class="an-tk-feld">stand</span><span class="w-text">Datum und Zeit</span><span class="an-pflicht">*</span>
+                  <span class="an-tk-feld">bestellungen</span><span class="w-liste">Liste von Bestellung</span><span class="an-pflicht">*</span>
+                </div>
+              </div>
+              <div class="an-kinder">
+                <div class="an-zweig">
+                  <span class="an-kante" title="Feld bestellungen"><span class="an-kante-zahl">0..n</span></span>
+                  <!-- Bestellung (gewählt) -->
+                  <div class="an-tk an-gewaehlt" aria-selected="true">
+                    <div class="an-tk-kopf"><i class="fa-solid fa-cube w-objekt"></i><span class="an-tk-name">Bestellung</span><span class="an-tk-zahl" title="Vorkommen"><i class="fa-solid fa-layer-group"></i>128</span></div>
+                    <div class="an-tk-felder">
+                      <span class="an-tk-feld" title="Schlüssel, eindeutig">nr <i class="fa-solid fa-key"></i></span><span class="w-text">Text</span><span class="an-pflicht">*</span>
+                      <span class="an-tk-feld">datum</span><span class="w-text">Datum</span><span class="an-pflicht">*</span>
+                      <span class="an-tk-feld">kunde</span><span class="w-objekt">Kunde</span><span class="an-pflicht">*</span>
+                      <span class="an-tk-feld">positionen</span><span class="w-liste">Liste von Position</span><span class="an-pflicht">*</span>
+                      <span class="an-tk-feld">bezahlt</span><span class="w-bool">Wahrheitswert</span><span class="an-pflicht">*</span>
+                      <span class="an-tk-feld">notiz</span><span><span class="w-text">Text oder Null</span> <span class="an-tk-anmerkung">97 von 128</span></span><span></span>
+                    </div>
+                  </div>
+                  <div class="an-kinder">
+                    <div class="an-zweig">
+                      <span class="an-kante" title="Feld kunde"><span class="an-kante-zahl">1</span></span>
+                      <!-- Kunde -->
+                      <div class="an-tk">
+                        <div class="an-tk-kopf"><i class="fa-solid fa-cube w-objekt"></i><span class="an-tk-name">Kunde</span><span class="an-tk-zahl" title="Vorkommen"><i class="fa-solid fa-layer-group"></i>128</span></div>
+                        <div class="an-tk-felder">
+                          <span class="an-tk-feld">name</span><span class="w-text">Text</span><span class="an-pflicht">*</span>
+                          <span class="an-tk-feld">plz</span><span class="w-text">Text, nur Ziffern</span><span class="an-pflicht">*</span>
+                          <span class="an-tk-feld">stadt</span><span class="w-text">Text</span><span class="an-pflicht">*</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="an-zweig">
+                      <span class="an-kante" title="Feld positionen"><span class="an-kante-zahl">0..n</span></span>
+                      <!-- Position -->
+                      <div class="an-tk">
+                        <div class="an-tk-kopf"><i class="fa-solid fa-cube w-objekt"></i><span class="an-tk-name">Position</span><span class="an-tk-zahl" title="Vorkommen"><i class="fa-solid fa-layer-group"></i>342</span></div>
+                        <div class="an-tk-felder">
+                          <span class="an-tk-feld">artikel</span><span class="w-text">Text</span><span class="an-pflicht">*</span>
+                          <span class="an-tk-feld">menge</span><span class="w-zahl">Zahl, ganz</span><span class="an-pflicht">*</span>
+                          <span class="an-tk-feld">preis</span><span class="w-zahl">Zahl</span><span class="an-pflicht">*</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Abfrage, eingeklappt -->
+        <div class="konsole-leiste">
+          <i class="fa-solid fa-terminal"></i>
+          <div class="segment">
+            <a class="aktiv">jq</a><a>SQL</a><a>JSONPath</a><a>Suche</a>
+          </div>
+          <span class="mono text-3" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0">.bestellungen[] | select(.bezahlt | not) | .nr</span>
+          <span class="rechts"><span class="abzeichen">7 Treffer</span><a class="knopf" href="abfrage.html"><i class="fa-solid fa-chevron-up"></i> Öffnen</a></span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewählter Typ <span class="rechts abzeichen">Objekt</span></div>
+            <div class="wertfeld">Bestellung</div>
+            <dl class="paare an-oben">
+              <dt>Vorkommen</dt><dd>128, in <span class="mono">.bestellungen[]</span></dd>
+              <dt>Felder</dt><dd>6, davon 5 in jedem Eintrag</dd>
+              <dt>Schlüssel</dt><dd><span class="mono">nr</span>, eindeutig</dd>
+              <dt>Name</dt><dd>aus dem Listennamen abgeleitet</dd>
+            </dl>
+            <div class="knopf-reihe an-oben">
+              <button class="knopf"><i class="fa-solid fa-pen"></i> Umbenennen</button>
+              <a class="knopf" href="tabelle.html"><i class="fa-solid fa-table"></i> Als Tabelle</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Als JSON Schema <span class="rechts klein">Ausschnitt</span></div>
+<pre class="wertfeld an-code-block">"Bestellung": {
+  "type": "object",
+  "required": ["nr", "datum", "kunde",
+    "positionen", "bezahlt"],
+  "properties": {
+    "nr": { "type": "string" },
+    "datum": { "type": "string",
+      "format": "date" },
+    "kunde": { "$ref": "#/$defs/Kunde" },
+    "positionen": { "type": "array",
+      "items": { "$ref": "#/$defs/Position" } },
+    "bezahlt": { "type": "boolean" },
+    "notiz": { "type": ["string", "null"] }
+  }
+}</pre>
+            <div class="knopf-reihe an-oben">
+              <button class="knopf"><i class="fa-solid fa-copy"></i> Kopieren</button>
+              <button class="knopf"><i class="fa-solid fa-download"></i> Herunterladen</button>
+              <a class="knopf" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i> Zum Validieren</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Abgeleitet</div>
+            <dl class="paare">
+              <dt>Typen</dt><dd>4</dd>
+              <dt>Felder</dt><dd>15</dd>
+              <dt>Grundlage</dt><dd>alle 2.621 Knoten</dd>
+            </dl>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

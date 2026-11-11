@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Strukturblick 2.0 - Telefon 2</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/erzeugen.css" />
+    <script src="entwurf.js"></script>
+    <style>
+      /* Nur für diese Entwurfsseite: die Entwurfsleiste sitzt oben rechts statt im Fuß. */
+      .entwurf-leiste { left: auto; right: 16px; translate: none; bottom: auto; top: 16px; }
+    </style>
+  </head>
+  <body>
+    <div class="buehne">
+      <!-- 5. Tabelle als Datensatz-Karten -->
+      <div>
+        <p class="buehne-titel">5. Tabelle am Telefon: je Zeile eine Karte mit den wichtigen Feldern, Filter als Chip, Blättern unten. Antippen öffnet die ganze Zeile.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <button class="knopf still" title="Zurück zu den Dokumenten"><i class="fa-solid fa-chevron-left"></i></button>
+            <h1>kunden.csv</h1>
+            <button class="knopf still" title="Felder auf den Karten wählen"><i class="fa-solid fa-sliders"></i></button>
+          </div>
+          <div class="tz-chips">
+            <button class="tz-chip"><span><span class="mono">ort</span>: Leipzig</span><span class="zu" title="Filter entfernen"><i class="fa-solid fa-xmark"></i></span></button>
+            <button class="tz-chip neu"><i class="fa-solid fa-plus"></i> Filter</button>
+            <button class="tz-chip neu"><i class="fa-solid fa-arrow-down-wide-short"></i> Umsatz</button>
+          </div>
+          <div class="t-inhalt">
+            <div class="tz-zaehler"><span><span class="mono">52</span> von <span class="mono">2.318</span> Zeilen</span><span class="rechts">nach Umsatz</span></div>
+            <div class="tz-hinweis"><i class="fa-solid fa-triangle-exclamation"></i><span>Genau so geschrieben. Dazu kommen leipzig, "Leipzig " und Lpz. <a href="bereinigen.html">Bereinigen</a></span></div>
+
+            <div class="t-karte-satz">
+              <a class="tz-satz">
+                <div class="tz-satz-kopf"><strong>Henrike Vogel</strong><span class="rechts">K-10088</span></div>
+                <dl class="tz-felder">
+                  <div><dt>plz, ort</dt><dd>04109 Leipzig</dd></div>
+                  <div><dt>umsatz</dt><dd class="w-zahl">4.812,30</dd></div>
+                  <div class="ganz"><dt>email</dt><dd>h.vogel@beispiel.de</dd></div>
+                </dl>
+              </a>
+            </div>
+            <div class="t-karte-satz">
+              <a class="tz-satz">
+                <div class="tz-satz-kopf"><strong>Marta Kowalski</strong><span class="rechts">K-11873</span></div>
+                <dl class="tz-felder">
+                  <div><dt>plz, ort</dt><dd>04109 Leipzig</dd></div>
+                  <div><dt>umsatz</dt><dd class="w-zahl">1.234,50</dd></div>
+                  <div class="ganz"><dt>email</dt><dd>marta.kowalski@beispiel.de</dd></div>
+                </dl>
+              </a>
+            </div>
+            <div class="t-karte-satz">
+              <a class="tz-satz">
+                <div class="tz-satz-kopf"><strong>Ole Hansen</strong><span class="rechts">K-11207</span></div>
+                <dl class="tz-felder">
+                  <div><dt>plz, ort</dt><dd>04315 Leipzig</dd></div>
+                  <div><dt>umsatz</dt><dd class="w-zahl">986,40</dd></div>
+                  <div class="ganz"><dt>email</dt><dd>ole.hansen@beispiel.de</dd></div>
+                </dl>
+              </a>
+            </div>
+            <div class="t-karte-satz">
+              <a class="tz-satz">
+                <div class="tz-satz-kopf"><strong>Petra Nguyen</strong><span class="rechts">K-10264</span></div>
+                <dl class="tz-felder">
+                  <div><dt>plz, ort</dt><dd>04277 Leipzig</dd></div>
+                  <div><dt>umsatz</dt><dd class="w-zahl">712,95</dd></div>
+                  <div class="ganz"><dt>email</dt><dd class="w-null">leer</dd></div>
+                </dl>
+              </a>
+            </div>
+            <div class="t-blaettern">
+              <button class="knopf" title="Vorige Seite" disabled><i class="fa-solid fa-arrow-left"></i></button>
+              <span class="mitte">1 bis 20 von 52</span>
+              <button class="knopf" title="Nächste Seite"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+          <nav class="t-reiter">
+            <a><i class="fa-solid fa-folder-open"></i>Dokumente</a>
+            <a class="aktiv"><i class="fa-solid fa-folder-tree"></i>Ansehen</a>
+            <a><i class="fa-solid fa-magnifying-glass"></i>Suchen</a>
+            <a><i class="fa-solid fa-ellipsis"></i>Mehr</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 6. Suchen -->
+      <div>
+        <p class="buehne-titel">6. Suchen: Volltext über das offene Dokument, je Treffer der Wert und sein Pfad. Antippen springt in Ansehen an die Stelle.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <h1 style="padding-left: 6px">Suchen</h1>
+            <span class="abzeichen">bestellungen.json</span>
+          </div>
+          <div class="t-inhalt">
+            <div class="t-suche"><label class="feld"><i class="fa-solid fa-magnifying-glass"></i><input value="apfelsaft" /><i class="fa-solid fa-circle-xmark" title="Suche leeren"></i></label></div>
+            <div class="tz-segment-reihe">
+              <div class="segment"><a class="aktiv">Werte</a><a>Schlüssel</a><a>Beides</a></div>
+            </div>
+            <div class="tz-zaehler"><span><span class="mono">23</span> Treffer in <span class="mono">21</span> Bestellungen</span><span class="rechts">groß/klein egal</span></div>
+            <div class="t-gruppe">Treffer</div>
+            <a class="t-zeile tz-treffer"><div class="t-text"><div class="t-wert w-text">"<mark>Apfelsaft</mark> naturtrüb 1 l"</div><div class="tz-pfad"><bdi>.bestellungen[1].positionen[0].artikel</bdi></div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile tz-treffer"><div class="t-text"><div class="t-wert w-text">"<mark>Apfelsaft</mark> naturtrüb 1 l"</div><div class="tz-pfad"><bdi>.bestellungen[4].positionen[1].artikel</bdi></div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile tz-treffer"><div class="t-text"><div class="t-wert w-text">"<mark>Apfelsaft</mark> klar 1 l"</div><div class="tz-pfad"><bdi>.bestellungen[9].positionen[0].artikel</bdi></div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile tz-treffer"><div class="t-text"><div class="t-wert w-text">"Kiste <mark>Apfelsaft</mark> bitte vor die Tür"</div><div class="tz-pfad"><bdi>.bestellungen[17].notiz</bdi></div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile tz-treffer"><div class="t-text"><div class="t-wert w-text">"<mark>Apfelsaft</mark> naturtrüb 1 l"</div><div class="tz-pfad"><bdi>.bestellungen[22].positionen[2].artikel</bdi></div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile tz-treffer"><div class="t-text"><div class="t-wert w-text">"<mark>Apfelsaft</mark>schorle 0,5 l"</div><div class="tz-pfad"><bdi>.bestellungen[30].positionen[0].artikel</bdi></div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <div class="t-blaettern"><span class="mitte text-3">6 von 23, weiter beim Rollen</span></div>
+          </div>
+          <nav class="t-reiter">
+            <a><i class="fa-solid fa-folder-open"></i>Dokumente</a>
+            <a><i class="fa-solid fa-folder-tree"></i>Ansehen</a>
+            <a class="aktiv"><i class="fa-solid fa-magnifying-glass"></i>Suchen</a>
+            <a><i class="fa-solid fa-ellipsis"></i>Mehr</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 7. Mehr -->
+      <div>
+        <p class="buehne-titel">7. Mehr: letzte Vorgänge mit Rückgängig, Rezepte, Anzeige mit Schriftstufe und Thema, Gerät und Fassung.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <h1 style="padding-left: 6px">Mehr</h1>
+          </div>
+          <div class="t-inhalt">
+            <div class="t-gruppe">Verlauf</div>
+            <div class="t-zeile"><i class="fa-solid fa-pen"></i><div class="t-text"><div class="t-name">Preis 2.49 auf 2.59</div><div class="t-meta">bestellungen.json, vor 1 Minute</div></div><button class="knopf tz-zeile-knopf"><i class="fa-solid fa-rotate-left"></i> Rückgängig</button></div>
+            <a class="t-zeile"><i class="fa-solid fa-scroll"></i><div class="t-text"><div class="t-name">Rezept PLZ fünfstellig</div><div class="t-meta">kunden.csv, heute 09:14</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile"><i class="fa-solid fa-pen"></i><div class="t-text"><div class="t-name">Port von api geändert</div><div class="t-meta">dienste.yaml, gestern</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile" href="verlauf.html"><i class="fa-solid fa-clock-rotate-left"></i><div class="t-text"><div class="t-name">Ganzer Verlauf</div></div><span class="rechts"><span class="abzeichen">14</span><i class="fa-solid fa-chevron-right"></i></span></a>
+
+            <div class="t-gruppe">Rezepte</div>
+            <a class="t-zeile"><i class="fa-solid fa-scroll"></i><div class="t-text"><div class="t-name">Shopexport säubern</div><div class="t-meta">5 Schritte</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile"><i class="fa-solid fa-scroll"></i><div class="t-text"><div class="t-name">PLZ fünfstellig</div><div class="t-meta">2 Schritte</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+
+            <div class="t-gruppe">Anzeige</div>
+            <div class="tz-einstellung">
+              <div class="tz-einstellung-titel"><i class="fa-solid fa-text-height"></i> Schriftstufe</div>
+              <div class="segment"><a>Klein</a><a class="aktiv">Mittel</a><a>Groß</a></div>
+            </div>
+            <div class="tz-einstellung">
+              <div class="tz-einstellung-titel"><i class="fa-solid fa-circle-half-stroke"></i> Thema</div>
+              <div class="segment"><a class="aktiv">Mittelton</a><a>Dunkel</a></div>
+            </div>
+
+            <div class="t-gruppe">Gerät und Fassung</div>
+            <div class="t-zeile"><i class="fa-solid fa-mobile-screen"></i><div class="t-text"><div class="t-name">Dieses Telefon</div><div class="t-meta">angemeldet, Ablage auf pi5b</div></div><span class="rechts"><span class="punkt"></span></span></div>
+            <div class="t-zeile"><i class="fa-solid fa-wand-magic-sparkles"></i><div class="t-text"><div class="t-name">Leitstelle</div><div class="t-meta">bereit für Mit KI</div></div><span class="rechts"><span class="punkt"></span></span></div>
+            <div class="t-zeile"><i class="fa-solid fa-circle-info"></i><div class="t-text"><div class="t-name">Strukturblick</div><div class="t-meta">Fassung 2.0.0, Stand 14</div></div></div>
+          </div>
+          <nav class="t-reiter">
+            <a><i class="fa-solid fa-folder-open"></i>Dokumente</a>
+            <a><i class="fa-solid fa-folder-tree"></i>Ansehen</a>
+            <a><i class="fa-solid fa-magnifying-glass"></i>Suchen</a>
+            <a class="aktiv"><i class="fa-solid fa-ellipsis"></i>Mehr</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 8. Datei öffnen ohne Server -->
+      <div>
+        <p class="buehne-titel">8. Bauart ohne Server: statt Ablage "Datei öffnen". Dokumente liegen nur in diesem Browser, Sichern heißt Herunterladen.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <h1 style="padding-left: 6px">Dokumente</h1>
+            <button class="knopf" title="Datei öffnen"><i class="fa-solid fa-plus"></i></button>
+          </div>
+          <div class="t-inhalt">
+            <div class="tz-hinweis lokal"><i class="fa-solid fa-hard-drive"></i><span>Liegt nur in diesem Browser. Andere Geräte sehen diese Dokumente nicht.</span></div>
+            <div class="t-gruppe">In diesem Browser</div>
+            <div class="t-zeile"><i class="fa-solid fa-table"></i><div class="t-text"><div class="t-name">kunden.csv</div><div class="t-meta">CSV, 2.318 Zeilen, geändert, nicht heruntergeladen</div></div><button class="knopf nur-symbol tz-zeile-knopf" title="kunden.csv herunterladen"><i class="fa-solid fa-download"></i></button></div>
+            <div class="t-zeile"><i class="fa-solid fa-file-code"></i><div class="t-text"><div class="t-name">bestellungen.json</div><div class="t-meta">JSON, 412 KB, gestern</div></div><button class="knopf nur-symbol tz-zeile-knopf" title="bestellungen.json herunterladen"><i class="fa-solid fa-download"></i></button></div>
+          </div>
+          <div class="t-abdunkeln"></div>
+          <div class="t-blatt">
+            <h2>Datei öffnen</h2>
+            <div class="tz-ablegen">
+              <i class="fa-solid fa-file-arrow-up"></i>
+              <strong>JSON, CSV, YAML oder XML</strong>
+              <span>Die Datei wird im Browser gelesen und nirgends hochgeladen.</span>
+            </div>
+            <div class="tz-blatt-wahl">
+              <a class="t-zeile"><i class="fa-solid fa-folder-open"></i><div class="t-text"><div class="t-name">Datei wählen</div><div class="t-meta">aus Dateien oder Downloads</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+              <a class="t-zeile"><i class="fa-solid fa-paste"></i><div class="t-text"><div class="t-name">Text einfügen</div><div class="t-meta">aus der Zwischenablage</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+              <a class="t-zeile"><i class="fa-solid fa-file-circle-plus"></i><div class="t-text"><div class="t-name">Leeres Dokument</div><div class="t-meta">JSON, CSV oder YAML</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            </div>
+            <div class="tz-knopfreihe">
+              <button class="knopf">Abbrechen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

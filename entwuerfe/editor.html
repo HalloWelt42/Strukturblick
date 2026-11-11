@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Editor</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/tabelle.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Eingabe in Zeile 23 (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag aktiv"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a class="aktiv"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+        </div>
+        <div class="werkzeugzeile ed-werkzeugzeile">
+          <button class="knopf" title="Format wählen; Umwandeln zeigt zuerst eine Vorschau"><i class="fa-solid fa-file-lines"></i> YAML <i class="fa-solid fa-chevron-down text-3"></i></button>
+          <button class="knopf" title="Einrücken und Abstände vereinheitlichen; lässt sich rückgängig machen"><i class="fa-solid fa-indent"></i><span class="tb-lang">Formatieren</span></button>
+          <button class="knopf" title="Ohne Einrückung und Leerzeilen schreiben; lässt sich rückgängig machen"><i class="fa-solid fa-compress"></i><span class="tb-lang">Kompakt</span></button>
+          <button class="knopf" title="Schlüssel jeder Ebene alphabetisch ordnen; lässt sich rückgängig machen"><i class="fa-solid fa-arrow-down-a-z"></i><span class="tb-lang">Schlüssel sortieren</span></button>
+          <div class="rechts">
+            <label class="feld ed-suche"><i class="fa-solid fa-magnifying-glass"></i><input placeholder="Suchen" /><span class="taste">⌘</span><span class="taste">F</span></label>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="ed-editor" role="textbox" aria-multiline="true" aria-label="dienste.yaml">
+            <div class="ed-zeile" id="ed-z1"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">1</span><span class="ed-falt"></span></span><span class="ed-code"><span class="ed-kommentar"># Dienste im Heimnetz, gelesen von der Leitstelle</span></span></div>
+            <div class="ed-zeile" id="ed-z2"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">2</span><span class="ed-falt"></span></span><span class="ed-code"><span class="ed-schl">version</span><span class="ed-zeichen">:</span> <span class="w-zahl">3</span></span></div>
+            <div class="ed-zeile" id="ed-z3"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">3</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code"><span class="ed-schl">standard</span><span class="ed-zeichen">:</span> <span class="ed-anker">&amp;standard</span></span></div>
+            <div class="ed-zeile" id="ed-z4"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">4</span><span class="ed-falt"></span></span><span class="ed-code">  <span class="ed-schl">neustart</span><span class="ed-zeichen">:</span> <span class="w-text">immer</span></span></div>
+            <div class="ed-zeile" id="ed-z5"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">5</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code">  <span class="ed-schl">gesundheit</span><span class="ed-zeichen">:</span> <span class="ed-anker">&amp;gesundheit</span></span></div>
+            <div class="ed-zeile" id="ed-z6"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">6</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">pfad</span><span class="ed-zeichen">:</span> <span class="w-text">/gesund</span></span></div>
+            <div class="ed-zeile" id="ed-z7"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">7</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">intervall</span><span class="ed-zeichen">:</span> <span class="w-text">30s</span></span></div>
+            <div class="ed-zeile" id="ed-z8"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">8</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">versuche</span><span class="ed-zeichen">:</span> <span class="w-zahl">3</span></span></div>
+            <div class="ed-zeile" id="ed-z9"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">9</span><span class="ed-falt"></span></span><span class="ed-code"></span></div>
+            <div class="ed-zeile" id="ed-z10"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">10</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code"><span class="ed-schl">dienste</span><span class="ed-zeichen">:</span></span></div>
+            <div class="ed-zeile" id="ed-z11"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">11</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code">  <span class="ed-zeichen">-</span> <span class="ed-schl">name</span><span class="ed-zeichen">:</span> <span class="w-text">ablage</span></span></div>
+            <div class="ed-zeile" id="ed-z12"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">12</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">&lt;&lt;</span><span class="ed-zeichen">:</span> <span class="ed-verweis">*standard</span></span></div>
+            <div class="ed-zeile" id="ed-z13"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">13</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">port</span><span class="ed-zeichen">:</span> <span class="w-zahl">8420</span></span></div>
+            <div class="ed-zeile" id="ed-z14"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">14</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">pfad</span><span class="ed-zeichen">:</span> <span class="w-text">/ablage</span></span></div>
+            <div class="ed-zeile" id="ed-z15"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">15</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">gesundheit</span><span class="ed-zeichen">:</span> <span class="ed-verweis">*gesundheit</span></span></div>
+            <div class="ed-zeile" id="ed-z16"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">16</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code">  <span class="ed-zeichen">-</span> <span class="ed-schl">name</span><span class="ed-zeichen">:</span> <span class="w-text">leitstelle</span></span></div>
+            <div class="ed-zeile" id="ed-z17"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">17</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">&lt;&lt;</span><span class="ed-zeichen">:</span> <span class="ed-verweis">*standard</span></span></div>
+            <div class="ed-zeile" id="ed-z18"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">18</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">port</span><span class="ed-zeichen">:</span> <span class="w-zahl">8531</span></span></div>
+            <div class="ed-zeile ed-mit-warnung" id="ed-z19"><span class="ed-rinne"><span class="ed-marke"><i class="fa-solid fa-triangle-exclamation" title="Warnung"></i></span><span class="ed-nr">19</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl ed-warnung">port</span><span class="ed-zeichen">:</span> <span class="w-zahl">8530</span></span></div>
+            <div class="ed-zeile" id="ed-z20"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">20</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">pfad</span><span class="ed-zeichen">:</span> <span class="w-text">/leitstelle</span></span></div>
+            <div class="ed-zeile" id="ed-z21"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">21</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code">    <span class="ed-schl">gesundheit</span><span class="ed-zeichen">:</span></span></div>
+            <div class="ed-zeile" id="ed-z22"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">22</span><span class="ed-falt"></span></span><span class="ed-code">      <span class="ed-schl">&lt;&lt;</span><span class="ed-zeichen">:</span> <span class="ed-verweis">*gesundheit</span></span></div>
+            <div class="ed-zeile ed-cursorzeile" id="ed-z23"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">23</span><span class="ed-falt"></span></span><span class="ed-code">      <span class="ed-schl">intervall</span><span class="ed-zeichen">:</span> <span class="w-text">10s</span><span class="ed-cursor"></span></span></div>
+            <div class="ed-zeile" id="ed-z24"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">24</span><span class="ed-falt" title="Aufklappen"><i class="fa-solid fa-caret-right"></i></span></span><span class="ed-code">  <span class="ed-zeichen">-</span> <span class="ed-schl">name</span><span class="ed-zeichen">:</span> <span class="w-text">suche</span><span class="ed-gefaltet" title="Aufklappen">4 Zeilen</span></span></div>
+            <div class="ed-zeile" id="ed-z29"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">29</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code">  <span class="ed-zeichen">-</span> <span class="ed-schl">name</span><span class="ed-zeichen">:</span> <span class="w-text">kalender</span></span></div>
+            <div class="ed-zeile" id="ed-z30"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">30</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">&lt;&lt;</span><span class="ed-zeichen">:</span> <span class="ed-verweis">*standard</span></span></div>
+            <div class="ed-zeile" id="ed-z31"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">31</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">port</span><span class="ed-zeichen">:</span> <span class="w-zahl">8460</span></span></div>
+            <div class="ed-zeile" id="ed-z32"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">32</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">pfad</span><span class="ed-zeichen">:</span> <span class="w-text">/kalender</span></span></div>
+            <div class="ed-zeile ed-mit-fehler" id="ed-z33"><span class="ed-rinne"><span class="ed-marke"><i class="fa-solid fa-circle-xmark" title="Fehler"></i></span><span class="ed-nr">33</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">gesundheit</span><span class="ed-zeichen">:</span> <span class="ed-verweis ed-fehler">*gesundheitt</span></span></div>
+            <div class="ed-zeile" id="ed-z34"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">34</span><span class="ed-falt"></span></span><span class="ed-code">    <span class="ed-schl">aktiv</span><span class="ed-zeichen">:</span> <span class="w-bool">false</span></span></div>
+            <div class="ed-zeile" id="ed-z35"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">35</span><span class="ed-falt"></span></span><span class="ed-code"></span></div>
+            <div class="ed-zeile" id="ed-z36"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">36</span><span class="ed-falt" title="Zuklappen"><i class="fa-solid fa-caret-down"></i></span></span><span class="ed-code"><span class="ed-schl">protokoll</span><span class="ed-zeichen">:</span></span></div>
+            <div class="ed-zeile" id="ed-z37"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">37</span><span class="ed-falt"></span></span><span class="ed-code">  <span class="ed-schl">stufe</span><span class="ed-zeichen">:</span> <span class="w-text">info</span></span></div>
+            <div class="ed-zeile" id="ed-z38"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">38</span><span class="ed-falt"></span></span><span class="ed-code">  <span class="ed-schl">ziel</span><span class="ed-zeichen">:</span> <span class="w-text">/var/log/dienste</span></span></div>
+            <div class="ed-zeile" id="ed-z39"><span class="ed-rinne"><span class="ed-marke"></span><span class="ed-nr">39</span><span class="ed-falt"></span></span><span class="ed-code">  <span class="ed-schl">behalten</span><span class="ed-zeichen">:</span> <span class="w-text">14 Tage</span></span></div>
+          </div>
+        </div>
+
+        <div class="ed-diagnose">
+          <div class="ed-diagnose-kopf">Diagnose <span class="abzeichen fehler">1 Fehler</span><span class="abzeichen warn">1 Warnung</span><span class="rechts mono">Zeile 23, Spalte 21</span></div>
+          <div class="ed-diagnose-liste">
+            <div class="ed-befund"><i class="fa-solid fa-circle-xmark"></i><a class="ed-sprung" href="#ed-z33" title="Zur Stelle springen">Anker *gesundheitt gibt es nicht, gemeint ist wohl *gesundheit</a><button class="knopf still" title="Ersetzt den Verweis in Zeile 33">In *gesundheit ändern</button><a class="ed-ort" href="#ed-z33">Zeile 33, Spalte 17</a></div>
+            <div class="ed-befund"><i class="fa-solid fa-triangle-exclamation"></i><a class="ed-sprung" href="#ed-z19" title="Zur Stelle springen">Schlüssel port steht doppelt (auch Zeile 18), es gilt 8530</a><span></span><a class="ed-ort" href="#ed-z19">Zeile 19, Spalte 5</a></div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Unter dem Cursor <span class="rechts abzeichen">Text</span></div>
+            <div class="wertfeld">10s</div>
+            <dl class="paare" style="margin: 10px 0 0">
+              <dt>Schlüssel</dt><dd class="mono">intervall</dd>
+              <dt>Ort</dt><dd class="mono">Zeile 23, Spalte 21</dd>
+              <dt>Ersetzt</dt><dd class="mono">30s <span class="text-3">aus &amp;gesundheit, Zeile 7</span></dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Pfad kopieren</div>
+            <div class="knopf-reihe">
+              <button class="knopf">jq</button>
+              <button class="knopf">JSONPath</button>
+              <button class="knopf">Zeiger</button>
+              <button class="knopf">PHP</button>
+              <button class="knopf">Python</button>
+              <button class="knopf">TypeScript</button>
+            </div>
+            <div class="wertfeld klein" style="margin-top: 10px; font-size: var(--klein)">.dienste[1].gesundheit.intervall</div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Anker &amp;gesundheit <span class="rechts mono">Zeile 5</span></div>
+            <dl class="paare">
+              <dt>Inhalt</dt><dd class="mono">pfad, intervall, versuche</dd>
+              <dt>Benutzt</dt><dd class="mono">Zeile 15, 22</dd>
+              <dt>Fehlt</dt><dd><span class="mono">Zeile 33</span> verweist auf *gesundheitt</dd>
+            </dl>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">YAML</span> 6 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-xmark" style="color: var(--fehler)"></i> 1 Fehler, 1 Warnung</span>
+        <span class="rechts">
+          <span class="teil" title="Jede Änderung wird abgelegt, auch mit Fehlern"><span class="punkt"></span> Abgelegt auf pi5b vor 2 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

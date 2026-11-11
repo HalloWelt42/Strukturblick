@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Tabelle</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/tabelle.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: email in Zeile 26 geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a class="aktiv"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+        </div>
+        <div class="werkzeugzeile tb-werkzeugzeile">
+          <label class="feld tb-filter" title="Zeigt nur Zeilen, in denen der Text in einer Spalte vorkommt"><i class="fa-solid fa-magnifying-glass"></i><span class="tb-feld-name">Zeilen filtern</span><input value="leipzig" /><button class="tb-feld-knopf" title="Filter aufheben"><i class="fa-solid fa-xmark"></i></button></label>
+          <button class="knopf" title="Spalten ein- und ausblenden"><i class="fa-solid fa-table-columns"></i><span class="tb-lang">Spalten</span> <span class="zahl">8/8</span></button>
+          <div class="rechts">
+            <span class="tb-dialekt" title="So wird die Datei gelesen: Trennzeichen Semikolon, erste Zeile ist die Kopfzeile, UTF-8"><span class="abzeichen zweit">Semikolon, Kopfzeile</span><button class="knopf still">Ändern</button></span>
+            <button class="knopf" title="Zeilen mit gleicher Kundennummer zeigen und auflösen"><i class="fa-solid fa-clone"></i><span class="tb-lang">Duplikate prüfen</span> <span class="abzeichen warn">3</span></button>
+            <a class="knopf" href="bereinigen.html" title="Werte der Spalte ort als Facette zählen und bereinigen"><i class="fa-solid fa-filter"></i><span class="tb-lang">Als Facette</span></a>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <table class="tb-tabelle">
+            <thead>
+              <tr>
+                <th class="tb-nr" scope="col" title="Zeile in der Datei">Zeile</th>
+                <th class="tb-b12 tb-fix" scope="col"><div class="tb-kopf"><span class="tb-name">kundennr</span><span class="tb-typzeile"><span class="abzeichen zweit" title="Kundennummer als Text">Text</span><button class="tb-kopf-knopf" title="Spalte kundennr: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 0 %</span><span>2.315 verschiedene</span><span class="tb-warnwert" title="3 Kundennummern stehen doppelt">3 doppelt</span></span><div class="tb-anteil" title="Keine Häufung: fast alle Werte kommen einmal vor"></div></div></th>
+                <th class="tb-b13" scope="col"><div class="tb-kopf"><span class="tb-name">name</span><span class="tb-typzeile"><span class="abzeichen zweit" title="Freier Text">Text</span><button class="tb-kopf-knopf" title="Spalte name: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 0 %</span><span>2.297 verschiedene</span></span><div class="tb-anteil" title="Keine Häufung: fast alle Werte kommen einmal vor"></div></div></th>
+                <th class="tb-b18" scope="col"><div class="tb-kopf"><span class="tb-name">plz</span><span class="tb-typzeile"><span class="abzeichen" title="Steht als Text, führende Null bleibt erhalten. Vorschlag: als Text belassen.">Text, sieht aus wie Zahl</span><button class="tb-kopf-knopf" title="Spalte plz: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 0,4 %</span><span>512 verschiedene</span></span><div class="tb-anteil"><span class="tb-f1" style="width: 6.1%" title="04109: 141"></span><span class="tb-f2" style="width: 5.2%" title="01067: 120"></span><span class="tb-f3" style="width: 4.0%" title="06108: 93"></span><span class="tb-f4" style="width: 3.3%" title="04103: 76"></span><span class="tb-fleer" style="width: 0.4%" title="leer: 9"></span></div></div></th>
+                <th class="tb-b13 tb-gewaehlt" scope="col"><div class="tb-kopf"><span class="tb-name">ort</span><span class="tb-typzeile"><span class="abzeichen zweit" title="Freier Text">Text</span><button class="tb-kopf-knopf" title="Spalte ort: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 0 %</span><span>148 verschiedene</span></span><div class="tb-anteil"><span class="tb-f1" style="width: 12.3%" title="Berlin: 286"></span><span class="tb-f2" style="width: 10.4%" title="Hamburg: 241"></span><span class="tb-f3" style="width: 8.5%" title="München: 198"></span><span class="tb-f4" style="width: 7.6%" title="Köln: 176"></span></div></div></th>
+                <th class="tb-b18" scope="col"><div class="tb-kopf"><span class="tb-name">email</span><span class="tb-typzeile"><span class="abzeichen" title="Alle gefüllten Werte haben die Form einer E-Mail-Adresse">Text, sieht aus wie E-Mail</span><button class="tb-kopf-knopf" title="Spalte email: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 2,1 %</span><span>2.262 verschiedene</span></span><div class="tb-anteil"><span class="tb-fleer" style="width: 2.1%" title="leer: 49"></span></div></div></th>
+                <th class="tb-b18" scope="col"><div class="tb-kopf"><span class="tb-name">telefon</span><span class="tb-typzeile"><span class="abzeichen" title="Ziffern mit Vorwahl, teils mit Leerzeichen">Text, sieht aus wie Telefon</span><button class="tb-kopf-knopf" title="Spalte telefon: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 11,8 %</span><span>2.031 verschiedene</span></span><div class="tb-anteil"><span class="tb-fleer" style="width: 11.8%" title="leer: 274"></span></div></div></th>
+                <th class="tb-b18" scope="col"><div class="tb-kopf"><span class="tb-name">angelegt</span><span class="tb-typzeile"><span class="abzeichen" title="Zwei Schreibweisen: 2024-03-01 und 01.03.2024">Text, sieht aus wie Datum</span><button class="tb-kopf-knopf" title="Spalte angelegt: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 0 %</span><span>611 verschiedene</span><span class="tb-warnwert" title="1.702 Werte als 2024-03-01, 616 als 01.03.2024">2 Formate</span></span><div class="tb-saeulen" title="Angelegt je Monat, Januar bis November 2024"><span style="height: 34%"></span><span style="height: 48%"></span><span style="height: 100%"></span><span style="height: 61%"></span><span style="height: 52%"></span><span style="height: 57%"></span><span style="height: 44%"></span><span style="height: 39%"></span><span style="height: 63%"></span><span style="height: 72%"></span><span style="height: 41%"></span></div></div></th>
+                <th class="tb-b18" scope="col"><div class="tb-kopf"><span class="tb-name">umsatz</span><span class="tb-typzeile"><span class="abzeichen" title="Deutsche Schreibweise mit Tausenderpunkt und Komma, etwa 1.234,50">Text, sieht aus wie Betrag</span><button class="tb-kopf-knopf" title="Spalte umsatz: sortieren, umbenennen, Typ festlegen, ausblenden"><i class="fa-solid fa-ellipsis-vertical"></i></button></span><span class="tb-profil"><span>leer 0,3 %</span><span>1.988 verschiedene</span></span><div class="tb-saeulen" title="Verteilung von 0 bis 9.800"><span style="height: 100%"></span><span style="height: 81%"></span><span style="height: 63%"></span><span style="height: 49%"></span><span style="height: 37%"></span><span style="height: 28%"></span><span style="height: 20%"></span><span style="height: 14%"></span><span style="height: 10%"></span><span style="height: 7%"></span><span style="height: 4%"></span><span style="height: 2%"></span></div></div></th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr><td class="tb-nr">2</td><td class="tb-fix mono">K-10002</td><td>Sabine Kramer</td><td>04109</td><td class="tb-gewaehlt">Leipzig</td><td>sabine.kramer@beispiel.de</td><td>0341 5583120</td><td>2024-01-08</td><td class="tb-rechts">2.418,90</td></tr>
+                <tr><td class="tb-nr">5</td><td class="tb-fix mono">K-10005</td><td>Thomas Heller</td><td>04155</td><td class="tb-gewaehlt">leipzig</td><td>t.heller@beispiel.de</td><td><span class="tb-leer">leer</span></td><td>08.01.2024</td><td class="tb-rechts">312,00</td></tr>
+                <tr><td class="tb-nr">9</td><td class="tb-fix mono">K-10009</td><td>Fatma Yıldız</td><td>04177</td><td class="tb-gewaehlt">Leipzig</td><td>fatma.yildiz@beispiel.de</td><td>0341 9921744</td><td>2024-01-11</td><td class="tb-rechts">87,40</td></tr>
+                <tr><td class="tb-nr">14</td><td class="tb-fix mono">K-10014</td><td>Jens Albrecht</td><td>04229</td><td class="tb-gewaehlt">Leipzig<span class="tb-leerzeichen" title="Leerzeichen am Ende"></span></td><td>jens.albrecht@beispiel.de</td><td>0176 22841907</td><td>12.01.2024</td><td class="tb-rechts">1.096,00</td></tr>
+                <tr><td class="tb-nr">21</td><td class="tb-fix mono">K-10021</td><td>Paula Schreiber</td><td>04103</td><td class="tb-gewaehlt">Leipzig</td><td>paula.schreiber@beispiel.de</td><td>0341 2107736</td><td>2024-01-19</td><td class="tb-rechts">3.560,20</td></tr>
+                <tr><td class="tb-nr">26</td><td class="tb-fix mono">K-10026</td><td>Henrik Vogt</td><td>04315</td><td class="tb-gewaehlt">Leipzig</td><td class="tb-geaendert">henrik.vogt@beispiel.de<i class="fa-solid fa-pen tb-geaendert-zeichen" title="Eben geändert, vorher henrik.vogt@beispiel,de"></i></td><td>0341 6650218</td><td>2024-01-23</td><td class="tb-rechts">745,80</td></tr>
+                <tr><td class="tb-nr">33</td><td class="tb-fix mono">K-10033</td><td>Leonie Becker</td><td>04109</td><td class="tb-gewaehlt">leipzig</td><td>leonie.becker@beispiel.de</td><td><span class="tb-leer">leer</span></td><td>03.02.2024</td><td class="tb-rechts">129,90</td></tr>
+                <tr><td class="tb-nr">38</td><td class="tb-fix mono">K-10038</td><td>Marek Nowak</td><td>04157</td><td class="tb-gewaehlt">Leipzig</td><td>marek.nowak@beispiel.de</td><td class="tb-bearbeiten"><span class="tb-eingabe"><span class="tb-markiert">0341 339 88 12</span><span class="tb-schreibmarke"></span></span><span class="tb-tipp"><span class="taste">Enter</span> übernimmt <span class="taste">Esc</span> bricht ab</span></td><td>2024-02-06</td><td class="tb-rechts">5.012,00</td></tr>
+                <tr><td class="tb-nr">47</td><td class="tb-fix mono">K-10047</td><td>Ingrid Hoffmann</td><td>04279</td><td class="tb-gewaehlt">Leipzig</td><td>ingrid.hoffmann@beispiel.de</td><td>0341 8842301</td><td>2024-02-14</td><td class="tb-rechts">268,50</td></tr>
+                <tr><td class="tb-nr">52</td><td class="tb-fix mono">K-10052</td><td>Can Öztürk</td><td>04317</td><td class="tb-gewaehlt">Leipzig</td><td>can.ozturk@beispiel.de</td><td>0157 39028811</td><td>2024-02-20</td><td class="tb-rechts">1.874,10</td></tr>
+                <tr><td class="tb-nr">58</td><td class="tb-fix mono">K-10058</td><td>Birgit Lange</td><td>04103</td><td class="tb-gewaehlt">leipzig</td><td>birgit.lange@beispiel.de</td><td><span class="tb-leer">leer</span></td><td>26.02.2024</td><td class="tb-rechts"><span class="tb-leer">leer</span></td></tr>
+                <tr><td class="tb-nr">61</td><td class="tb-fix mono">K-10061</td><td>Stefan Wolf</td><td>04109</td><td class="tb-gewaehlt">Leipzig</td><td>stefan.wolf@beispiel.de</td><td>0341 2214490</td><td>2024-03-01</td><td class="tb-rechts">642,00</td></tr>
+                <tr><td class="tb-nr">70</td><td class="tb-fix mono">K-10070</td><td>Anna Schulze</td><td>04229</td><td class="tb-gewaehlt">Leipzig</td><td>anna.schulze@beispiel.de</td><td>0341 4471025</td><td>01.03.2024</td><td class="tb-rechts">2.105,75</td></tr>
+                <tr><td class="tb-nr">77</td><td class="tb-fix mono">K-10077</td><td>Lukas Richter</td><td>04155</td><td class="tb-gewaehlt">Leipzig<span class="tb-leerzeichen" title="Leerzeichen am Ende"></span></td><td>lukas.richter@beispiel.de</td><td>0172 6630947</td><td>2024-03-04</td><td class="tb-rechts">58,90</td></tr>
+                <tr><td class="tb-nr">83</td><td class="tb-fix mono">K-10083</td><td>Greta Neumann</td><td>04177</td><td class="tb-gewaehlt">Leipzig</td><td>greta.neumann@beispiel.de</td><td>0341 5519832</td><td>2024-03-07</td><td class="tb-rechts">1.234,50</td></tr>
+                <tr><td class="tb-nr">91</td><td class="tb-fix mono">K-10091</td><td>Mehmet Kaya</td><td>04315</td><td class="tb-gewaehlt">leipzig</td><td>mehmet.kaya@beispiel.de</td><td>0341 7702316</td><td>09.03.2024</td><td class="tb-rechts">903,20</td></tr>
+                <tr><td class="tb-nr">96</td><td class="tb-fix mono">K-10096</td><td>Clara Wagner</td><td>04103</td><td class="tb-gewaehlt">Leipzig</td><td>clara.wagner@beispiel.de</td><td>0341 9038877</td><td>2024-03-12</td><td class="tb-rechts">4.410,00</td></tr>
+                <tr><td class="tb-nr">104</td><td class="tb-fix mono">K-10104</td><td>Moritz Fischer</td><td>04279</td><td class="tb-gewaehlt">Leipzig</td><td>moritz.fischer@beispiel.de</td><td>0341 2655104</td><td>2024-03-15</td><td class="tb-rechts">377,60</td></tr>
+                <tr><td class="tb-nr">112</td><td class="tb-fix mono">K-10112</td><td>Jana Seidel</td><td>04109</td><td class="tb-gewaehlt">Leipzig</td><td>jana.seidel@beispiel.de</td><td>0341 4108839</td><td>2024-03-18</td><td class="tb-rechts">1.560,00</td></tr>
+                <tr><td class="tb-nr">118</td><td class="tb-fix mono">K-10118</td><td>Erik Lorenz</td><td>04157</td><td class="tb-gewaehlt">leipzig</td><td>erik.lorenz@beispiel.de</td><td>0341 9934021</td><td>19.03.2024</td><td class="tb-rechts">214,30</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tb-fuss">
+          <span><strong>141</strong> von 2.318 Zeilen</span>
+          <span class="abzeichen" title="Volltext in allen Spalten, Groß- und Kleinschreibung egal"><i class="fa-solid fa-magnifying-glass"></i> gefiltert: leipzig</span>
+          <button class="knopf still"><i class="fa-solid fa-xmark"></i> Filter aufheben</button>
+          <span class="rechts"><span>8 von 8 Spalten</span><span class="text-3">Spalte ort gewählt</span></span>
+        </div>
+
+        <!-- Abfrage, eingeklappt -->
+        <div class="konsole-leiste">
+          <i class="fa-solid fa-terminal"></i>
+          <div class="segment">
+            <a>jq</a><a class="aktiv">SQL</a><a>JSONPath</a><a>Suche</a>
+          </div>
+          <span class="mono text-3" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0">SELECT ort, count(*) FROM kunden GROUP BY ort ORDER BY 2 DESC</span>
+          <span class="rechts"><span class="abzeichen">148 Treffer</span><a class="knopf" href="abfrage.html"><i class="fa-solid fa-chevron-up"></i> Öffnen</a></span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Spalte ort <span class="rechts abzeichen zweit">Text</span></div>
+            <dl class="paare">
+              <dt>Gefüllt</dt><dd class="mono">2.318 von 2.318</dd>
+              <dt>Verschieden</dt><dd class="mono">148</dd>
+              <dt>Typen</dt><dd>immer Text</dd>
+              <dt>Rand</dt><dd>41 Werte mit Leerzeichen am Ende</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Häufigste <span class="rechts mono">von 2.318</span></div>
+            <div class="verteilung">
+              <span>Berlin</span><span class="mono text-3">286</span><div class="balken"><span style="width: 100%"></span></div>
+              <span>Hamburg</span><span class="mono text-3">241</span><div class="balken"><span style="width: 84%"></span></div>
+              <span>München</span><span class="mono text-3">198</span><div class="balken"><span style="width: 69%"></span></div>
+              <span>Köln</span><span class="mono text-3">176</span><div class="balken"><span style="width: 62%"></span></div>
+              <span>Leipzig</span><span class="mono text-3">52</span><div class="balken"><span style="width: 18%"></span></div>
+            </div>
+            <div class="tb-weitere">und 143 weitere Werte</div>
+          </div>
+
+          <div class="karte">
+            <div class="tb-hinweis-titel"><i class="fa-solid fa-triangle-exclamation"></i> 4 ähnliche Schreibweisen</div>
+            <div class="tb-varianten">
+              <span class="tb-variante">Leipzig <span class="tb-zahl">52</span></span>
+              <span class="tb-variante">leipzig <span class="tb-zahl">48</span></span>
+              <span class="tb-variante">Lpz. <span class="tb-zahl">39</span></span>
+              <span class="tb-variante" title="Leerzeichen am Ende">Leipzig<span class="tb-leerzeichen"></span> <span class="tb-zahl">41</span></span>
+            </div>
+            <p class="tb-text">Dazu Dresden und dresden, Halle (Saale) und Halle/Saale.</p>
+            <div class="knopf-reihe">
+              <a class="knopf primaer" href="bereinigen.html"><i class="fa-solid fa-broom"></i> Bereinigen</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">CSV</span> 186 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-triangle-exclamation" style="color: var(--warn)"></i> 3 doppelte Kundennummern</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt warn"></span> Wird auf pi5b abgelegt</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+    <div class="meldung tb-meldung-hoch"><i class="fa-solid fa-circle-check"></i> email in Zeile 26 geändert <button class="knopf"><i class="fa-solid fa-rotate-left"></i> Rückgängig</button></div>
+  </body>
+</html>

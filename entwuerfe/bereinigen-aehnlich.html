@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Bereinigen: Ähnliche Werte</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/bereinigen.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag aktiv" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment br-werkzeug" aria-label="Offenes Werkzeug"><a class="aktiv"><i class="fa-solid fa-broom"></i><span>Bereinigen</span> <i class="fa-solid fa-xmark" title="Werkzeug schließen"></i></a></nav>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="segment" aria-label="Bereinigen">
+            <a href="bereinigen.html"><i class="fa-solid fa-filter"></i><span>Facetten</span></a>
+            <a class="aktiv"><i class="fa-solid fa-object-group"></i><span>Ähnliche Werte</span></a>
+            <a href="bereinigen-typen.html"><i class="fa-solid fa-shapes"></i><span>Typen</span></a>
+          </nav>
+          <div class="rechts">
+            <button class="knopf" title="Spalte wählen"><span class="text-3">Spalte</span> <span class="mono">ort</span> <i class="fa-solid fa-caret-down"></i></button>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="br-flaeche">
+            <!-- Verfahren -->
+            <section>
+              <h2 class="br-abschnitt-titel">Verfahren</h2>
+              <div class="br-verfahren">
+                <a class="br-verfahren-wahl aktiv">
+                  <span class="br-verfahren-kopf"><span class="br-ziel an"></span><strong>Gleicher Kern</strong><span class="abzeichen">3 Gruppen</span></span>
+                  <span class="br-verfahren-text">Groß und klein, Leerzeichen und Satzzeichen zählen nicht. Sicher, findet aber keine Abkürzungen.</span>
+                </a>
+                <a class="br-verfahren-wahl">
+                  <span class="br-verfahren-kopf"><span class="br-ziel"></span><strong>Buchstabenpaare</strong><span class="abzeichen zweit">4 Gruppen</span></span>
+                  <span class="br-verfahren-text">Vergleicht benachbarte Buchstaben. Findet auch vertauschte und fehlende Buchstaben.</span>
+                </a>
+                <a class="br-verfahren-wahl">
+                  <span class="br-verfahren-kopf"><span class="br-ziel"></span><strong>Tippfehler-Abstand</strong><span class="abzeichen zweit">5 Gruppen</span></span>
+                  <span class="br-verfahren-text">Zählt die Änderungen von einem Wert zum anderen, bis 2 gilt als ähnlich. Findet am meisten, auch Falsches.</span>
+                </a>
+              </div>
+            </section>
+
+            <!-- Gruppen -->
+            <section>
+              <h2 class="br-abschnitt-titel">Gruppen in ort <span class="br-rechts text-3">3 gefunden, alle zum Zusammenführen</span></h2>
+
+              <article class="br-tafel">
+                <header class="br-tafel-kopf">
+                  <strong>Leipzig</strong>
+                  <span class="text-3 klein">4 Schreibweisen, 180 Zellen</span>
+                  <span class="br-rechts">
+                    <span class="klein text-3">Zusammenführen</span>
+                    <nav class="segment"><a class="aktiv">Ja</a><a>Nein</a></nav>
+                  </span>
+                </header>
+                <div class="br-varianten">
+                  <div class="br-variante br-ist-ziel">
+                    <span class="br-ziel an" title="Zielwert"></span>
+                    <span class="br-wert-text">Leipzig</span>
+                    <span class="br-balken"><span style="width: 100%"></span></span>
+                    <span class="br-anzahl">52</span>
+                    <span class="br-folge"><span class="abzeichen gut"><i class="fa-solid fa-bullseye"></i> Zielwert</span></span>
+                  </div>
+                  <div class="br-variante">
+                    <span class="br-ziel" title="Als Zielwert wählen"></span>
+                    <span class="br-wert-text">leipzig</span>
+                    <span class="br-balken"><span style="width: 92%"></span></span>
+                    <span class="br-anzahl">48</span>
+                    <span class="br-folge">wird zu <span class="mono">Leipzig</span></span>
+                  </div>
+                  <div class="br-variante">
+                    <span class="br-ziel" title="Als Zielwert wählen"></span>
+                    <span class="br-wert-text">Leipzig<span class="br-leerzeichen" title="Leerzeichen am Ende"></span></span>
+                    <span class="br-balken"><span style="width: 79%"></span></span>
+                    <span class="br-anzahl">41</span>
+                    <span class="br-folge">wird zu <span class="mono">Leipzig</span> <span class="abzeichen warn">Leerzeichen am Ende</span></span>
+                  </div>
+                  <div class="br-variante">
+                    <span class="br-ziel" title="Als Zielwert wählen"></span>
+                    <span class="br-wert-text">Lpz.</span>
+                    <span class="br-balken"><span style="width: 75%"></span></span>
+                    <span class="br-anzahl">39</span>
+                    <span class="br-folge">wird zu <span class="mono">Leipzig</span> <span class="abzeichen zweit">von Hand dazu</span> <button class="knopf still nur-symbol" title="Aus der Gruppe nehmen"><i class="fa-solid fa-xmark"></i></button></span>
+                  </div>
+                  <div class="br-variante br-frei">
+                    <span class="br-ziel" title="Eigenen Zielwert nehmen"></span>
+                    <label class="feld"><i class="fa-solid fa-pen"></i><input placeholder="Eigenen Zielwert eingeben" /></label>
+                  </div>
+                </div>
+                <footer class="br-tafel-fuss">
+                  <span>Ändert <strong class="mono">128</strong> Zellen</span>
+                  <span class="br-rechts"><button class="knopf still"><i class="fa-solid fa-plus"></i> Wert dazunehmen</button></span>
+                </footer>
+              </article>
+
+              <article class="br-tafel">
+                <header class="br-tafel-kopf">
+                  <strong>Dresden</strong>
+                  <span class="text-3 klein">2 Schreibweisen, 57 Zellen</span>
+                  <span class="br-rechts">
+                    <span class="klein text-3">Zusammenführen</span>
+                    <nav class="segment"><a class="aktiv">Ja</a><a>Nein</a></nav>
+                  </span>
+                </header>
+                <div class="br-varianten">
+                  <div class="br-variante br-ist-ziel">
+                    <span class="br-ziel an" title="Zielwert"></span>
+                    <span class="br-wert-text">Dresden</span>
+                    <span class="br-balken"><span style="width: 100%"></span></span>
+                    <span class="br-anzahl">30</span>
+                    <span class="br-folge"><span class="abzeichen gut"><i class="fa-solid fa-bullseye"></i> Zielwert</span></span>
+                  </div>
+                  <div class="br-variante">
+                    <span class="br-ziel" title="Als Zielwert wählen"></span>
+                    <span class="br-wert-text">dresden</span>
+                    <span class="br-balken"><span style="width: 90%"></span></span>
+                    <span class="br-anzahl">27</span>
+                    <span class="br-folge">wird zu <span class="mono">Dresden</span></span>
+                  </div>
+                  <div class="br-variante br-frei">
+                    <span class="br-ziel" title="Eigenen Zielwert nehmen"></span>
+                    <label class="feld"><i class="fa-solid fa-pen"></i><input placeholder="Eigenen Zielwert eingeben" /></label>
+                  </div>
+                </div>
+                <footer class="br-tafel-fuss">
+                  <span>Ändert <strong class="mono">27</strong> Zellen</span>
+                  <span class="br-rechts"><button class="knopf still"><i class="fa-solid fa-plus"></i> Wert dazunehmen</button></span>
+                </footer>
+              </article>
+
+              <article class="br-tafel">
+                <header class="br-tafel-kopf">
+                  <strong>Halle (Saale)</strong>
+                  <span class="text-3 klein">2 Schreibweisen, 75 Zellen</span>
+                  <span class="br-rechts">
+                    <span class="klein text-3">Zusammenführen</span>
+                    <nav class="segment"><a class="aktiv">Ja</a><a>Nein</a></nav>
+                  </span>
+                </header>
+                <div class="br-varianten">
+                  <div class="br-variante br-ist-ziel">
+                    <span class="br-ziel an" title="Zielwert"></span>
+                    <span class="br-wert-text">Halle (Saale)</span>
+                    <span class="br-balken"><span style="width: 34%"></span></span>
+                    <span class="br-anzahl">19</span>
+                    <span class="br-folge"><span class="abzeichen gut"><i class="fa-solid fa-bullseye"></i> Zielwert</span> von dir gewählt</span>
+                  </div>
+                  <div class="br-variante">
+                    <span class="br-ziel" title="Als Zielwert wählen"></span>
+                    <span class="br-wert-text">Halle/Saale</span>
+                    <span class="br-balken"><span style="width: 100%"></span></span>
+                    <span class="br-anzahl">56</span>
+                    <span class="br-folge">wird zu <span class="mono">Halle (Saale)</span></span>
+                  </div>
+                  <div class="br-variante br-frei">
+                    <span class="br-ziel" title="Eigenen Zielwert nehmen"></span>
+                    <label class="feld"><i class="fa-solid fa-pen"></i><input placeholder="Eigenen Zielwert eingeben" /></label>
+                  </div>
+                </div>
+                <footer class="br-tafel-fuss">
+                  <span>Ändert <strong class="mono">56</strong> Zellen</span>
+                  <span class="text-3">Vorschlag war der häufigste Wert <span class="mono">Halle/Saale</span></span>
+                  <span class="br-rechts"><button class="knopf still"><i class="fa-solid fa-plus"></i> Wert dazunehmen</button></span>
+                </footer>
+              </article>
+            </section>
+          </div>
+        </div>
+
+        <!-- Vorschau und Übernehmen -->
+        <div class="br-anwenden">
+          <span class="br-anwenden-text"><i class="fa-solid fa-eye"></i> Vorschau: ändert <strong class="mono">211</strong> Zellen in <strong class="mono">3</strong> Gruppen</span>
+          <span>Landet als ein Vorgang im Verlauf, rückgängig möglich.</span>
+          <span class="br-rechts">
+            <span class="br-ankreuzen"><span class="br-haken"><i class="fa-solid fa-check"></i></span> Auch als Rezeptschritt speichern</span>
+            <button class="knopf primaer"><i class="fa-solid fa-check"></i> Übernehmen</button>
+          </span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Verfahren <span class="rechts abzeichen">Gleicher Kern</span></div>
+            <p class="br-karten-text">Jeder Wert wird auf seinen Kern gebracht. Werte mit gleichem Kern bilden eine Gruppe.</p>
+            <ol class="br-schritte">
+              <li>Leerzeichen vorn und hinten weg</li>
+              <li>Alles klein</li>
+              <li>Satzzeichen weg: Punkt, Klammern, Schrägstrich</li>
+              <li>Wörter nach dem Alphabet ordnen</li>
+            </ol>
+            <div class="br-aenderungen" style="margin-top: 10px">
+              <span class="br-nr"><i class="fa-solid fa-equals"></i></span><span class="br-paar">Halle/Saale<i class="fa-solid fa-arrow-right"></i>halle saale</span>
+              <span class="br-nr"><i class="fa-solid fa-equals"></i></span><span class="br-paar">Halle (Saale)<i class="fa-solid fa-arrow-right"></i>halle saale</span>
+            </div>
+            <p class="br-karten-text" style="margin-top: 10px">Lpz. hat den Kern "lpz" und fällt nicht in die Gruppe. Abkürzungen nimmst du von Hand dazu.</p>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Betroffene Zeilen <span class="rechts mono">211</span></div>
+            <div class="br-aenderungen">
+              <span class="br-nr">1.237</span><span class="br-paar"><span class="br-alt">Leipzig<span class="br-leerzeichen"></span></span><i class="fa-solid fa-arrow-right"></i>Leipzig</span>
+              <span class="br-nr">1.262</span><span class="br-paar"><span class="br-alt">Lpz.</span><i class="fa-solid fa-arrow-right"></i>Leipzig</span>
+              <span class="br-nr">1.298</span><span class="br-paar"><span class="br-alt">dresden</span><i class="fa-solid fa-arrow-right"></i>Dresden</span>
+              <span class="br-nr">1.316</span><span class="br-paar"><span class="br-alt">leipzig</span><i class="fa-solid fa-arrow-right"></i>Leipzig</span>
+              <span class="br-nr">1.583</span><span class="br-paar"><span class="br-alt">Halle/Saale</span><i class="fa-solid fa-arrow-right"></i>Halle (Saale)</span>
+            </div>
+            <div class="knopf-reihe" style="margin-top: 10px">
+              <a class="knopf" href="bereinigen.html"><i class="fa-solid fa-table"></i> Alle 211 in der Tabelle</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Danach</div>
+            <dl class="paare">
+              <dt>ort</dt><dd><span class="mono">45</span> verschiedene Werte statt <span class="mono">50</span></dd>
+              <dt>Verlauf</dt><dd>Stand 15: "ort: ähnliche Werte zusammengeführt"</dd>
+              <dt>Rezept</dt><dd>Mit Haken als Schritt in einem Rezept, für das nächste Einlesen</dd>
+            </dl>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">CSV</span> 2.318 Zeilen</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

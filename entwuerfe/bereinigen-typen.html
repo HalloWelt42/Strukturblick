@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Bereinigen: Typen</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/bereinigen.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a class="aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag aktiv"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag aktiv" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a href="arbeitsplatz.html"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+          <nav class="segment br-werkzeug" aria-label="Offenes Werkzeug"><a class="aktiv"><i class="fa-solid fa-broom"></i><span>Bereinigen</span> <i class="fa-solid fa-xmark" title="Werkzeug schließen"></i></a></nav>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="segment" aria-label="Bereinigen">
+            <a href="bereinigen.html"><i class="fa-solid fa-filter"></i><span>Facetten</span></a>
+            <a href="bereinigen-aehnlich.html"><i class="fa-solid fa-object-group"></i><span>Ähnliche Werte</span></a>
+            <a class="aktiv"><i class="fa-solid fa-shapes"></i><span>Typen</span></a>
+          </nav>
+          <div class="rechts">
+            <span class="text-3 klein br-breit">8 Spalten, 2 Vorschläge, 1 Hinweis</span>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="br-flaeche">
+            <!-- Übersicht aller Spalten -->
+            <section>
+              <h2 class="br-abschnitt-titel">Spalten in kunden.csv <span class="br-rechts text-3">CSV kennt nur Text, die Typen liest Strukturblick</span></h2>
+              <div class="br-uebersicht">
+                <table class="br-tabelle">
+                  <thead>
+                    <tr><th class="br-text">Spalte</th><th class="br-text">Steht als</th><th class="br-text">Erkannt</th><th class="br-text">Vorschlag</th><th class="br-text">Stand</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>kundennr</td><td class="br-text">Text</td><td class="br-text">Kennung</td><td class="br-text text-3">keiner</td><td class="br-text"><span class="abzeichen gut">passt</span></td></tr>
+                    <tr><td>name</td><td class="br-text">Text</td><td class="br-text">Text</td><td class="br-text text-3">keiner</td><td class="br-text"><span class="abzeichen gut">passt</span></td></tr>
+                    <tr><td>plz</td><td class="br-text">Text</td><td class="br-text">sieht aus wie Zahl</td><td class="br-text">Text bleibt</td><td class="br-text"><span class="abzeichen warn">Hinweis</span></td></tr>
+                    <tr><td>ort</td><td class="br-text">Text</td><td class="br-text">Text, 50 verschiedene</td><td class="br-text text-3">keiner</td><td class="br-text"><span class="abzeichen gut">passt</span></td></tr>
+                    <tr><td>email</td><td class="br-text">Text</td><td class="br-text">E-Mail-Adresse</td><td class="br-text text-3">keiner</td><td class="br-text"><span class="abzeichen gut">passt</span></td></tr>
+                    <tr><td>telefon</td><td class="br-text">Text</td><td class="br-text">Telefonnummer</td><td class="br-text text-3">keiner</td><td class="br-text"><span class="abzeichen gut">passt</span></td></tr>
+                    <tr><td>angelegt</td><td class="br-text">Text</td><td class="br-text">Datum in 2 Formaten</td><td class="br-text">Datum <span class="mono">JJJJ-MM-TT</span></td><td class="br-text"><span class="abzeichen">Vorschlag</span></td></tr>
+                    <tr class="br-gewaehlt"><td>umsatz</td><td class="br-text">Text</td><td class="br-text">Betrag, deutsches Format</td><td class="br-text">Betrag</td><td class="br-text"><span class="abzeichen">Vorschlag</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Vorschläge je Spalte -->
+            <section>
+              <h2 class="br-abschnitt-titel">Vorschläge</h2>
+              <p class="br-abschnitt-text">Nichts wird von selbst umgewandelt. Jede Spalte zeigt erst die Vorschau, jedes Umwandeln ist ein eigener Vorgang im Verlauf.</p>
+
+              <!-- plz -->
+              <article class="br-tafel">
+                <header class="br-tafel-kopf">
+                  <strong>plz</strong>
+                  <span class="abzeichen zweit">Text</span>
+                  <span class="br-rechts"><span class="abzeichen warn"><i class="fa-solid fa-triangle-exclamation"></i> Nicht in Zahl wandeln</span></span>
+                </header>
+                <div class="br-tafel-inhalt">
+                  <p class="br-typ-text">Sieht aus wie eine Zahl, ist aber eine Postleitzahl. Sie bleibt Text.</p>
+                  <div class="br-warnung"><i class="fa-solid fa-triangle-exclamation"></i><span>Als Zahl verlören <strong class="mono">312</strong> Werte ihre führende Null, aus 04109 würde 4109.</span></div>
+                  <table class="br-vergleich">
+                    <thead><tr><th class="br-nr">Zeile</th><th>Text, bleibt</th><th class="br-pfeil"></th><th>Als Zahl</th><th></th></tr></thead>
+                    <tbody>
+                      <tr><td class="br-nr">1.204</td><td>04109</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td><span class="br-verlust">0</span>4109</td><td class="br-anm">Null fällt weg</td></tr>
+                      <tr><td class="br-nr">1.219</td><td>01067</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td><span class="br-verlust">0</span>1067</td><td class="br-anm">Null fällt weg</td></tr>
+                      <tr><td class="br-nr">1.298</td><td>01099</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td><span class="br-verlust">0</span>1099</td><td class="br-anm">Null fällt weg</td></tr>
+                      <tr><td class="br-nr">1.355</td><td>04275</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td><span class="br-verlust">0</span>4275</td><td class="br-anm">Null fällt weg</td></tr>
+                      <tr><td class="br-nr">1.583</td><td>06108</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td><span class="br-verlust">0</span>6108</td><td class="br-anm">Null fällt weg</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <footer class="br-tafel-fuss">
+                  <span>Ändert keine Zelle, merkt sich nur den Typ Text für plz</span>
+                  <span class="br-rechts"><button class="knopf"><i class="fa-solid fa-font"></i> Als Text festlegen</button></span>
+                </footer>
+              </article>
+
+              <!-- umsatz -->
+              <article class="br-tafel">
+                <header class="br-tafel-kopf">
+                  <strong>umsatz</strong>
+                  <span class="abzeichen zweit">Text</span><i class="fa-solid fa-arrow-right br-typ-pfeil"></i><span class="abzeichen">Betrag</span>
+                  <span class="br-rechts"><span class="abzeichen gut">Deutsches Format erkannt</span></span>
+                </header>
+                <div class="br-tafel-inhalt">
+                  <p class="br-typ-text">Punkt trennt die Tausender, Komma die Nachkommastellen. Gelesen wird "1.234,50" als 1234.50.</p>
+                  <table class="br-vergleich">
+                    <thead><tr><th class="br-nr">Zeile</th><th>Vorher</th><th class="br-pfeil"></th><th>Nachher</th><th></th></tr></thead>
+                    <tbody>
+                      <tr><td class="br-nr">88</td><td class="w-text">"12.480,00"</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-zahl">12480.00</td><td class="br-anm"></td></tr>
+                      <tr><td class="br-nr">311</td><td class="w-text">"75"</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-zahl">75.00</td><td class="br-anm">ohne Nachkommastellen</td></tr>
+                      <tr><td class="br-nr">1.204</td><td class="w-text">"1.234,50"</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-zahl">1234.50</td><td class="br-anm"></td></tr>
+                      <tr><td class="br-nr">1.219</td><td class="w-text">"689,90"</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-zahl">689.90</td><td class="br-anm"></td></tr>
+                      <tr><td class="br-nr">1.237</td><td class="w-text">"2.410,00"</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-zahl">2410.00</td><td class="br-anm"></td></tr>
+                      <tr class="br-unlesbar"><td class="br-nr">418</td><td>"ca. 900"</td><td class="br-pfeil"><i class="fa-solid fa-xmark"></i></td><td>nicht lesbar</td><td class="br-anm">Wort vor der Zahl</td></tr>
+                      <tr class="br-unlesbar"><td class="br-nr">1.907</td><td>"1.2O4,00"</td><td class="br-pfeil"><i class="fa-solid fa-xmark"></i></td><td>nicht lesbar</td><td class="br-anm">Buchstabe O statt Null</td></tr>
+                    </tbody>
+                  </table>
+                  <div class="br-unlesbar-wahl">
+                    <span>Die 2 nicht lesbaren Werte</span>
+                    <nav class="segment"><a class="aktiv">Unverändert lassen</a><a>Leer setzen</a></nav>
+                  </div>
+                </div>
+                <footer class="br-tafel-fuss">
+                  <span>Ändert <strong class="mono">2.316</strong> Zellen, 2 bleiben Text</span>
+                  <span class="br-rechts"><button class="knopf primaer"><i class="fa-solid fa-arrow-right-arrow-left"></i> Umwandeln</button></span>
+                </footer>
+              </article>
+
+              <!-- angelegt -->
+              <article class="br-tafel">
+                <header class="br-tafel-kopf">
+                  <strong>angelegt</strong>
+                  <span class="abzeichen zweit">Text</span><i class="fa-solid fa-arrow-right br-typ-pfeil"></i><span class="abzeichen">Datum <span class="mono">JJJJ-MM-TT</span></span>
+                  <span class="br-rechts"><span class="abzeichen warn">2 Formate gemischt</span></span>
+                </header>
+                <div class="br-tafel-inhalt">
+                  <p class="br-typ-text"><span class="mono">1.406</span> Werte stehen schon als JJJJ-MM-TT und bleiben. <span class="mono">912</span> stehen als TT.MM.JJJJ und werden umgestellt.</p>
+                  <table class="br-vergleich">
+                    <thead><tr><th class="br-nr">Zeile</th><th>Vorher</th><th class="br-pfeil"></th><th>Nachher</th><th></th></tr></thead>
+                    <tbody>
+                      <tr class="br-bleibt"><td class="br-nr">1.204</td><td>2025-01-14</td><td class="br-pfeil"><i class="fa-solid fa-equals"></i></td><td>2025-01-14</td><td class="br-anm">bleibt</td></tr>
+                      <tr><td class="br-nr">1.219</td><td>03.02.2025</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-text">2025-02-03</td><td class="br-anm"></td></tr>
+                      <tr><td class="br-nr">1.262</td><td>17.04.2025</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-text">2025-04-17</td><td class="br-anm"></td></tr>
+                      <tr><td class="br-nr">1.316</td><td>08.07.2025</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-text">2025-07-08</td><td class="br-anm"></td></tr>
+                      <tr><td class="br-nr">1.390</td><td>11.11.2025</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-text">2025-11-11</td><td class="br-anm"></td></tr>
+                      <tr><td class="br-nr">1.476</td><td>02.04.2026</td><td class="br-pfeil"><i class="fa-solid fa-arrow-right"></i></td><td class="w-text">2026-04-02</td><td class="br-anm"></td></tr>
+                    </tbody>
+                  </table>
+                  <p class="br-typ-text klein">TT.MM.JJJJ wird immer als Tag, Monat, Jahr gelesen. Kein Wert ist mehrdeutig.</p>
+                </div>
+                <footer class="br-tafel-fuss">
+                  <span>Ändert <strong class="mono">912</strong> Zellen</span>
+                  <span class="br-rechts"><button class="knopf primaer"><i class="fa-solid fa-arrow-right-arrow-left"></i> Umwandeln</button></span>
+                </footer>
+              </article>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewählt <span class="rechts abzeichen">Spalte umsatz</span></div>
+            <dl class="paare">
+              <dt>Steht als</dt><dd>Text in allen 2.318 Zeilen</dd>
+              <dt>Lesbar</dt><dd><span class="mono">2.316</span> als Betrag</dd>
+              <dt>Spanne</dt><dd class="mono">12,00 bis 18.940,00</dd>
+              <dt>Tausender</dt><dd>Punkt, in 1.418 Werten</dd>
+              <dt>Dezimal</dt><dd>Komma, meist 2 Stellen</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Nicht lesbar <span class="rechts abzeichen fehler">2</span></div>
+            <div class="br-aenderungen">
+              <span class="br-nr">418</span><span class="br-paar">"ca. 900"</span>
+              <span class="br-nr">1.907</span><span class="br-paar">"1.2O4,00"</span>
+            </div>
+            <p class="br-karten-text" style="margin-top: 10px">Von Hand ändern gilt sofort und lässt sich rückgängig machen. Danach zählt die Vorschau mit.</p>
+            <div class="knopf-reihe">
+              <a class="knopf" href="tabelle.html"><i class="fa-solid fa-table"></i> In der Tabelle zeigen</a>
+            </div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Beim Speichern</div>
+            <p class="br-karten-text">Wie Beträge in die CSV geschrieben werden:</p>
+            <nav class="segment"><a class="aktiv mono">1.234,50</a><a class="mono">1234.50</a></nav>
+            <p class="br-karten-text" style="margin-top: 10px">Gerechnet wird immer mit der Zahl, in Statistik, Abfrage und Facetten.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">CSV</span> 2.318 Zeilen</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+  </body>
+</html>

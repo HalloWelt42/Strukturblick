@@ -49,8 +49,17 @@
   const galerie = document.createElement("a");
   galerie.href = "index.html" + adresse.search;
   galerie.textContent = "Galerie";
+  galerie.onclick = () => (galerie.href = "index.html" + adresse.search);
   leiste.append(galerie);
 
   anwenden();
-  document.addEventListener("DOMContentLoaded", () => document.body.append(leiste));
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.append(leiste);
+    // Links zwischen den Entwürfen tragen Thema und Schriftstufe weiter
+    document.querySelectorAll('a[href$=".html"]').forEach((a) => {
+      a.addEventListener("click", () => {
+        a.href = a.getAttribute("href").split("?")[0] + adresse.search;
+      });
+    });
+  });
 })();

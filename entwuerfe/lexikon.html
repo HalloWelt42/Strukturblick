@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Lexikon</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <link rel="stylesheet" href="teile/erzeugen.css" />
+    <script src="entwurf.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Kopf: Marke, geöffnete Dokumente, Befehle -->
+      <header class="kopf">
+        <div class="marke"><i class="fa-solid fa-sitemap"></i> <span>Strukturblick</span></div>
+        <nav class="dok-reiter" aria-label="Geöffnete Dokumente">
+          <a class="aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="stand" title="Wird gerade abgelegt"></span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="zu"><i class="fa-solid fa-xmark"></i></span></a>
+          <a title="Neues Dokument"><i class="fa-solid fa-plus"></i></a>
+        </nav>
+        <div class="kopf-rechts">
+          <button class="knopf nur-symbol" title="Rückgängig: Preis geändert (⌘ Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button class="knopf nur-symbol" title="Wiederholen (⇧ ⌘ Z)" disabled><i class="fa-solid fa-rotate-right"></i></button>
+          <a class="knopf" href="verlauf.html" title="Verlauf aller Vorgänge"><i class="fa-solid fa-clock-rotate-left"></i><span class="nur-breit">Verlauf</span> <span class="zahl">14</span></a>
+          <div class="befehl-feld" title="Befehlspalette">
+            <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
+            <span class="rechts"><span class="taste">⌘</span><span class="taste">K</span></span>
+          </div>
+          <a class="knopf nur-symbol" href="einstellungen.html" title="Einstellungen"><i class="fa-solid fa-gear"></i></a>
+        </div>
+      </header>
+
+      <!-- Linke Leiste -->
+      <aside class="leiste">
+        <div class="leiste-feld">
+          <div class="leiste-titel">Ablage auf pi5b <span class="rechts"><a class="knopf still nur-symbol" href="ablage.html" title="Ablage öffnen"><i class="fa-solid fa-folder-open"></i></a></span></div>
+          <a class="eintrag aktiv"><i class="fa-solid fa-file-code"></i><span class="name">bestellungen.json</span><span class="rechts"><span class="abzeichen">JSON</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">kunden.csv</span><span class="rechts"><span class="abzeichen">CSV</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-file-lines"></i><span class="name">dienste.yaml</span><span class="rechts"><span class="abzeichen">YAML</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Kundenimport</span><span class="rechts"><span class="text-3 klein mono">12</span></span></a>
+          <a class="eintrag"><i class="fa-solid fa-folder"></i><span class="name">Schnittstellen</span><span class="rechts"><span class="text-3 klein mono">7</span></span></a>
+
+          <div class="leiste-titel">Prüfen und umbauen</div>
+          <a class="eintrag" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i><span class="name">Validieren</span></a>
+          <a class="eintrag" href="bereinigen.html"><i class="fa-solid fa-broom"></i><span class="name">Bereinigen</span></a>
+          <a class="eintrag" href="reparatur.html"><i class="fa-solid fa-screwdriver-wrench"></i><span class="name">Reparieren</span></a>
+          <a class="eintrag" href="konvertieren.html"><i class="fa-solid fa-shuffle"></i><span class="name">Konvertieren</span></a>
+
+          <div class="leiste-titel">Erzeugen</div>
+          <a class="eintrag" href="codegen.html"><i class="fa-solid fa-code"></i><span class="name">Code erzeugen</span></a>
+          <a class="eintrag" href="testdaten.html"><i class="fa-solid fa-cubes"></i><span class="name">Testdaten</span></a>
+          <a class="eintrag" href="ki.html"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="name">Mit KI</span><span class="rechts"><span class="punkt" title="Leitstelle bereit"></span></span></a>
+
+          <div class="leiste-titel">Rezepte <span class="rechts"><a class="knopf still nur-symbol" href="rezepte.html" title="Alle Rezepte"><i class="fa-solid fa-list"></i></a></span></div>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">Shopexport säubern</span><span class="rechts"><span class="text-3 klein mono">5</span></span></a>
+          <a class="eintrag" href="rezepte.html"><i class="fa-solid fa-scroll"></i><span class="name">PLZ fünfstellig</span><span class="rechts"><span class="text-3 klein mono">2</span></span></a>
+
+          <div class="leiste-titel">Nachschlagen</div>
+          <a class="eintrag" href="lexikon.html"><i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span></a>
+        </div>
+        <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>Strukturblick 2.0.0</span></div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="haupt">
+        <div class="ansicht-kopf">
+          <nav class="segment" aria-label="Ansicht">
+            <a class="aktiv"><i class="fa-solid fa-folder-tree"></i><span>Baum</span></a>
+            <a href="editor.html"><i class="fa-solid fa-code"></i><span>Editor</span></a>
+            <a href="tabelle.html"><i class="fa-solid fa-table"></i><span>Tabelle</span></a>
+            <a href="statistik.html"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+            <a href="struktur.html"><i class="fa-solid fa-diagram-project"></i><span>Struktur</span></a>
+            <a href="graph.html"><i class="fa-solid fa-circle-nodes"></i><span>Graph</span></a>
+            <a href="vergleich.html"><i class="fa-solid fa-code-compare"></i><span>Vergleich</span></a>
+          </nav>
+        </div>
+        <div class="werkzeugzeile">
+          <nav class="pfad" aria-label="Pfad">
+            <a>$</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>bestellungen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>[1]</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>positionen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>[0]</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a class="letzter">preis</a>
+          </nav>
+          <div class="rechts">
+            <label class="feld" style="width: 190px"><i class="fa-solid fa-magnifying-glass"></i><input placeholder="Im Baum suchen" /></label>
+            <div class="segment" title="Ebenen aufklappen">
+              <a>1</a><a>2</a><a class="aktiv">3</a><a>4</a><a>Alle</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="inhalt">
+          <div class="baum" role="tree">
+            <div class="knoten" style="padding-left: 8px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="w-objekt">$</span><span class="art">Objekt</span><span class="info">3 Schlüssel</span></div>
+            <div class="knoten" style="padding-left: 30px"><span class="klapp"></span><span class="schl">shop</span><span class="w-text">"Hofladen Lindenhof"</span></div>
+            <div class="knoten" style="padding-left: 30px"><span class="klapp"></span><span class="schl">stand</span><span class="w-text">"2026-11-10T08:15:00+01:00"</span><span class="rechts"><span class="abzeichen zweit">Datum und Zeit</span></span></div>
+            <div class="knoten" style="padding-left: 30px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="schl">bestellungen</span><span class="art">Liste</span><span class="info">128 Einträge, gleich aufgebaut</span><span class="rechts"><a class="knopf still" href="tabelle.html" style="min-height: 26px"><i class="fa-solid fa-table"></i> Als Tabelle</a></span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[0]</span><span class="art">Objekt</span><span class="info">nr "B-24017", kunde "Jonas Brandt", 2 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="idx">[1]</span><span class="art">Objekt</span><span class="info">6 Schlüssel</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">nr</span><span class="w-text">"B-24018"</span><span class="rechts"><span class="abzeichen zweit">eindeutig</span></span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">datum</span><span class="w-text">"2026-11-09"</span><span class="rechts"><span class="abzeichen zweit">Datum</span></span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="schl">kunde</span><span class="art">Objekt</span><span class="info">3 Schlüssel</span></div>
+            <div class="knoten" style="padding-left: 96px"><span class="klapp"></span><span class="schl">name</span><span class="w-text">"Marta Kowalski"</span></div>
+            <div class="knoten" style="padding-left: 96px"><span class="klapp"></span><span class="schl">plz</span><span class="w-text">"04109"</span><span class="rechts"><span class="abzeichen" title="Steht als Text, führende Null bleibt erhalten">Text, sieht aus wie Zahl</span></span></div>
+            <div class="knoten" style="padding-left: 96px"><span class="klapp"></span><span class="schl">stadt</span><span class="w-text">"Leipzig"</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="schl">positionen</span><span class="art">Liste</span><span class="info">3 Einträge</span></div>
+            <div class="knoten" style="padding-left: 96px"><span class="klapp"><i class="fa-solid fa-caret-down"></i></span><span class="idx">[0]</span><span class="art">Objekt</span><span class="info">3 Schlüssel</span></div>
+            <div class="knoten" style="padding-left: 118px"><span class="klapp"></span><span class="schl">artikel</span><span class="w-text">"Apfelsaft naturtrüb 1 l"</span></div>
+            <div class="knoten" style="padding-left: 118px"><span class="klapp"></span><span class="schl">menge</span><span class="w-zahl">6</span></div>
+            <div class="knoten gewaehlt" style="padding-left: 118px"><span class="klapp"></span><span class="schl">preis</span><span class="w-zahl">2.59</span><span class="rechts"><span class="abzeichen warn"><i class="fa-solid fa-pen"></i> geändert</span></span></div>
+            <div class="knoten" style="padding-left: 96px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[1]</span><span class="art">Objekt</span><span class="info">artikel "Bergkäse 300 g", menge 1, preis 6.9</span></div>
+            <div class="knoten" style="padding-left: 96px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[2]</span><span class="art">Objekt</span><span class="info">artikel "Hofeier 10 Stück", menge 2, preis 3.8</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">bezahlt</span><span class="w-bool">true</span></div>
+            <div class="knoten" style="padding-left: 74px"><span class="klapp"></span><span class="schl">notiz</span><span class="w-null">null</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[2]</span><span class="art">Objekt</span><span class="info">nr "B-24019", kunde "Ole Hansen", 1 Position</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[3]</span><span class="art">Objekt</span><span class="info">nr "B-24020", kunde "Petra Nguyen", 4 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[4]</span><span class="art">Objekt</span><span class="info">nr "B-24021", kunde "Karl Weiß", 2 Positionen</span></div>
+            <div class="knoten" style="padding-left: 52px"><span class="klapp"><i class="fa-solid fa-caret-right"></i></span><span class="idx">[5]</span><span class="art">Objekt</span><span class="info">nr "B-24022", kunde "Aylin Demir", 3 Positionen</span></div>
+          </div>
+        </div>
+
+        <!-- Abfrage, eingeklappt -->
+        <div class="konsole-leiste">
+          <i class="fa-solid fa-terminal"></i>
+          <div class="segment">
+            <a class="aktiv">jq</a><a>SQL</a><a>JSONPath</a><a>Suche</a>
+          </div>
+          <span class="mono text-3" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0">.bestellungen[] | select(.bezahlt | not) | .nr</span>
+          <span class="rechts"><span class="abzeichen">7 Treffer</span><a class="knopf" href="abfrage.html"><i class="fa-solid fa-chevron-up"></i> Öffnen</a></span>
+        </div>
+      </main>
+
+      <!-- Inspektor -->
+      <aside class="inspektor">
+        <div class="inspektor-feld">
+          <div class="karte">
+            <div class="karte-titel">Gewählt <span class="rechts abzeichen">Zahl</span></div>
+            <div class="wertfeld">2.59</div>
+            <dl class="paare" style="margin: 10px 0 0">
+              <dt>Vorher</dt><dd class="mono">2.49 <span class="text-3">(vor 1 Minute)</span></dd>
+              <dt>Zeile</dt><dd class="mono">31, Spalte 20</dd>
+            </dl>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Pfad kopieren</div>
+            <div class="knopf-reihe">
+              <button class="knopf">jq</button>
+              <button class="knopf">JSONPath</button>
+              <button class="knopf">Zeiger</button>
+              <button class="knopf">PHP</button>
+              <button class="knopf">Python</button>
+              <button class="knopf">TypeScript</button>
+            </div>
+            <div class="wertfeld klein" style="margin-top: 10px; font-size: var(--klein)">.bestellungen[1].positionen[0].preis</div>
+          </div>
+
+          <div class="karte">
+            <div class="karte-titel">Alle Werte dieses Pfads <span class="rechts mono">342</span></div>
+            <div class="mono text-3" style="font-size: var(--klein); margin-bottom: 8px">.bestellungen[].positionen[].preis</div>
+            <dl class="paare">
+              <dt>Spanne</dt><dd class="mono">0.89 bis 39.90</dd>
+              <dt>Fehlt</dt><dd class="mono">0</dd>
+              <dt>Typen</dt><dd>immer Zahl</dd>
+            </dl>
+            <div class="verteilung" style="margin-top: 10px">
+              <span class="mono">2.49</span><span class="mono text-3">41</span><div class="balken"><span style="width: 92%"></span></div>
+              <span class="mono">3.80</span><span class="mono text-3">33</span><div class="balken"><span style="width: 74%"></span></div>
+              <span class="mono">6.90</span><span class="mono text-3">18</span><div class="balken"><span style="width: 40%"></span></div>
+            </div>
+            <div class="knopf-reihe" style="margin-top: 10px">
+              <a class="knopf" href="bereinigen.html"><i class="fa-solid fa-filter"></i> Als Facette</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Fuß -->
+      <footer class="fuss">
+        <span class="teil"><span class="abzeichen">JSON</span> 412 KB</span>
+        <span class="teil"><i class="fa-solid fa-code-branch text-3"></i> Stand 14</span>
+        <span class="teil"><i class="fa-solid fa-circle-check" style="color: var(--gut)"></i> Keine Fehler</span>
+        <span class="rechts">
+          <span class="teil"><span class="punkt"></span> Abgelegt auf pi5b vor 3 s</span>
+          <span class="teil"><span class="punkt"></span> Leitstelle</span>
+          <span class="teil mono">2.0.0</span>
+        </span>
+      </footer>
+    </div>
+
+    <!-- Lexikon: schwebendes Fenster über dem Arbeitsplatz, am Kopf verschiebbar, an der Ecke in der Größe ziehbar -->
+    <section class="ez-lexikon" role="dialog" aria-label="Lexikon">
+      <div class="ez-fenster-kopf" title="Zum Verschieben ziehen">
+        <i class="fa-solid fa-grip ez-griff"></i>
+        <strong><i class="fa-solid fa-book-open"></i> Lexikon</strong>
+        <div class="rechts">
+          <button class="knopf still nur-symbol" title="Zurück zum vorigen Artikel"><i class="fa-solid fa-arrow-left"></i></button>
+          <button class="knopf still nur-symbol" title="Am Rand anheften"><i class="fa-solid fa-thumbtack"></i></button>
+          <button class="knopf still nur-symbol" title="Lexikon schließen (Esc)"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <div class="ez-lex-koerper">
+        <nav class="ez-lex-themen" aria-label="Themen">
+          <div class="ez-lex-suche"><label class="feld"><i class="fa-solid fa-magnifying-glass"></i><input placeholder="Im Lexikon suchen" /></label></div>
+          <div class="ez-lex-liste">
+            <div class="leiste-titel">Pfade und Abfragen</div>
+            <a class="eintrag aktiv"><i class="fa-solid fa-route"></i><span class="name">JSON Pointer und jq-Pfade</span></a>
+            <a class="eintrag"><i class="fa-solid fa-route"></i><span class="name">JSONPath</span></a>
+            <a class="eintrag"><i class="fa-solid fa-filter"></i><span class="name">jq-Filter</span></a>
+            <a class="eintrag"><i class="fa-solid fa-route"></i><span class="name">XPath</span></a>
+            <a class="eintrag"><i class="fa-solid fa-database"></i><span class="name">SQL über Dokumente</span></a>
+
+            <div class="leiste-titel">Formate</div>
+            <a class="eintrag"><i class="fa-solid fa-table"></i><span class="name">CSV-Dialekt</span></a>
+            <a class="eintrag"><i class="fa-solid fa-bars"></i><span class="name">NDJSON</span></a>
+            <a class="eintrag"><i class="fa-solid fa-anchor"></i><span class="name">YAML-Anker und Alias</span></a>
+            <a class="eintrag"><i class="fa-solid fa-hashtag"></i><span class="name">Zahlen als Text</span></a>
+
+            <div class="leiste-titel">Prüfen</div>
+            <a class="eintrag"><i class="fa-solid fa-clipboard-check"></i><span class="name">JSON Schema</span></a>
+            <a class="eintrag"><i class="fa-solid fa-link"></i><span class="name">Verweise mit $ref</span></a>
+          </div>
+        </nav>
+
+        <article class="ez-artikel">
+          <h1>JSON Pointer und jq-Pfade</h1>
+          <div class="ez-artikel-meta"><span class="abzeichen">Pfade</span><span class="abzeichen zweit">JSON, YAML</span></div>
+          <p>Beide beschreiben den Weg zu einem Wert. Ein JSON Pointer zeigt immer auf genau eine Stelle. Ein jq-Pfad kann auch viele Stellen auf einmal treffen und gleich weiterrechnen.</p>
+
+          <div class="ez-bezug">
+            <div class="ez-bezug-titel"><i class="fa-solid fa-crosshairs"></i> Dein gewählter Wert: 2.59</div>
+            <dl>
+              <dt>Zeiger</dt><dd>/bestellungen/1/positionen/0/preis</dd><dd><button class="knopf" title="Zeiger kopieren"><i class="fa-solid fa-copy"></i></button></dd>
+              <dt>jq</dt><dd>.bestellungen[1].positionen[0].preis</dd><dd><button class="knopf" title="jq-Pfad kopieren"><i class="fa-solid fa-copy"></i></button></dd>
+            </dl>
+          </div>
+
+          <h2>So sind sie gebaut</h2>
+          <div class="ez-tabelle-feld">
+            <table class="ez-tabelle">
+              <thead><tr><th>Teil</th><th>JSON Pointer</th><th>jq-Pfad</th></tr></thead>
+              <tbody>
+                <tr><td>Ganzes Dokument</td><td class="mono">""</td><td class="mono">.</td></tr>
+                <tr><td>Schlüssel</td><td class="mono">/kunde</td><td class="mono">.kunde</td></tr>
+                <tr><td>Listeneintrag</td><td class="mono">/positionen/0</td><td class="mono">.positionen[0]</td></tr>
+                <tr><td>Alle Einträge</td><td class="text-3">gibt es nicht</td><td class="mono">.positionen[]</td></tr>
+                <tr><td>Schlüssel "a/b"</td><td class="mono">/a~1b</td><td class="mono">.["a/b"]</td></tr>
+                <tr><td>Schlüssel "a~b"</td><td class="mono">/a~0b</td><td class="mono">.["a~b"]</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Beide zählen Listen ab 0. Im Zeiger stehen <code>~1</code> für einen Schrägstrich und <code>~0</code> für eine Tilde im Schlüssel.</p>
+
+          <h2>Beispiele mit bestellungen.json</h2>
+          <div class="ez-beispiel">
+            <div class="ez-beispiel-titel">Name der Kundin in der zweiten Bestellung</div>
+            <div class="ez-beispiel-zeile"><span>Zeiger</span><pre class="ez-code">/bestellungen/1/kunde/name</pre></div>
+            <div class="ez-beispiel-zeile"><span>jq</span><pre class="ez-code">.bestellungen[1].kunde.name</pre></div>
+            <div class="ez-beispiel-zeile ergebnis"><span>Ergebnis</span><pre class="ez-code"><span class="s">"Marta Kowalski"</span></pre></div>
+          </div>
+          <div class="ez-beispiel">
+            <div class="ez-beispiel-titel">Alle Bestellnummern (nur jq)</div>
+            <div class="ez-beispiel-zeile"><span>jq</span><pre class="ez-code">.bestellungen[].nr</pre></div>
+            <div class="ez-beispiel-zeile ergebnis"><span>Ergebnis</span><pre class="ez-code"><span class="s">"B-24017"</span>, <span class="s">"B-24018"</span>, ... <span class="c">128 Werte</span></pre></div>
+          </div>
+          <div class="ez-beispiel">
+            <div class="ez-beispiel-titel">Noch nicht bezahlte Bestellungen (nur jq)</div>
+            <div class="ez-beispiel-zeile"><span>jq</span><pre class="ez-code">.bestellungen[] | select(.bezahlt | not) | .nr</pre></div>
+            <div class="ez-beispiel-zeile ergebnis"><span>Ergebnis</span><pre class="ez-code"><span class="c">7 Treffer</span></pre></div>
+          </div>
+
+          <h2>Wann welcher?</h2>
+          <ul class="ez-merkliste">
+            <li><strong>Zeiger</strong>, wenn genau eine Stelle gemeint ist: in JSON Schema bei <code>$ref</code>, in Fehlermeldungen beim Validieren, für Änderungen an einer Stelle.</li>
+            <li><strong>jq</strong>, wenn du suchst, filterst oder umbaust. Die Abfrage unten im Arbeitsplatz versteht jq direkt.</li>
+          </ul>
+
+          <h2>Siehe auch</h2>
+          <nav class="ez-verweise">
+            <a class="ez-verweis"><i class="fa-solid fa-route"></i> JSONPath</a>
+            <a class="ez-verweis"><i class="fa-solid fa-filter"></i> jq-Filter</a>
+            <a class="ez-verweis"><i class="fa-solid fa-link"></i> Verweise mit $ref</a>
+            <a class="ez-verweis" href="validieren.html"><i class="fa-solid fa-clipboard-check"></i> Werkzeug Validieren</a>
+          </nav>
+          <p class="ez-quelle">Grundlage: RFC 6901 (JSON Pointer), Handbuch von jq 1.7.</p>
+        </article>
+      </div>
+      <span class="ez-ecke" title="Größe ändern"></span>
+    </section>
+  </body>
+</html>

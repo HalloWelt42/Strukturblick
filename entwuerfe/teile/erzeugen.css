@@ -1,0 +1,916 @@
+/* ============================================================================
+   Strukturblick 2.0 - Bausteine "Erzeugen": Testdaten, Mit KI, Lexikon
+   Präfix .ez- für den Rechner, .tz- für Zusätze am Telefon.
+   Nutzt nur Marken und Klassen aus stil.css, definiert nichts davon neu.
+   ========================================================================== */
+
+/* ----- 1. Werkzeugfläche im Hauptbereich ---------------------------------- */
+/* Die Fläche liegt im Rollfeld .inhalt; oben kein Innenabstand, der Abstand
+   kommt aus dem margin-top der Karten. */
+
+.ez-flaeche {
+  padding: 0 var(--a4) var(--a5);
+  max-width: 1180px;
+}
+.ez-flaeche > .karte {
+  padding: var(--a3) var(--a4) var(--a4);
+}
+.ez-karte-kopf {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a3);
+  margin-bottom: var(--a3);
+}
+.ez-karte-kopf h2 {
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+}
+.ez-karte-kopf .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+.ez-hinweis {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a2);
+  margin: var(--a2) 0 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.ez-hinweis > i {
+  flex: none;
+}
+.ez-hinweis a {
+  color: var(--akzent);
+}
+.ez-werkzeug-info {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ----- 2. Tabellen (Spezifikation, Vorschau, Probelauf, Lexikon) ---------- */
+
+.ez-tabelle-feld {
+  overflow-x: auto;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+}
+.ez-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.ez-tabelle th {
+  padding: var(--a2) var(--a3);
+  text-align: left;
+  font-size: var(--marke);
+  font-weight: 600;
+  color: var(--text-3);
+  white-space: nowrap;
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.ez-tabelle td {
+  padding: 6px var(--a3);
+  height: var(--zeile);
+  vertical-align: middle;
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.ez-tabelle tbody tr:nth-child(even) {
+  background: var(--flaeche-wechsel);
+}
+.ez-tabelle tbody tr.gewaehlt {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .ez-tabelle tbody tr.gewaehlt {
+  background: var(--akzent-weich);
+}
+.ez-tabelle .mono {
+  white-space: nowrap;
+}
+.ez-tabelle .zahl {
+  text-align: right;
+  font-family: var(--schrift-mono);
+  white-space: nowrap;
+}
+.ez-tabelle .ez-feldname {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--typ-schluessel);
+  white-space: nowrap;
+}
+
+/* Erzeuger-Wahl: sieht aus wie ein Auswahlfeld, öffnet eine eigene Liste */
+.ez-wahl {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  padding: 0 var(--a2) 0 var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  border-radius: var(--r-knopf);
+  font-size: var(--klein);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ez-wahl > i:last-child {
+  margin-left: auto;
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+
+/* Einstellungen als kleine Wertmarken, je Marke ein Regler */
+.ez-marken {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a1);
+}
+.ez-marke {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  padding: 1px 7px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.ez-marke b {
+  font-family: var(--schrift-mono);
+  font-weight: 500;
+  color: var(--text-1);
+}
+
+/* ----- 3. Angaben in einer Reihe (Anzahl, Startwert, Zielformat) --------- */
+
+.ez-reihe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--a3) var(--a4);
+}
+.ez-angabe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a1);
+  min-width: 0;
+}
+.ez-angabe-titel {
+  font-size: var(--marke);
+  font-weight: 600;
+  color: var(--text-3);
+}
+.ez-angabe .feld {
+  font-family: var(--schrift-mono);
+}
+.ez-angabe.schmal .feld {
+  width: 9em;
+}
+.ez-angabe.breit {
+  flex: 1 1 14em;
+}
+
+/* ----- 4. Fortschritt in Blöcken ------------------------------------------ */
+
+.ez-lauf {
+  margin-top: var(--a4);
+  padding: var(--a3);
+  background: var(--flaeche-panel-2);
+  box-shadow: var(--kante);
+}
+.ez-lauf-kopf {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a3);
+  margin-bottom: var(--a2);
+}
+.ez-lauf-kopf strong {
+  font-weight: 600;
+}
+.ez-lauf-kopf .rechts {
+  margin-left: auto;
+  font-family: var(--schrift-mono);
+  font-size: var(--titel);
+  color: var(--akzent);
+}
+.ez-bloecke {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.ez-bloecke > span {
+  position: relative;
+  height: 14px;
+  background: var(--flaeche-panel-2);
+  overflow: hidden;
+}
+.ez-bloecke > .fertig {
+  background: var(--akzent-flaeche);
+}
+.ez-bloecke > .laeuft::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--anteil, 50%);
+  background: var(--akzent-flaeche);
+}
+.ez-bloecke-text {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+  padding: 0 3px;
+  margin-top: var(--a1);
+  font-size: var(--marke);
+  color: var(--text-3);
+  text-align: center;
+}
+.ez-bloecke-text .aktiv {
+  color: var(--akzent);
+  font-weight: 600;
+}
+.ez-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  margin-top: var(--a3);
+}
+.ez-aktionen .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+
+/* ----- 5. Code (SQL, Beispiele) mit Typfarben ----------------------------- */
+
+.ez-code {
+  margin: 0;
+  padding: var(--a3);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--text-1);
+}
+.ez-code .k {
+  color: var(--akzent);
+  font-weight: 600;
+}
+.ez-code .f {
+  color: var(--typ-liste);
+}
+.ez-code .s {
+  color: var(--typ-text);
+}
+.ez-code .z {
+  color: var(--typ-zahl);
+}
+.ez-code .c {
+  color: var(--text-3);
+  font-style: italic;
+}
+
+/* ----- 6. Mit KI ---------------------------------------------------------- */
+
+/* Aufgaben-Wahl: eingelassene Schiene, gewählte Aufgabe erhaben (wie Segment) */
+.ez-aufgaben {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 3px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  border-radius: var(--r-knopf);
+}
+.ez-aufgabe {
+  flex: 1 1 11em;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--a2) var(--a3);
+  border-radius: 2px;
+  color: var(--text-2);
+  text-decoration: none;
+  cursor: pointer;
+  min-width: 0;
+}
+.ez-aufgabe:hover {
+  color: var(--text-1);
+}
+.ez-aufgabe strong {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  font-weight: 600;
+}
+.ez-aufgabe span {
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.ez-aufgabe.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.ez-aufgabe.aktiv strong {
+  color: var(--akzent);
+  text-shadow: 0 0 calc(10px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 55%, transparent);
+}
+
+/* Frage: großes Eingabefeld */
+.ez-frage {
+  display: block;
+  width: 100%;
+  min-height: calc(var(--zeile) * 2.4);
+  padding: var(--a2) var(--a3);
+  border: 0;
+  outline: 0;
+  resize: vertical;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-size: var(--titel);
+  line-height: 1.4;
+}
+.ez-frage-fuss {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a3);
+  margin-top: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.ez-frage-fuss .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a2);
+}
+
+/* Vorschlag: Code links, Erklärung rechts; schmal untereinander */
+.ez-vorschlag {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--a4);
+  align-items: start;
+}
+.ez-unterkopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: 0 0 var(--a2);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.ez-unterkopf .rechts {
+  margin-left: auto;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+.ez-erklaerung {
+  margin: 0;
+  padding: 0 0 0 1.4em;
+  font-size: var(--gross);
+  line-height: 1.5;
+}
+.ez-erklaerung li + li {
+  margin-top: var(--a2);
+}
+.ez-erklaerung code,
+.ez-artikel code {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  padding: 0 4px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.ez-artikel code {
+  font-size: var(--gross);
+}
+.ez-probelauf {
+  margin-top: var(--a4);
+}
+.ez-modell {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.ez-modell .punkt {
+  margin-right: 2px;
+}
+
+/* Kleine Liste im Inspektor (frühere Fragen) */
+.ez-liste {
+  display: flex;
+  flex-direction: column;
+}
+.ez-liste a {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px var(--a2);
+  color: var(--text-1);
+  text-decoration: none;
+  font-size: var(--klein);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.ez-liste a:hover {
+  background: var(--akzent-weich);
+}
+.ez-liste a span {
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+
+/* ----- 7. Lexikon als schwebendes Fenster --------------------------------- */
+
+.ez-lexikon {
+  position: fixed;
+  z-index: 15;
+  top: calc(var(--kopf-hoehe) + 18px);
+  right: 28px;
+  bottom: calc(var(--fuss-hoehe) + 18px);
+  width: min(920px, calc(100vw - 56px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background-color: var(--flaeche-panel);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+}
+.ez-fenster-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--knopf-hoehe) + 10px);
+  padding: 0 var(--a2) 0 var(--a3);
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  cursor: move;
+  user-select: none;
+}
+.ez-fenster-kopf .ez-griff {
+  color: var(--text-3);
+}
+.ez-fenster-kopf strong {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--titel);
+  font-weight: 600;
+}
+.ez-fenster-kopf strong i {
+  color: var(--akzent);
+}
+.ez-fenster-kopf .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a1);
+  cursor: default;
+}
+.ez-lex-koerper {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 0;
+}
+.ez-lex-themen {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background-color: var(--flaeche-leiste);
+}
+.ez-lex-suche {
+  flex: none;
+  padding: var(--a2);
+}
+.ez-lex-liste {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--a2) var(--a4);
+}
+.ez-artikel {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--a5) var(--a6);
+  font-size: var(--titel);
+  line-height: 1.55;
+}
+.ez-artikel > * {
+  max-width: 64ch;
+}
+.ez-artikel h1 {
+  margin: var(--a4) 0 var(--a2);
+  font-size: var(--seitentitel);
+  line-height: 1.2;
+}
+.ez-artikel h2 {
+  margin: var(--a5) 0 var(--a2);
+  font-size: var(--titel);
+  font-weight: 600;
+  color: var(--akzent);
+}
+.ez-artikel p {
+  margin: 0 0 var(--a3);
+}
+.ez-artikel .ez-tabelle,
+.ez-artikel .ez-code {
+  font-size: var(--gross);
+}
+.ez-artikel .ez-tabelle-feld {
+  margin: var(--a2) 0 var(--a3);
+}
+.ez-artikel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+  margin-bottom: var(--a3);
+}
+
+/* Bezug zur Auswahl im Arbeitsplatz */
+.ez-bezug {
+  margin: var(--a3) 0 var(--a4);
+  padding: var(--a3);
+  background: var(--flaeche-hervor);
+  box-shadow: var(--kante);
+  font-size: var(--gross);
+}
+:root[data-theme="dunkel"] .ez-bezug {
+  background: var(--akzent-weich);
+}
+.ez-bezug-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin-bottom: var(--a2);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.ez-bezug dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  margin: 0;
+}
+.ez-bezug dt {
+  color: var(--text-3);
+  font-size: var(--klein);
+}
+.ez-bezug dd {
+  margin: 0;
+  font-family: var(--schrift-mono);
+  overflow-wrap: anywhere;
+}
+
+/* Beispiel: Ausdruck und Ergebnis untereinander */
+.ez-beispiel {
+  margin: var(--a2) 0 var(--a4);
+  box-shadow: var(--kante);
+  background: var(--flaeche-panel-2);
+}
+.ez-beispiel-titel {
+  padding: var(--a2) var(--a3);
+  font-size: var(--gross);
+  font-weight: 600;
+}
+.ez-beispiel .ez-code {
+  font-size: var(--gross);
+}
+.ez-beispiel-zeile {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  align-items: center;
+  gap: var(--a2);
+  padding: 0 var(--a3) var(--a2);
+}
+.ez-beispiel-zeile > span {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.ez-beispiel-zeile.ergebnis .ez-code {
+  background: var(--mulde);
+}
+
+.ez-merkliste {
+  margin: 0 0 var(--a3);
+  padding: 0 0 0 1.2em;
+}
+.ez-merkliste li + li {
+  margin-top: var(--a2);
+}
+
+/* Querverweise */
+.ez-verweise {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+  margin: var(--a2) 0 var(--a4);
+}
+.ez-verweis {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--knopf-hoehe);
+  padding: 0 var(--a3);
+  border-radius: var(--r-knopf);
+  background: var(--akzent-weich);
+  color: var(--akzent);
+  font-size: var(--gross);
+  font-weight: 500;
+  text-decoration: none;
+}
+.ez-verweis:hover {
+  color: var(--text-1);
+}
+.ez-quelle {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* Ecke zum Ziehen der Fenstergröße */
+.ez-ecke {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 0 45%, var(--rand-2) 45% 55%, transparent 55% 70%, var(--rand-2) 70% 80%, transparent 80%);
+}
+
+@media (max-width: 1099px) {
+  .ez-vorschlag {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ez-lex-koerper {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+}
+@media (max-width: 899px) {
+  .ez-lex-koerper {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ez-lex-themen {
+    display: none;
+  }
+}
+
+/* ----- 8. Telefon-Zusätze (.tz-) ------------------------------------------ */
+
+/* Filter-Chips über der Datensatzliste */
+.tz-chips {
+  flex: none;
+  display: flex;
+  gap: var(--a2);
+  padding: var(--a2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.tz-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: 40px;
+  padding: 0 var(--a2) 0 var(--a3);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background: var(--akzent-weich);
+  color: var(--akzent);
+  font-size: var(--klein);
+  font-weight: 600;
+  white-space: nowrap;
+  flex: none;
+}
+.tz-chip .mono {
+  font-weight: 500;
+}
+.tz-chip .zu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+}
+.tz-chip.neu {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--text-2);
+  padding: 0 var(--a3);
+}
+.tz-zaehler {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3) 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.tz-zaehler .rechts {
+  margin-left: auto;
+  color: var(--text-3);
+}
+.tz-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--a2);
+  margin: var(--a2);
+  padding: var(--a2) var(--a3);
+  background: var(--warn-weich);
+  color: var(--warn);
+  font-size: var(--klein);
+}
+.tz-hinweis > i {
+  margin-top: 3px;
+}
+.tz-hinweis a {
+  color: inherit;
+  font-weight: 600;
+}
+.tz-hinweis.lokal {
+  background: var(--akzent-weich);
+  color: var(--akzent);
+}
+
+/* Datensatz-Karte: Kopf mit Name und Nummer, darunter Felder in zwei Spalten */
+.tz-satz {
+  padding: var(--a3);
+  color: var(--text-1);
+  text-decoration: none;
+  display: block;
+}
+.tz-satz-kopf {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a2);
+  margin-bottom: var(--a2);
+}
+.tz-satz-kopf strong {
+  font-size: var(--gross);
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tz-satz-kopf .rechts {
+  margin-left: auto;
+  flex: none;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.tz-felder {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--a2) var(--a3);
+  margin: 0;
+}
+.tz-felder > div {
+  min-width: 0;
+}
+.tz-felder dt {
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.tz-felder dd {
+  margin: 0;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tz-felder .ganz {
+  grid-column: 1 / -1;
+}
+
+/* Suchtreffer: Wert mit Markierung, Pfad darunter */
+.tz-segment-reihe {
+  padding: 0 var(--a2) var(--a2);
+}
+.tz-segment-reihe .segment {
+  display: flex;
+}
+.tz-segment-reihe .segment > * {
+  flex: 1;
+  justify-content: center;
+  min-height: 40px;
+}
+.tz-treffer .t-wert {
+  font-size: var(--gross);
+}
+.tz-treffer mark {
+  background: var(--warn-weich);
+  color: var(--text-1);
+  padding: 0 2px;
+}
+.tz-treffer .tz-pfad {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: rtl; /* zu lang: vorn kürzen, das Ende des Pfads bleibt sichtbar */
+  text-align: left;
+}
+.tz-treffer .tz-pfad bdi {
+  direction: ltr;
+}
+
+/* Mehr: Einstellungszeile mit Segment über die ganze Breite */
+.tz-einstellung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3) var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.tz-einstellung-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.tz-einstellung .segment {
+  display: flex;
+}
+.tz-einstellung .segment > * {
+  flex: 1;
+  justify-content: center;
+  min-height: 42px;
+}
+.tz-zeile-knopf {
+  flex: none;
+  min-height: 44px;
+}
+
+/* Datei öffnen ohne Server */
+.tz-ablegen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a5) var(--a3);
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  color: var(--text-2);
+  text-align: center;
+  font-size: var(--klein);
+}
+.tz-ablegen > i {
+  font-size: var(--kennzahl);
+  color: var(--akzent);
+}
+.tz-ablegen strong {
+  font-size: var(--gross);
+  color: var(--text-1);
+}
+.tz-blatt-wahl {
+  display: flex;
+  flex-direction: column;
+}
+.tz-blatt-wahl .t-zeile {
+  min-height: 60px;
+}
+.tz-knopfreihe {
+  display: flex;
+  gap: var(--a2);
+}
