@@ -7,12 +7,16 @@ import BaumAnsicht from "./baum/BaumAnsicht.svelte";
 import EditorAnsicht from "./editor/EditorAnsicht.svelte";
 import TabellenAnsicht from "./tabelle/TabellenAnsicht.svelte";
 import StatistikAnsicht from "./statistik/StatistikAnsicht.svelte";
+import StrukturAnsicht from "./struktur/StrukturAnsicht.svelte";
+import StrukturInspektor from "./struktur/StrukturInspektor.svelte";
 
 export interface Ansicht {
   readonly kennung: string;
   readonly titel: string;
   readonly symbol: string;               // Font-Awesome-Klasse
   readonly komponente: Component<{ blatt: Arbeitsblatt }>;
+  /** Eigene Karten der rechten Spalte statt der allgemeinen (Gewählt, Pfad, Werte) */
+  readonly inspektor?: Component<{ blatt: Arbeitsblatt }>;
 }
 
 export const ANSICHTEN: readonly Ansicht[] = [
@@ -20,6 +24,7 @@ export const ANSICHTEN: readonly Ansicht[] = [
   { kennung: "editor", titel: "Editor", symbol: "fa-code", komponente: EditorAnsicht },
   { kennung: "tabelle", titel: "Tabelle", symbol: "fa-table", komponente: TabellenAnsicht },
   { kennung: "statistik", titel: "Statistik", symbol: "fa-chart-column", komponente: StatistikAnsicht },
+  { kennung: "struktur", titel: "Struktur", symbol: "fa-diagram-project", komponente: StrukturAnsicht, inspektor: StrukturInspektor },
 ];
 
 export const ansicht = (kennung: string): Ansicht => ANSICHTEN.find((a) => a.kennung === kennung) ?? ANSICHTEN[0];

@@ -9,11 +9,17 @@ import { felderSammeln, type Feld } from "./statistik";
 /** Anteil, ab dem ein Textmuster (Datum, nur Ziffern) für ein Feld gilt */
 const MUSTER_ANTEIL = 0.95;
 
+/**
+ * Muster eines Textfelds: "datum" und "datum-zeit" in ISO-Form (so verlangt JSON Schema sie), "datum-frei" für
+ * andere Datumsformen (TT.MM.JJJJ, gemischt), "ziffern" für Nummern aus Ziffern.
+ */
+export type Textformat = "datum" | "datum-zeit" | "datum-frei" | "ziffern";
+
 /** Was ein Wert sein kann; ein Feld trägt eine oder mehrere Arten */
 export type Wertart =
   | { readonly art: "objekt"; readonly typ: string }
   | { readonly art: "liste"; readonly von: readonly Wertart[] }
-  | { readonly art: "text"; readonly format: "datum" | "datum-zeit" | "ziffern" | null }
+  | { readonly art: "text"; readonly format: Textformat | null }
   | { readonly art: "zahl"; readonly ganz: boolean }
   | { readonly art: "wahrheitswert" }
   | { readonly art: "null" };
@@ -101,7 +107,8 @@ export function schemaAbleiten(index: Strukturindex, text: string): Schema {
     if (f.arten[KnotenArt.liste]) a.push({ art: "liste", von: wertarten(`${pfad}[]`) });
     const texte = f.arten[KnotenArt.text];
     if (texte) {
-      const format = f.datumZeit >= texte * MUSTER_ANTEIL ? "datum-zeit" : f.wieDatum >= texte * MUSTER_ANTEIL ? "datum" : f.nurZiffern >= texte * MUSTER_ANTEIL ? "ziffern" : null;
+      const anteil = (n: number) => n >= texte * MUSTER_ANTEIL;
+      const format: Textformat | null = anteil(f.isoDatum) ? "datum" : anteil(f.isoDatumZeit) ? "datum-zeit" : anteil(f.wieDatum) ? "datum-frei" : anteil(f.nurZiffern) ? "ziffern" : null;
       a.push({ art: "text", format });
     }
     if (f.arten[KnotenArt.zahl]) a.push({ art: "zahl", ganz: f.ganz });
@@ -123,7 +130,7 @@ export function schemaAbleiten(index: Strukturindex, text: string): Schema {
         const pflicht = k.vorkommen >= f.objekte;
         const arten = wertarten(k.pfad);
         const eindeutig = pflicht && f.objekte > 1 && einfach === k.vorkommen && !k.verschiedeneMehr && k.verschiedene === k.vorkommen && k.arten[KnotenArt.wahrheitswert] === 0;
-        const datum = arten.some((x) => x.art === "text" && (x.format === "datum" || x.format === "datum-zeit"));
+        const datum = arten.some((x) => x.art === "text" && (x.format === "datum" || x.format === "datum-zeit" || x.format === "datum-frei"));
         return { name: rohName(k.name), arten, vorkommen: k.vorkommen, pflicht, pfad: k.pfad, erster: k.erster, schluessel: eindeutig && !datum };
       })),
     });
@@ -143,7 +150,7 @@ export function beschreiben(arten: readonly Wertart[]): string {
     switch (a.art) {
       case "objekt": return a.typ;
       case "liste": return a.von.length ? `Liste von ${beschreiben(a.von)}` : "Liste, immer leer";
-      case "text": return a.format === "datum" ? "Datum" : a.format === "datum-zeit" ? "Datum und Zeit" : a.format === "ziffern" ? "Text, nur Ziffern" : "Text";
+      case "text": return a.format === "datum" ? "Datum" : a.format === "datum-zeit" ? "Datum und Zeit" : a.format === "datum-frei" ? "Datum, verschiedene Formen" : a.format === "ziffern" ? "Text, nur Ziffern" : "Text";
       case "zahl": return a.ganz ? "Zahl, ganz" : "Zahl";
       case "wahrheitswert": return "Wahrheitswert";
       case "null": return "Null";

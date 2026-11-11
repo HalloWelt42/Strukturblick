@@ -11,6 +11,7 @@
   import KarteWerte from "./KarteWerte.svelte";
   import KarteVerlauf from "./KarteVerlauf.svelte";
   import { werkzeug } from "../werkzeuge/registrierung";
+  import { ansicht } from "../ansichten/registrierung";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
 
@@ -21,7 +22,8 @@
   const text = $derived(stand?.text ?? "");
   const k = $derived(index && blatt.gewaehlt !== null ? knotenZu(index, text, blatt.gewaehlt) : KEIN);
   const teile = $derived(index && k !== KEIN ? teileVon(index, text, k) : null);
-  const WerkzeugKarten = $derived(blatt.platz.art === "werkzeug" ? werkzeug(blatt.platz.kennung)?.inspektor : undefined);
+  // Werkzeuge und manche Ansichten (Struktur) bringen eigene Karten mit
+  const WerkzeugKarten = $derived(blatt.platz.art === "werkzeug" ? werkzeug(blatt.platz.kennung)?.inspektor : ansicht(blatt.platz.kennung).inspektor);
 </script>
 
 <aside class="inspektor" aria-label="Inspektor">

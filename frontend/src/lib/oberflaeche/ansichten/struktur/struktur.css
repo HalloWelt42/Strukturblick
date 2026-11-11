@@ -1,0 +1,73 @@
+/* Ansicht Struktur (nach entwuerfe/teile/ansichten.css, Teil Typkarten): je Typ eine Karte mit Feldern, Typen und
+   Pflichtmarke; die Verzweigung dazwischen liegt in ../ansichten.css. */
+
+/* ----- 5. Struktur: Typkarten ---------------------------------------------- */
+
+.an-tk {
+  min-width: calc(var(--a6) * 8);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  cursor: pointer;
+}
+.an-tk.an-gewaehlt {
+  background-color: var(--flaeche-panel);
+  box-shadow: var(--kante), 0 0 0 2px var(--akzent-flaeche),
+    0 0 calc(18px * var(--leuchten)) var(--akzent-flaeche), var(--schatten-ruhig);
+}
+.an-tk-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.an-tk.an-gewaehlt .an-tk-kopf {
+  background-color: var(--akzent-weich);
+}
+.an-tk-name {
+  font-size: var(--gross);
+  font-weight: 600;
+}
+.an-tk-zahl {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  margin-left: auto;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.an-tk-felder {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0 var(--a3);
+  padding: var(--a2) var(--a3);
+  font-size: var(--klein);
+  line-height: 1.8;
+}
+.an-tk-feld {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--typ-schluessel);
+}
+.an-tk-feld i {
+  color: var(--text-3);
+}
+.an-tk-anmerkung {
+  color: var(--text-3);
+}
+.an-pflicht {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--akzent);
+}
+
+/* Anmerkung neben dem Typ ("2 von 3"): Abstand per Stil, Leerzeichen am Blockanfang fallen weg */
+.an-tk-anmerkung {
+  margin-left: var(--a1);
+}

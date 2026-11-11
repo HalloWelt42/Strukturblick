@@ -56,6 +56,9 @@ export interface Feld {
   readonly fuehrendeNullen: number;
   /** Texte, die wie Datum mit Uhrzeit aussehen, und Texte nur aus Ziffern */
   readonly datumZeit: number;
+  /** Davon in ISO-Form (JJJJ-MM-TT, mit Zeit nach RFC 3339), wie JSON Schema "date" und "date-time" sie verlangt */
+  readonly isoDatum: number;
+  readonly isoDatumZeit: number;
   readonly nurZiffern: number;
   /** Wie viele Objekte an diesem Pfad stehen (darin können Felder stehen) */
   readonly objekte: number;
@@ -121,6 +124,8 @@ class Sammler {
   wieZahl = 0;
   fuehrendeNullen = 0;
   datumZeit = 0;
+  isoDatum = 0;
+  isoDatumZeit = 0;
   nurZiffern = 0;
   datumMin: string | null = null;
   datumMax: string | null = null;
@@ -165,6 +170,8 @@ class Sammler {
     if (a === "datum") {
       this.wieDatum++;
       if (/\d[T ]\d{2}:\d{2}/.test(s)) this.datumZeit++;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) this.isoDatum++;
+      else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/.test(s)) this.isoDatumZeit++;
       const iso = datumAlsIso(s);
       if (iso !== null) {
         if (this.datumMin === null || iso < this.datumMin) this.datumMin = iso;
@@ -244,7 +251,7 @@ export function felderSammeln(index: Strukturindex, text: string, basis: number,
       zahlen: Float64Array.from(s.zahlen), ganz: s.ganz, wahr: s.wahr, falsch: s.falsch,
       listenLaenge: s.listeMin <= s.listeMax ? { min: s.listeMin, max: s.listeMax } : null,
       nichts: s.nichts, leerText: s.leerText, wieDatum: s.wieDatum, wieZahl: s.wieZahl, fuehrendeNullen: s.fuehrendeNullen,
-      datumZeit: s.datumZeit, nurZiffern: s.nurZiffern, objekte: s.objekte,
+      datumZeit: s.datumZeit, isoDatum: s.isoDatum, isoDatumZeit: s.isoDatumZeit, nurZiffern: s.nurZiffern, objekte: s.objekte,
     });
   }
   return { felder, eintraege };

@@ -133,6 +133,119 @@
   color: var(--text-1);
 }
 
+/* Verzweigung (Graph und Struktur): Baum von links nach rechts mit Verbindern */
+/* ----- 3. Verzweigung (Graph und Struktur) --------------------------------- */
+/* Baum von links nach rechts aus Karten und Verbindern. Die Verbinder sind
+   Pseudo-Elemente, die Schrift kann jede Stufe haben, ohne dass etwas
+   verrutscht. --an-spalt ist der Raum zwischen Eltern und Kindern. */
+
+.an-leinwand {
+  --an-spalt: calc(var(--a6) * 2);
+  display: flex;
+  min-width: max-content;
+  min-height: 100%;
+  padding: var(--a5);
+  background-image: radial-gradient(circle, var(--rand-1) 1px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+.an-leinwand > * {
+  margin: auto; /* mittig, solange Platz ist; sonst rollt das Feld */
+}
+.an-leinwand.an-weit {
+  --an-spalt: calc(var(--a6) * 4);
+}
+.an-zweig {
+  display: flex;
+  align-items: center;
+}
+.an-kinder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--an-spalt);
+}
+.an-kinder::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: calc(var(--an-spalt) / 2);
+  height: 2px;
+  translate: 0 -50%;
+  background: var(--rand-2);
+}
+.an-kinder > .an-zweig {
+  position: relative;
+  padding-block: var(--a1);
+}
+.an-weit .an-kinder > .an-zweig {
+  padding-block: var(--a4);
+}
+.an-kinder > .an-zweig::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--an-spalt) / -2);
+  top: 50%;
+  width: calc(var(--an-spalt) / 2);
+  height: 2px;
+  translate: 0 -50%;
+  background: var(--rand-2);
+}
+.an-kinder > .an-zweig::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--an-spalt) / -2);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  translate: -50% 0;
+  background: var(--rand-2);
+}
+.an-kinder > .an-zweig:first-child::after {
+  top: 50%;
+}
+.an-kinder > .an-zweig:last-child::after {
+  bottom: 50%;
+}
+.an-kinder > .an-zweig:only-child::after {
+  display: none;
+}
+
+/* Beschriftung einer Kante: Kardinalität auf der Linie zum Kind */
+.an-kante {
+  position: absolute;
+  z-index: 1;
+  left: calc(var(--an-spalt) / -4);
+  top: 50%;
+  translate: -50% -50%;
+}
+.an-kante-zahl {
+  display: inline-block;
+  padding: 0 var(--a2);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  font-weight: 600;
+  color: var(--akzent);
+  white-space: nowrap;
+}
+
+/* Zoom-Knöpfe */
+.an-zoom {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+}
+.an-zoom-wert {
+  min-width: 5ch;
+  text-align: center;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
 /* ----- In der App ---------------------------------------------------------- */
 
 .an-ansicht {
@@ -152,4 +265,22 @@ button.an-muster-eintrag {
   color: inherit;
   text-align: left;
   cursor: pointer;
+}
+button.an-tk-feld {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--typ-schluessel);
+  text-align: left;
+  cursor: pointer;
+}
+button.an-tk-feld:hover {
+  color: var(--akzent);
+}
+.an-ansicht > .inhalt {
+  overflow: auto;
 }

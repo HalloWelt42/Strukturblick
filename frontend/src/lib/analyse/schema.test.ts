@@ -53,6 +53,12 @@ describe("Schema", () => {
     expect(c.typen.map((t) => t.name)).toEqual(["Eintrag"]);
     expect(beschreiben(c.wurzel)).toBe("Liste von Eintrag");
     expect(c.typen[0].felder.map((f) => f.name)).toEqual(["kunden nr", "e-mail"]);
+    // Datum in deutscher Form: kein "format: date" (das verlangt JJJJ-MM-TT), aber als Datum beschrieben
+    const d = "angelegt\n01.02.2024\n2024-03-01\n";
+    const dx = format("csv").lesen(d).index!;
+    const ds = schemaAbleiten(dx, d);
+    expect(beschreiben(ds.typen[0].felder[0].arten)).toBe("Datum, verschiedene Formen");
+    expect((alsJsonSchema(ds, "d.csv") as { $defs: Record<string, { properties: Record<string, unknown> }> }).$defs.Eintrag.properties.angelegt).toEqual({ type: "string" });
     const j = alsJsonSchema(c, "kunden.csv") as { type: string; items: unknown; $defs: Record<string, { properties: Record<string, unknown> }> };
     expect(j.type).toBe("array");
     expect(Object.keys(j.$defs.Eintrag.properties)).toEqual(["kunden nr", "e-mail"]);
