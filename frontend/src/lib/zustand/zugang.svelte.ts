@@ -2,7 +2,7 @@
 // Einrichtung, dann Start des Arbeitsplatzes mit der Ablage auf dem Server. Dazu der Abgleich der Fassung: eine neue
 // Fassung lädt von selbst, aber nie, solange etwas noch nicht abgelegt ist.
 
-import { BAUART, FASSUNG, ablageFuerBauart, ausweichAblage, serverteil, type Serverteil } from "../dienste/bauart";
+import { BAUART, FASSUNG, ablageFuerBauart, ausweichAblage, fassungOhneServerVerfolgen, serverteil, type Serverteil } from "../dienste/bauart";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
 import { ablageverwaltung } from "./ablageverwaltung.svelte";
 import { meldungen } from "./meldungen.svelte";
@@ -32,10 +32,11 @@ class Zugang {
 
   async starten(): Promise<void> {
     this.teil = await serverteil();
+    const ruhig = () => arbeitsplatz.blaetter.every((b) => b.gespeichert);
     if (this.teil) {
-      this.teil.fassungVerfolgen(FASSUNG, () => arbeitsplatz.blaetter.every((b) => b.gespeichert));
+      this.teil.fassungVerfolgen(FASSUNG, ruhig);
       await this.teil.sitzungStarten();
-    }
+    } else fassungOhneServerVerfolgen(FASSUNG, ruhig);
   }
 
   /** Startet den Arbeitsplatz einmal, sobald der Zugang bereit ist (vom Einstieg aus einem Effekt gerufen). Tolerant:
