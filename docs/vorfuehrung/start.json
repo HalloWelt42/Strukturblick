@@ -1,0 +1,25 @@
+{
+  "kapitel": "start",
+  "titel": "Der erste Blick",
+  "ticket": "STB-29",
+  "rolle": "erzaehler",
+  "voraussetzung": "App frisch geladen (Bauart ohne Server oder pi5b)",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Beim Start erklärt Strukturblick kurz, worauf es ankommt: Die Nutzung ist privat kostenfrei, die Dokumente bleiben bei dir, und die App ist noch in der Betaphase. Die Lizenzen aller verwendeten Bausteine sind von hier aus einsehbar.",
+      "ziel": { "anker": "starthinweis", "notbehelf": "Fenster mit dem Titel Strukturblick und Fassung, Beta" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Vier Abschnitte: Nur private Nutzung ist kostenfrei, Deine Daten, Betaphase, Beispiele sind erfunden",
+      "geprueft": "2026-11-11, Bauart ohne Server und pi5b, 2.7.0"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Verstanden, und es geht los.",
+      "ziel": { "anker": "starthinweis-verstanden", "notbehelf": "Knopf Verstanden" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Fenster zu, Arbeitsplatz sichtbar",
+      "geprueft": "2026-11-11"
+    }
+  ]
+}
