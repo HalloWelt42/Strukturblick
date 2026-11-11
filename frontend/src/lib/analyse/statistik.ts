@@ -54,6 +54,11 @@ export interface Feld {
   readonly wieDatum: number;
   readonly wieZahl: number;
   readonly fuehrendeNullen: number;
+  /** Texte, die wie Datum mit Uhrzeit aussehen, und Texte nur aus Ziffern */
+  readonly datumZeit: number;
+  readonly nurZiffern: number;
+  /** Wie viele Objekte an diesem Pfad stehen (darin können Felder stehen) */
+  readonly objekte: number;
 }
 
 export interface Statistik {
@@ -115,6 +120,8 @@ class Sammler {
   wieDatum = 0;
   wieZahl = 0;
   fuehrendeNullen = 0;
+  datumZeit = 0;
+  nurZiffern = 0;
   datumMin: string | null = null;
   datumMax: string | null = null;
   zahlMin: { z: number; s: string } | null = null;
@@ -154,8 +161,10 @@ class Sammler {
     if (this.textMin === null || s < this.textMin) this.textMin = s;
     if (this.textMax === null || s > this.textMax) this.textMax = s;
     const a = siehtAusWie(s);
+    if (/^\d+$/.test(s)) this.nurZiffern++;
     if (a === "datum") {
       this.wieDatum++;
+      if (/\d[T ]\d{2}:\d{2}/.test(s)) this.datumZeit++;
       const iso = datumAlsIso(s);
       if (iso !== null) {
         if (this.datumMin === null || iso < this.datumMin) this.datumMin = iso;
@@ -183,7 +192,11 @@ function textBereich(s: Sammler, gleichLang: boolean): { min: string; max: strin
 const BEZEICHNER = /^[\p{L}_$][\p{L}\p{N}_$]*$/u;
 const teilName = (k: string): string => (BEZEICHNER.test(k) ? k : JSON.stringify(k));
 
-export function statistik(index: Strukturindex, text: string, basis: number): Statistik {
+/**
+ * Alle Felder als Musterpfade unterhalb von `basis`: bei einer Liste relativ zu ihren Einträgen, sonst relativ zu
+ * `basis` selbst (Pfad ""). Ungefiltert; Statistik und Schema wählen daraus.
+ */
+export function felderSammeln(index: Strukturindex, text: string, basis: number, eintraegeEinzeln = basis !== KEIN && index.art[basis] === KnotenArt.liste): { felder: Feld[]; eintraege: number } {
   const sammler = new Map<string, Sammler>();
   const sammeln = (pfad: string, k: number, vorsilbe: string, name: string): void => {
     let s = sammler.get(pfad);
@@ -210,9 +223,8 @@ export function statistik(index: Strukturindex, text: string, basis: number): St
       for (let i = kinder.length - 1; i >= 0; i--) stapel.push(kinder[i]);
     }
   };
-  const istListe = basis !== KEIN && index.art[basis] === KnotenArt.liste;
   let eintraege = 0;
-  if (istListe) for (let c = index.erstesKind[basis]; c !== KEIN; c = index.naechstes[c], eintraege++) besuchen(c);
+  if (eintraegeEinzeln) for (let c = index.erstesKind[basis]; c !== KEIN; c = index.naechstes[c], eintraege++) besuchen(c);
   else if (basis !== KEIN) { besuchen(basis); eintraege = 1; }
 
   const felder: Feld[] = [];
@@ -232,8 +244,14 @@ export function statistik(index: Strukturindex, text: string, basis: number): St
       zahlen: Float64Array.from(s.zahlen), ganz: s.ganz, wahr: s.wahr, falsch: s.falsch,
       listenLaenge: s.listeMin <= s.listeMax ? { min: s.listeMin, max: s.listeMax } : null,
       nichts: s.nichts, leerText: s.leerText, wieDatum: s.wieDatum, wieZahl: s.wieZahl, fuehrendeNullen: s.fuehrendeNullen,
+      datumZeit: s.datumZeit, nurZiffern: s.nurZiffern, objekte: s.objekte,
     });
   }
+  return { felder, eintraege };
+}
+
+export function statistik(index: Strukturindex, text: string, basis: number): Statistik {
+  const { felder, eintraege } = felderSammeln(index, text, basis);
   // Felder, die immer Objekte sind (kunde, positionen[]), sagen nichts, was ihre Felder darunter nicht sagen; der Eintrag
   // selbst zählt nur, wenn die Einträge einfache Werte sind
   const nurObjekt = (f: Feld) => f.arten[KnotenArt.objekt] === f.vorkommen;
