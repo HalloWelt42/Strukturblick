@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strukturblick 2.0 - Entwürfe</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <script src="entwurf.js"></script>
+    <style>
+      body { overflow: auto; }
+      .galerie { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+      .galerie h1 { font-size: var(--seitentitel); margin: 0 0 6px; display: flex; gap: 12px; align-items: center; }
+      .galerie h1 i { color: var(--akzent); }
+      .galerie > p { color: var(--text-2); margin: 0 0 24px; max-width: 70ch; }
+      .g-liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 12px; }
+      .g-karte { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; color: var(--text-1); text-decoration: none;
+                 background-color: var(--flaeche-panel); background-image: var(--erhaben); box-shadow: var(--kante), var(--schatten-ruhig); }
+      .g-karte:hover { background-color: var(--flaeche-panel-2); }
+      .g-karte strong { display: flex; gap: 10px; align-items: center; font-size: var(--titel); }
+      .g-karte strong i { color: var(--akzent); width: 24px; text-align: center; }
+      .g-karte span { color: var(--text-2); font-size: var(--klein); }
+      .g-karte.folgt { opacity: 0.55; pointer-events: none; }
+      .g-gruppe { margin: 28px 0 10px; font-size: var(--marke); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
+      .entwurf-leiste { left: auto; right: 16px; translate: none; bottom: auto; top: 16px; }
+    </style>
+  </head>
+  <body>
+    <div class="galerie">
+      <h1><i class="fa-solid fa-sitemap"></i> Strukturblick 2.0: Entwürfe</h1>
+      <p>Farben und kantiger Stil der freigegebenen Entwürfe, Schrift in drei Stufen (Klein 16, Mittel 17, Groß 18 px), Knöpfe und Segmente mit Lichtkante. Oben rechts lassen sich Thema und Schriftstufe umschalten; die Adresse merkt sich beides.</p>
+
+      <div class="g-gruppe">Zur Abnahme: Richtung</div>
+      <div class="g-liste">
+        <a class="g-karte" href="arbeitsplatz.html"><strong><i class="fa-solid fa-display"></i> Arbeitsplatz am Rechner</strong><span>Baum mit Pfad, Inspektor mit "Alle Werte dieses Pfads" und Pfad kopieren (jq, PHP, Python ...), Rückgängig und Verlauf im Kopf, Befehlspalette, Ablage auf pi5b, Abfrage unten.</span></a>
+        <a class="g-karte" href="telefon.html"><strong><i class="fa-solid fa-mobile-screen"></i> Telefon</strong><span>Eigene Ansicht: Dokumente, Ansehen Ebene für Ebene, Wert ändern im Blatt von unten, danach Rückgängig im Band.</span></a>
+      </div>
+
+      <div class="g-gruppe">Folgen nach der Abnahme</div>
+      <div class="g-liste">
+        <span class="g-karte folgt"><strong><i class="fa-solid fa-table"></i> Tabelle</strong><span>Bearbeiten direkt mit Rückgängig, Spaltenprofil im Kopf, Facetten.</span></span>
+        <span class="g-karte folgt"><strong><i class="fa-solid fa-terminal"></i> Abfrage</strong><span>jq mit Ergebnis beim Tippen, SQL über mehrere Dokumente, JSONPath, XPath, Suche.</span></span>
+        <span class="g-karte folgt"><strong><i class="fa-solid fa-broom"></i> Bereinigen</strong><span>Facetten, ähnliche Schreibweisen zusammenführen, Typvorschläge.</span></span>
+        <span class="g-karte folgt"><strong><i class="fa-solid fa-scroll"></i> Rezepte und Verlauf</strong><span>Vorgänge ansehen, zurückspringen, als Rezept speichern und anwenden.</span></span>
+        <span class="g-karte folgt"><strong><i class="fa-solid fa-magnifying-glass"></i> Befehlspalette</strong><span>Alle Befehle mit Tastenkürzeln, zuletzt benutzte oben.</span></span>
+        <span class="g-karte folgt"><strong><i class="fa-solid fa-folder-open"></i> Ablage und Einstellungen</strong><span>Ordner auf pi5b, Schriftstufe, KI über die Leitstelle.</span></span>
+        <span class="g-karte folgt"><strong><i class="fa-solid fa-layer-group"></i> Übrige Ansichten</strong><span>Editor, Statistik, Struktur, Graph, Vergleich, Validieren, Konvertieren, Reparieren, Code, Testdaten.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

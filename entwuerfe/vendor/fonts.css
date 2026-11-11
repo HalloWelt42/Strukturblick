@@ -1,0 +1,35 @@
+/* Schriften der Entwürfe: eigenständig und ohne CDN, die Dateien liegen daneben.
+   Nur der latin-Zeichensatz, das genügt für die Entwürfe. Die App bindet
+   dieselben Schriften über npm (@fontsource) ein. */
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./barlow-latin-400-normal.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./barlow-latin-500-normal.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./barlow-latin-600-normal.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./jetbrains-mono-latin-400-normal.woff2) format("woff2");
+}

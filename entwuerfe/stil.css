@@ -1,0 +1,1312 @@
+/* ============================================================================
+   Strukturblick 2.0 - Stil der Entwürfe
+   Eine Datei für alle Entwurfsseiten. Abschnitt 1 (Marken) wandert bei der
+   Umsetzung unverändert in die App. Farben aus den freigegebenen Entwürfen der
+   Fassung 0.x, Schriftstufen nach dem Appkern (data-schrift am html), Plastik
+   der Nebenelemente nach der Vorlage HiFi. Kantig: Ecken 0, Knöpfe 3 px.
+   Kein !important, keine Ränder links/rechts als Akzent, Raster immer mit
+   minmax(0, 1fr).
+   ========================================================================== */
+
+/* ----- 1. Marken ---------------------------------------------------------- */
+
+:root {
+  /* Rohpalette des Nutzers (nur hier, nie direkt in Bausteinen) */
+  --roh-anthrazit: #4a4a4a;
+  --roh-silber: #cbcbcb;
+  --roh-creme: #ffffe3;
+  --roh-blaugrau: #6d8196;
+  --roh-ocker: #96826d;      /* Komplement zu Blaugrau */
+  --roh-lavendel: #e3e3ff;   /* Komplement zu Creme */
+
+  /* Schriften: Barlow für Texte, JetBrains Mono für Werte, Pfade und Code */
+  --schrift: "Barlow", system-ui, -apple-system, sans-serif;
+  --schrift-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Ecken: alles kantig, nur Knöpfe leicht gerundet */
+  --r-knopf: 3px;
+
+  /* Abstände */
+  --a1: 4px;
+  --a2: 8px;
+  --a3: 12px;
+  --a4: 16px;
+  --a5: 24px;
+  --a6: 32px;
+
+  --schnell: 0.12s ease;
+
+  /* Plastik (HiFi): Licht von oben links, Glanz und Tiefe als Regler */
+  --glanz: 1;
+  --tiefe: 1;
+}
+
+/* Schriftstufen wie im Appkern: gross = Grundschrift, klein = Nebenangaben,
+   marke = Etiketten und Zähler (nie kleiner). Vorgabe: mittel (17 px). */
+:root,
+[data-schrift="mittel"] {
+  --gross: 17px;
+  --klein: 15px;
+  --marke: 15px;
+  --titel: 21px;
+  --seitentitel: 26px;
+  --kennzahl: 27px;
+  --zeile: 34px;        /* Zeile in Baum, Tabelle, Listen */
+  --knopf-hoehe: 38px;
+  --kopf-hoehe: 56px;
+  --leiste-breite: 264px;
+  --inspektor-breite: 340px;
+  --fuss-hoehe: 36px;
+}
+[data-schrift="klein"] {
+  --gross: 16px;
+  --klein: 14px;
+  --marke: 13px;
+  --titel: 19px;
+  --seitentitel: 24px;
+  --kennzahl: 24px;
+  --zeile: 31px;
+  --knopf-hoehe: 34px;
+  --kopf-hoehe: 52px;
+  --leiste-breite: 240px;
+  --inspektor-breite: 320px;
+  --fuss-hoehe: 32px;
+}
+[data-schrift="gross"] {
+  --gross: 18px;
+  --klein: 16px;
+  --marke: 15px;
+  --titel: 22px;
+  --seitentitel: 28px;
+  --kennzahl: 30px;
+  --zeile: 37px;
+  --knopf-hoehe: 42px;
+  --kopf-hoehe: 60px;
+  --leiste-breite: 284px;
+  --inspektor-breite: 368px;
+  --fuss-hoehe: 40px;
+}
+
+/* Mittelton (Vorgabe): weder hell noch dunkel. Farben für Zustände und Typen
+   gegenüber 0.x in Kontrast und Leuchtkraft angehoben (Nutzer 11.11.2026, alte
+   Palette am Ticket STB-2); Text auf Flächen mindestens 4,5:1, Abzeichen auf
+   einfachen Farben statt Transparenz. */
+:root,
+:root[data-theme="mittelton"] {
+  --flaeche-seite: #a6a6a6;
+  --flaeche-leiste: #979797;
+  --flaeche-panel: var(--roh-silber);
+  --flaeche-panel-2: #bdbdbd;
+  --flaeche-eingabe: #d8d8d1;
+  --flaeche-hervor: var(--roh-creme);
+  --flaeche-wechsel: rgba(0, 0, 0, 0.03);
+  --mulde: #b3b3b0;
+
+  --text-1: #222222;
+  --text-2: #3e3e3e;
+  --text-3: #575757;
+  --text-invers: #ececec;
+
+  --rand-1: rgba(20, 20, 20, 0.22);
+  --rand-2: rgba(20, 20, 20, 0.38);
+
+  --akzent: #2f5478;
+  --akzent-flaeche: #3c6690;
+  --akzent-weich: #b8cbe0;
+  --auf-akzent: #f2f4f6;
+  --zweit: #5e4728;
+  --zweit-weich: #dccaa9;
+
+  --gut: #1d5a30;
+  --gut-weich: #b5d9bd;
+  --warn: #5e4205;
+  --warn-weich: #ecd391;
+  --fehler: #82291f;
+  --fehler-weich: #e6b7b1;
+
+  /* Typfarben für Baum und Syntax */
+  --typ-objekt: #2f5478;
+  --typ-liste: #563c88;
+  --typ-text: #285c20;
+  --typ-zahl: #77480f;
+  --typ-bool: #84285a;
+  --typ-null: #5c5c5c;
+  --typ-schluessel: #222222;
+
+  --diff-hinzu: rgba(60, 150, 90, 0.38);
+  --diff-weg: rgba(200, 80, 70, 0.36);
+  --diff-geaendert: rgba(214, 160, 40, 0.4);
+
+  --schatten-ruhig: 0 1px 2px rgba(20, 20, 20, 0.16), 0 8px 18px -6px rgba(20, 20, 20, 0.22);
+  --schatten-schwebend: 0 18px 50px -10px rgba(20, 20, 20, 0.45);
+  --leuchten: 0.35;
+}
+
+/* Dunkel: aus Anthrazit abgeleitet, Akzente aufgehellt */
+:root[data-theme="dunkel"] {
+  --flaeche-seite: #232323;
+  --flaeche-leiste: #2b2b2b;
+  --flaeche-panel: #353535;
+  --flaeche-panel-2: #404040;
+  --flaeche-eingabe: #2a2a2a;
+  --flaeche-hervor: rgba(255, 255, 227, 0.14);
+  --flaeche-wechsel: rgba(255, 255, 255, 0.025);
+  --mulde: #1c1c1c;
+
+  --text-1: #e8e8e8;
+  --text-2: #cbcbcb;
+  --text-3: #a3a3a3;
+  --text-invers: #232323;
+
+  --rand-1: rgba(255, 255, 255, 0.12);
+  --rand-2: rgba(255, 255, 255, 0.24);
+
+  --akzent: #9fc4ea;
+  --akzent-flaeche: #5b85b0;
+  --akzent-weich: #33475e;
+  --auf-akzent: #f2f4f6;
+  --zweit: #e0c08f;
+  --zweit-weich: #4b4131;
+
+  --gut: #7fd69a;
+  --gut-weich: #2c4a35;
+  --warn: #f0c46a;
+  --warn-weich: #4f4124;
+  --fehler: #f08f86;
+  --fehler-weich: #563330;
+
+  --typ-objekt: #9fc4ea;
+  --typ-liste: #c3a6ef;
+  --typ-text: #9fd88a;
+  --typ-zahl: #ebba7c;
+  --typ-bool: #ee9cc4;
+  --typ-null: #969696;
+  --typ-schluessel: #e8e8e8;
+
+  --diff-hinzu: rgba(80, 180, 110, 0.32);
+  --diff-weg: rgba(220, 100, 90, 0.34);
+  --diff-geaendert: rgba(230, 175, 60, 0.3);
+
+  --schatten-ruhig: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 18px -6px rgba(0, 0, 0, 0.5);
+  --schatten-schwebend: 0 18px 50px -10px rgba(0, 0, 0, 0.7);
+  --leuchten: 1;
+}
+
+/* Plastik, abgeleitet aus den Marken */
+:root {
+  --erhaben: linear-gradient(180deg, rgb(255 255 255 / calc(0.10 * var(--glanz))), rgb(0 0 0 / calc(0.08 * var(--tiefe))));
+  --kante: inset 0 1px 0 rgb(255 255 255 / calc(0.14 * var(--glanz))), 0 0 0 1px var(--rand-1);
+  --vertieft: inset 0 calc(2px * var(--tiefe)) 5px rgb(0 0 0 / calc(0.28 * var(--tiefe))),
+    inset 0 -1px 0 rgb(255 255 255 / calc(0.10 * var(--glanz))), inset 0 0 0 1px rgb(0 0 0 / 0.14);
+}
+:root[data-theme="dunkel"] {
+  --kante: inset 0 1px 0 rgb(255 255 255 / calc(0.07 * var(--glanz))), 0 0 0 1px var(--rand-1);
+  --vertieft: inset 0 calc(2px * var(--tiefe)) 5px rgb(0 0 0 / calc(0.55 * var(--tiefe))),
+    inset 0 -1px 0 rgb(255 255 255 / calc(0.07 * var(--glanz))), inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+
+/* ----- 2. Grundlagen ------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+body {
+  font-family: var(--schrift);
+  font-size: var(--gross);
+  line-height: 1.4;
+  color: var(--text-1);
+  background: var(--flaeche-seite);
+  -webkit-font-smoothing: antialiased;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+.mono {
+  font-family: var(--schrift-mono);
+}
+.text-3 {
+  color: var(--text-3);
+}
+.klein {
+  font-size: var(--klein);
+}
+
+/* ----- 3. Bausteine: Knöpfe, Segmente, Felder, Abzeichen ------------------ */
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--knopf-hoehe);
+  padding: 0 var(--a3);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), 0 1px 2px rgb(0 0 0 / calc(0.25 * var(--tiefe)));
+  font-size: var(--klein);
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform var(--schnell), box-shadow var(--schnell);
+}
+.knopf:hover {
+  background-color: var(--flaeche-panel);
+}
+.knopf:active {
+  transform: translateY(1px);
+  background-image: none;
+  box-shadow: var(--vertieft);
+}
+.knopf.primaer {
+  background-color: var(--akzent-flaeche);
+  color: var(--auf-akzent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / calc(0.35 * var(--glanz))), 0 1px 2px rgb(0 0 0 / 0.3),
+    0 0 calc(16px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 40%, transparent);
+}
+.knopf.still {
+  background: transparent;
+  box-shadow: none;
+}
+.knopf.still:hover {
+  background: var(--akzent-weich);
+}
+.knopf.nur-symbol {
+  width: var(--knopf-hoehe);
+  padding: 0;
+  justify-content: center;
+}
+.knopf:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.knopf .zahl {
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.taste {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0 6px;
+  border-radius: var(--r-knopf);
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--marke);
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text-2);
+}
+
+/* Segment: eingelassene Schiene, gewählter Teil erhaben mit leuchtender Schrift */
+.segment {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  border-radius: var(--r-knopf);
+}
+.segment > * {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  padding: 0 var(--a3);
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  font-size: var(--klein);
+  font-weight: 500;
+  color: var(--text-2);
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+.segment > *:hover {
+  color: var(--text-1);
+}
+.segment > .aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), 0 1px 3px rgb(0 0 0 / calc(0.3 * var(--tiefe)));
+  color: var(--akzent);
+  text-shadow: 0 0 calc(10px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 55%, transparent);
+}
+
+.feld {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--knopf-hoehe);
+  padding: 0 var(--a3);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: var(--text-1);
+  font-size: var(--gross);
+  min-width: 0;
+}
+.feld input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: 0;
+}
+.feld input::placeholder {
+  color: var(--text-3);
+}
+.feld > i {
+  color: var(--text-3);
+}
+
+.abzeichen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  padding: 1px 7px;
+  background: var(--akzent-weich);
+  color: var(--akzent);
+  font-size: var(--marke);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.abzeichen.gut {
+  background: var(--gut-weich);
+  color: var(--gut);
+}
+.abzeichen.warn {
+  background: var(--warn-weich);
+  color: var(--warn);
+}
+.abzeichen.fehler {
+  background: var(--fehler-weich);
+  color: var(--fehler);
+}
+.abzeichen.zweit {
+  background: var(--zweit-weich);
+  color: var(--zweit);
+}
+
+.punkt {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--gut);
+  box-shadow: 0 0 calc(8px * var(--leuchten)) var(--gut);
+  flex: none;
+}
+.punkt.warn {
+  background: var(--warn);
+  box-shadow: 0 0 calc(8px * var(--leuchten)) var(--warn);
+}
+
+/* ----- 4. Schale am Rechner ----------------------------------------------- */
+/* Die Seite selbst rollt nie, nur ihre Felder (Rollfelder). */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--leiste-breite) minmax(0, 1fr) var(--inspektor-breite);
+  grid-template-rows: var(--kopf-hoehe) minmax(0, 1fr) var(--fuss-hoehe);
+  grid-template-areas:
+    "kopf kopf kopf"
+    "leiste haupt inspektor"
+    "fuss fuss fuss";
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Kopf: Marke, Dokumente, Befehle */
+.kopf {
+  grid-area: kopf;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+}
+.marke {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--titel);
+  font-weight: 600;
+  white-space: nowrap;
+  flex: none;
+}
+.marke i {
+  color: var(--akzent);
+}
+.dok-reiter {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
+  gap: 2px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-top: var(--a2);
+}
+.dok-reiter::-webkit-scrollbar {
+  display: none;
+}
+.dok-reiter a {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: 0 var(--a3);
+  max-width: 260px;
+  font-size: var(--klein);
+  color: var(--text-2);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  flex: none;
+}
+.dok-reiter a .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dok-reiter a:hover {
+  color: var(--text-1);
+  background: var(--flaeche-wechsel);
+}
+.dok-reiter a.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--text-1);
+  font-weight: 600;
+}
+.dok-reiter a .zu {
+  color: var(--text-3);
+  padding: 2px 4px;
+}
+.dok-reiter a .stand {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--warn);
+  flex: none;
+}
+.kopf-rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  flex: none;
+}
+.befehl-feld {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--knopf-hoehe);
+  width: 280px;
+  padding: 0 var(--a2) 0 var(--a3);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: var(--text-3);
+  font-size: var(--klein);
+  cursor: pointer;
+}
+.befehl-feld .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: 3px;
+}
+
+/* Linke Leiste: Dokumente der Ablage, Werkzeuge, Rezepte */
+.leiste {
+  grid-area: leiste;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: inset -1px 0 0 var(--rand-1);
+}
+.leiste-feld {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--a2) var(--a2) var(--a4);
+}
+.leiste-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a4) var(--a2) var(--a1);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.leiste-titel .rechts {
+  margin-left: auto;
+}
+.eintrag {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--zeile);
+  padding: 0 var(--a2);
+  color: var(--text-2);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.eintrag > i:first-child {
+  width: 20px;
+  text-align: center;
+  color: var(--text-3);
+}
+.eintrag .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.eintrag .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a1);
+  align-items: center;
+}
+.eintrag:hover {
+  color: var(--text-1);
+  background: var(--flaeche-wechsel);
+}
+.eintrag.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--text-1);
+  font-weight: 600;
+}
+.eintrag.aktiv > i:first-child {
+  color: var(--akzent);
+  text-shadow: 0 0 calc(10px * var(--leuchten)) var(--akzent-flaeche);
+}
+.leiste-fuss {
+  padding: var(--a2) var(--a3);
+  font-size: var(--marke);
+  color: var(--text-3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+
+/* Hauptbereich: Ansichtswahl, Werkzeugzeile, Inhalt, Konsole */
+.haupt {
+  grid-area: haupt;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--flaeche-panel);
+}
+.ansicht-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  min-width: 0;
+  flex: none;
+}
+.ansicht-kopf .segment {
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.werkzeugzeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  flex: none;
+  min-width: 0;
+}
+.werkzeugzeile > .pfad {
+  flex: 1 1 auto;
+  justify-content: flex-end; /* zu lang: vorn kürzen, das Ende bleibt sichtbar */
+}
+.werkzeugzeile > .pfad > :first-child {
+  margin-right: auto;
+}
+.werkzeugzeile .rechts {
+  margin-left: auto;
+  flex: none;
+  display: flex;
+  gap: var(--a2);
+  align-items: center;
+}
+.inhalt {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Pfad (Brotkrumen) */
+.pfad {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.pfad a {
+  padding: 2px 6px;
+  color: var(--text-2);
+  text-decoration: none;
+}
+.pfad a:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+.pfad a.letzter {
+  color: var(--akzent);
+  font-weight: 600;
+}
+.pfad .trenner {
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+
+/* Baum */
+.baum {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  padding: var(--a2) 0 var(--a5);
+}
+.knoten {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--zeile);
+  padding-right: var(--a3);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.knoten:nth-child(even) {
+  background: var(--flaeche-wechsel);
+}
+.knoten:hover {
+  background: var(--akzent-weich);
+}
+.knoten.gewaehlt {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .knoten.gewaehlt {
+  background: var(--akzent-weich);
+}
+.knoten .klapp {
+  width: 18px;
+  text-align: center;
+  color: var(--text-3);
+  flex: none;
+}
+.knoten .schl {
+  color: var(--typ-schluessel);
+  font-weight: 600;
+}
+.knoten .schl::after {
+  content: ":";
+  color: var(--text-3);
+  font-weight: 400;
+}
+.knoten .idx {
+  color: var(--text-3);
+}
+.knoten .art {
+  font-size: var(--marke);
+  padding: 0 6px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  color: var(--text-2);
+}
+.knoten .info {
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.knoten .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a1);
+}
+.w-text {
+  color: var(--typ-text);
+}
+.w-zahl {
+  color: var(--typ-zahl);
+}
+.w-bool {
+  color: var(--typ-bool);
+}
+.w-null {
+  color: var(--typ-null);
+  font-style: italic;
+}
+.w-objekt {
+  color: var(--typ-objekt);
+}
+.w-liste {
+  color: var(--typ-liste);
+}
+
+/* Konsole unten (Abfrage), eingeklappt als Leiste */
+.konsole-leiste {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  min-height: calc(var(--knopf-hoehe) + 12px);
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  flex: none;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.konsole-leiste .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a2);
+  align-items: center;
+}
+
+/* Rechte Spalte: Inspektor */
+.inspektor {
+  grid-area: inspektor;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: inset 1px 0 0 var(--rand-1);
+}
+.inspektor-feld {
+  overflow-wrap: anywhere;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--a3) var(--a4);
+}
+.karte {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  padding: var(--a3);
+  margin-top: var(--a3);
+}
+.karte-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: 0 0 var(--a2);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.karte-titel .rechts {
+  margin-left: auto;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.wertfeld {
+  padding: var(--a2) var(--a3);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  overflow-wrap: anywhere;
+}
+.paare {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--a1) var(--a3);
+  font-size: var(--klein);
+}
+.paare dt {
+  color: var(--text-3);
+}
+.paare dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.knopf-reihe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+.verteilung {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px var(--a3);
+  font-size: var(--klein);
+  align-items: center;
+}
+.verteilung .balken {
+  grid-column: 1 / -1;
+  height: 6px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  margin-top: -4px;
+}
+.verteilung .balken span {
+  display: block;
+  height: 100%;
+  background: var(--akzent-flaeche);
+}
+
+/* Fußleiste: Zustand */
+.fuss {
+  grid-area: fuss;
+  display: flex;
+  align-items: center;
+  gap: var(--a4);
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+.fuss .teil {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+.fuss .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a4);
+  align-items: center;
+}
+
+/* Schwebende Meldung mit Rückgängig */
+.meldung {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--fuss-hoehe) + var(--knopf-hoehe) + 28px);
+  translate: -50% 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: var(--a2) var(--a2) var(--a2) var(--a4);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+  font-size: var(--klein);
+  max-width: calc(100vw - 32px);
+}
+.meldung > i {
+  color: var(--gut);
+}
+
+/* ----- 5. Breiten am Rechner (kein Telefon, das hat eigene Seiten) -------- */
+
+/* Unter 1280 px: Inspektor wird schmaler */
+@media (max-width: 1279px) {
+  .app {
+    grid-template-columns: var(--leiste-breite) minmax(0, 1fr) 300px;
+  }
+  .befehl-feld {
+    width: 200px;
+  }
+}
+/* Unter 1200 px: Ansichtswahl zeigt nur die gewählte Ansicht mit Namen */
+@media (max-width: 1199px) {
+  .ansicht-kopf .segment > :not(.aktiv) span {
+    display: none;
+  }
+}
+/* Unter 1100 px: Inspektor klappt als Tafel über den Inhalt */
+@media (max-width: 1099px) {
+  .app {
+    grid-template-columns: var(--leiste-breite) minmax(0, 1fr);
+    grid-template-areas:
+      "kopf kopf"
+      "leiste haupt"
+      "fuss fuss";
+  }
+  .inspektor {
+    display: none;
+  }
+  .befehl-feld .text {
+    display: none;
+  }
+  .befehl-feld {
+    width: auto;
+  }
+  .nur-breit {
+    display: none;
+  }
+}
+/* Unter 900 px: Leiste nur mit Symbolen */
+@media (max-width: 899px) {
+  .app {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+  .leiste .name,
+  .leiste .rechts,
+  .leiste-titel,
+  .leiste-fuss span {
+    display: none;
+  }
+  .leiste .eintrag {
+    justify-content: center;
+  }
+  .ansicht-kopf .segment > * span {
+    display: none;
+  }
+  .marke span {
+    display: none;
+  }
+}
+
+/* ----- 6. Entwurfsleiste (nur in den Entwürfen) --------------------------- */
+
+.entwurf-leiste {
+  position: fixed;
+  left: 50%;
+  translate: -50% 0;
+  bottom: 2px;
+  z-index: 30;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--marke);
+}
+.entwurf-leiste button,
+.entwurf-leiste a {
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  padding: 4px 8px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: var(--marke);
+}
+.entwurf-leiste .aktiv {
+  background: var(--flaeche-panel);
+  box-shadow: var(--kante);
+  color: var(--akzent);
+}
+.entwurf-leiste .trenn {
+  width: 1px;
+  background: var(--rand-1);
+  margin: 2px 4px;
+}
+
+/* ----- 7. Telefon (eigene Ansicht, keine verkleinerte Schale) ------------- */
+/* Oben nur der sichere Rand des Systems, unten kein Abstand über dem
+   Home-Balken; Berührflächen ab 44 px, Eingaben ab 17 px (kein Zoom). */
+
+.buehne {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: flex-start;
+  padding: 32px;
+  min-height: 100vh;
+}
+.buehne-titel {
+  margin: 0 0 12px;
+  font-size: var(--klein);
+  color: var(--text-2);
+  max-width: 390px;
+}
+.telefon {
+  width: 390px;
+  height: 844px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--flaeche-panel);
+  box-shadow: 0 0 0 10px #161616, 0 24px 60px rgba(0, 0, 0, 0.4);
+  border-radius: 46px;
+}
+.t-status {
+  height: 47px; /* steht für env(safe-area-inset-top) */
+  flex: none;
+  background-color: var(--flaeche-leiste);
+}
+.t-kopf {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: 52px;
+  padding: 0 var(--a2) var(--a2);
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  position: relative;
+  z-index: 2;
+}
+.t-kopf h1 {
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.t-kopf .knopf {
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+}
+.t-pfad {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  padding: 6px var(--a2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  white-space: nowrap;
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.t-pfad a {
+  padding: 6px 8px;
+  color: var(--text-2);
+}
+.t-pfad a.letzter {
+  color: var(--akzent);
+  font-weight: 600;
+}
+.t-pfad .trenner {
+  align-self: center;
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+.t-inhalt {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: clip;
+}
+.t-suche {
+  padding: var(--a2);
+}
+.t-suche .feld {
+  min-height: 46px;
+  font-size: var(--gross);
+}
+.t-gruppe {
+  padding: var(--a4) var(--a3) 6px;
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.t-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  min-height: 58px;
+  padding: 8px var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  color: var(--text-1);
+  text-decoration: none;
+}
+.t-zeile > i:first-child {
+  width: 24px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 1.1em;
+  flex: none;
+}
+.t-zeile .t-text {
+  flex: 1;
+  min-width: 0;
+}
+.t-zeile .t-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.t-zeile .t-meta {
+  font-size: var(--klein);
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.t-zeile .t-wert {
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.t-zeile .rechts {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  color: var(--text-3);
+}
+.t-zeile.gewaehlt {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .t-zeile.gewaehlt {
+  background: var(--akzent-weich);
+}
+.t-reiter {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background-color: var(--flaeche-leiste);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  padding: 4px 4px 0; /* unten kein Abstand: die Leiste steht ganz unten */
+}
+.t-reiter a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 56px;
+  justify-content: center;
+  font-size: var(--marke);
+  color: var(--text-3);
+  text-decoration: none;
+}
+.t-reiter a i {
+  font-size: 22px;
+}
+.t-reiter a.aktiv {
+  color: var(--akzent);
+  font-weight: 600;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  text-shadow: 0 0 calc(10px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 55%, transparent);
+}
+
+/* Blatt von unten (Wert ändern) */
+.t-abdunkeln {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 5;
+}
+.t-blatt {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  padding: var(--a4) var(--a3) var(--a4);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+  display: flex;
+  flex-direction: column;
+  gap: var(--a3);
+}
+.t-blatt h2 {
+  margin: 0;
+  font-size: var(--titel);
+}
+.t-blatt .feld {
+  min-height: 52px;
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+}
+.t-blatt .knopf {
+  min-height: 48px;
+  justify-content: center;
+  flex: 1;
+  font-size: var(--gross);
+}
+.t-band {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: var(--a2);
+  padding: 6px 6px 6px var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  font-size: var(--klein);
+}
+.t-band > i {
+  color: var(--gut);
+}
+.t-band .knopf {
+  margin-left: auto;
+  min-height: 44px;
+}
+.t-karte-satz {
+  margin: var(--a2);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.t-karte-satz .t-zeile {
+  min-height: 52px;
+}
+.t-blaettern {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.t-blaettern .knopf {
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+}
+.t-blaettern .mitte {
+  flex: 1;
+  text-align: center;
+}

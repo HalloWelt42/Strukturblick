@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de" data-theme="mittelton" data-schrift="mittel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Strukturblick 2.0 - Telefon</title>
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="stil.css" />
+    <script src="entwurf.js"></script>
+    <style>
+      /* Nur für diese Entwurfsseite: die Entwurfsleiste sitzt oben rechts statt im Fuß. */
+      .entwurf-leiste { left: auto; right: 16px; translate: none; bottom: auto; top: 16px; }
+    </style>
+  </head>
+  <body>
+    <div class="buehne">
+      <!-- 1. Dokumente der Ablage -->
+      <div>
+        <p class="buehne-titel">1. Dokumente: dieselbe Ablage wie am Rechner (pi5b), zuletzt benutzte oben.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <h1 style="padding-left: 6px">Dokumente</h1>
+            <button class="knopf" title="Datei öffnen"><i class="fa-solid fa-plus"></i></button>
+          </div>
+          <div class="t-inhalt">
+            <div class="t-suche"><label class="feld"><i class="fa-solid fa-magnifying-glass"></i><input placeholder="Dokument suchen" /></label></div>
+            <div class="t-gruppe">Zuletzt</div>
+            <a class="t-zeile"><i class="fa-solid fa-file-code"></i><div class="t-text"><div class="t-name">bestellungen.json</div><div class="t-meta">JSON, 412 KB, vor 2 Minuten</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile"><i class="fa-solid fa-table"></i><div class="t-text"><div class="t-name">kunden.csv</div><div class="t-meta">CSV, 2.318 Zeilen, heute 09:12</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile"><i class="fa-solid fa-file-lines"></i><div class="t-text"><div class="t-name">dienste.yaml</div><div class="t-meta">YAML, 6 KB, gestern</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <div class="t-gruppe">Ordner</div>
+            <a class="t-zeile"><i class="fa-solid fa-folder"></i><div class="t-text"><div class="t-name">Kundenimport</div><div class="t-meta">12 Dokumente</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile"><i class="fa-solid fa-folder"></i><div class="t-text"><div class="t-name">Schnittstellen</div><div class="t-meta">7 Dokumente</div></div><span class="rechts"><i class="fa-solid fa-chevron-right"></i></span></a>
+          </div>
+          <nav class="t-reiter">
+            <a class="aktiv"><i class="fa-solid fa-folder-open"></i>Dokumente</a>
+            <a><i class="fa-solid fa-folder-tree"></i>Ansehen</a>
+            <a><i class="fa-solid fa-magnifying-glass"></i>Suchen</a>
+            <a><i class="fa-solid fa-ellipsis"></i>Mehr</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 2. Ansehen: Ebene für Ebene -->
+      <div>
+        <p class="buehne-titel">2. Ansehen: Ebene für Ebene wie ein Dateimanager, der Pfad oben führt zurück. Antippen eines Werts öffnet das Ändern.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <button class="knopf still" title="Eine Ebene zurück"><i class="fa-solid fa-chevron-left"></i></button>
+            <h1>[1] B-24018</h1>
+            <button class="knopf still" title="Als Tabelle"><i class="fa-solid fa-table"></i></button>
+          </div>
+          <nav class="t-pfad">
+            <a>$</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>bestellungen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a class="letzter">[1]</a>
+          </nav>
+          <div class="t-inhalt">
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">nr</div><div class="t-wert w-text">"B-24018"</div></div></a>
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">datum <span class="abzeichen zweit">Datum</span></div><div class="t-wert w-text">"2026-11-09"</div></div></a>
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">kunde</div><div class="t-wert w-objekt">Marta Kowalski, 04109 Leipzig</div></div><span class="rechts"><span class="abzeichen">3</span><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">positionen</div><div class="t-wert w-liste">3 Einträge</div></div><span class="rechts"><span class="abzeichen">Liste</span><i class="fa-solid fa-chevron-right"></i></span></a>
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">bezahlt</div><div class="t-wert w-bool">true</div></div></a>
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">notiz</div><div class="t-wert w-null">null</div></div></a>
+            <div class="t-blaettern">
+              <button class="knopf" title="Vorige Bestellung"><i class="fa-solid fa-arrow-left"></i></button>
+              <span class="mitte">Bestellung 2 von 128</span>
+              <button class="knopf" title="Nächste Bestellung"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+          <nav class="t-reiter">
+            <a><i class="fa-solid fa-folder-open"></i>Dokumente</a>
+            <a class="aktiv"><i class="fa-solid fa-folder-tree"></i>Ansehen</a>
+            <a><i class="fa-solid fa-magnifying-glass"></i>Suchen</a>
+            <a><i class="fa-solid fa-ellipsis"></i>Mehr</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 3. Wert ändern -->
+      <div>
+        <p class="buehne-titel">3. Kleine Änderung: Blatt von unten mit großem Feld, Typ bleibt sichtbar. Gespeichert wird sofort, Rückgängig steht danach im Band.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <button class="knopf still"><i class="fa-solid fa-chevron-left"></i></button>
+            <h1>[0] Apfelsaft</h1>
+            <button class="knopf still"><i class="fa-solid fa-table"></i></button>
+          </div>
+          <nav class="t-pfad">
+            <a>bestellungen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>[1]</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>positionen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a class="letzter">[0]</a>
+          </nav>
+          <div class="t-inhalt">
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">artikel</div><div class="t-wert w-text">"Apfelsaft naturtrüb 1 l"</div></div></a>
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">menge</div><div class="t-wert w-zahl">6</div></div></a>
+            <a class="t-zeile gewaehlt"><div class="t-text"><div class="t-meta">preis</div><div class="t-wert w-zahl">2.49</div></div></a>
+          </div>
+          <div class="t-abdunkeln"></div>
+          <div class="t-blatt">
+            <h2>preis ändern</h2>
+            <div class="t-meta text-3 klein">Zahl, bisher <span class="mono">2.49</span>. In 342 Positionen immer eine Zahl.</div>
+            <label class="feld"><input value="2.59" /></label>
+            <div class="segment" style="align-self: flex-start">
+              <a class="aktiv">Zahl</a><a>Text</a><a>null</a>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <button class="knopf">Abbrechen</button>
+              <button class="knopf primaer">Übernehmen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Nach dem Ändern -->
+      <div>
+        <p class="buehne-titel">4. Danach: Wert markiert, Band mit Rückgängig. Der Rechner zeigt dieselbe Änderung im Verlauf.</p>
+        <div class="telefon">
+          <div class="t-status"></div>
+          <div class="t-kopf">
+            <button class="knopf still"><i class="fa-solid fa-chevron-left"></i></button>
+            <h1>[0] Apfelsaft</h1>
+            <button class="knopf still"><i class="fa-solid fa-table"></i></button>
+          </div>
+          <nav class="t-pfad">
+            <a>bestellungen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>[1]</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a>positionen</a><span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>
+            <a class="letzter">[0]</a>
+          </nav>
+          <div class="t-inhalt">
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">artikel</div><div class="t-wert w-text">"Apfelsaft naturtrüb 1 l"</div></div></a>
+            <a class="t-zeile"><div class="t-text"><div class="t-meta">menge</div><div class="t-wert w-zahl">6</div></div></a>
+            <a class="t-zeile gewaehlt"><div class="t-text"><div class="t-meta">preis <span class="abzeichen warn"><i class="fa-solid fa-pen"></i> geändert</span></div><div class="t-wert w-zahl">2.59</div></div></a>
+          </div>
+          <div class="t-band"><i class="fa-solid fa-circle-check"></i><span>Preis 2.49 auf 2.59, abgelegt</span><button class="knopf"><i class="fa-solid fa-rotate-left"></i> Rückgängig</button></div>
+          <nav class="t-reiter">
+            <a><i class="fa-solid fa-folder-open"></i>Dokumente</a>
+            <a class="aktiv"><i class="fa-solid fa-folder-tree"></i>Ansehen</a>
+            <a><i class="fa-solid fa-magnifying-glass"></i>Suchen</a>
+            <a><i class="fa-solid fa-ellipsis"></i>Mehr</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
