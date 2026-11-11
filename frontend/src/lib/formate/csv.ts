@@ -7,6 +7,7 @@ import { Formatfehler, type Diagnose, type Format, type Leseergebnis, type Leseo
 import { dialektProben, siehtNachKopfzeileAus, trennzeichenAusOption, type Zeilenende } from "./csv/dialekt";
 import { Zerleger } from "./csv/zerleger";
 import { zeilenweise } from "./entfernen";
+import { csvSpalteEntfernen } from "./spalten";
 
 /** Höchstzahl der Einzelwarnungen zu abweichender Zellenzahl; danach folgt eine Sammelmeldung. */
 const MAX_ZELLENZAHL_WARNUNGEN = 20;
@@ -229,5 +230,6 @@ export const CSV_FORMAT: Format = {
   erkennen,
   lesen,
   eintraegeEntfernen: (text, index, liste, stellen) => zeilenweise(text, index, liste, stellen),
+  spalteEntfernen: (text, index, liste, spalte) => csvSpalteEntfernen(text, index, liste, spalte),
   wertSchreiben,
 };

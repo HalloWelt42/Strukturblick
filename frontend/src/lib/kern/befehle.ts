@@ -110,4 +110,22 @@ export const EINTRAEGE_ENTFERNEN = befehl({
   },
 });
 
-export const GRUNDBEFEHLE: readonly Befehl[] = [TEXT_AENDERN, TEXT_ERSETZEN, WERT_SETZEN, WERTE_SETZEN, EINTRAEGE_ENTFERNEN] as unknown as readonly Befehl[];
+/** Ein Feld aus allen Einträgen einer Liste entfernen (Spalte der Tabelle; bei CSV samt Kopfzelle). */
+export const SPALTE_ENTFERNEN = befehl({
+  kennung: "spalte.entfernen",
+  titel: "Spalte entfernt",
+  werte: z.object({ liste: z.string(), spalte: z.string(), titel: z.string().optional() }),
+  brauchtAnalyse: true,
+  beschreiben: (w) => w.titel ?? `Spalte ${w.spalte} entfernt`,
+  aenderungen: (w, u) => {
+    const a = brauchtAnalyse(u);
+    const index = a.index!;
+    const k = knotenZu(index, u.text, w.liste);
+    if (k === KEIN || index.art[k] !== KnotenArt.liste) throw new Befehlsfehler(`An ${w.liste || "/"} steht keine Liste`);
+    const aenderungen = a.format.spalteEntfernen(u.text, index, k, w.spalte);
+    if (!aenderungen.length) throw new Befehlsfehler(`Die Spalte ${w.spalte} gibt es in dieser Liste nicht`);
+    return aenderungen;
+  },
+});
+
+export const GRUNDBEFEHLE: readonly Befehl[] = [TEXT_AENDERN, TEXT_ERSETZEN, WERT_SETZEN, WERTE_SETZEN, EINTRAEGE_ENTFERNEN, SPALTE_ENTFERNEN] as unknown as readonly Befehl[];

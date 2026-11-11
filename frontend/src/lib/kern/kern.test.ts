@@ -63,6 +63,9 @@ const MINI: Format = {
   eintraegeEntfernen: () => {
     throw new Formatfehler("Mini kennt keine Listen");
   },
+  spalteEntfernen: () => {
+    throw new Formatfehler("Mini kennt keine Listen");
+  },
   wertSchreiben: (_t, index, k, neu) => {
     if (neu.art !== "text") throw new Formatfehler("Mini kennt nur Text");
     return { von: index.von[k], bis: index.bis[k], einfuegen: neu.wert };

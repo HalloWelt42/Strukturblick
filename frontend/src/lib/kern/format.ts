@@ -73,6 +73,9 @@ export interface Format {
   /** Textänderungen, die die Einträge an den Stellen `stellen` der Liste `liste` entfernen, ohne den Rest neu zu
    *  schreiben (Formatierung und Kommentare bleiben). */
   eintraegeEntfernen(text: string, index: Strukturindex, liste: number, stellen: readonly number[]): readonly TextAenderung[];
+  /** Textänderungen, die das Feld `spalte` aus allen Objekten der Liste `liste` entfernen (bei CSV samt Kopfzelle),
+   *  ohne den Rest neu zu schreiben. */
+  spalteEntfernen(text: string, index: Strukturindex, liste: number, spalte: string): readonly TextAenderung[];
   /** Textänderung, die den Wert des Knotens `k` ersetzt; wirft Formatfehler, wenn der Wert hier nicht geht. */
   wertSchreiben(text: string, index: Strukturindex, k: number, neu: NeuerWert, merkmale: Merkmale): TextAenderung;
 }

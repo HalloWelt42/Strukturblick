@@ -27,20 +27,20 @@ function laeufe(anzahl: number, weg: ReadonlySet<number>): [number, number][] {
  * Mit Trennzeichen: ein Lauf hinter einem bleibenden Eintrag fällt samt Komma davor weg (", b, c"), ein Lauf am Anfang
  * samt Komma danach ("a, b, " vor dem ersten bleibenden), fällt alles weg, bleiben die Klammern.
  */
-export function mitTrennern(index: Strukturindex, liste: number, stellen: readonly number[]): TextAenderung[] {
+export function mitTrennern(index: Strukturindex, liste: number, stellen: readonly number[], anfang: (k: number) => number = (k) => index.von[k]): TextAenderung[] {
   const k = kinder(index, liste);
   return laeufe(k.length, new Set(stellen)).map(([a, b]) => {
     if (a > 0) return { von: index.bis[k[a - 1]], bis: index.bis[k[b]], einfuegen: "" };
-    if (b + 1 < k.length) return { von: index.von[k[a]], bis: index.von[k[b + 1]], einfuegen: "" };
-    return { von: index.von[k[a]], bis: index.bis[k[b]], einfuegen: "" };
+    if (b + 1 < k.length) return { von: anfang(k[a]), bis: anfang(k[b + 1]), einfuegen: "" };
+    return { von: anfang(k[a]), bis: index.bis[k[b]], einfuegen: "" };
   });
 }
 
 /** Zeilenanfang vor einer Stelle */
-const zeilenanfang = (text: string, pos: number): number => text.lastIndexOf("\n", pos - 1) + 1;
+export const zeilenanfang = (text: string, pos: number): number => text.lastIndexOf("\n", pos - 1) + 1;
 
 /** Hinter dem Zeilenende eines Eintrags (der Eintrag kann schon mit dem Umbruch enden, etwa in YAML) */
-function hinterZeile(text: string, bis: number): number {
+export function hinterZeile(text: string, bis: number): number {
   if (bis > 0 && text[bis - 1] === "\n") return bis;
   const n = text.indexOf("\n", bis);
   return n < 0 ? text.length : n + 1;

@@ -8,6 +8,7 @@ import { Formatfehler, type Diagnose, type Format, type Leseergebnis } from "./v
 import { JsonLeser } from "./json/leser";
 import { jsonWertSchreiben } from "./json/schreiben";
 import { mitTrennern, zeilenweise } from "./entfernen";
+import { mitgliederEntfernen } from "./spalten";
 
 /** Für die Erkennung werden höchstens so viele nichtleere Zeilen geprüft. */
 const ERKENNEN_ZEILEN = 50;
@@ -105,6 +106,7 @@ export const NDJSON_FORMAT: Format = {
   jsonText: () => "folge",
   // Die Zeilen selbst zeilenweise, Listen in einer Zeile wie in JSON
   eintraegeEntfernen: (text, index, liste, stellen) => (liste === 0 ? zeilenweise(text, index, liste, stellen) : mitTrennern(index, liste, stellen)),
+  spalteEntfernen: (text, index, liste, spalte) => mitgliederEntfernen(text, index, liste, spalte),
   wertSchreiben: (_text, index, k, neu) => {
     if (k === 0) throw new Formatfehler("Die Wurzel ist die Liste der Zeilen und wird nicht ersetzt");
     return jsonWertSchreiben(index, k, neu);
