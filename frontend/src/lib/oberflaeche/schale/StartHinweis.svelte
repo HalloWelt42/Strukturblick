@@ -11,7 +11,7 @@
 
 <div class="abdunkeln" aria-hidden="true"></div>
 <div class="fenster karte" role="dialog" aria-modal="true" aria-labelledby="sh-titel">
-  <div class="kopf">
+  <div class="hinweis-kopf">
     <h2 id="sh-titel"><i class="fa-solid fa-sitemap"></i> Strukturblick</h2>
     <span class="abzeichen warn">{FASSUNG_TEXT}</span>
   </div>
@@ -24,7 +24,7 @@
       </div>
     </section>
   {/each}
-  <div class="fuss">
+  <div class="hinweis-fuss">
     <a class="knopf still" href="./lizenzen.txt" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines"></i> Lizenz und Lizenzen der verwendeten Bausteine</a>
     <button class="knopf primaer" bind:this={knopf} onclick={() => starthinweis.schliessen()}><i class="fa-solid fa-check"></i> Verstanden</button>
   </div>
@@ -53,7 +53,7 @@
     gap: var(--a3);
     box-shadow: var(--kante), var(--schatten-schwebend);
   }
-  .kopf {
+  .hinweis-kopf {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -85,12 +85,21 @@
     color: var(--text-2);
     line-height: 1.5;
   }
-  .fuss {
+  .hinweis-fuss {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--a2);
     padding-top: var(--a2);
+  }
+  /* Der lange Link bricht auf schmalen Bildschirmen um, statt über den Rand zu ragen */
+  .hinweis-fuss > a {
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    min-height: var(--knopf-hoehe);
+    white-space: normal;
+    text-align: left;
   }
 </style>
