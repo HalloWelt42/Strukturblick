@@ -106,7 +106,7 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 | ⌥ ⌘ N | Neues Dokument |
 | ⌥ ⌘ W | Dokument schließen |
 | ⌥ ⌘ A | Ablage verwalten oder schließen |
-| ⌥ ⌘ 1, 2, 3 | Ansicht Baum, Editor, Tabelle |
+| ⌥ ⌘ 1, 2, 3, 4 | Ansicht Baum, Editor, Tabelle, Statistik |
 | ⌥ ⌘ E | Abfrage öffnen oder einklappen |
 | F3, ⇧ F3 | Nächster, voriger Treffer im Baum |
 
