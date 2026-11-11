@@ -60,6 +60,9 @@ const MINI: Format = {
   leseoptionen: [],
   erkennen: () => 0,
   lesen: (text) => ({ index: miniLesen(text), diagnosen: [], merkmale: {} }),
+  eintraegeEntfernen: () => {
+    throw new Formatfehler("Mini kennt keine Listen");
+  },
   wertSchreiben: (_t, index, k, neu) => {
     if (neu.art !== "text") throw new Formatfehler("Mini kennt nur Text");
     return { von: index.von[k], bis: index.bis[k], einfuegen: neu.wert };
