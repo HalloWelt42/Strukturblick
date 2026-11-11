@@ -1,8 +1,8 @@
-// Die Grundbefehle am Text. Weitere Befehle (Bereinigen, Rezepte ...) melden sich später an der Sitzung an.
+// Die Grundbefehle am Text, dazu das Entfernen von Listeneinträgen. Weitere Befehle (Rezepte ...) melden sich später an der Sitzung an.
 
 import { z } from "zod";
 import { befehl, brauchtAnalyse, Befehlsfehler, type Befehl } from "./befehl";
-import { inhalt, KEIN, KNOTEN_NAME, istBehaelter } from "./strukturindex";
+import { inhalt, KEIN, KNOTEN_NAME, KnotenArt, istBehaelter } from "./strukturindex";
 import { knotenZu } from "./pfade";
 import { Formatfehler, type NeuerWert } from "./format";
 
@@ -81,4 +81,23 @@ export const WERTE_SETZEN = befehl({
   aenderungen: (w, u) => w.aenderungen.map((e) => aenderungFuer(e, u)),
 });
 
-export const GRUNDBEFEHLE: readonly Befehl[] = [TEXT_AENDERN, TEXT_ERSETZEN, WERT_SETZEN, WERTE_SETZEN] as unknown as readonly Befehl[];
+/** Einträge einer Liste entfernen (Bereinigen: "Nur diese Zeilen behalten"); das Format nimmt nur ihre Textstellen weg. */
+export const EINTRAEGE_ENTFERNEN = befehl({
+  kennung: "eintraege.entfernen",
+  titel: "Einträge entfernt",
+  werte: z.object({ liste: z.string(), stellen: z.array(z.number().int().min(0)).min(1), titel: z.string().optional() }),
+  brauchtAnalyse: true,
+  beschreiben: (w) => w.titel ?? (w.stellen.length === 1 ? "1 Eintrag entfernt" : `${w.stellen.length} Einträge entfernt`),
+  aenderungen: (w, u) => {
+    const a = brauchtAnalyse(u);
+    const index = a.index!;
+    const k = knotenZu(index, u.text, w.liste);
+    if (k === KEIN || index.art[k] !== KnotenArt.liste) throw new Befehlsfehler(`An ${w.liste || "/"} steht keine Liste`);
+    const anzahl = index.kinder[k];
+    if (w.stellen.some((s) => s >= anzahl)) throw new Befehlsfehler("Einige Einträge gibt es nicht mehr; bitte neu wählen");
+    if (new Set(w.stellen).size >= anzahl) throw new Befehlsfehler("Mindestens ein Eintrag muss bleiben");
+    return a.format.eintraegeEntfernen(u.text, index, k, w.stellen);
+  },
+});
+
+export const GRUNDBEFEHLE: readonly Befehl[] = [TEXT_AENDERN, TEXT_ERSETZEN, WERT_SETZEN, WERTE_SETZEN, EINTRAEGE_ENTFERNEN] as unknown as readonly Befehl[];

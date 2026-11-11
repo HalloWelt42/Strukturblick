@@ -5,6 +5,7 @@ import type { Format } from "./vertrag";
 import { erkennenYaml } from "./yaml/erkennen";
 import { lesenYaml } from "./yaml/lesen";
 import { wertSchreibenYaml } from "./yaml/schreiben";
+import { mitTrennern, zeilenweise } from "./entfernen";
 
 export const YAML_FORMAT: Format = {
   kennung: "yaml",
@@ -15,5 +16,7 @@ export const YAML_FORMAT: Format = {
   leseoptionen: [],
   erkennen: (text) => erkennenYaml(text),
   lesen: (text) => lesenYaml(text),
+  // In Klammern ([a, b]) wie JSON, als Block ("- a") zeilenweise
+  eintraegeEntfernen: (text, index, liste, stellen) => (text[index.von[liste]] === "[" ? mitTrennern(index, liste, stellen) : zeilenweise(text, index, liste, stellen)),
   wertSchreiben: (text, index, k, neu, merkmale) => wertSchreibenYaml(text, index, k, neu, merkmale),
 };

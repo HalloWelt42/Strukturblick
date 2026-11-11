@@ -70,6 +70,9 @@ export interface Format {
   /** Ist dieser Text schon reines JSON, so wie er dasteht? "wert": ein JSON-Wert, "folge": ein JSON-Wert je Zeile.
    *  Abfragen (jq) lesen ihn dann unverändert; sonst bekommen sie den aus dem Index erzeugten Wert. */
   jsonText?(merkmale: Merkmale): "wert" | "folge" | null;
+  /** Textänderungen, die die Einträge an den Stellen `stellen` der Liste `liste` entfernen, ohne den Rest neu zu
+   *  schreiben (Formatierung und Kommentare bleiben). */
+  eintraegeEntfernen(text: string, index: Strukturindex, liste: number, stellen: readonly number[]): readonly TextAenderung[];
   /** Textänderung, die den Wert des Knotens `k` ersetzt; wirft Formatfehler, wenn der Wert hier nicht geht. */
   wertSchreiben(text: string, index: Strukturindex, k: number, neu: NeuerWert, merkmale: Merkmale): TextAenderung;
 }

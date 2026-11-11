@@ -6,6 +6,7 @@ import { IndexBauer, KEIN, KnotenArt, type Strukturindex } from "../kern/struktu
 import { Formatfehler, type Diagnose, type Format, type Leseergebnis, type Leseoptionen, type Merkmale, type NeuerWert, type TextAenderung } from "./vertrag";
 import { dialektProben, siehtNachKopfzeileAus, trennzeichenAusOption, type Zeilenende } from "./csv/dialekt";
 import { Zerleger } from "./csv/zerleger";
+import { zeilenweise } from "./entfernen";
 
 /** Höchstzahl der Einzelwarnungen zu abweichender Zellenzahl; danach folgt eine Sammelmeldung. */
 const MAX_ZELLENZAHL_WARNUNGEN = 20;
@@ -227,5 +228,6 @@ export const CSV_FORMAT: Format = {
   ],
   erkennen,
   lesen,
+  eintraegeEntfernen: (text, index, liste, stellen) => zeilenweise(text, index, liste, stellen),
   wertSchreiben,
 };

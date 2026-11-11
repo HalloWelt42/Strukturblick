@@ -5,6 +5,7 @@ import { IndexBauer, KEIN } from "../kern/strukturindex";
 import type { Diagnose, Format, Leseergebnis } from "./vertrag";
 import { JsonLeser } from "./json/leser";
 import { jsonWertSchreiben } from "./json/schreiben";
+import { mitTrennern } from "./entfernen";
 
 /** Für die Erkennung wird höchstens dieser Anfang geprüft; ein dort abgeschnittener Text gilt als lesbar. */
 const ERKENNEN_HOECHSTENS = 1 << 20;
@@ -55,5 +56,6 @@ export const JSON_FORMAT: Format = {
   lesen,
   // Mit Kommentaren oder abschließenden Kommas ist es JSONC, das reines JSON nicht liest
   jsonText: (m) => (m.kommentare || m.abschliessendeKommas ? null : "wert"),
+  eintraegeEntfernen: (_text, index, liste, stellen) => mitTrennern(index, liste, stellen),
   wertSchreiben: (_text, index, k, neu) => jsonWertSchreiben(index, k, neu),
 };
