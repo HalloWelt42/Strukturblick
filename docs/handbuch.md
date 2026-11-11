@@ -60,6 +60,23 @@ Tabelle nimmt genau die sichtbaren Zeilen (Filter und Sortierung wie angezeigt),
 Treffernavigation des Baums die Treffer der Suche oder Abfrage (einzelne Werte mit ihrem Pfad). Beides geht als
 Datei (JSON, NDJSON, CSV) oder als neues Dokument in der Ablage, im selben Ordner wie die Quelle.
 
+Das Werkzeug Bereinigen (Leiste, "Prüfen und umbauen", oder die Befehlspalette) arbeitet auf der Liste, die
+auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz im Segment geschlossen wird:
+
+- Facetten: Eine Facette zählt, welche Werte in einer Spalte stehen und wie oft (bei Listen in der Zelle jeden
+  Eintrag). Text zum Ankreuzen, Zahlen und Beträge als Verteilung mit Bereich, Datumsangaben je Monat. Mehrere
+  Facetten filtern zusammen; der Inspektor zählt die Zeilen nach jedem Filter. "Als neues Dokument" legt eine Kopie
+  mit den Treffern an, "Nur diese Zeilen behalten" entfernt nach einer Vorschau die übrigen Zeilen aus dem Text
+  (Kopfzeile, Kommentare und Schreibweise bleiben).
+- Ähnliche Werte: Schreibweisen mit gleichem Kern (Groß und klein, Leerzeichen und Satzzeichen zählen nicht),
+  ähnlichen Buchstabenpaaren oder höchstens zwei Tippfehlern Abstand. Je Gruppe Zielwert wählen oder eintippen,
+  Gruppen mit "Nein" ausnehmen. Die unscharfen Verfahren gehen bis 1.500 verschiedene Werte je Spalte.
+- Typen: was je Spalte erkannt wird (Betrag im deutschen Format, Datum, Nummer mit führender Null) und was sich
+  einheitlich umschreiben ließe. Umgewandelt wird nur auf Knopfdruck; nicht lesbare Werte bleiben stehen oder
+  werden auf Wunsch leer.
+
+Jedes Übernehmen ist genau ein Vorgang im Verlauf und lässt sich rückgängig machen.
+
 Die Befehlspalette (⌘ K, unter Windows und Linux Strg K, oder das Suchfeld oben rechts) findet Befehle, Dokumente,
 Ordner und Ansichten mit unscharfer Suche; zuletzt Benutztes steht oben, jeder Befehl zeigt sein Tastenkürzel. Die
 Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):

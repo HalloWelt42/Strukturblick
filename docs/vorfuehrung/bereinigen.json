@@ -1,0 +1,97 @@
+{
+  "kapitel": "bereinigen",
+  "titel": "Daten aufräumen",
+  "ticket": "STB-6",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet (Kapitel beispiele), kunden.csv aktiv, keine Änderungen im Verlauf",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Die Kundenliste ist unordentlich, wie echte Exporte eben sind. Zum Aufräumen öffne ich in der Leiste das Werkzeug Bereinigen. Es belegt den Platz der Ansicht und hat drei Reiter: Facetten, ähnliche Werte und Typen.",
+      "ziel": { "anker": "werkzeug-bereinigen", "notbehelf": "Leiste, Abschnitt Prüfen und umbauen, Eintrag Bereinigen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Segment Bereinigen mit Kreuz neben den Ansichten, Reiter Facetten, 1.214 von 1.214 Zeilen",
+      "geprueft": "2026-11-11, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Eine Facette zählt, welche Werte in einer Spalte stehen und wie oft. In der Facette ort sieht man sofort das Durcheinander: Leipzig steht in drei Schreibweisen da, klein, groß und mit einem Leerzeichen am Ende, das hier gelb markiert ist.",
+      "ziel": { "anker": "facette-ort", "notbehelf": ".br-facette mit Kopf ort" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Werte Berlin, dresden, Dresden, Halle (Saale), Halle/Saale ... mit Anzahl; Hinweis Leipzig steht in 3 Schreibweisen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Ich kreuze alle drei Leipzig an. Rechts bleiben 142 von 1.214 Zeilen, und der Filter steht oben als Chip.",
+      "ziel": { "anker": "facette-wert", "notbehelf": "Werte leipzig, Leipzig und Leipzig mit Leerzeichen in der Facette ort" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Chip ort 3 Werte, 142 von 1.214 Zeilen, Inspektor Treffer ort 142 Zeilen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Facetten filtern zusammen. In angelegt klicke ich April und dann September: gewählt ist der Zeitraum dazwischen, 73 Zeilen. Im Feld für den Umsatz tippe ich 2.000 als untere Grenze, es bleiben 59. Der Inspektor zählt jeden Schritt mit.",
+      "ziel": { "anker": "facette-monate", "notbehelf": "Balken 2024-04 und 2024-09 der Facette angelegt, dann Feld umsatz von" },
+      "aktion": { "art": "tippen", "text": "2.000", "vorher": "Monate 2024-04 und 2024-09 anklicken" },
+      "erwartung": "Treffer 59 von 1.214; ort 142, + angelegt 73, + umsatz 59 Zeilen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Nur diese Zeilen behalten zeigt erst eine Vorschau: 59 bleiben, 1.155 werden entfernt. Übernehmen ist ein einziger Vorgang im Verlauf. Entfernt werden nur die Zeilen selbst, Kopfzeile und Schreibweise der Datei bleiben, wie sie sind.",
+      "ziel": { "anker": "bereinigen-behalten", "notbehelf": "Knopf Nur diese Zeilen behalten, dann Übernehmen in der Leiste unten" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "59 von 59 Zeilen, Verlauf: Bereinigen: 59 von 1.214 Zeilen behalten, Meldung mit Rückgängig",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 6,
+      "sprechtext": "Für die Vorführung nehme ich das gleich zurück. Rückgängig, und alle 1.214 Zeilen sind wieder da.",
+      "ziel": { "anker": "meldung-rueckgaengig", "notbehelf": "Knopf Rückgängig in der Meldung" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "1.214 von 1.214 Zeilen, Stand 0",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 7,
+      "sprechtext": "Statt nur zu filtern, mache ich aus den Schreibweisen eine. Der Reiter Ähnliche Werte findet in ort drei Gruppen. Gleicher Kern heißt: Groß und klein, Leerzeichen und Satzzeichen zählen nicht. Vorgeschlagen wird jeweils die häufigste Schreibweise als Zielwert.",
+      "ziel": { "anker": "reiter-aehnlich", "notbehelf": "Reiter Ähnliche Werte" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Gleicher Kern 3 Gruppen; Gruppen Leipzig, Halle (Saale), Dresden; Vorschau ändert 151 Zellen in 3 Gruppen",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 8,
+      "sprechtext": "Bei Halle bin ich mir nicht sicher, welche Schreibweise gilt. Mit Nein bleibt diese Gruppe unberührt. Übernehmen ändert nun 116 Zellen in zwei Gruppen, wieder als ein Vorgang.",
+      "ziel": { "anker": "gruppe-nein", "notbehelf": "Segment Zusammenführen Nein in der Gruppe Halle (Saale), dann Übernehmen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Meldung ort: ähnliche Werte zusammengeführt (116 Zellen); danach bleibt nur die Gruppe Halle (Saale)",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 9,
+      "sprechtext": "Der Reiter Typen sagt, wie die Werte gemeint sind. CSV kennt nur Text; Strukturblick erkennt Beträge im deutschen Format, Datumsangaben in zwei Formen und Postleitzahlen, die nach Zahl aussehen.",
+      "ziel": { "anker": "reiter-typen", "notbehelf": "Reiter Typen" },
+      "aktion": { "art": "klicken", "vorher": "Rückgängig in der Meldung" },
+      "erwartung": "8 Spalten, 2 Vorschläge, 1 Hinweis; plz Text bleibt, angelegt Datum, umsatz Betrag",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 10,
+      "sprechtext": "Bei den Postleitzahlen warnt Strukturblick: Als Zahl verlören 313 Werte ihre führende Null, aus 04109 würde 4109. Also bleiben sie Text. Nichts wird von selbst umgewandelt.",
+      "ziel": { "anker": "typ-plz", "notbehelf": "Tafel plz unter Vorschläge" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Warnung 313 Werte, Vergleich 04109 zu 4109 mit durchgestrichener Null",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 11,
+      "sprechtext": "Den Umsatz wandle ich um: Aus 3.309,23 wird die Zahl 3309.23, in allen 1.214 Zeilen. Danach rechnen Statistik, Abfrage und Facetten mit echten Zahlen. Auch das lässt sich rückgängig machen.",
+      "ziel": { "anker": "typ-umwandeln", "notbehelf": "Knopf Umwandeln in der Tafel umsatz" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Meldung umsatz: als Betrag umgewandelt (1.214 Zellen); umsatz ohne Vorschlag in der Übersicht",
+      "geprueft": "2026-11-11"
+    }
+  ]
+}
