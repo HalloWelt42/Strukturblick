@@ -1,0 +1,41 @@
+{
+  "kapitel": "beispiele",
+  "titel": "Mit Beispielen anfangen",
+  "ticket": "STB-19",
+  "rolle": "erzaehler",
+  "voraussetzung": "Bauart ohne Server oder pi5b, kein Dokument offen (Startseite)",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Wer keine eigenen Daten zur Hand hat, fängt mit den Beispielen an. Alles darin ist erfunden: ein Hofladen mit Bestellungen, einer Kundenliste und den Diensten seines Webshops.",
+      "ziel": { "anker": "beispiele-oeffnen", "notbehelf": "Knopf Beispiele zum Üben auf der Startseite" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Reiter bestellungen.json, kunden.csv, dienste.yaml; links der Ordner Beispiele mit 3; bestellungen.json im Baum",
+      "geprueft": "2026-11-11, GitHub Pages 2.5.0, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Die Beispiele liegen jetzt in der eigenen Ablage und dürfen verändert werden. Ein zweites Öffnen legt nichts doppelt an. Wer frisch anfangen will, legt sie in den Papierkorb.",
+      "ziel": { "anker": "leiste-ordner-beispiele", "notbehelf": "Eintrag Beispiele in der Leiste" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Meldung: Beispiele geöffnet (Ordner Beispiele)",
+      "geprueft": "2026-11-11"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Die Kundenliste ist absichtlich unordentlich, so wie echte Daten oft sind. Das zeigt eine kleine SQL-Abfrage: Wie viele Bestellungen kommen aus welchem Ort?",
+      "ziel": { "anker": "abfrage-ausdruck", "notbehelf": ".af-konsole .cm-content", "vorher": "⌥ ⌘ E, Sprache SQL" },
+      "aktion": { "art": "tippen", "text": "SELECT k.ort, count(DISTINCT b.nr) AS bestellungen FROM bestellungen b JOIN kunden k ON k.name = b.kunde_name GROUP BY k.ort ORDER BY bestellungen DESC" },
+      "erwartung": "Ergebnis mit Leipzig in mehreren Schreibweisen: Leipzig, leipzig, Leipzig mit Leerzeichen am Ende, Lpz.",
+      "geprueft": "2026-11-11 (mit count(*) durchgespielt; count(DISTINCT b.nr) zählt jede Bestellung nur einmal, weil manche Namen mehrfach in der Kundenliste stehen)"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Leipzig steht hier vier Mal, jedes Mal anders geschrieben. Solche Fehler aufzuräumen ist die Aufgabe des Bereinigens.",
+      "ziel": { "anker": "sql-ergebnis", "notbehelf": ".af-tabelle" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Zeilen Leipzig, leipzig, Leipzig␣, Lpz. sichtbar",
+      "geprueft": "2026-11-11"
+    }
+  ]
+}
