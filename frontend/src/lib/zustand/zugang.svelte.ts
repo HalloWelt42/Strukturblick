@@ -2,9 +2,13 @@
 // Einrichtung, dann Start des Arbeitsplatzes mit der Ablage auf dem Server. Dazu der Abgleich der Fassung: eine neue
 // Fassung lädt von selbst, aber nie, solange etwas noch nicht abgelegt ist.
 
-import { BAUART, FASSUNG, ablageFuerBauart, serverteil, type Serverteil } from "../dienste/bauart";
+import { BAUART, FASSUNG, ablageFuerBauart, ausweichAblage, serverteil, type Serverteil } from "../dienste/bauart";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
 import { ablageverwaltung } from "./ablageverwaltung.svelte";
+import { meldungen } from "./meldungen.svelte";
+
+const WARTET_AUF_ALTEN_TAB =
+  "Strukturblick ist in einem anderen Tab dieses Browsers noch mit einer älteren Fassung offen. Bitte jenen Tab schließen oder neu laden; danach geht es hier von selbst weiter.";
 
 export type Zugangsstand = "laedt" | "nicht-erreichbar" | "einrichtung" | "anmeldung" | "bereit";
 
@@ -34,11 +38,29 @@ class Zugang {
     }
   }
 
-  /** Startet den Arbeitsplatz einmal, sobald der Zugang bereit ist (vom Einstieg aus einem Effekt gerufen). */
+  /** Startet den Arbeitsplatz einmal, sobald der Zugang bereit ist (vom Einstieg aus einem Effekt gerufen). Tolerant:
+   *  hält ein älterer Tab die Ablage, sagt der Start, worauf er wartet, und geht danach von selbst weiter; braucht ein
+   *  neuerer Tab sie, legt dieser hier alles ab und lädt neu; geht die Ablage gar nicht, startet er im Arbeitsspeicher. */
   async arbeitsplatzStarten(): Promise<void> {
     if (this.gestartet || this.stand !== "bereit") return;
     this.gestartet = true;
-    await arbeitsplatz.starten(await ablageFuerBauart());
+    const ablage = await ablageFuerBauart({
+      wartet: () => (arbeitsplatz.start = { ...arbeitsplatz.start, hinweis: WARTET_AUF_ALTEN_TAB }),
+      frei: () => (arbeitsplatz.start = { ...arbeitsplatz.start, hinweis: null }),
+      abgeloest: () => void arbeitsplatz.allesSpeichern().finally(() => location.reload()),
+    });
+    try {
+      await arbeitsplatz.starten(ablage);
+    } catch (f) {
+      // Mit Server wäre der Arbeitsspeicher irreführend (man hielte die Dokumente für abgelegt): Fehler zeigen, neu versuchen
+      if (BAUART === "server") {
+        arbeitsplatz.start = { ...arbeitsplatz.start, hinweis: `Die Ablage antwortet nicht (${(f as Error).message}).`, fehler: true };
+        this.gestartet = false;
+        return;
+      }
+      await arbeitsplatz.starten(ausweichAblage());
+      meldungen.zeigen({ text: `Dieser Browser lässt hier kein Speichern zu (${(f as Error).message}). Die Dokumente bleiben nur, solange das Fenster offen ist; sichern per Herunterladen.`, art: "fehler" });
+    }
     await ablageverwaltung.neuLaden();
   }
 

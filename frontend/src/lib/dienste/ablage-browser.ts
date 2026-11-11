@@ -14,6 +14,17 @@ interface Schema extends DBSchema {
 }
 
 const DATENBANK = "strukturblick-2";
+const STUFE = 2;
+
+/** Was beim Öffnen der Datenbank geschieht, für die Anzeige im Zustand */
+export interface Ablageereignisse {
+  /** Ein anderer Tab mit älterer Fassung hält die Datenbank; der Umstieg wartet, bis er geschlossen ist */
+  wartet?(): void;
+  /** Der Umstieg ist gelungen (der ältere Tab wurde geschlossen) */
+  frei?(): void;
+  /** Ein anderer Tab mit neuerer Fassung braucht die Datenbank: alles ablegen und neu laden */
+  abgeloest?(): void;
+}
 
 const kopf = (d: Gespeichert): Dokumentkopf => ({ kennung: d.kennung, name: d.name, ordner: d.ordner ?? "", groesse: d.text.length, geaendert: d.geaendert });
 
@@ -22,16 +33,48 @@ export class BrowserAblage implements Ablage {
   readonly hinweis = "Liegt nur in diesem Browser; sichern per Herunterladen.";
   private db: Promise<IDBPDatabase<Schema>> | null = null;
 
+  constructor(private readonly ereignisse: Ablageereignisse = {}) {}
+
   private oeffnen(): Promise<IDBPDatabase<Schema>> {
-    return (this.db ??= openDB<Schema>(DATENBANK, 2, {
-      upgrade(db, alt) {
+    if (this.db) return this.db;
+    let gewartet = false;
+    const e = this.ereignisse;
+    const db = openDB<Schema>(DATENBANK, STUFE, {
+      upgrade(d, alt) {
         if (alt < 1) {
-          db.createObjectStore("dokumente", { keyPath: "kennung" });
-          db.createObjectStore("stand");
+          d.createObjectStore("dokumente", { keyPath: "kennung" });
+          d.createObjectStore("stand");
         }
-        if (alt < 2) db.createObjectStore("ordner", { keyPath: "name" });
+        if (alt < 2) d.createObjectStore("ordner", { keyPath: "name" });
       },
-    }));
+      // Ältere Fassungen reagieren nicht auf einen Umstieg: dann warten, bis ihr Tab zu ist, und es sagen
+      blocked: () => {
+        gewartet = true;
+        e.wartet?.();
+      },
+      // Eine neuere Fassung will umsteigen: Platz machen, statt sie warten zu lassen
+      blocking: () => e.abgeloest?.(),
+      // Der Browser hat die Verbindung geschlossen (Speicher geräumt): beim nächsten Zugriff neu öffnen
+      terminated: () => {
+        this.db = null;
+      },
+    }).then((d) => {
+      if (gewartet) e.frei?.();
+      return d;
+    });
+    // Schlägt das Öffnen fehl, beim nächsten Zugriff neu versuchen, statt den Fehler zu behalten
+    db.catch(() => {
+      if (this.db === db) this.db = null;
+    });
+    this.db = db;
+    return db;
+  }
+
+  /** Verbindung schließen (vor dem Neuladen, damit eine neuere Fassung umsteigen kann) */
+  async schliessen(): Promise<void> {
+    const db = this.db;
+    this.db = null;
+    (await db?.catch(() => null))?.close();
   }
 
   private async alle(): Promise<Gespeichert[]> {

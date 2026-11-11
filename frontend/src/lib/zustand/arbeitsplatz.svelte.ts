@@ -18,6 +18,10 @@ class Arbeitsplatz {
   /** Was der Hauptbereich zeigt: das aktive Blatt oder die Ablage (genau eins) */
   seite = $state<"blatt" | "ablage">("blatt");
 
+  /** Fortschritt des Starts für die Startanzeige: Schritt, Anteil (0 bis 1, null: unbestimmt), ein Hinweis, worauf
+   *  gewartet wird, und ob der Start gescheitert ist (dann bietet die Anzeige "Neu versuchen") */
+  start = $state<{ schritt: string; anteil: number | null; hinweis: string | null; fehler?: boolean }>({ schritt: "Ablage öffnen", anteil: null, hinweis: null });
+
   private ablageStand: Ablage | null = null;
 
   /** Wo die Dokumente liegen; steht ab `starten` fest (Bauart, nach der Anmeldung). */
@@ -26,16 +30,24 @@ class Arbeitsplatz {
     return this.ablageStand;
   }
 
-  /** Startet mit einer Ablage; ein erneuter Start ersetzt die offenen Blätter, statt sie zu verdoppeln. */
+  /** Startet mit einer Ablage; ein erneuter Start ersetzt die offenen Blätter, statt sie zu verdoppeln. Ein Dokument,
+   *  das sich nicht laden lässt, wird gemeldet und übersprungen; der Start geht weiter. */
   async starten(ablage: Ablage): Promise<void> {
     for (const b of this.blaetter) await b.schliessen();
     this.ablageStand = ablage;
+    this.start = { schritt: "Ablage öffnen", anteil: null, hinweis: null };
     const stand = await this.ablage.arbeitsstand();
     const blaetter: Arbeitsblatt[] = [];
-    for (const kennung of stand.offen) {
-      const dok = await this.ablage.laden(kennung);
-      if (dok) blaetter.push(new Arbeitsblatt(dok, this.ablage));
+    for (const [i, kennung] of stand.offen.entries()) {
+      this.start = { ...this.start, schritt: `Dokument ${i + 1} von ${stand.offen.length} laden`, anteil: i / stand.offen.length };
+      try {
+        const dok = await this.ablage.laden(kennung);
+        if (dok) blaetter.push(new Arbeitsblatt(dok, this.ablage));
+      } catch (f) {
+        meldungen.zeigen({ text: `Ein Dokument ließ sich nicht laden und bleibt zu (${(f as Error).message})`, art: "fehler" });
+      }
     }
+    this.start = { ...this.start, schritt: "Liste der Dokumente lesen", anteil: 1 };
     this.blaetter = blaetter;
     this.aktivesBlatt = this.blaetter.find((b) => b.kennung === stand.aktiv) ?? this.blaetter[0] ?? null;
     await this.listeNeu();

@@ -136,6 +136,11 @@ Gerät oder nach dem Leeren des Browsers holt "Einspielen" alles zurück. Das ge
   sehr große Folgen; mit limit(1000; ...) oder first(...) begrenzen. jq lädt danach von selbst neu.
 - Eine Abfrage bricht nach 10 s ab: meist ein regulärer Ausdruck mit verschachtelten Wiederholungen oder eine
   Schleife in jq; der Abfrage-Worker startet danach neu, die nächste Abfrage läuft normal.
+- Die Bauart ohne Server bleibt beim Start stehen und meldet, ein anderer Tab sei mit einer älteren Fassung offen:
+  jenen Tab schließen oder neu laden, danach geht es von selbst weiter. Ab Fassung 2.4 machen Tabs einer neueren
+  Fassung selbst Platz (sie legen alles ab und laden neu).
+- Der Browser erlaubt kein Speichern (privates Fenster): die App startet trotzdem, warnt und hält die Dokumente nur,
+  solange das Fenster offen ist; sichern per Herunterladen oder in der Ablage mit Alles sichern.
 - Ein Ordner lässt sich nicht entfernen: nur leere Ordner gehen weg; Dokumente vorher verschieben oder in den
   Papierkorb legen.
 - YAML-Dateien über einigen MB brauchen Sekunden zum Lesen (Bibliothek `yaml`); die Oberfläche bleibt dabei

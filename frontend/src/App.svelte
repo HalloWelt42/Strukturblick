@@ -14,6 +14,7 @@
   import Palette from "./lib/oberflaeche/palette/Palette.svelte";
   import { palette } from "./lib/oberflaeche/palette/palettenstand.svelte";
   import Zugangsseite from "./lib/oberflaeche/schale/Zugangsseite.svelte";
+  import Startanzeige from "./lib/oberflaeche/schale/Startanzeige.svelte";
   import AblageSeite from "./lib/oberflaeche/ablage/AblageSeite.svelte";
   import { zugang } from "./lib/zustand/zugang.svelte";
 
@@ -42,7 +43,7 @@
 {#if zugang.stand !== "bereit"}
   <Zugangsseite />
 {:else if !arbeitsplatz.bereit}
-  <div class="laden-start"><i class="fa-solid fa-spinner fa-spin"></i> Öffne den Arbeitsplatz ...</div>
+  <Startanzeige />
 {:else}
 <Ablagezone>
   <div class="app">
@@ -66,14 +67,3 @@
 {/if}
 <Meldung />
 
-<style>
-  .laden-start {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--a2);
-    color: var(--text-3);
-    background: var(--flaeche-seite);
-  }
-</style>
