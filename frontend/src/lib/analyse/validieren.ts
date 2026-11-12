@@ -177,11 +177,21 @@ export function schemaLesen(text: string): { ok: true; schema: Record<string, un
   return { ok: true, schema: s as Record<string, unknown> };
 }
 
+/** Wert mit bigint als gewöhnlicher Zahl (für Bibliotheken ohne bigint) */
+function ohneBigint(w: unknown): unknown {
+  if (typeof w === "bigint") return Number(w);
+  if (Array.isArray(w)) return w.map(ohneBigint);
+  if (w !== null && typeof w === "object") return Object.fromEntries(Object.entries(w).map(([s, x]) => [s, ohneBigint(x)]));
+  return w;
+}
+
 export function pruefen(index: Strukturindex, text: string, schema: Record<string, unknown>): Pruefung {
   const beginn = Date.now();
   let ausgabe: { valid: boolean; errors: OutputUnit[] };
   try {
-    ausgabe = new Validator(schema as Schema, entwurf(schema), false).validate(wertAus(index, text));
+    // Die Prüfbibliothek kennt kein bigint: große Ganzzahlen gehen als gewöhnliche Zahl hinein (Typ stimmt, Grenzen
+    // gelten bis auf die letzte Stelle)
+    ausgabe = new Validator(schema as Schema, entwurf(schema), false).validate(ohneBigint(wertAus(index, text)));
   } catch (f) {
     return { ok: false, fehler: `Das Schema lässt sich nicht anwenden: ${(f as Error).message}` };
   }

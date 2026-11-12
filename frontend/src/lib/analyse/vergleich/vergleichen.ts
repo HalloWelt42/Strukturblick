@@ -3,6 +3,8 @@
 // Schlüsselfeld (selbst erkannt oder gewählt, etwa nr), sonst nach Stelle mit Ausrichtung gleicher Einträge, damit ein
 // eingefügter Eintrag nicht alle folgenden als geändert erscheinen lässt. Rein, ohne Browser.
 
+import { jsonText } from "../../kern/json";
+
 export type Art = "gleich" | "geaendert" | "hinzu" | "weg" | "innen";
 
 export interface Vergleichsknoten {
@@ -70,7 +72,7 @@ export function gleich(a: unknown, b: unknown): boolean {
 function abdruck(w: unknown): string {
   if (Array.isArray(w)) return `[${w.map(abdruck).join(",")}]`;
   if (istObjekt(w)) return `{${Object.keys(w).sort().map((k) => `${JSON.stringify(k)}:${abdruck(w[k])}`).join(",")}}`;
-  return JSON.stringify(w) ?? "undefined";
+  return jsonText(w) ?? "undefined";
 }
 
 const zeigerTeil = (s: string | number): string => String(s).replaceAll("~", "~0").replaceAll("/", "~1");

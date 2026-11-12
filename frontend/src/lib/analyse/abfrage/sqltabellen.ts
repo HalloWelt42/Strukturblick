@@ -99,8 +99,10 @@ function typVon(werte: readonly unknown[], typen: boolean): { typ: SqlTyp; art: 
   const gefuellt = werte.filter((w) => w !== null && w !== undefined && w !== "");
   if (!gefuellt.length) return { typ: "TEXT", art: "leer", umwandeln: false };
   if (gefuellt.every((w) => typeof w === "boolean")) return { typ: "INTEGER", art: "Wahrheitswert (1 oder 0)", umwandeln: false };
-  if (gefuellt.every((w) => typeof w === "number")) {
-    return gefuellt.every((w) => Number.isInteger(w)) ? { typ: "INTEGER", art: "Ganzzahl", umwandeln: false } : { typ: "REAL", art: "Zahl", umwandeln: false };
+  // Ganzzahlen über 2^63 passen in keine SQLite-Ganzzahl: dann bleibt die Spalte genau als Text
+  if (gefuellt.some((w) => typeof w === "bigint" && (w > INT64_MAX || w < INT64_MIN))) return { typ: "TEXT", art: "Ganzzahl, zu groß für SQLite (als Text)", umwandeln: false };
+  if (gefuellt.every((w) => typeof w === "number" || typeof w === "bigint")) {
+    return gefuellt.every((w) => typeof w === "bigint" || Number.isInteger(w)) ? { typ: "INTEGER", art: "Ganzzahl", umwandeln: false } : { typ: "REAL", art: "Zahl", umwandeln: false };
   }
   if (!typen && gefuellt.every((w) => typeof w === "string" && GANZ.test(w))) return { typ: "INTEGER", art: "Ganzzahl", umwandeln: true };
   if (!typen && gefuellt.every((w) => typeof w === "string" && (GANZ.test(w) || KOMMA.test(w)))) return { typ: "REAL", art: "Zahl", umwandeln: true };
@@ -108,10 +110,14 @@ function typVon(werte: readonly unknown[], typen: boolean): { typ: SqlTyp; art: 
   return { typ: "TEXT", art: gefuellt.every((w) => typeof w === "string") ? "Text" : "gemischt", umwandeln: false };
 }
 
+const INT64_MAX = 9223372036854775807n;
+const INT64_MIN = -9223372036854775808n;
+
 function zelle(w: unknown, umwandeln: boolean): Zellwert {
   if (w === undefined || w === null) return null;
   if (typeof w === "boolean") return w ? 1 : 0;
   if (typeof w === "number") return w;
+  if (typeof w === "bigint") return w >= INT64_MIN && w <= INT64_MAX ? w : String(w);
   if (typeof w === "string") return umwandeln && w !== "" ? Number(w) : w;
   return JSON.stringify(w);
 }

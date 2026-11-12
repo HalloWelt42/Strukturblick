@@ -2,6 +2,7 @@
 // Eingabe für jq. Beides wird je Revision einmal gebaut und behalten, damit Tippen in der Abfrage nicht jedes Mal das
 // ganze Dokument neu umsetzt.
 
+import { jsonText } from "../../kern/json";
 import { format } from "../../formate/registrierung";
 import type { FormatKennung, Merkmale } from "../../kern/format";
 import type { Strukturindex } from "../../kern/strukturindex";
@@ -68,7 +69,7 @@ export class Quellen {
     if (!e) throw new Error(`Dokument ${kennung} fehlt im Abfrage-Worker`);
     if (!e.jq) {
       const art = format(e.stand.format).jsonText?.(e.stand.merkmale) ?? null;
-      e.jq = art ? { text: e.stand.text, folge: art === "folge" } : { text: JSON.stringify(this.wert(kennung)), folge: false };
+      e.jq = art ? { text: e.stand.text, folge: art === "folge" } : { text: jsonText(this.wert(kennung)), folge: false };
     }
     return e.jq;
   }

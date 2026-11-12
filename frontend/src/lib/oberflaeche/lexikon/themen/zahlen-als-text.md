@@ -52,22 +52,23 @@ Abhilfe schafft [Bereinigen](#bereinigen/typen) unter Typen: Für `umsatz` erken
 
 ## Große Kennungen über 2^53
 
-Die meisten Programme, auch Browser, speichern Zahlen als Gleitkommazahl mit 64 Bit (IEEE 754). Ganze Zahlen sind darin nur bis 2^53 = 9.007.199.254.740.992 sicher genau. Größere Kennungen, wie sie manche Datenbanken und Dienste vergeben, werden beim Einlesen still gerundet:
+Die meisten Programme, auch Browser, speichern Zahlen als Gleitkommazahl mit 64 Bit (IEEE 754). Ganze Zahlen sind darin nur bis 2^53 = 9.007.199.254.740.992 sicher genau. Größere Kennungen, wie sie manche Datenbanken und Dienste vergeben, würden beim Einlesen still gerundet. Strukturblick hält sie deshalb genau, Ziffer für Ziffer:
 
 ```json
 { "id": 12345678901234567890, "k": 9007199254740993 }
 ```
 
-So geht Strukturblick damit um:
-
 | Wo | Was du siehst |
 |---|---|
 | Baum, Editor, Tabelle | die Ziffern genau so, wie sie im Text stehen |
 | Ändern anderer Werte | die lange Zahl bleibt Ziffer für Ziffer im Text |
-| jq bei reinem JSON und JSON Lines | `.id` gibt `12345678901234567890` genau aus; wer damit rechnet, etwa `.k + 0`, bekommt `9007199254740992` |
-| JSONPath, SQL, Statistik, Validieren, Konvertieren | gerundete Werte: `12345678901234567000` und `9007199254740992` |
+| jq, JSONPath, Vergleich | `.id` ergibt `12345678901234567890` genau, bei jedem Format; wer in jq damit rechnet, etwa `.k + 0`, bekommt den gerundeten Wert `9007199254740992`, so rechnet jq |
+| Konvertieren, Herunterladen, als neues Dokument | die Zahl mit allen Ziffern, ohne Anführungszeichen (in CSV und XML als Text, wie alles dort) |
+| SQL | eine ganze Zahl bis 2^63 (9.223.372.036.854.775.807, so weit reicht SQLite); noch größere Werte stehen genau als Text in der Spalte |
+| Validieren | Typ und Pflichtfelder genau; Grenzen wie `maximum` vergleicht die Prüfung mit dem gerundeten Wert |
+| Statistik | die Spalte heißt "Zahl" statt "Zahl, ganz", weil die Lage (Mittel, Median) mit Gleitkommazahlen rechnet |
 
-Bei JSON mit Kommentaren, bei YAML, TOML und den übrigen Formaten bekommt auch jq den gerundeten Wert. Die Statistik nennt eine solche Spalte "Zahl" statt "Zahl, ganz". Sicher ist nur eins: Kennungen als Text speichern, `"id": "12345678901234567890"`.
+Wer ganz sichergehen will, auch für andere Programme: Kennungen als Text speichern, `"id": "12345678901234567890"`.
 
 ## Warum Strukturblick nicht von selbst umwandelt
 

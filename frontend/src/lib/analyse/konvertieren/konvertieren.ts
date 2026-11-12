@@ -2,6 +2,7 @@
 // meldet sich in ZIELE an (Name, Endung, Optionen, Schreiben, Verluste); Oberfläche und Tests lesen nur diese Liste.
 // Rein, ohne Browser. Texte in Verlustpunkten kennzeichnen Namen und Werte mit `Backticks`.
 
+import { jsonText } from "../../kern/json";
 import { stringify } from "yaml";
 import { tomlAus } from "./toml";
 import { xmlAus, xmlQuellVerluste } from "./xml";
@@ -131,7 +132,7 @@ export function umwandeln(q: Quelle, zielKennung: Zielkennung, o: Konvertieropti
     const wert = wertAus(q.index, q.text);
     // YAML nach den Regeln von 1.1: Texte wie yes, on oder 2026-11-01 stehen in Anführungszeichen und bleiben in jedem
     // Leser Text
-    const text = z.kennung === "json" ? JSON.stringify(wert, null, 2) + "\n" : stringify(wert, { lineWidth: 0, version: "1.1" });
+    const text = z.kennung === "json" ? jsonText(wert, 2) + "\n" : stringify(wert, { lineWidth: 0, version: "1.1" });
     return { text, verluste: [...vorn, ...allgemein], tabelle: null, datensaetze: null };
   }
   if (z.kennung === "xml") {
@@ -144,7 +145,7 @@ export function umwandeln(q: Quelle, zielKennung: Zielkennung, o: Konvertieropti
   }
   const h = hauptliste(q);
   if (z.kennung === "ndjson") {
-    const text = h.eintraege.map((e) => JSON.stringify(e ?? null)).join("\n") + (h.eintraege.length ? "\n" : "");
+    const text = h.eintraege.map((e) => jsonText(e ?? null)).join("\n") + (h.eintraege.length ? "\n" : "");
     return { text, verluste: [...vorn, ...aussenPunkt(h.aussen, h.name, z.name, "eine Folge von Datensätzen"), ...allgemein], tabelle: null, datensaetze: h.eintraege.length };
   }
   if (z.kennung === "xlsx") {

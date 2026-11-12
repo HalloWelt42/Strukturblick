@@ -6,6 +6,7 @@ import { KEIN, KnotenArt, schluessel, type Strukturindex } from "../../kern/stru
 import { Formatfehler, type NeuerWert, type TextAenderung } from "../vertrag";
 import { hinterZeile, mitTrennern, zeilenanfang, zeilenweise } from "../entfernen";
 import { mitgliedAnfang } from "../spalten";
+import { datumLesen } from "./skalare";
 
 const GUELTIGE_ZAHL = /^[+-]?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
 
@@ -30,9 +31,22 @@ export function tomlWert(neu: NeuerWert): string {
   }
 }
 
-export function wertSchreibenToml(index: Strukturindex, k: number, neu: NeuerWert): TextAenderung {
+/** Steht an k ein Datum oder eine Zeit als TOML-Typ (ohne Anführungszeichen)? */
+const istDatum = (text: string, index: Strukturindex, k: number): boolean =>
+  index.art[k] === KnotenArt.text && text[index.von[k]] !== '"' && text[index.von[k]] !== "'" && datumLesen(text, index.von[k])?.bis === index.bis[k];
+
+/** Die Eingabe, wenn sie ganz ein TOML-Datum oder eine Zeit ist; sonst null */
+function alsDatum(eingabe: string): string | null {
+  const t = eingabe.trim();
+  return datumLesen(t, 0)?.bis === t.length && t !== "" ? t : null;
+}
+
+/** Ein Datum bleibt Datum, solange die Eingabe ein gültiges TOML-Datum ist (wie eine Zahl Zahl bleibt, STB-54); sonst
+ *  wird es Text */
+export function wertSchreibenToml(text: string, index: Strukturindex, k: number, neu: NeuerWert): TextAenderung {
   if (index.art[k] === KnotenArt.objekt || index.art[k] === KnotenArt.liste) throw new Formatfehler("Nur einzelne Werte lassen sich so ändern");
-  return { von: index.von[k], bis: index.bis[k], einfuegen: tomlWert(neu) };
+  const datum = neu.art === "text" && istDatum(text, index, k) ? alsDatum(neu.wert) : null;
+  return { von: index.von[k], bis: index.bis[k], einfuegen: datum ?? tomlWert(neu) };
 }
 
 /** Eine Tabellenliste ([[a]]) erkennt man daran, dass ihr Schlüssel in der Kopfzeile hinter ihrem Anfang steht */

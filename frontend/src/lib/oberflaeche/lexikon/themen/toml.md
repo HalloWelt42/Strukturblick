@@ -93,7 +93,7 @@ webshop.toml hat drei solche Werte: `stand`, `ab` und `bis`. Strukturblick erken
 
 Ergebnis: `"2026-11-10T08:15:00+01:00"`. Die [Ansicht Struktur](#struktur) nennt `stand` "Datum und Zeit", die Uhrzeiten `ab` und `bis` "Text". Beim [Konvertieren](#konvertieren) in ein anderes Format sagt die Verlustkarte "Datum und Zeit werden Text": Der Inhalt bleibt gleich, nur der eigene Typ geht verloren. Mehr bei [Datum und Zeit](#datum-und-zeit).
 
-Änderst du einen solchen Wert in Baum oder Tabelle, schreibt Strukturblick ihn als Text in Anführungszeichen; TOML liest ihn danach als Text. Soll der Typ bleiben, änderst du ihn im [Editor](#editor).
+Änderst du einen solchen Wert in Baum oder Tabelle, bleibt er Datum, solange du wieder ein gültiges Datum oder eine Zeit eingibst (etwa `2026-12-24` oder `2026-12-24T18:00:00+01:00`); andere Eingaben werden Text in Anführungszeichen. So hält es Strukturblick auch mit Zahlen.
 
 ## Meldungen
 

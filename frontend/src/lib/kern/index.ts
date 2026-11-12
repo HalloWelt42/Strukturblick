@@ -8,3 +8,4 @@ export * from "./befehl";
 export { GRUNDBEFEHLE, anzeige, kleinsteAenderung } from "./befehle";
 export * from "./sitzung";
 export * from "./abfrage";
+export * from "./json";

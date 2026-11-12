@@ -10,6 +10,7 @@ import { CODEZIELE, codeziel } from "../../../analyse/codegen/codeziele";
 import { klassenname, type Klassenmodell } from "../../../analyse/codegen/modell";
 import type { Codeausgabe, Codedatei, Codeoptionen } from "../../../analyse/codegen/ziele";
 import { wertAus } from "../../../analyse/wert";
+import { jsonText } from "../../../kern/json";
 import { ablageverwaltung } from "../../../zustand/ablageverwaltung.svelte";
 import { FASSUNG, URHEBER } from "../../../zustand/app";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
@@ -85,7 +86,7 @@ export class CodeZustand implements Adressierbar {
     const e = this.ergebnis(blatt);
     const a = blatt.analyse;
     if (!e?.ok || !a?.index) return null;
-    const daten = { name: `${blatt.name.replace(/\.[^.]+$/, "")}.json`, text: `${JSON.stringify(wertAus(a.index, blatt.analyseText, 0), null, 2)}\n` };
+    const daten = { name: `${blatt.name.replace(/\.[^.]+$/, "")}.json`, text: `${jsonText(wertAus(a.index, blatt.analyseText, 0), 2)}\n` };
     return codeziel(this.ziel).miniprojekt(e.modell, e.optionen, daten);
   }
 

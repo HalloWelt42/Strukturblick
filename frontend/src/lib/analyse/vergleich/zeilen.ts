@@ -3,6 +3,7 @@
 // lässt. Geänderte Werte stehen links alt, rechts neu; Hinzugekommenes steht nur rechts, Weggefallenes nur links.
 
 import { istObjekt, type Vergleichsknoten } from "./vergleichen";
+import { jsonText } from "../../kern/json";
 
 export type Ton = "gleich" | "geaendert" | "hinzu" | "weg";
 
@@ -37,7 +38,7 @@ function kopf(k: { schluessel: string | null }, stelle: number | null): Teil[] {
 
 /** Kurzbeschreibung eines Eintrags für Falten: die ersten zwei Texte */
 export function kennung(w: unknown): string {
-  if (!istObjekt(w)) return typeof w === "string" ? w : JSON.stringify(w) ?? "";
+  if (!istObjekt(w)) return typeof w === "string" ? w : jsonText(w) ?? "";
   return Object.values(w).filter((v): v is string => typeof v === "string" && v.trim() !== "").slice(0, 2).join(", ");
 }
 

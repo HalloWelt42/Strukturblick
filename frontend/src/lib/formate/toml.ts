@@ -18,5 +18,5 @@ export const TOML_FORMAT: Format = {
   lesen: (text) => lesenToml(text),
   eintraegeEntfernen: (text, index, liste, stellen) => eintraegeEntfernenToml(text, index, liste, stellen),
   spalteEntfernen: (text, index, liste, spalte) => spalteEntfernenToml(text, index, liste, spalte),
-  wertSchreiben: (_text, index, k, neu) => wertSchreibenToml(index, k, neu),
+  wertSchreiben: (text, index, k, neu) => wertSchreibenToml(text, index, k, neu),
 };

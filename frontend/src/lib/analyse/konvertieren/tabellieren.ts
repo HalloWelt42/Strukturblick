@@ -2,6 +2,8 @@
 // als JSON-Text; eine Liste in den Einträgen als eine Zeile je Element, als Spalten je Element (positionen.0.artikel)
 // oder als JSON-Text. Jede Spalte weiß, woher sie kommt, damit Inspektor und Verlustkarte es sagen können.
 
+import { jsonText } from "../../kern/json";
+
 export type Objektweise = "spalten" | "json";
 export type Listenweise = "zeilen" | "spalten" | "json";
 
@@ -63,10 +65,10 @@ export function tabellieren(eintraege: readonly unknown[], objekte: Objektweise,
         wert.forEach((w, i) => flach(aus, `${pfad}.${i}`, w, "liste", false, null));
         return;
       }
-      return setzen(aus, pfad, JSON.stringify(wert), "json");
+      return setzen(aus, pfad, jsonText(wert), "json");
     }
     if (istObjekt(wert)) {
-      if (objekte === "json" && herkunft !== "liste") return setzen(aus, pfad, JSON.stringify(wert), "json");
+      if (objekte === "json" && herkunft !== "liste") return setzen(aus, pfad, jsonText(wert), "json");
       for (const [k, v] of Object.entries(wert)) flach(aus, pfad ? `${pfad}.${k}` : k, v, herkunft === "liste" ? "liste" : pfad ? "objekt" : "eintrag", false, null);
       return;
     }
@@ -94,7 +96,7 @@ export type Trennzeichen = ";" | "," | "\t";
 
 function zelle(w: unknown, trenner: Trennzeichen): string {
   if (w === null || w === undefined) return "";
-  const s = typeof w === "object" ? JSON.stringify(w) : String(w);
+  const s = typeof w === "object" ? jsonText(w) : String(w);
   return s.includes(trenner) || /["\r\n]/.test(s) || s !== s.trim() ? `"${s.replaceAll('"', '""')}"` : s;
 }
 

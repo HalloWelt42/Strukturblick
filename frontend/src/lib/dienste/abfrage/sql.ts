@@ -2,13 +2,19 @@
 // (analyse/abfrage/sqltabellen.ts) und werden nur neu gebaut, wenn sich ein Dokument geändert hat. Dazu Funktionen, die
 // SQLite fehlen oder nur für ASCII kann: lower und upper mit Umlauten, REGEXP.
 
-import type { Database, SqlJsStatic } from "sql.js";
+import type { Database, QueryExecResult, SqlJsStatic } from "sql.js";
 import { ABFRAGE_GRENZEN, type Tabellenuebersicht, type Zellwert } from "../../kern/abfrage";
 import { format } from "../../formate/registrierung";
 import { sqlTabellen, type SqlTabelle } from "../../analyse/abfrage/sqltabellen";
 import { zeilenAusgeben } from "../../analyse/ausgabe";
 import { wurf, type Maschine } from "./maschine";
 import type { Quellen } from "./quellen";
+
+const MAX_SICHER = BigInt(Number.MAX_SAFE_INTEGER);
+
+/** sql.js (ab 1.10) liest mit useBigInt Ganzzahlen genau als bigint; die Typen des Pakets kennen die dritte Angabe von
+ *  exec noch nicht, darum steht sie hier */
+type ExecGenau = { exec(sql: string, params: undefined, config: { readonly useBigInt: boolean }): QueryExecResult[] };
 
 const sql = (name: string): string => `"${name.replaceAll('"', '""')}"`;
 
@@ -17,7 +23,8 @@ function einspielen(db: Database, t: SqlTabelle): void {
   if (!t.zeilen.length) return;
   const st = db.prepare(`INSERT INTO ${sql(t.name)} VALUES (${t.spalten.map(() => "?").join(", ")})`);
   try {
-    for (const z of t.zeilen) st.run(z as Zellwert[]);
+    // bigint geht als Ziffern hinein; die Spalte INTEGER macht daraus wieder eine genaue Ganzzahl (bis 2^63)
+    for (const z of t.zeilen) st.run(z.map((w) => (typeof w === "bigint" ? w.toString() : w)));
   } finally {
     st.free();
   }
@@ -79,13 +86,14 @@ export function sqlMaschine(laden: () => Promise<SqlJsStatic>): Maschine {
     if (!a.ausdruck.trim()) return { art: "tabelle", spalten: [], zeilen: [], anzahl: 0, tabellen };
     let ergebnisse;
     try {
-      ergebnisse = db.exec(a.ausdruck);
+      // Ganzzahlen genau lesen (STB-53); was in eine gewöhnliche Zahl passt, wird wieder eine
+      ergebnisse = (db as unknown as ExecGenau).exec(a.ausdruck, undefined, { useBigInt: true });
     } catch (f) {
       throw wurf(meldung((f as Error).message));
     }
     const letztes = ergebnisse.at(-1);
     const namen = letztes?.columns ?? [];
-    const alle = (letztes?.values ?? []) as Zellwert[][];
+    const alle = (letztes?.values ?? []).map((z) => z.map((w) => (typeof w === "bigint" && w >= -MAX_SICHER && w <= MAX_SICHER ? Number(w) : w))) as Zellwert[][];
     if (a.ausgabe) return { art: "dokument", text: zeilenAusgeben(namen, alle, a.ausgabe) };
     const spalten = namen.map((name, i) => ({ name, art: artVon(alle.map((z) => z[i])) }));
     return { art: "tabelle", spalten, zeilen: alle.slice(0, ABFRAGE_GRENZEN.zeilen), anzahl: alle.length, tabellen };

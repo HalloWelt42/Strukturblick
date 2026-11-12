@@ -121,3 +121,29 @@ describe("SQL", () => {
     expect((await fehlerVon(sql, auftrag("sql", "SELEC 1", null))).meldung).toBe('SQL ungültig bei "SELEC"');
   });
 });
+
+describe("Große Ganzzahlen in den Abfragen (STB-53)", () => {
+  const YAML = "kennungen:\n  - id: 12345678901234567891\n    klein: 7\n  - id: 9223372036854775807\n    klein: 8\n";
+  // Eigene Quellen, damit die übrigen Tests ihre Dokumente für sich behalten
+  const q = new Quellen();
+  q.setzen(stand("y", "kennungen.yaml", "yaml", YAML));
+  q.setzen(stand("b", "bestellungen.json", "json", BESTELLUNGEN));
+
+  it("jq rechnet genau, auch wenn das Dokument kein JSON ist", async () => {
+    const e = (await jq(auftrag("jq", ".kennungen[0].id", "y"), q)) as Werteergebnis;
+    expect(e.stuecke[0].text).toBe("12345678901234567891");
+    const j = (await jq(auftrag("jq", ".id", "b"), q)) as Werteergebnis;
+    expect(j.stuecke[0].text).toBe("12345678901234567890");
+  });
+
+  it("JSONPath liefert die Zahl mit allen Ziffern", async () => {
+    const e = (await jsonpathMaschine(auftrag("jsonpath", "$.kennungen[*].id", "y"), q)) as Werteergebnis;
+    expect(e.stuecke.map((s) => s.text)).toEqual(["12345678901234567891", "9223372036854775807"]);
+  });
+
+  it("SQL rechnet bis 2^63 mit ganzen Zahlen und hält größere genau als Text", async () => {
+    const e = (await sql(auftrag("sql", "SELECT typeof(id) AS art, id FROM kennungen ORDER BY klein", null), q)) as Tabellenergebnis;
+    expect(e.zeilen.map((z) => z[0])).toEqual(["text", "text"]);
+    expect(e.zeilen.map((z) => String(z[1]))).toEqual(["12345678901234567891", "9223372036854775807"]);
+  });
+});

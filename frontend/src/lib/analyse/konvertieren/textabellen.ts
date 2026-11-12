@@ -2,6 +2,7 @@
 // Einträgen nach der gewählten Weise) und Felder außerhalb der Liste als zweite Tabelle "Angaben". Zahlen stehen
 // rechtsbündig. Es bleibt Text: Typen gehen verloren, null wird eine leere Zelle.
 
+import { jsonText } from "../../kern/json";
 import type { Tabellierung } from "./tabellieren";
 
 export interface Texttabelle {
@@ -10,7 +11,7 @@ export interface Texttabelle {
   readonly zeilen: readonly (readonly unknown[])[];
 }
 
-const alsText = (w: unknown): string => (w === null || w === undefined ? "" : typeof w === "object" ? JSON.stringify(w) : String(w));
+const alsText = (w: unknown): string => (w === null || w === undefined ? "" : typeof w === "object" ? jsonText(w) : String(w));
 const istZahlenspalte = (t: Texttabelle, i: number): boolean => t.zeilen.some((z) => typeof z[i] === "number") && t.zeilen.every((z) => z[i] === null || z[i] === undefined || typeof z[i] === "number");
 
 export function ausTabellierung(titel: string, t: Tabellierung): Texttabelle {

@@ -130,6 +130,17 @@ describe("TOML schreiben", () => {
     expect(() => TOML_FORMAT.wertSchreiben(TEXT, index, k, { art: "nichts" }, r.merkmale)).toThrow(/kein null/);
   });
 
+  it("lässt ein Datum Datum, solange die Eingabe eines ist (STB-54)", () => {
+    const text = 'tag = 2026-11-01\nzeit = 2026-11-01T08:15:00Z\nname = "2026-11-01"\n';
+    const i = TOML_FORMAT.lesen(text).index!;
+    const schreiben = (zeiger: string, wert: string) => anwenden(text, [TOML_FORMAT.wertSchreiben(text, i, knotenZu(i, text, zeiger), { art: "text", wert }, {})]).text;
+    expect(schreiben("/tag", "2026-12-24")).toContain("tag = 2026-12-24\n");
+    expect(schreiben("/zeit", " 2026-12-24T18:00:00+01:00 ")).toContain("zeit = 2026-12-24T18:00:00+01:00\n");
+    expect(schreiben("/tag", "Heiligabend")).toContain('tag = "Heiligabend"');
+    // Ein Text, der wie ein Datum aussieht, bleibt Text
+    expect(schreiben("/name", "2026-12-24")).toContain('name = "2026-12-24"');
+  });
+
   it("entfernt ein Element einer Tabellenliste samt Untertabellen", () => {
     const liste = knotenZu(index, TEXT, "/bestellungen");
     const neu = aendern(TOML_FORMAT.eintraegeEntfernen(TEXT, index, liste, [0]));

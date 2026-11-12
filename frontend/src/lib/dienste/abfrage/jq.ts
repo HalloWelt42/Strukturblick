@@ -4,6 +4,7 @@
 // 2. Werte und Treffer in einem Lauf, damit jq das Dokument nur einmal liest: `{w: [Ausdruck], p: [Pfade]}`. Die Pfade
 //    kommen vom längsten vorderen Teil, der noch auswählt (siehe analyse/abfrage/jqpfad.ts).
 
+import { jsonLesen } from "../../kern/json";
 import type { Jq } from "jq-wasm";
 import { pfadAusdruck, vordereTeile, zeigerAusPfad } from "../../analyse/abfrage/jqpfad";
 import type { Teil } from "../../kern/pfade";
@@ -63,7 +64,8 @@ function rechnen(j: Jq, a: Abfrageauftrag, q: Quellen): Abfrageergebnis {
   const pfade = teile.map((t) => `(try ${pfadAusdruck(t)} catch null)`).join(", ");
   const r = j.raw(ein.text, `{w: [\n${ausdruck}\n], p: [${pfade}]}`, ["-c", ...flags]);
   if (r.exitCode !== 0) throw fehlerVon(r.stderr, 1, ausdruck);
-  const { w, p } = JSON.parse(r.stdout) as { w: unknown[]; p: (Teil[][] | null)[] };
+  // Genau lesen: jq behält große Ganzzahlen, JSON.parse würde sie runden (STB-53)
+  const { w, p } = jsonLesen(r.stdout) as { w: unknown[]; p: (Teil[][] | null)[] };
 
   const gefunden = p.findIndex((x) => x !== null);
   const treffer = gefunden < 0 ? null : (p[gefunden] as Teil[][]).map(zeigerAusPfad);

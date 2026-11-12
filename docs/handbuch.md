@@ -97,6 +97,12 @@ Die Abfrage am Fuß des Hauptbereichs (⌥ ⌘ E oder "Öffnen" in der Leiste) r
   Text und Wahrheitswerte stehen als ein Wert da. Wechselt das Dokument auf eines ohne XML, gilt wieder jq.
 - Suche über Schlüssel und Werte, wahlweise als regulärer Ausdruck und mit Groß und Klein.
 
+Bei YAML steht an einem Alias (`*name`) für Abfragen, SQL, Validieren, Vergleich und Konvertieren der ganze Inhalt seines
+Ankers (`&name`); der Baum zeigt den Alias als Verweis auf die Zeile des Ankers. `<<` ist ein gewöhnlicher Schlüssel.
+Ganzzahlen über 2^53 (etwa 64-Bit-Kennungen) bleiben Ziffer für Ziffer genau: in jq, JSONPath, Vergleich, beim
+Konvertieren und Herunterladen als Zahl ohne Anführungszeichen, in SQL als ganze Zahl bis 2^63 (darüber genau als
+Text); nur Validieren vergleicht Grenzen wie maximum mit dem gerundeten Wert.
+
 Ein Fehler im Ausdruck steht an der Stelle im Feld; das letzte gültige Ergebnis bleibt gedimmt stehen. Jedes
 Ergebnis lässt sich ganz als neues Dokument anlegen (⌘ Enter), herunterladen (JSON, NDJSON, CSV mit Semikolon)
 oder in den Abfragen-Verlauf legen. Eine Abfrage, die länger als 10 s rechnet, wird abgebrochen.

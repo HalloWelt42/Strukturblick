@@ -78,15 +78,15 @@ So zeigt Strukturblick Aliase:
 - **Alias auf einen einfachen Wert** übernimmt den Wert. Der Hinweis lautet etwa "*x übernimmt den Wert von &x (Zeile 1)".
 - **Alias auf ein Objekt oder eine Liste** erscheint im Baum als Verweis auf die Zeile des Ankers. Die Einträge stehen nur dort. Der Hinweis lautet "*gesundheit wiederholt den Inhalt von &gesundheit (Zeile 6); die Einträge stehen dort".
 
-Für Abfragen und beim Konvertieren steht an der Stelle eines solchen Verweises ein leeres Objekt. Frag deshalb die Stelle des Ankers ab:
+Für Abfragen, SQL, Validieren und beim Konvertieren steht an der Stelle eines Verweises der ganze Inhalt des Ankers, so wie YAML ihn meint:
 
 ```jq
-.standard.gesundheit.intervall
+.dienste[0].gesundheit.intervall
 ```
 
-Ergebnis: `"30s"`. Die Abfrage `.dienste[0].gesundheit` ergibt dagegen `{}`.
+Ergebnis: `"30s"`, derselbe Wert wie bei `.standard.gesundheit.intervall`. Ein Treffer darin hat keinen eigenen Ort im Baum, denn dort stehen die Einträge nur am Anker.
 
-`<<: *standard` ist in vielen Programmen ein Zusammenführen: Die Felder von `standard` sollen in jeden Dienst wandern. YAML 1.2 kennt diese Regel nicht mehr; für Strukturblick ist `<<` ein gewöhnlicher Schlüssel mit einem Verweis darunter. `neustart` steht also nur unter `standard`, und `.dienste[0].neustart` ergibt `null`.
+`<<: *standard` ist in vielen Programmen ein Zusammenführen: Die Felder von `standard` sollen in jeden Dienst wandern. YAML 1.2 kennt diese Regel nicht mehr; für Strukturblick ist `<<` ein gewöhnlicher Schlüssel, unter dem der ganze Inhalt von `standard` steht. `.dienste[0].neustart` ergibt also `null`, `.dienste[0]["<<"].neustart` ergibt `"immer"`.
 
 ## Mehrere Dokumente
 

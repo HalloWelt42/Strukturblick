@@ -8,6 +8,7 @@ import type { Strukturindex } from "../kern/strukturindex";
 import { schreiben, teileVon } from "../kern/pfade";
 import type { Tabelle } from "./tabelle";
 import { wertAus } from "./wert";
+import { jsonText } from "../kern/json";
 
 export type Ausgabeformat = "json" | "ndjson" | "csv";
 
@@ -21,7 +22,7 @@ const TRENNER = ";";
 
 function feld(w: unknown): string {
   if (w === null || w === undefined) return "";
-  const s = typeof w === "object" ? JSON.stringify(w) : String(w);
+  const s = typeof w === "object" ? jsonText(w) : String(w);
   return /[;"\r\n]/.test(s) || s !== s.trim() ? `"${s.replaceAll('"', '""')}"` : s;
 }
 
@@ -42,8 +43,8 @@ export function werteAlsTabelle(werte: readonly unknown[]): { spalten: string[];
 }
 
 export function werteAusgeben(werte: readonly unknown[], format: Ausgabeformat): string {
-  if (format === "json") return JSON.stringify(werte, null, 2);
-  if (format === "ndjson") return werte.map((w) => JSON.stringify(w ?? null)).join("\n") + (werte.length ? "\n" : "");
+  if (format === "json") return jsonText(werte, 2);
+  if (format === "ndjson") return werte.map((w) => jsonText(w ?? null)).join("\n") + (werte.length ? "\n" : "");
   const t = werteAlsTabelle(werte);
   return csvAus(t.spalten, t.zeilen);
 }

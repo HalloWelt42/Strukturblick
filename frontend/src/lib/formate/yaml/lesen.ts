@@ -18,6 +18,8 @@ interface AnkerZiel {
   readonly art: KnotenArt;
   readonly inhalt: string | null;        // nur bei einfachen Werten
   readonly von: number;
+  /** Knoten des Ankers im Index (Ziel des Verweises) */
+  readonly knoten: number;
 }
 
 function artVonWert(wert: unknown): KnotenArt {
@@ -118,7 +120,7 @@ class YamlLeser {
       const [von, bis] = this.bereich(knoten, ersatz);
       const art = isMap(knoten) ? KnotenArt.objekt : KnotenArt.liste;
       const k = this.bauer.knoten(art, eltern, von, schluessel);
-      if (knoten.anchor) this.anker.set(knoten.anchor, { art, inhalt: null, von });
+      if (knoten.anchor) this.anker.set(knoten.anchor, { art, inhalt: null, von, knoten: k });
       if (isMap(knoten)) {
         const gesehen = new Set<string>();
         for (const p of knoten.items) this.paar(p, k, gesehen, von);
@@ -169,10 +171,10 @@ class YamlLeser {
       const wert = String(knoten.value);
       if (!this.steht(wert, inhalt.von, inhalt.bis)) inhalt = { ...inhalt, dekodiert: wert };
     }
-    this.bauer.blatt(art, eltern, von, bis, schluessel, inhalt);
+    const k = this.bauer.blatt(art, eltern, von, bis, schluessel, inhalt);
     if (knoten.anchor) {
       const ankerInhalt = inhalt.dekodiert ?? (art === KnotenArt.text ? this.text.slice(inhalt.von, inhalt.bis) : this.text.slice(von, bis));
-      this.anker.set(knoten.anchor, { art, inhalt: ankerInhalt, von });
+      this.anker.set(knoten.anchor, { art, inhalt: ankerInhalt, von, knoten: k });
     }
   }
 
@@ -187,7 +189,7 @@ class YamlLeser {
     const zeile = this.zeile(ziel.von);
     if (ziel.inhalt === null) {
       const k = this.bauer.blatt(ziel.art, eltern, von, bis, schluessel);
-      this.bauer.verweis(k, `Verweis auf &${name}, Zeile ${zeile}`);
+      this.bauer.verweis(k, `Verweis auf &${name}, Zeile ${zeile}`, ziel.knoten);
       this.melden("hinweis", `*${name} wiederholt den Inhalt von &${name} (Zeile ${zeile}); die Einträge stehen dort`, von, bis);
     } else {
       this.bauer.blatt(ziel.art, eltern, von, bis, schluessel, { von, bis, dekodiert: ziel.inhalt });

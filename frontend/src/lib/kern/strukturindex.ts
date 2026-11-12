@@ -45,6 +45,9 @@ export interface Strukturindex {
   readonly schluesselDekodiert: ReadonlyMap<number, string>;
   /** Knoten, die nur auf einen anderen Teil verweisen (YAML-Alias): für Menschen, etwa "Verweis auf &standard, Zeile 3" */
   readonly verweise: ReadonlyMap<number, string>;
+  /** Ziel eines Verweises (YAML-Alias auf ein Objekt oder eine Liste: der Knoten des Ankers). Wer Werte baut, nimmt
+   *  dort den Inhalt des Ziels; der Baum zeigt den Verweis selbst. */
+  readonly verweisZiele: ReadonlyMap<number, number>;
 }
 
 /** Baut einen Index in der Reihenfolge des Textes auf (Eltern vor Kindern, Kinder in Textreihenfolge). */
@@ -65,6 +68,7 @@ export class IndexBauer {
   private readonly dekodiert = new Map<number, string>();
   private readonly schluesselDekodiert = new Map<number, string>();
   private readonly verweise = new Map<number, string>();
+  private readonly verweisZiele = new Map<number, number>();
 
   private wachsen(): void {
     const groesser = <T extends Int32Array | Uint8Array>(a: T): T => {
@@ -127,9 +131,10 @@ export class IndexBauer {
     return k;
   }
 
-  /** Knoten als Verweis kennzeichnen (Text für Menschen). */
-  verweis(k: number, beschreibung: string): void {
+  /** Knoten als Verweis kennzeichnen (Text für Menschen), mit dem Knoten, auf den er zeigt */
+  verweis(k: number, beschreibung: string, ziel?: number): void {
     this.verweise.set(k, beschreibung);
+    if (ziel !== undefined) this.verweisZiele.set(k, ziel);
   }
 
   get anzahl(): number {
@@ -154,6 +159,7 @@ export class IndexBauer {
       dekodiert: this.dekodiert,
       schluesselDekodiert: this.schluesselDekodiert,
       verweise: this.verweise,
+      verweisZiele: this.verweisZiele,
     };
   }
 }

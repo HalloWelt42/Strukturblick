@@ -47,7 +47,8 @@ export const ABFRAGE_GRENZEN = {
   tippenMs: 250,
 } as const;
 
-export type Zellwert = string | number | null;
+/** Wert einer Zelle in SQL; Ganzzahlen über 2^53 genau als bigint (STB-53) */
+export type Zellwert = string | number | bigint | null;
 
 export interface Wertstueck {
   /** Der Wert als eingerücktes JSON */

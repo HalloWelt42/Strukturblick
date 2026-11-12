@@ -1,11 +1,12 @@
 // Gemeinsames der Sprachen, die Werte liefern (jq, JSONPath, Suche): Werte zu Stücken für die Anzeige, ganzes Ergebnis
 // als Text im gewünschten Format.
 
+import { jsonText } from "../../kern/json";
 import { ABFRAGE_GRENZEN, type Abfrageergebnis, type Wertstueck } from "../../kern/abfrage";
 import { werteAusgeben, type Ausgabeformat } from "../../analyse/ausgabe";
 
 /** Eingerücktes JSON für die Anzeige; undefined (gibt es in JSON nicht) als null */
-export const eingerueckt = (w: unknown): string => JSON.stringify(w ?? null, null, 2);
+export const eingerueckt = (w: unknown): string => jsonText(w ?? null, 2);
 
 export function werteErgebnis(werte: readonly unknown[], orte: readonly (string | null)[] | null, treffer: readonly string[] | null, ausgabe: Ausgabeformat | null): Abfrageergebnis {
   if (ausgabe) return { art: "dokument", text: werteAusgeben(werte, ausgabe) };
