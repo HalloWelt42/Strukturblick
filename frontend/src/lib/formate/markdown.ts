@@ -12,7 +12,7 @@ export const MARKDOWN_FORMAT: Format = {
   name: "Markdown",
   endungen: ["md", "markdown"],
   sprache: "markdown",
-  faehigkeiten: { kommentare: false, tabellarisch: true, typen: false, schemasprache: "json-schema" },
+  faehigkeiten: { kommentare: false, tabellarisch: true, typen: false, schemasprache: "json-schema", xpath: false },
   leseoptionen: [],
   erkennen: (text) => erkennenMarkdown(text),
   lesen: (text) => lesenMarkdown(text),

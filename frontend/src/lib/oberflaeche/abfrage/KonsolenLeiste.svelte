@@ -1,19 +1,21 @@
 <script lang="ts">
   // Eingeklappte Abfrage am Fuß des Hauptbereichs (Entwurf entwuerfe/palette.html): Sprachen, der aktuelle Ausdruck,
   // Treffer, Öffnen. Ein Klick auf eine Sprache öffnet die Konsole in dieser Sprache.
-  import { abfrage, SPRACHEN } from "../../zustand/abfrage.svelte";
+  import { abfrage, SPRACHEN, type Sprache } from "../../zustand/abfrage.svelte";
+  import LexikonKnopf from "../lexikon/LexikonKnopf.svelte";
 
-  let { treffer }: { treffer: number | null } = $props();
+  let { treffer, sprachen }: { treffer: number | null; sprachen: readonly Sprache[] } = $props();
 </script>
 
 <div class="konsole-leiste">
   <i class="fa-solid fa-terminal"></i>
   <nav class="segment" aria-label="Sprache der Abfrage">
-    {#each SPRACHEN as s (s.kennung)}
+    {#each sprachen as s (s.kennung)}
       <button class:aktiv={abfrage.sprache === s.kennung} onclick={() => abfrage.oeffnen(s.kennung)}>{s.name}</button>
     {/each}
   </nav>
-  <button class="vorschau mono" title="Abfrage öffnen" onclick={() => abfrage.oeffnen()}>{abfrage.ausdruck || "Abfrage mit jq, SQL, JSONPath oder Suche"}</button>
+  <LexikonKnopf thema={abfrage.sprache} titel="So schreibt man Ausdrücke in {SPRACHEN.find((s) => s.kennung === abfrage.sprache)?.name}" />
+  <button class="vorschau mono" title="Abfrage öffnen" onclick={() => abfrage.oeffnen()}>{abfrage.ausdruck || `Abfrage mit ${sprachen.map((x) => x.name).join(", ").replace(/, ([^,]+)$/, " oder $1")}`}</button>
   <span class="rechts">
     {#if treffer !== null}<span class="abzeichen">{treffer} Treffer</span>{/if}
     <button class="knopf" onclick={() => abfrage.oeffnen()}><i class="fa-solid fa-chevron-up"></i> Öffnen</button>

@@ -56,6 +56,8 @@ export interface Faehigkeiten {
   readonly typen: boolean;               // unterscheidet Zahl, Text, Wahrheitswert, nichts (CSV nicht)
   /** Womit sich Dokumente des Formats prüfen lassen: JSON Schema (über den Wert) oder XML Schema (über den Text) */
   readonly schemasprache: "json-schema" | "xml-schema";
+  /** Der Text ist XML und lässt sich mit XPath abfragen */
+  readonly xpath: boolean;
 }
 
 export interface Format {

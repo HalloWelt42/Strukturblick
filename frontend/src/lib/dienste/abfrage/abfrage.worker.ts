@@ -11,11 +11,13 @@ import { Abfragewurf, type Maschine } from "./maschine";
 import { istStand, type AbfrageAntwort, type AbfrageNachricht } from "./nachrichten";
 import { Quellen } from "./quellen";
 import { sqlMaschine } from "./sql";
+import { xpathMaschine } from "./xpath";
 
 const MASCHINEN: Record<SprachKennung, Maschine> = {
   jq: jqMaschine(async () => (await import("jq-wasm")).loadJq({ wasmURL: new URL(jqWasm, self.location.href) })),
   sql: sqlMaschine(async () => (await import("sql.js")).default({ locateFile: () => sqlWasm })),
   jsonpath: jsonpathMaschine,
+  xpath: xpathMaschine,
   suche: sucheMaschine,
 };
 

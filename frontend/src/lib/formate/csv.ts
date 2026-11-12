@@ -213,7 +213,7 @@ export const CSV_FORMAT: Format = {
   name: "CSV",
   endungen: ["csv", "tsv", "txt"],
   sprache: "text",
-  faehigkeiten: { kommentare: false, tabellarisch: true, typen: false, schemasprache: "json-schema" },
+  faehigkeiten: { kommentare: false, tabellarisch: true, typen: false, schemasprache: "json-schema", xpath: false },
   leseoptionen: [
     {
       kennung: "trennzeichen",

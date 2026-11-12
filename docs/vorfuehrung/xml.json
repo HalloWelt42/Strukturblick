@@ -8,34 +8,68 @@
     {
       "nr": 1,
       "sprechtext": "XML liest Strukturblick nach festen Regeln: Attribute werden Felder mit einem At-Zeichen davor, gleichnamige Elemente eine Liste. Die zwölf Lieferungen stehen deshalb als Liste da.",
-      "ziel": { "anker": "baum", "notbehelf": "Ansicht Baum von lieferungen.xml" },
-      "aktion": { "art": "zeigen" },
+      "ziel": {
+        "anker": "baum",
+        "notbehelf": "Ansicht Baum von lieferungen.xml"
+      },
+      "aktion": {
+        "art": "zeigen"
+      },
       "erwartung": "lieferungen mit @xmlns:hl, @stand, @anzahl und lieferung als Liste mit 12 Einträgen; Fuß XML, Keine Fehler",
       "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
     },
     {
       "nr": 2,
       "sprechtext": "In der Tabelle wird jede Lieferung eine Zeile. Die Spalte der Positionen heißt gemischt: Manche Lieferungen haben eine Position, andere mehrere.",
-      "ziel": { "anker": "ansicht-tabelle", "notbehelf": "Ansicht Tabelle" },
-      "aktion": { "art": "klicken" },
+      "ziel": {
+        "anker": "ansicht-tabelle",
+        "notbehelf": "Ansicht Tabelle"
+      },
+      "aktion": {
+        "art": "klicken"
+      },
       "erwartung": "12 Zeilen, Spalten @nr, @datum, kunde, hl:position mit Typ Gemischt",
       "geprueft": "2026-11-12"
     },
     {
       "nr": 3,
       "sprechtext": "Genau das sagt die Karte beim Konvertieren: Ein Element, das nur einmal vorkommt, wird keine Liste. Dazu, dass Attribute Felder werden und alle Werte Text bleiben.",
-      "ziel": { "anker": "konvertieren-ziel", "notbehelf": "Leiste Konvertieren, Ziel JSON" },
-      "aktion": { "art": "klicken" },
+      "ziel": {
+        "anker": "konvertieren-ziel",
+        "notbehelf": "Leiste Konvertieren, Ziel JSON"
+      },
+      "aktion": {
+        "art": "klicken"
+      },
       "erwartung": "Punkte hl:position ist mal Liste, mal einzeln (4 einzeln, 8 als Liste); Attribute werden Felder; Werte bleiben Text; Kommentare gehen verloren",
       "geprueft": "2026-11-12"
     },
     {
       "nr": 4,
       "sprechtext": "Umgekehrt wird aus den Bestellungen XML: Alles steht unter einem Wurzelelement, Zahlen werden Text, und null wird ein leeres Element. Das Ergebnis lässt sich ohne Fehler wieder lesen.",
-      "ziel": { "anker": "konvertieren-neu", "notbehelf": "bestellungen.json öffnen, Konvertieren, Ziel XML, Als neues Dokument" },
-      "aktion": { "art": "klicken" },
+      "ziel": {
+        "anker": "konvertieren-neu",
+        "notbehelf": "bestellungen.json öffnen, Konvertieren, Ziel XML, Als neues Dokument"
+      },
+      "aktion": {
+        "art": "klicken"
+      },
       "erwartung": "Karte mit 3 Punkten; neues Dokument bestellungen.xml, Fuß XML 66 KB, Keine Fehler",
       "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Bei XML gibt es unten im Abfragefeld zusätzlich XPath. Ein Ausdruck wie alle Lieferscheinnummern der unbezahlten Lieferungen trifft die Attribute; ein Klick springt zur Stelle im Baum.",
+      "ziel": {
+        "anker": "abfrage-xpath",
+        "notbehelf": "Abfrage öffnen, Sprache XPath, //lieferung[bezahlt = 'nein']/@nr tippen"
+      },
+      "aktion": {
+        "art": "eingeben",
+        "text": "//lieferung[bezahlt = 'nein']/@nr"
+      },
+      "erwartung": "gültig, 4 Ergebnisse L-2401, L-2404, L-2407, L-2410, jedes mit Ort .lieferungen.lieferung[0].\"@nr\"; bei einem JSON-Dokument steht XPath nicht zur Wahl",
+      "geprueft": "2026-11-12, Bauart ohne Server"
     }
   ]
 }

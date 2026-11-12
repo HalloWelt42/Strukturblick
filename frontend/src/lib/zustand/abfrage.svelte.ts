@@ -13,7 +13,7 @@ import { abfrageverlauf } from "./abfrageverlauf.svelte";
 import { meldungen } from "./meldungen.svelte";
 
 // Für die Oberfläche (Regel A1)
-export { SPRACHEN, ABFRAGE_GRENZEN, type SprachKennung, type Werteergebnis, type Tabellenergebnis, type Tabellenuebersicht, type Zellwert } from "../kern/abfrage";
+export { SPRACHEN, sprachenFuer, ABFRAGE_GRENZEN, type Sprache, type SprachKennung, type Werteergebnis, type Tabellenergebnis, type Tabellenuebersicht, type Zellwert } from "../kern/abfrage";
 export type { Suchoptionen } from "../analyse/abfrage/textsuche";
 export { abfrageverlauf, type Gemerkt } from "./abfrageverlauf.svelte";
 
@@ -30,7 +30,7 @@ export interface Abfragestand {
   readonly ausgang: Abfrageausgang;
 }
 
-const LEER: Record<SprachKennung, string> = { jq: "", sql: "", jsonpath: "", suche: "" };
+const LEER: Record<SprachKennung, string> = { jq: "", sql: "", jsonpath: "", xpath: "", suche: "" };
 
 function stand(b: Arbeitsblatt): Dokumentstand | null {
   const a = b.analyse;

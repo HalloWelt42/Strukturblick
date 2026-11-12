@@ -99,7 +99,7 @@ export const NDJSON_FORMAT: Format = {
   name: "NDJSON",
   endungen: ["ndjson", "jsonl"],
   sprache: "json",
-  faehigkeiten: { kommentare: false, tabellarisch: true, typen: true, schemasprache: "json-schema" },
+  faehigkeiten: { kommentare: false, tabellarisch: true, typen: true, schemasprache: "json-schema", xpath: false },
   leseoptionen: [],
   erkennen,
   lesen,

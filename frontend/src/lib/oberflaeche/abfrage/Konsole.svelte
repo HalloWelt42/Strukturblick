@@ -7,7 +7,7 @@
   import { pfadVorSchreibmarke, schluesselAm } from "../../analyse/abfrage/ergaenzung";
   import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
-  import { abfrage, SPRACHEN, type Gemerkt } from "../../zustand/abfrage.svelte";
+  import { abfrage, sprachenFuer, type Gemerkt } from "../../zustand/abfrage.svelte";
   import { meldungen } from "../../zustand/meldungen.svelte";
   import { MAC } from "../aktionen/tastatur";
   import AusdruckFeld from "./AusdruckFeld.svelte";
@@ -20,6 +20,12 @@
   let { blatt }: { blatt: Arbeitsblatt } = $props();
 
   const s = $derived(spracheVon(abfrage.sprache));
+  /** Sprachen, die zum Dokument passen (XPath nur bei XML) */
+  const sprachen = $derived(sprachenFuer(blatt.analyse?.format.faehigkeiten));
+  // Passt die gewählte Sprache nicht zum Dokument (XPath, dann ein JSON-Dokument), gilt wieder die erste
+  $effect(() => {
+    if (blatt.analyse && !sprachen.some((x) => x.kennung === abfrage.sprache)) abfrage.sprache = sprachen[0].kennung;
+  });
   // Neu rechnen bei Ausdruck, Sprache, Suchwahl und jedem neu gelesenen Stand der betroffenen Dokumente
   const lage = $derived(s.ueberAlle ? arbeitsplatz.blaetter.map((b) => `${b.kennung}:${b.analyse?.revision}`).join(",") : `${blatt.kennung}:${blatt.analyse?.revision}`);
   $effect(() => {
@@ -92,7 +98,7 @@
 </script>
 
 {#if !abfrage.offen}
-  <KonsolenLeiste {treffer} />
+  <KonsolenLeiste {treffer} {sprachen} />
 {:else}
   <button class="af-griff" aria-label="Höhe der Abfrage: ziehen oder Pfeiltasten" title="Ziehen verstellt die Höhe der Abfrage"
     onpointerdown={ziehen}
@@ -103,7 +109,7 @@
     <div class="af-kopf">
       <i class="fa-solid fa-terminal"></i>
       <nav class="segment" aria-label="Sprache">
-        {#each SPRACHEN as x (x.kennung)}
+        {#each sprachen as x (x.kennung)}
           <button class:aktiv={abfrage.sprache === x.kennung} aria-pressed={abfrage.sprache === x.kennung} onclick={() => (abfrage.sprache = x.kennung)}>{x.name}</button>
         {/each}
       </nav>

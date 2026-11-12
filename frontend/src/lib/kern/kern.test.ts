@@ -56,7 +56,7 @@ const MINI: Format = {
   name: "Mini",
   endungen: [],
   sprache: "text",
-  faehigkeiten: { kommentare: false, tabellarisch: false, typen: false, schemasprache: "json-schema" },
+  faehigkeiten: { kommentare: false, tabellarisch: false, typen: false, schemasprache: "json-schema", xpath: false },
   leseoptionen: [],
   erkennen: () => 0,
   lesen: (text) => ({ index: miniLesen(text), diagnosen: [], merkmale: {} }),

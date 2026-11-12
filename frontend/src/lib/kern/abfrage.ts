@@ -1,7 +1,9 @@
 // Vertrag der Abfrage (Stufe 4): welche Sprachen es gibt, was eine Abfrage zurückgibt und welche Grenzen gelten. Die
 // Oberfläche baut ihre Sprachwahl nur aus SPRACHEN; gerechnet wird im Abfrage-Worker (dienste/abfrage).
 
-export type SprachKennung = "jq" | "sql" | "jsonpath" | "suche";
+import type { Faehigkeiten } from "./format";
+
+export type SprachKennung = "jq" | "sql" | "jsonpath" | "xpath" | "suche";
 
 export interface Sprache {
   readonly kennung: SprachKennung;
@@ -14,14 +16,20 @@ export interface Sprache {
   readonly hervorhebung: "jq" | "sql" | "text";
   /** Was das Feld vorschlägt: Felder des Dokuments an der Schreibmarke, Tabellen und Spalten, oder nichts */
   readonly ergaenzung: "felder" | "sql" | null;
+  /** Nur für Dokumente mit diesen Fähigkeiten (XPath nur bei XML); ohne: für alle */
+  readonly passt?: (f: Faehigkeiten) => boolean;
 }
 
 export const SPRACHEN: readonly Sprache[] = [
   { kennung: "jq", name: "jq", ueberAlle: false, beispiel: ".bestellungen[] | select(.bezahlt | not) | .nr", hervorhebung: "jq", ergaenzung: "felder" },
   { kennung: "sql", name: "SQL", ueberAlle: true, beispiel: "SELECT * FROM tabelle LIMIT 20", hervorhebung: "sql", ergaenzung: "sql" },
   { kennung: "jsonpath", name: "JSONPath", ueberAlle: false, beispiel: "$.bestellungen[?(@.bezahlt == false)].nr", hervorhebung: "text", ergaenzung: "felder" },
+  { kennung: "xpath", name: "XPath", ueberAlle: false, beispiel: "//lieferung/@nr", hervorhebung: "text", ergaenzung: null, passt: (f) => f.xpath },
   { kennung: "suche", name: "Suche", ueberAlle: false, beispiel: "Text in Schlüsseln und Werten", hervorhebung: "text", ergaenzung: null },
 ];
+
+/** Sprachen, die zum Dokument passen (ohne Dokument alle ohne Bedingung) */
+export const sprachenFuer = (f: Faehigkeiten | null | undefined): readonly Sprache[] => SPRACHEN.filter((s) => !s.passt || (f ? s.passt(f) : false));
 
 export const sprache = (k: SprachKennung): Sprache => SPRACHEN.find((s) => s.kennung === k) ?? SPRACHEN[0];
 
