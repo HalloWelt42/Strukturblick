@@ -30,3 +30,14 @@ export async function schemasImOrdner(ordner: string, ausser?: string): Promise<
   }
   return aus;
 }
+
+/** Namen der Dokumente in einem Ordner */
+export const belegteNamen = (ordner: string): Set<string> => new Set(arbeitsplatz.dokumente.filter((d) => d.ordner === ordner).map((d) => d.name));
+
+/** Freier Name im Ordner: "a.xsd", sonst "a 2.xsd", "a 3.xsd" ...; merkt ihn sich in `belegt` */
+export function freierName(wunsch: string, belegt: Set<string>): string {
+  let name = wunsch;
+  for (let i = 2; belegt.has(name); i++) name = wunsch.replace(/(\.[^.]+)?$/, ` ${i}$1`);
+  belegt.add(name);
+  return name;
+}

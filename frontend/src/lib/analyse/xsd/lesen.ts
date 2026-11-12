@@ -5,7 +5,7 @@
 import { xmlLesen, type Element as XmlElement } from "../../formate/xml/dom";
 import { aufloesen, dateiname, Dateisuche, type Schemadatei } from "./dateien";
 import {
-  qname, XSD_NS,
+  qname, XSD_NS, zerlegen,
   type Attributdekl, type Attributgruppe, type Bezug, type Elementdekl, type Facette, type Grenzen, type Gruppe,
   type Partikel, type QName, type Schemateil, type Typdefinition, type XsdModell,
 } from "./modell";
@@ -16,6 +16,9 @@ interface Kontext {
   readonly tns: string;
   /** Eingebunden ohne eigenen Zielnamensraum (Chamäleon): Verweise ohne Namensraum gehören zum einbindenden Schema */
   readonly chamaeleon: string;
+  /** elementFormDefault und attributeFormDefault der Datei: lokale Namen mit Namensraum? */
+  readonly elementeQualifiziert: boolean;
+  readonly attributeQualifiziert: boolean;
   /** Präfix zu Namensraum an dieser Stelle; "" ist der Vorgabe-Namensraum */
   readonly ns: ReadonlyMap<string, string>;
 }
@@ -89,6 +92,7 @@ function elementDekl(k: Kontext, el: XmlElement, global: boolean): Elementdekl {
   for (const c of kinder(k, el)) if (istXs(c.k, c.el, "complexType") || istXs(c.k, c.el, "simpleType")) lokalerTyp = typDef(c.k, c.el, null);
   return {
     name,
+    ns: namensraum(k, el, global, k.elementeQualifiziert),
     schluessel: global ? qname(k.tns, name) : null,
     typ: aufloesenQ(k, attr(k, el, "type")),
     lokalerTyp,
@@ -102,13 +106,20 @@ function elementDekl(k: Kontext, el: XmlElement, global: boolean): Elementdekl {
   };
 }
 
-function attributDekl(k: Kontext, el: XmlElement): Attributdekl {
+/** Namensraum eines Namens im Dokument: global immer der Zielnamensraum, lokal nach form oder Vorgabe der Datei */
+function namensraum(k: Kontext, el: XmlElement, global: boolean, vorgabe: boolean): string {
+  const form = attr(k, el, "form");
+  return global || (form ? form === "qualified" : vorgabe) ? k.tns : "";
+}
+
+function attributDekl(k: Kontext, el: XmlElement, global = false): Attributdekl {
   const ref = aufloesenQ(k, attr(k, el, "ref"));
   let lokalerTyp: Typdefinition | null = null;
   for (const c of kinder(k, el)) if (istXs(c.k, c.el, "simpleType")) lokalerTyp = typDef(c.k, c.el, null);
   const use = attr(k, el, "use");
   return {
     name: attr(k, el, "name") ?? (ref ? lokal(attr(k, el, "ref") ?? "") : ""),
+    ns: ref ? zerlegen(ref).ns : namensraum(k, el, global, k.attributeQualifiziert),
     ref,
     typ: aufloesenQ(k, attr(k, el, "type")),
     lokalerTyp,
@@ -229,8 +240,20 @@ export function xsdLesen(haupt: Schemadatei, dateien: readonly Schemadatei[]): X
   const fehlendeOrte = new Set<string>();
   const fehlendeNs = new Set<string>();
   const gelesen = new Set<string>();
-  // Erste Erklärung gewinnt: so gilt eine Neudefinition (redefine) vor dem Original, das erst danach gelesen wird
-  const merken = <T>(m: Map<QName, T>, q: QName, w: T) => { if (!m.has(q)) m.set(q, w); };
+  // Erste Erklärung gewinnt: so gilt eine Neudefinition (redefine) vor dem Original, das erst danach gelesen wird. Das
+  // Original bleibt unter eigenem Schlüssel erhalten, denn die Neudefinition baut darauf auf (Basis gleichen Namens).
+  const neuDefiniert = new Set<QName>();
+  const original = (q: QName): QName => `${q} (Original)`;
+  const merken = <T>(m: Map<QName, T>, q: QName, w: T) => {
+    if (!m.has(q)) m.set(q, w);
+    else if (neuDefiniert.has(q) && !m.has(original(q))) m.set(original(q), { ...w, schluessel: original(q) });
+  };
+  const umlenken = (p: Partikel | null, q: QName): Partikel | null => {
+    if (!p) return p;
+    if (p.art === "gruppe" && p.ref === q) return { ...p, ref: original(q) };
+    if (p.art === "folge" || p.art === "auswahl" || p.art === "alle") return { ...p, teile: p.teile.map((x) => umlenken(x, q)!) };
+    return p;
+  };
 
   const schlange: { datei: Schemadatei; haupt: boolean; tns: string | null }[] = [{ datei: haupt, haupt: true, tns: null }];
   while (schlange.length) {
@@ -240,14 +263,20 @@ export function xsdLesen(haupt: Schemadatei, dateien: readonly Schemadatei[]): X
     gelesen.add(schluessel);
     const dok = xmlLesen(datei.text);
     const w = dok.wurzel;
-    const leer: Kontext = { datei: datei.pfad, text: datei.text, tns: "", chamaeleon: "", ns: new Map([["xml", "http://www.w3.org/XML/1998/namespace"]]) };
+    const leer: Kontext = { datei: datei.pfad, text: datei.text, tns: "", chamaeleon: "", elementeQualifiziert: false, attributeQualifiziert: false, ns: new Map([["xml", "http://www.w3.org/XML/1998/namespace"]]) };
     const wk = w ? mitBereich(leer, w) : leer;
     if (!w || !istXs(wk, w, "schema")) {
       fehler.push({ datei: datei.pfad, meldung: w ? "kein XML Schema (Wurzel ist nicht xs:schema)" : "kein lesbares XML" });
       continue;
     }
     const eigener = attr(wk, w, "targetNamespace");
-    const k: Kontext = { ...wk, tns: eigener ?? vorgabe ?? "", chamaeleon: eigener === null ? (vorgabe ?? "") : "" };
+    const k: Kontext = {
+      ...wk,
+      tns: eigener ?? vorgabe ?? "",
+      chamaeleon: eigener === null ? (vorgabe ?? "") : "",
+      elementeQualifiziert: attr(wk, w, "elementFormDefault") === "qualified",
+      attributeQualifiziert: attr(wk, w, "attributeFormDefault") === "qualified",
+    };
     for (const [p, ns] of k.ns) if (p && !praefixe.has(ns)) praefixe.set(ns, p);
     const bezuege: Bezug[] = [];
     for (const c of kinder(k, w)) {
@@ -261,29 +290,36 @@ export function xsdLesen(haupt: Schemadatei, dateien: readonly Schemadatei[]): X
         else if (ort) fehlendeOrte.add(dateiname(ort));
         else if (namensraum) fehlendeNs.add(namensraum);
         // Neu definierte Typen und Gruppen gelten vor dem Original
-        if (n === "redefine" || n === "override") for (const r of kinder(c.k, c.el)) globalLesen(r.k, r.el);
+        if (n === "redefine" || n === "override") for (const r of kinder(c.k, c.el)) globalLesen(r.k, r.el, true);
       } else globalLesen(c.k, c.el);
     }
     teile.push({ pfad: datei.pfad, zielnamensraum: k.tns, haupt: istHaupt, bezuege });
   }
 
-  function globalLesen(k: Kontext, el: XmlElement): void {
+  /** Globale Erklärung lesen; `neu` bei Neudefinition (redefine): Bezüge auf den eigenen Namen meinen das Original */
+  function globalLesen(k: Kontext, el: XmlElement, neu = false): void {
     const name = attr(k, el, "name");
     if (!name) return;
     const q = qname(k.tns, name);
+    if (neu) neuDefiniert.add(q);
     switch (lokal(el.name)) {
       case "element": merken(elemente, q, elementDekl(k, el, true)); break;
       case "complexType":
-      case "simpleType": merken(typen, q, typDef(k, el, name)); break;
-      case "attribute": merken(attribute, q, attributDekl(k, el)); break;
+      case "simpleType": {
+        const t = typDef(k, el, name);
+        merken(typen, q, neu && t.basis === q ? { ...t, basis: original(q) } : t);
+        break;
+      }
+      case "attribute": merken(attribute, q, attributDekl(k, el, true)); break;
       case "group": {
         const p = kinder(k, el).map((c) => partikel(c.k, c.el)).find((x) => x !== null) ?? null;
-        merken(gruppen, q, { schluessel: q, partikel: p, quelle: quelle(k, el) });
+        merken(gruppen, q, { schluessel: q, partikel: neu ? umlenken(p, q) : p, quelle: quelle(k, el) });
         break;
       }
       case "attributeGroup": {
         const t = typDef(k, { ...el, name: "complexType" }, null);
-        merken(attributgruppen, q, { schluessel: q, attribute: t.attribute, attributgruppen: t.attributgruppen, quelle: quelle(k, el) });
+        const gruppenRefs = neu ? t.attributgruppen.map((x) => (x === q ? original(q) : x)) : t.attributgruppen;
+        merken(attributgruppen, q, { schluessel: q, attribute: t.attribute, attributgruppen: gruppenRefs, quelle: quelle(k, el) });
         break;
       }
     }

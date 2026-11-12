@@ -2,12 +2,14 @@
   // Ansicht Schema (STB-39): Übersicht eines XML Schemas in drei Reitern. Elementbaum (was im Dokument wo stehen darf),
   // Typen (alle benannten, mit Ableitung und Verwendung) und Statistik. Importe und Includes kommen aus dem Ordner des
   // Dokuments in der Ablage; was fehlt, sagt das Hinweisband. Die Ansicht erscheint nur bei XML-Schema-Dokumenten.
+  // "Beispieldokument" erzeugt ein gültiges Dokument zum Schema.
   import "../ansichten.css";
   import "./schema.css";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import { anzahl } from "../tabelle/zahlen";
   import { schemaZustand, type Reiter, type Typfilter } from "./schemaZustand.svelte";
   import SchemaBaum from "./SchemaBaum.svelte";
+  import SchemaBeispielKnopf from "./SchemaBeispielKnopf.svelte";
   import SchemaStatistik from "./SchemaStatistik.svelte";
   import SchemaTypen from "./SchemaTypen.svelte";
 
@@ -61,6 +63,7 @@
     {:else if u}
       <div class="rechts"><span class="klein text-3">gelesen in {anzahl(Math.max(1, Math.round(u.dauer)))} ms</span></div>
     {/if}
+    {#if u}<SchemaBeispielKnopf {blatt} {u} {z} />{/if}
   </div>
   {#if !blatt.analyse}
     <p class="an-tafel-fuss an-leer">Das Dokument wird gelesen ...</p>

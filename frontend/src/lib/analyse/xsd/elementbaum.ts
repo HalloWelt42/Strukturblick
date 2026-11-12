@@ -83,11 +83,12 @@ function elementKnoten(m: XsdModell, e: Elementdekl, g: Grenzen, kennung: string
   };
 }
 
-/** Attribute eines Typs samt Basis (Erweiterung) und Attributgruppen; verbotene fallen weg */
+/** Attribute eines Typs samt Basis und Attributgruppen; verbotene fallen weg */
 export function attributeVon(m: XsdModell, t: Typdefinition, gesehen = new Set<Typdefinition>()): Attributdekl[] {
   if (gesehen.has(t)) return [];
   gesehen.add(t);
-  const basis = t.ableitung === "erweiterung" && t.basis ? m.typen.get(t.basis) : undefined;
+  // Attribute erbt ein Typ bei Erweiterung und bei Einschränkung (dort kann er sie verbieten)
+  const basis = (t.ableitung === "erweiterung" || t.ableitung === "einschraenkung") && t.basis ? m.typen.get(t.basis) : undefined;
   const aus = basis && basis.art === "komplex" ? attributeVon(m, basis, gesehen) : [];
   const gruppen = (qs: readonly QName[], tiefe: number): Attributdekl[] =>
     tiefe > 20 ? [] : qs.flatMap((q) => { const g = m.attributgruppen.get(q); return g ? [...g.attribute, ...gruppen(g.attributgruppen, tiefe + 1)] : []; });
@@ -101,7 +102,7 @@ export function attributeVon(m: XsdModell, t: Typdefinition, gesehen = new Set<T
 }
 
 /** Inhaltsteile eines Typs: bei Erweiterung erst die der Basis */
-function inhaltVon(m: XsdModell, t: Typdefinition, gesehen = new Set<Typdefinition>()): Partikel[] {
+export function inhaltVon(m: XsdModell, t: Typdefinition, gesehen = new Set<Typdefinition>()): Partikel[] {
   if (gesehen.has(t)) return [];
   gesehen.add(t);
   const basis = t.ableitung === "erweiterung" && t.basis ? m.typen.get(t.basis) : undefined;

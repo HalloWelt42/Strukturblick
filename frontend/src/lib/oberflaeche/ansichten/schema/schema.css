@@ -17,6 +17,46 @@
   }
 }
 
+/* ----- Beispieldokument ---------------------------------------------------- */
+
+.sc-huelle {
+  position: relative;
+}
+.sc-menue {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 10;
+  margin: 0;
+  min-width: 320px;
+  padding: var(--a1);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+}
+.sc-menue-kopf {
+  margin: 0;
+  padding: var(--a1) var(--a2);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.sc-menue button {
+  display: grid;
+  width: 100%;
+  padding: var(--a2);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--klein);
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+}
+.sc-menue button:hover {
+  background: var(--akzent-weich);
+}
+.sc-menue-titel {
+  font-weight: 600;
+}
+
 /* ----- Elementbaum --------------------------------------------------------- */
 
 /* Fokus zeigt die gewählte Zeile, nicht das Rollfeld (wie im Baum der Daten) */

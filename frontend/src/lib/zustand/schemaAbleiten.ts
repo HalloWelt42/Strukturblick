@@ -7,17 +7,10 @@ import { xsdAbleiten } from "../analyse/xsd/ableiten";
 import type { Arbeitsblatt } from "./arbeitsblatt.svelte";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
 import { meldungen } from "./meldungen.svelte";
+import { belegteNamen, freierName } from "./schemadateien";
 
 /** Lässt sich aus diesem Dokument ein XML Schema ableiten? */
 export const xmlSchemaAbleitbar = (blatt: Arbeitsblatt | null): boolean => blatt?.analyse?.format.faehigkeiten.schemasprache === "xml-schema";
-
-/** Freier Name im Ordner: "a.xsd", sonst "a 2.xsd", "a 3.xsd" ... */
-function freierName(wunsch: string, belegt: Set<string>): string {
-  let name = wunsch;
-  for (let i = 2; belegt.has(name); i++) name = wunsch.replace(/(\.xsd)$/, ` ${i}$1`);
-  belegt.add(name);
-  return name;
-}
 
 export async function xmlSchemaAblegen(blatt: Arbeitsblatt): Promise<void> {
   const ableitung = xsdAbleiten(blatt.analyseText);
@@ -26,7 +19,7 @@ export async function xmlSchemaAblegen(blatt: Arbeitsblatt): Promise<void> {
     return;
   }
   const stamm = blatt.name.replace(/\.[^.]+$/, "");
-  const belegt = new Set(arbeitsplatz.dokumente.filter((d) => d.ordner === blatt.ordner).map((d) => d.name));
+  const belegt = belegteNamen(blatt.ordner);
   const namen = new Map<string, string>();
   const dateien = xsdSchreiben(ableitung, {
     quelle: blatt.name,

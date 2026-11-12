@@ -127,6 +127,23 @@ describe("XML Schema lesen", () => {
     expect(v.get("{urn:vertrag}Knoten")!.map((x) => x.von)).toEqual(["Element v:vertrag/gliederung", "Typ v:Knoten/knoten"]);
   });
 
+  it("behält bei Neudefinition (redefine) das Original als Basis", () => {
+    const basis = `<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:b="urn:b" targetNamespace="urn:b" elementFormDefault="qualified">
+  <xs:complexType name="Produkt" abstract="true"><xs:sequence><xs:element name="name" type="xs:string"/></xs:sequence><xs:attribute name="Version" type="xs:string" use="required"/></xs:complexType>
+  <xs:element name="produkt" type="b:Produkt"/>
+</xs:schema>`;
+    const sparte = `<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:b="urn:b" targetNamespace="urn:b" elementFormDefault="qualified">
+  <xs:redefine schemaLocation="basis.xsd">
+    <xs:complexType name="Produkt"><xs:complexContent><xs:extension base="b:Produkt"><xs:sequence><xs:element name="deckung" type="xs:decimal"/></xs:sequence></xs:extension></xs:complexContent></xs:complexType>
+  </xs:redefine>
+</xs:schema>`;
+    const m = xsdLesen({ pfad: "sparte.xsd", text: sparte }, [{ pfad: "basis.xsd", text: basis }]);
+    expect([...m.typen.keys()]).toEqual(["{urn:b}Produkt", "{urn:b}Produkt (Original)"]);
+    expect(m.typen.get("{urn:b}Produkt")!.basis).toBe("{urn:b}Produkt (Original)");
+    const [produkt] = wurzeln(m);
+    expect(kinder(m, produkt)).toEqual(["@Version xs:string 1", "name xs:string 1", "deckung xs:decimal 1"]);
+  });
+
   it("liest die Beispiele und meldet Dateien, die kein Schema sind", () => {
     const m = xsdLesen(pruefdatei("lieferungen.xsd"), [pruefdatei("hofladen-position.xsd")]);
     const [lieferungen] = wurzeln(m);

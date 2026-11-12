@@ -36,6 +36,8 @@ export type Partikel =
 
 export interface Elementdekl {
   readonly name: string;
+  /** Namensraum des Elements im Dokument (global der Zielnamensraum, lokal nach elementFormDefault oder form) */
+  readonly ns: string;
   /** Nur bei globalen Elementen */
   readonly schluessel: QName | null;
   readonly typ: QName | null;
@@ -52,6 +54,8 @@ export interface Elementdekl {
 
 export interface Attributdekl {
   readonly name: string;
+  /** Namensraum des Attributs im Dokument (lokal meist ohne) */
+  readonly ns: string;
   readonly ref: QName | null;
   readonly typ: QName | null;
   readonly lokalerTyp: Typdefinition | null;
