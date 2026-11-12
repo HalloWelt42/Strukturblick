@@ -102,8 +102,8 @@ Ergebnis gültig; vor dem Einsatz für andere Daten prüfen und wo nötig locker
 Die Ansicht Graph (⌥ ⌘ 6) zeigt einen Ausschnitt der Daten als Wertkarten: ab einem Fokus eine bis drei Ebenen tief
 (Tiefe oben rechts), links die Karte eine Ebene höher als Rückweg. Jede Karte nennt Schlüssel oder Stelle, Art, den Wert
 oder bei Objekten den ersten Text darin, und den Umfang; ein Plus heißt, darunter liegt mehr, als die Tiefe zeigt. Klick
-wählt eine Karte (Inspektor und die anderen Ansichten folgen), Doppelklick oder "Fokus hierher" setzt den Fokus, der Pfad
-oben springt zu einem Vorfahren. Der Inspektor blättert zum vorigen oder nächsten Nachbarn des Fokus. Sehr lange Listen
+auf ein Objekt oder eine Liste setzt den Fokus dorthin und richtet den Graph neu aus, Klick auf einen Wert wählt ihn
+(Inspektor und die anderen Ansichten folgen); der Pfad oben springt zu einem Vorfahren. Der Inspektor blättert zum vorigen oder nächsten Nachbarn des Fokus. Sehr lange Listen
 zeigt der Fokus mit 50, tiefere Ebenen mit 12 Einträgen, den Rest als Zahl.
 
 Die Ansicht Vergleich (⌥ ⌘ 7) vergleicht das Dokument mit einer Gegenseite: einem anderen offenen Dokument, einem aus

@@ -44,12 +44,12 @@
         <dt>Ebene</dt><dd class="mono">{tiefe(index, k)}</dd>
       </dl>
       <div class="knopf-reihe an-oben">
-        <button class="knopf primaer" disabled={k === a.fokus.k} onclick={() => fokusAuf(k)}><i class="fa-solid fa-crosshairs"></i> Fokus hierher</button>
+        <button class="knopf primaer" disabled={k === a.fokus.k || !istBehaelter(index.art[k])} title={istBehaelter(index.art[k]) ? "Fokus auf das Gewählte" : "Ein einfacher Wert hat keinen Inhalt zum Zeigen"} onclick={() => fokusAuf(k)}><i class="fa-solid fa-crosshairs"></i> Fokus hierher</button>
         <button class="knopf" onclick={() => blatt.zeigen({ art: "ansicht", kennung: "baum" })}><i class="fa-solid fa-folder-tree"></i> Im Baum zeigen</button>
       </div>
     </div>
   {:else}
-    <div class="karte"><p class="an-tafel-fuss">Klick auf eine Karte wählt sie, Doppelklick setzt den Fokus.</p></div>
+    <div class="karte"><p class="an-tafel-fuss">Klick auf Objekt oder Liste setzt den Fokus dorthin, Klick auf einen Wert wählt ihn.</p></div>
   {/if}
   <div class="karte">
     <div class="karte-titel">Ausschnitt</div>

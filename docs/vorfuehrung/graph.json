@@ -15,18 +15,18 @@
     },
     {
       "nr": 2,
-      "sprechtext": "Ein Doppelklick auf die zweite Bestellung setzt den Fokus dorthin. Links steht die Liste als Rückweg, rechts die Felder, darunter Kunde und Positionen.",
-      "ziel": { "anker": "graph-karte", "notbehelf": "Doppelklick auf die Karte [1] B-24018" },
-      "aktion": { "art": "doppelklick" },
+      "sprechtext": "Ein Klick auf die zweite Bestellung setzt den Fokus dorthin. Links steht die Liste als Rückweg, rechts die Felder, darunter Kunde und Positionen.",
+      "ziel": { "anker": "graph-karte", "notbehelf": "Klick auf die Karte [1] B-24018" },
+      "aktion": { "art": "klicken" },
       "erwartung": "Pfad $ > bestellungen > [1]; Rückweg bestellungen, 128 Einträge; Fokus [1] leuchtet; 12 von 2.472 Knoten",
       "geprueft": "2026-11-12"
     },
     {
       "nr": 3,
-      "sprechtext": "Ein Klick wählt den Kunden. Der Inspektor nennt Pfad und Schlüssel und blättert zur vorigen oder nächsten Bestellung.",
-      "ziel": { "anker": "graph-karte", "notbehelf": "Karte kunde" },
+      "sprechtext": "Ein Klick auf einen Wert wählt ihn, hier die Bestellnummer. Der Inspektor nennt Pfad und Wert und blättert zur vorigen oder nächsten Bestellung.",
+      "ziel": { "anker": "graph-karte", "notbehelf": "Karte nr" },
       "aktion": { "art": "klicken" },
-      "erwartung": "Gewählt .bestellungen[1].kunde, Schlüssel name, plz, stadt, Ebene 3; Knöpfe [0] B-24017 und [2] B-24019",
+      "erwartung": "Gewählt .bestellungen[1].nr, Wert B-24018, Ebene 3; Knöpfe [0] B-24017 und [2] B-24019",
       "geprueft": "2026-11-12"
     }
   ]

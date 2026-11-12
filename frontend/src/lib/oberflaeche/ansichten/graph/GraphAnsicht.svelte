@@ -1,8 +1,9 @@
 <script lang="ts">
   // Ansicht Graph (entwuerfe/graph.html): ein Ausschnitt der Daten als Wertkarten ab einem Fokus, wenige Ebenen tief.
   // Links die Karte eine Ebene höher (Klick: Fokus dorthin), dann der leuchtende Fokus mit seinen Kindern. Der Pfad
-  // oben setzt den Fokus auf einen Vorfahren, die Tiefe wählt 1 bis 3 Ebenen. Klick auf eine Karte wählt sie (Inspektor,
-  // andere Ansichten), Doppelklick setzt den Fokus.
+  // oben setzt den Fokus auf einen Vorfahren, die Tiefe wählt 1 bis 3 Ebenen. Klick auf eine Karte mit Inhalt setzt den
+  // Fokus dorthin (wie im Entwurf: Fokus verschieben per Klick), Klick auf einen Wert wählt ihn (Inspektor, andere
+  // Ansichten).
   import "../ansichten.css";
   import "./graph.css";
   import { tick } from "svelte";
@@ -26,7 +27,12 @@
   $effect(() => {
     void a?.fokus.k;
     void z.tiefe;
-    void tick().then(() => leinwand?.querySelector(".an-fokus")?.scrollIntoView({ block: "center", inline: "nearest" }));
+    void tick().then(() => {
+      // Erst ganz nach links (dort steht der Rückweg), dann den Fokus senkrecht in die Mitte
+      const feld = leinwand?.parentElement;
+      if (feld) feld.scrollLeft = 0;
+      leinwand?.querySelector(".an-fokus")?.scrollIntoView({ block: "center", inline: "nearest" });
+    });
   });
 
   function fokussieren(k: number): void {
@@ -58,7 +64,7 @@
   {:else}
     <div class="an-hinweis">
       <i class="fa-solid fa-crosshairs"></i>
-      <span>Ausschnitt: {anzahl(a.sichtbar)} von {anzahl(a.gesamt)} Knoten. Klick wählt, Doppelklick setzt den Fokus.</span>
+      <span>Ausschnitt: {anzahl(a.sichtbar)} von {anzahl(a.gesamt)} Knoten. Klick auf Objekt oder Liste setzt den Fokus dorthin, auf einen Wert wählt ihn. <i class="fa-solid fa-plus an-wk-mehr"></i> heißt: darunter liegt mehr, als die Tiefe zeigt.</span>
     </div>
     <div class="inhalt">
       <div class="an-leinwand" bind:this={leinwand}>
