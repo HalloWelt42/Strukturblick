@@ -4,7 +4,7 @@
   // SQL-Ergebnis, das mehrere Dokumente verbindet.
   import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
   import { abfrage } from "../../zustand/abfrage.svelte";
-  import { ANSICHTEN, ansicht } from "../ansichten/registrierung";
+  import { ansicht, ansichtenFuer } from "../ansichten/registrierung";
   import { werkzeug } from "../werkzeuge/registrierung";
   import Konsole from "../abfrage/Konsole.svelte";
   import SqlErgebnis from "../abfrage/SqlErgebnis.svelte";
@@ -28,7 +28,7 @@
 <main class="haupt">
   <div class="ansicht-kopf">
     <nav class="segment" aria-label="Ansicht">
-      {#each ANSICHTEN as a (a.kennung)}
+      {#each ansichtenFuer(blatt) as a (a.kennung)}
         <button class:aktiv={!sqlZeigen && !offenesWerkzeug && blatt.platz.kennung === a.kennung} onclick={() => zeigen(a.kennung)}>
           <i class="fa-solid {a.symbol}"></i><span>{a.titel}</span>
         </button>

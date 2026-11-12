@@ -6,13 +6,10 @@
 import { KEIN, knotenAn, KnotenArt, type Strukturindex } from "../../kern/strukturindex";
 import { knotenZu } from "../../kern/pfade";
 import type { Befund, Pruefung } from "../validieren";
+import { dateiname, Dateisuche, normal, type Schemadatei } from "./dateien";
 import { deuten, schemaGrund } from "./meldungen";
 
-export interface Schemadatei {
-  /** Pfad im Paket ("bipro/basis/basis.xsd") oder Name in der Ablage */
-  readonly pfad: string;
-  readonly text: string;
-}
+export type { Schemadatei } from "./dateien";
 
 export type XsdPruefung = Pruefung & { readonly fehlend?: readonly string[] };
 
@@ -20,25 +17,11 @@ type Bibliothek = typeof import("libxml2-wasm");
 let bibliothek: Promise<Bibliothek> | null = null;
 
 /** Die Dateien der laufenden Prüfung; der Dateigeber ist einmal angemeldet und liest von hier */
-const aktuell = { dateien: new Map<string, Uint8Array>(), nachName: new Map<string, Uint8Array>(), angefragt: [] as string[], fehlend: new Set<string>() };
+const aktuell = { dateien: new Dateisuche<Uint8Array>(), angefragt: [] as string[], fehlend: new Set<string>() };
 const offen = new Map<number, { daten: Uint8Array; pos: number }>();
 let naechsteDatei = 1;
 
-const dateiname = (p: string): string => p.split(/[\\/]/).pop() ?? p;
-/** Pfad ohne ./ und ../ (wie libxml2 ihn bildet, aber ohne führendes Präfix) */
-function normal(p: string): string {
-  const aus: string[] = [];
-  for (const t of p.replace(/\\/g, "/").split("/")) {
-    if (t === "..") aus.pop();
-    else if (t && t !== ".") aus.push(t);
-  }
-  return aus.join("/");
-}
-
-function finden(anfrage: string): Uint8Array | undefined {
-  const n = normal(anfrage.replace(/^file:\/\//, ""));
-  return aktuell.dateien.get(n) ?? [...aktuell.dateien].find(([p]) => n.endsWith(`/${p}`) || p.endsWith(`/${n}`))?.[1] ?? aktuell.nachName.get(dateiname(n));
-}
+const finden = (anfrage: string): Uint8Array | undefined => aktuell.dateien.finden(anfrage);
 
 async function laden(): Promise<Bibliothek> {
   bibliothek ??= import("libxml2-wasm").then((b) => {
@@ -110,8 +93,7 @@ export async function xsdPruefen(index: Strukturindex | null, text: string, haup
   const start = performance.now();
   const b = await laden();
   const kodieren = (s: string) => new TextEncoder().encode(s);
-  aktuell.dateien = new Map(weitere.map((d) => [normal(d.pfad), kodieren(d.text)]));
-  aktuell.nachName = new Map(weitere.map((d) => [dateiname(d.pfad), kodieren(d.text)]));
+  aktuell.dateien = new Dateisuche(weitere.map((d) => [d.pfad, kodieren(d.text)] as const));
   aktuell.angefragt = [];
   aktuell.fehlend = new Set();
 

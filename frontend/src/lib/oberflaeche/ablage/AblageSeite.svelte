@@ -7,7 +7,7 @@
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
   import { zugang } from "../../zustand/zugang.svelte";
-  import { ANSICHTEN } from "../ansichten/registrierung";
+  import { ansichtenFuer } from "../ansichten/registrierung";
   import { dateiWaehlen } from "../schale/dateien";
   import { Ablageauswahl } from "./auswahl.svelte";
   import OrdnerSpalte from "./OrdnerSpalte.svelte";
@@ -53,7 +53,7 @@
   <div class="ansicht-kopf">
     {#if blatt}
       <nav class="segment" aria-label="Ansicht">
-        {#each ANSICHTEN as a (a.kennung)}
+        {#each ansichtenFuer(blatt) as a (a.kennung)}
           <button onclick={() => zurAnsicht(a.kennung)}><i class="fa-solid {a.symbol}"></i><span>{a.titel}</span></button>
         {/each}
       </nav>

@@ -8,11 +8,10 @@ import { textAusBytes } from "../../../formate/kodierung";
 import { verwiesenesSchema, xsdPruefen, type Schemadatei, type XsdPruefung } from "../../../analyse/xsd/pruefen";
 import { ablageverwaltung } from "../../../zustand/ablageverwaltung.svelte";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
-import { arbeitsplatz } from "../../../zustand/arbeitsplatz.svelte";
+import { istXsdName, schemasDerAblage, schemasImOrdner, type SchemaInAblage } from "../../../zustand/schemadateien";
 
 export type XsdWahl = { readonly art: "ablage"; readonly kennung: string; readonly name: string; readonly ordner: string } | { readonly art: "paket"; readonly pfad: string; readonly name: string };
 
-const istXsd = (name: string): boolean => /\.xsd$/i.test(name);
 const dateiname = (p: string): string => p.split("/").pop() ?? p;
 
 export class XsdZustand {
@@ -23,8 +22,8 @@ export class XsdZustand {
   paketfehler = $state<string | null>(null);
 
   /** XSD-Dokumente der Ablage, die zum gewählten Wurzelordner passen zuerst */
-  schemasDerAblage(): { kennung: string; name: string; ordner: string }[] {
-    return arbeitsplatz.dokumente.filter((d) => istXsd(d.name)).map((d) => ({ kennung: d.kennung, name: d.name, ordner: d.ordner })).sort((a, b) => a.name.localeCompare(b.name, "de"));
+  schemasDerAblage(): SchemaInAblage[] {
+    return schemasDerAblage();
   }
 
   /** Schema-Paket laden: alle XSD aus dem ZIP, nur im Speicher dieses Browsers */
@@ -32,7 +31,7 @@ export class XsdZustand {
     try {
       const teile = unzipSync(new Uint8Array(await datei.arrayBuffer()));
       const dateien = Object.entries(teile)
-        .filter(([p, b]) => istXsd(p) && b.length > 0 && !p.split("/").some((t) => t.startsWith("__MACOSX") || t.startsWith("._")))
+        .filter(([p, b]) => istXsdName(p) && b.length > 0 && !p.split("/").some((t) => t.startsWith("__MACOSX") || t.startsWith("._")))
         .map(([pfad, b]) => ({ pfad, text: textAusBytes(b).text }));
       if (!dateien.length) throw new Error("Im Paket ist kein XML Schema (.xsd)");
       this.paket = { name: datei.name, dateien };
@@ -82,12 +81,7 @@ export class XsdZustand {
         haupt = t ? { pfad: w.name, text: t.text } : null;
       }
       // Ein Schema aus der Ablage findet seine Importe im selben Ordner (und im Paket, falls geladen)
-      if (w.art === "ablage") {
-        for (const d of this.schemasDerAblage().filter((x) => x.ordner === w.ordner && x.kennung !== w.kennung)) {
-          const t = await ablageverwaltung.textVon(d.kennung);
-          if (t) weitere.push({ pfad: d.name, text: t.text });
-        }
-      }
+      if (w.art === "ablage") weitere.push(...(await schemasImOrdner(w.ordner, w.kennung)));
       const pruefung: XsdPruefung = haupt ? await xsdPruefen(a.index, blatt.analyseText, haupt, weitere) : { ok: false, fehler: `${w.name} gibt es nicht mehr` };
       this.ergebnis = { analyse: a, schluessel, pruefung, importe: weitere.length };
     } finally {

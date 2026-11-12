@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Position eines Lieferscheins im Namensraum des Hofladens (erfunden, zum Üben) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:hl="urn:example:hofladen"
            targetNamespace="urn:example:hofladen"
            elementFormDefault="qualified">
-  <xs:element name="position">
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute name="menge" type="xs:positiveInteger" use="required"/>
-          <xs:attribute name="preis" type="xs:decimal" use="required"/>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:element name="position" type="hl:Position"/>
+
+  <xs:complexType name="Position">
+    <xs:annotation><xs:documentation>Eine Ware mit Menge und Einzelpreis; der Text ist die Bezeichnung.</xs:documentation></xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="menge" type="xs:positiveInteger" use="required"/>
+        <xs:attribute name="preis" type="hl:Betrag" use="required"/>
+        <xs:attribute name="einheit" type="hl:Einheit" default="Stück"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="Betrag">
+    <xs:annotation><xs:documentation>Euro mit höchstens zwei Nachkommastellen, nie negativ.</xs:documentation></xs:annotation>
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0"/>
+      <xs:fractionDigits value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Einheit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Stück"/>
+      <xs:enumeration value="kg"/>
+      <xs:enumeration value="Bund"/>
+      <xs:enumeration value="Glas"/>
+    </xs:restriction>
+  </xs:simpleType>
 </xs:schema>

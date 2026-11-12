@@ -1,0 +1,210 @@
+/* Ansicht Schema (STB-39): Elementbaum mit Zeilen wie der Baum der Daten, Typenliste, Balken der Statistik und
+   Kleinteile des Inspektors. Gemeinsames (Tafeln, Kacheln, Tabellen) in ../ansichten.css, Zeilen in stil/schale.css. */
+
+/* ----- Werkzeugzeile ------------------------------------------------------- */
+
+.sc-suche {
+  flex: 1 1 calc(var(--a6) * 5);
+  max-width: calc(var(--a6) * 8);
+}
+.sc-filter {
+  flex-wrap: wrap;
+}
+/* Schmal: Reiter nur mit Symbol, der gewählte mit Namen (wie die Ansichtswahl der Schale) */
+@media (max-width: 899px) {
+  .sc-reiter > :not(.aktiv) span {
+    display: none;
+  }
+}
+
+/* ----- Elementbaum --------------------------------------------------------- */
+
+/* Fokus zeigt die gewählte Zeile, nicht das Rollfeld (wie im Baum der Daten) */
+.sc-rollfeld {
+  outline: 0;
+}
+.sc-baum {
+  position: relative;
+}
+.sc-probe {
+  position: absolute;
+  visibility: hidden;
+}
+.sc-zeile {
+  height: var(--zeile);
+  padding-left: calc(var(--a2) + var(--tiefe) * 22px);
+  outline: 0;
+}
+.sc-klappknopf {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.sc-symbol {
+  flex: none;
+  width: 1.2em;
+  text-align: center;
+  color: var(--text-3);
+}
+.sc-name {
+  flex: none;
+  font-weight: 600;
+  color: var(--typ-schluessel);
+}
+.sc-symbol.sc-element {
+  color: var(--typ-objekt);
+}
+.sc-symbol.sc-attribut,
+.sc-name.sc-attribut {
+  color: var(--typ-zahl);
+}
+.sc-name.sc-auswahl,
+.sc-name.sc-folge,
+.sc-name.sc-ersetzung,
+.sc-name.sc-beliebig {
+  font-family: var(--schrift);
+  font-style: italic;
+  color: var(--text-2);
+}
+.sc-symbol.sc-auswahl,
+.sc-symbol.sc-ersetzung {
+  color: var(--akzent);
+}
+.sc-zeile .rechts {
+  align-items: center;
+}
+.sc-pflicht {
+  display: inline-block;
+  width: 1ch;
+}
+.sc-fuss {
+  flex: none;
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+}
+
+/* ----- Typen --------------------------------------------------------------- */
+
+.sc-typname {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--typ-schluessel);
+}
+.sc-typname > i {
+  width: 1.4em;
+  color: var(--text-3);
+}
+.sc-nachlade {
+  height: 1px;
+}
+
+/* ----- Statistik ----------------------------------------------------------- */
+
+.sc-reihe {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--a3);
+}
+.sc-balken {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  font-size: var(--klein);
+}
+.sc-balken > span:first-child,
+.sc-balken > :nth-child(3n + 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sc-balken > b {
+  font-family: var(--schrift-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.sc-balken-spur {
+  height: calc(var(--zeile) / 3);
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.sc-balken-spur > span {
+  display: block;
+  width: var(--anteil);
+  height: 100%;
+  background-color: var(--akzent-flaeche);
+  background-image: var(--erhaben);
+}
+.sc-marken {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a1) var(--a2);
+  align-items: center;
+}
+
+/* ----- Verweise und Inspektor ---------------------------------------------- */
+
+.sc-verweis {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--akzent);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.sc-verweis:hover {
+  text-decoration: underline;
+}
+.abzeichen.sc-verweis {
+  padding: 0 var(--a2);
+  background: var(--flaeche-panel-2);
+}
+.sc-kette {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+}
+.sc-kette > i {
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.sc-doku {
+  margin: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.sc-liste {
+  display: grid;
+  gap: var(--a2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--klein);
+}
+.sc-liste > li {
+  display: grid;
+}
+.sc-sprung {
+  margin-left: var(--a2);
+}
+.sc-umbruch {
+  overflow-wrap: anywhere;
+}
+
+@container an-raum (max-width: 899px) {
+  .sc-reihe {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Schmal: Art zeigt schon das Symbol, die Datei steht im Inspektor */
+@container an-raum (max-width: 759px) {
+  .sc-breit {
+    display: none;
+  }
+}

@@ -49,7 +49,7 @@ export const BEISPIELE: readonly Beispiel[] = [
   },
   {
     name: "lieferungen.xsd",
-    beschreibung: "XML Schema zu lieferungen.xml; importiert hofladen-position.xsd und verlangt bezahlt als Wahrheitswert; zum Üben im Werkzeug Validieren",
+    beschreibung: "XML Schema zu lieferungen.xml mit benannten Typen; importiert hofladen-position.xsd und verlangt bezahlt als Wahrheitswert; zum Üben im Werkzeug Validieren und in der Ansicht Schema",
     laden: async () => (await import("../../../pruefdaten/lieferungen.xsd?raw")).default,
   },
   {

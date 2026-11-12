@@ -4,44 +4,68 @@
            xmlns:hl="urn:example:hofladen">
   <xs:import namespace="urn:example:hofladen" schemaLocation="hofladen-position.xsd"/>
 
-  <xs:simpleType name="PLZ">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[0-9]{5}"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:element name="lieferungen">
+    <xs:annotation><xs:documentation>Alle Lieferscheine eines Stands, der neueste zuletzt.</xs:documentation></xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="lieferung" maxOccurs="unbounded">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="kunde">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="name" type="xs:string"/>
-                    <xs:element name="plz" type="PLZ"/>
-                    <xs:element name="ort" type="xs:string"/>
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
-              <xs:element ref="hl:position" maxOccurs="unbounded"/>
-              <xs:element name="hinweis" type="xs:string" minOccurs="0"/>
-              <xs:element name="bezahlt" type="xs:boolean"/>
-            </xs:sequence>
-            <xs:attribute name="nr" use="required">
-              <xs:simpleType>
-                <xs:restriction base="xs:string">
-                  <xs:pattern value="L-[0-9]{4}"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="datum" type="xs:date" use="required"/>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="lieferung" type="Lieferung" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="stand" type="xs:date" use="required"/>
       <xs:attribute name="anzahl" type="xs:positiveInteger"/>
     </xs:complexType>
   </xs:element>
+
+  <xs:complexType name="Lieferung">
+    <xs:annotation><xs:documentation>Ein Lieferschein: an wen, was, und ob es bezahlt ist.</xs:documentation></xs:annotation>
+    <xs:sequence>
+      <xs:element name="kunde" type="Kunde"/>
+      <xs:element ref="hl:position" maxOccurs="unbounded"/>
+      <xs:element name="hinweis" type="xs:string" minOccurs="0"/>
+      <xs:element name="bezahlt" type="xs:boolean">
+        <xs:annotation><xs:documentation>Wahrheitswert: true oder false, auch 1 oder 0.</xs:documentation></xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="nr" type="Lieferscheinnummer" use="required"/>
+    <xs:attribute name="datum" type="xs:date" use="required"/>
+    <xs:attribute name="zahlweise" type="Zahlweise"/>
+  </xs:complexType>
+
+  <xs:complexType name="Person">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Kunde">
+    <xs:annotation><xs:documentation>Person mit Anschrift für die Lieferung.</xs:documentation></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="Person">
+        <xs:sequence>
+          <xs:element name="plz" type="PLZ"/>
+          <xs:element name="ort" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="PLZ">
+    <xs:annotation><xs:documentation>Fünf Ziffern; eine führende Null gehört dazu.</xs:documentation></xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{5}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Lieferscheinnummer">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="L-[0-9]{4}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Zahlweise">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="bar"><xs:annotation><xs:documentation>Bei Übergabe</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="Rechnung"><xs:annotation><xs:documentation>Zahlbar in 14 Tagen</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="Lastschrift"/>
+    </xs:restriction>
+  </xs:simpleType>
 </xs:schema>

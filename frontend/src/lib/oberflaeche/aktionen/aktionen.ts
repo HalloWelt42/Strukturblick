@@ -14,7 +14,7 @@ import { starthinweis } from "../../zustand/starthinweis.svelte";
 import { einstellungen, SCHRIFTSTUFEN, THEMEN } from "../../zustand/einstellungen.svelte";
 import { meldungen } from "../../zustand/meldungen.svelte";
 import { zugang } from "../../zustand/zugang.svelte";
-import { ANSICHTEN } from "../ansichten/registrierung";
+import { ANSICHTEN, ansichtWaehlbar } from "../ansichten/registrierung";
 import { WERKZEUGE } from "../werkzeuge/registrierung";
 import { dateiWaehlen, herunterladen } from "../schale/dateien";
 import type { Tasten } from "../palette/tasten";
@@ -188,7 +188,10 @@ export const ANSICHT_WAHL: readonly Aktion[] = ANSICHTEN.map((a, i) => ({
   beschreibung: "Das offene Dokument in dieser Ansicht",
   symbol: a.symbol,
   tasten: i < 9 ? [{ taste: String(i + 1), befehl: true, alt: true }] : undefined,
-  verfuegbar: () => blatt() !== null,
+  verfuegbar: () => {
+    const b = blatt();
+    return b !== null && ansichtWaehlbar(a, b);
+  },
   ausfuehren: () => {
     ablageverwaltung.schliessen();
     blatt()?.zeigen({ art: "ansicht", kennung: a.kennung });

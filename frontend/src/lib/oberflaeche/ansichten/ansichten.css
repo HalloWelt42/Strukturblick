@@ -284,3 +284,101 @@ button.an-tk-feld:hover {
 .an-ansicht > .inhalt {
   overflow: auto;
 }
+
+/* ----- Kennzahlen und Tabellen (Statistik, Schema) ------------------------- */
+
+.an-kennzahlen {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--a3);
+}
+.an-kachel {
+  min-width: 0;
+  padding: var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.an-kachel-wert {
+  font-size: var(--kennzahl);
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.an-einheit {
+  margin-left: var(--a1);
+  font-size: var(--klein);
+  font-weight: 500;
+  color: var(--text-3);
+}
+.an-kachel-name {
+  margin-top: var(--a1);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* Tabelle in einer Tafel (Feld-Profil, Schema): echte Tabelle, Kopf und Werte teilen dieselbe Spalte und
+   dieselbe Ausrichtung (Zahlen rechts, Text links). Rollt seitlich im eigenen Feld. */
+.an-tabellenfeld {
+  overflow-x: auto;
+  margin: 0 calc(var(--a3) * -1) calc(var(--a3) * -1);
+}
+.an-profil {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.an-profil th,
+.an-profil td {
+  height: var(--zeile);
+  padding: 0 var(--a3);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.an-profil th {
+  font-size: var(--marke);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-2);
+}
+.an-profil td {
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.an-profil .an-zahl {
+  text-align: right;
+  font-family: var(--schrift-mono);
+  font-variant-numeric: tabular-nums;
+}
+.an-profil th.an-zahl {
+  font-family: var(--schrift);
+}
+.an-profil tbody tr {
+  cursor: pointer;
+}
+.an-profil tbody tr:nth-child(even) {
+  background-color: var(--flaeche-wechsel);
+}
+.an-profil tbody tr:hover {
+  background-color: var(--akzent-weich);
+}
+.an-profil tbody tr.an-gewaehlt {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .an-profil tbody tr.an-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+@container an-raum (max-width: 899px) {
+  .an-kennzahlen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@container an-raum (max-width: 479px) {
+  .an-kennzahlen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
