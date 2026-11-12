@@ -1,0 +1,41 @@
+{
+  "kapitel": "toml",
+  "titel": "Einstellungen in TOML",
+  "ticket": "STB-42",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, webshop.toml im Vordergrund",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "TOML ist ein Format für Einstellungen. Strukturblick liest es wie die übrigen: Tabellen werden Objekte, die Versandarten in doppelten Klammern eine Liste.",
+      "ziel": { "anker": "baum", "notbehelf": "Ansicht Baum von webshop.toml" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Objekt mit 8 Schlüsseln; versand als Liste mit 3 Einträgen; Fuß TOML, Keine Fehler",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Im Editor steht der Text, wie er ist, mit Kommentaren und farbig hervorgehoben. Was man in Tabelle oder Baum ändert, ersetzt nur genau diese Stelle.",
+      "ziel": { "anker": "ansicht-editor", "notbehelf": "Ansicht Editor" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Kommentarzeilen grau, Kopfzeilen [kontakt] und [[versand]] hervorgehoben",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Beim Konvertieren nach JSON sagt die Karte, was wegfällt: die Kommentare, und Datum und Zeit, die in TOML einen eigenen Typ haben, werden Text.",
+      "ziel": { "anker": "konvertieren-ziel", "notbehelf": "Leiste Konvertieren, dann Ziel JSON" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Verlustkarte mit 2 Punkten: Kommentare gehen verloren; Datum und Zeit werden Text (3 Werte)",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Umgekehrt geht es auch. Die Bestellungen nach TOML: TOML kennt kein null, deshalb fallen diese Felder weg, und die Karte nennt sie vorher.",
+      "ziel": { "anker": "konvertieren-ziel", "notbehelf": "bestellungen.json öffnen, Konvertieren, Ziel TOML" },
+      "aktion": { "art": "klicken", "nachher": "Als neues Dokument" },
+      "erwartung": "Karte TOML kennt kein null, 103 Stellen, notiz; neues Dokument bestellungen.toml ohne Fehler, 128 Bestellungen",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

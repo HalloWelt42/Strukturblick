@@ -1,5 +1,5 @@
 ---
-zweck: "Zeigt, prüft und baut Strukturdaten um (JSON, NDJSON, CSV, YAML): Baum, Editor, Tabelle und Inspektor auf einem Text mit gemeinsamem Verlauf; mit Server auf pi5b, ohne Server auf GitHub Pages."
+zweck: "Zeigt, prüft und baut Strukturdaten um (JSON, NDJSON, CSV, YAML, TOML): Baum, Editor, Tabelle und Inspektor auf einem Text mit gemeinsamem Verlauf; mit Server auf pi5b, ohne Server auf GitHub Pages."
 geraet: [pi5b]
 abhaengigkeiten: [kellerwolke, appkern, vorbau]
 daten:
@@ -18,7 +18,7 @@ stand: f4da234
 
 ## Zweck
 
-Strukturblick öffnet Strukturdaten (JSON, NDJSON, CSV, YAML) und zeigt sie als Baum, im Editor und als Tabelle;
+Strukturblick öffnet Strukturdaten (JSON, NDJSON, CSV, YAML, TOML) und zeigt sie als Baum, im Editor und als Tabelle;
 der Inspektor zeigt das Gewählte, kopiert seinen Pfad (jq, JSONPath, Zeiger, PHP, Python, TypeScript) und zählt
 alle Werte desselben Pfads. Alle Ansichten arbeiten auf demselben Text: eine Änderung in der Tabelle ist eine
 Textänderung an genau dieser Stelle, CSV-Dialekt, Kommentare und Formatierung bleiben. Rückgängig gilt für alle
@@ -38,8 +38,8 @@ Lizenz und den Lizenzen aller Bausteine; der Bau sammelt sie selbst (frontend/li
 Zum Üben gibt es erfundene Beispieldaten: "Beispiele zum Üben" auf der Startseite, in der Ablage oder über die
 Befehlspalette ("Beispiele öffnen"). Sie landen im Ordner Beispiele der eigenen Ablage: bestellungen.json (128
 Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten), dienste.yaml,
-bestellung.schema.json (Schema eines Lieferdienstes zum Validieren) und kundenimport.ndjson (Kundenimport mit vier
-kaputten Zeilen zum Reparieren). Ein
+bestellung.schema.json (Schema eines Lieferdienstes zum Validieren), kundenimport.ndjson (Kundenimport mit vier
+kaputten Zeilen zum Reparieren) und webshop.toml (Einstellungen des Webshops in TOML). Ein
 zweites Öffnen zeigt die vorhandenen samt Änderungen; frisch anfangen: die Beispiele in den Papierkorb legen.
 Quelle ist frontend/pruefdaten; Adressen unter example.org, Telefonnummern aus dem für Film und Fernsehen
 freigehaltenen Bereich 030 23125.
@@ -114,7 +114,7 @@ ergänzt und gelöscht werden, die Zeile unten, wie viele Datensätze danach les
 im Verlauf, "Verwerfen" schließt das Werkzeug ohne Änderung.
 
 Das Werkzeug Konvertieren (Leiste, "Prüfen und umbauen") schreibt das Dokument in ein anderes Format um: CSV, JSON
-Lines, JSON oder YAML (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
+Lines, JSON, YAML oder TOML (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
 mit "Als neues Dokument" ein eigener Reiter im selben Ordner oder mit "Herunterladen" eine Datei. Über Quelle und
 Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
 
@@ -128,6 +128,13 @@ Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
   verloren, aus CSV bleiben Werte Text, nicht lesbare Stellen kommen nur als Text mit (vorher Reparieren).
 - YAML wird nach den Regeln von 1.1 geschrieben: Texte wie yes, on oder 2026-11-01 stehen in Anführungszeichen und
   bleiben in jedem Leser Text.
+- TOML braucht oben ein Objekt (eine Liste kommt unter eintraege, jeder Eintrag als eigener Abschnitt in doppelten eckigen Klammern) und kennt
+  kein null: solche Felder fallen weg, die Karte nennt sie. Aus TOML werden Datum und Zeit in den übrigen Zielen Text.
+
+TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
+als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,
+8 und 2, Datum und Zeit. Ein Fehler betrifft nur seine Zeile; der Rest bleibt lesbar. Ändern, Einträge entfernen und
+Spalten entfernen wirken nur an ihren Stellen, Kommentare und Anordnung bleiben; null lässt TOML nicht zu.
 
 Der Inspektor zeigt Zeilen, Spalten, Größe und bei CSV, woher jede Spalte kommt (aus dem Eintrag, aufgeklappt, je
 Element der Liste).

@@ -7,10 +7,10 @@
   "schritte": [
     {
       "nr": 1,
-      "sprechtext": "Wer keine eigenen Daten zur Hand hat, fängt mit den Beispielen an. Alles darin ist erfunden: ein Hofladen mit Bestellungen, einer Kundenliste und den Diensten seines Webshops, dazu ein Schema zum Prüfen und ein kaputter Kundenimport zum Reparieren.",
+      "sprechtext": "Wer keine eigenen Daten zur Hand hat, fängt mit den Beispielen an. Alles darin ist erfunden: ein Hofladen mit Bestellungen, einer Kundenliste und den Diensten seines Webshops, dazu ein Schema zum Prüfen ein kaputter Kundenimport zum Reparieren und die Einstellungen des Webshops in TOML.",
       "ziel": { "anker": "beispiele-oeffnen", "notbehelf": "Knopf Beispiele zum Üben auf der Startseite" },
       "aktion": { "art": "klicken" },
-      "erwartung": "Reiter bestellungen.json, kunden.csv, dienste.yaml, bestellung.schema.json, kundenimport.ndjson; links der Ordner Beispiele mit 5; bestellungen.json im Baum",
+      "erwartung": "Reiter bestellungen.json, kunden.csv, dienste.yaml, bestellung.schema.json, kundenimport.ndjson, webshop.toml; links der Ordner Beispiele mit 6; bestellungen.json im Baum",
       "geprueft": "2026-11-11, GitHub Pages 2.5.0, 1440 x 900"
     },
     {
