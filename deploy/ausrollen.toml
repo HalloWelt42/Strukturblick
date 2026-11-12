@@ -5,7 +5,9 @@ kennung = "strukturblick"
 repo = "https://github.com/HalloWelt42/Strukturblick.git"   # öffentlich: pi5b klont ohne Schlüssel
 # ton: die App nutzt den Tondienst (Tonarbeit auf dem Mac über die Leitstelle); geprüft wird, ob die Leitstelle ihn meldet
 ton = false
-# Zugänge besorgt das Ausrollen (Appkern docs/ZUGAENGE.md): der App-Schlüssel der Kellerwolke für das Konto des Nutzers.
+# Zugänge besorgt das Ausrollen (Appkern docs/ZUGAENGE.md): der App-Schlüssel der Kellerwolke für das Konto des Nutzers
+# und der Zugang zur Leitstelle mit genau den Fähigkeiten, die das Werkzeug Mit KI braucht (STB-60).
 [zugaenge]
 name = "Strukturblick"
 kellerwolke = "admin"
+leitstelle = ["text"]

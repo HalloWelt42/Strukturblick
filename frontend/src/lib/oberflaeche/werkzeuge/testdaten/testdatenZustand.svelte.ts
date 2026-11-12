@@ -169,6 +169,12 @@ export class TestdatenZustand implements Adressierbar {
   // ----- Lauf -----
 
   /** Lauf und Vorschau verwerfen (nach jeder Änderung an dem, was entsteht) */
+  /** Eine ganze Spezifikation übernehmen (Vorschlag der KI); Rückgängig über Zurücksetzen */
+  uebernehmen(s: Spezifikation): void {
+    this.eigen = s;
+    this.verwerfen();
+  }
+
   verwerfen(): void {
     this.anhalten = true;
     this.lauf = null;

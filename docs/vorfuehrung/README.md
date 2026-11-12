@@ -71,3 +71,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `testdaten.json` | Testdaten nach dem Vorbild einer Vorlage (STB-47) | durchgespielt 12.11.2026 |
 | `tabelle-verschachtelt.json` | Objekte aufklappen, in Listen hineingehen (STB-49) | durchgespielt 12.11.2026 |
 | `adressen.json` | Deeplinks: Adresse zeigt Ort, Neuladen und Zurück führen dorthin (STB-48) | durchgespielt 12.11.2026 |
+| `mit-ki.json` | Mit KI über die Leitstelle: Vorschau, Probelauf, Übernehmen auf Klick (STB-60) | durchgespielt 12.11.2026 |

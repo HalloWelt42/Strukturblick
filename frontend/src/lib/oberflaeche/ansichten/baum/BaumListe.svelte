@@ -66,8 +66,10 @@
   const zeigerZu = (k: number): string => zeigerVon(index, text, k);
   const waehlen = (k: number): void => blatt.waehlen(zeigerZu(k));
 
-  function gerollt(): void {
-    oben = rollfeld.scrollTop;
+  /** Das Rollereignis kann noch eintreffen, wenn die Liste schon abgebaut ist (Wechsel der Ansicht, bind:this ist dann
+   *  null); darum gilt das Element des Ereignisses selbst */
+  function gerollt(e: Event): void {
+    oben = (e.currentTarget as HTMLElement).scrollTop;
     zustand.rollstand = oben;
   }
 

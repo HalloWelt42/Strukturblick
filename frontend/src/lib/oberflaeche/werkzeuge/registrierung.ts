@@ -23,6 +23,10 @@ import KonvertierenWerkzeug from "./konvertieren/KonvertierenWerkzeug.svelte";
 import KonvertierenInspektor from "./konvertieren/KonvertierenInspektor.svelte";
 import CodeWerkzeug from "./code/CodeWerkzeug.svelte";
 import CodeInspektor from "./code/CodeInspektor.svelte";
+import { kiZustand } from "./ki/kiZustand.svelte";
+import KiWerkzeug from "./ki/KiWerkzeug.svelte";
+import KiInspektor from "./ki/KiInspektor.svelte";
+import { ki } from "../../zustand/ki.svelte";
 
 /** Abschnitte der Leiste mit Werkzeugen, in dieser Reihenfolge */
 export const ABSCHNITTE = [
@@ -45,6 +49,8 @@ export interface Werkzeug {
   readonly adresse?: (blatt: Arbeitsblatt) => Adressierbar;
   /** Thema im Lexikon, wenn es anders heißt als die Kennung */
   readonly lexikon?: string;
+  /** Nur zeigen, wenn es geht (Mit KI braucht Server und Leitstelle); ohne Angabe immer */
+  readonly sichtbar?: () => boolean;
 }
 
 export const WERKZEUGE: readonly Werkzeug[] = [
@@ -117,6 +123,21 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     inspektor: TestdatenInspektor,
     adresse: testdatenZustand,
   },
+  {
+    kennung: "ki",
+    titel: "Mit KI",
+    beschreibung: "Daten erklären, Fragen in Abfragen übersetzen, Schemas und Testdaten vorschlagen; über die Leitstelle, erst als Vorschau",
+    symbol: "fa-wand-magic-sparkles",
+    abschnitt: "erzeugen",
+    komponente: KiWerkzeug,
+    inspektor: KiInspektor,
+    adresse: kiZustand,
+    lexikon: "mit-ki",
+    sichtbar: () => ki.verfuegbar,
+  },
 ];
+
+/** Ob ein Werkzeug gerade angeboten wird */
+export const werkzeugSichtbar = (w: Werkzeug): boolean => w.sichtbar?.() ?? true;
 
 export const werkzeug = (kennung: string): Werkzeug | null => WERKZEUGE.find((w) => w.kennung === kennung) ?? null;

@@ -116,6 +116,81 @@
   background: var(--akzent-flaeche);
 }
 
+/* Haken einer Wahl (entwuerfe/teile/verwaltung.css) */
+.vw-haken {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: transparent;
+  font-size: var(--marke);
+}
+.vw-haken.an {
+  background-color: var(--akzent-flaeche);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--auf-akzent);
+}
+
+/* Auswahlkarten (eine Wahl aus mehreren, etwa das Sprachmodell) */
+.vw-wahl-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+}
+.vw-wahl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  padding: var(--a3);
+  border: 0;
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--text-1);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vw-wahl:hover {
+  background-color: var(--flaeche-panel);
+}
+.vw-wahl.aktiv {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .vw-wahl.aktiv {
+  background-color: var(--akzent-weich);
+}
+.vw-wahl-name {
+  display: block;
+  font-weight: 600;
+}
+.vw-wahl.aktiv .vw-wahl-name {
+  color: var(--akzent);
+}
+.vw-wahl-info {
+  display: block;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.vw-wahl-zustand {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.punkt.vw-ruhig {
+  background: var(--text-3);
+  box-shadow: none;
+}
+
 @media (max-width: 1279px) {
   .vw-zweiteilig {
     grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);

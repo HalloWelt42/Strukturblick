@@ -1,7 +1,10 @@
 <script lang="ts">
-  // Thema und Schriftstufe je Gerät, als kleine Tafel am Zahnrad (die Seite Einstellungen folgt in Stufe 7).
+  // Thema und Schriftstufe je Gerät als kleine Tafel am Zahnrad; mit Server dazu KI über die Leitstelle (für alle
+  // Geräte) und das Konto.
   import { einstellungen, SCHRIFTSTUFEN, THEMEN } from "../../zustand/einstellungen.svelte";
   import { zugang } from "../../zustand/zugang.svelte";
+  import { ki } from "../../zustand/ki.svelte";
+  import KiEinstellung from "./KiEinstellung.svelte";
 
   let offen = $state(false);
   let wurzel: HTMLDivElement | undefined = $state();
@@ -14,7 +17,7 @@
 <svelte:window onpointerdown={draussen} onkeydown={(e) => e.key === "Escape" && (offen = false)} />
 
 <div class="anzeigewahl" bind:this={wurzel}>
-  <button class="knopf nur-symbol" title="Anzeige" aria-expanded={offen} onclick={() => (offen = !offen)}><i class="fa-solid fa-gear"></i></button>
+  <button class="knopf nur-symbol" title="Anzeige und Einstellungen" aria-expanded={offen} onclick={() => (offen = !offen)}><i class="fa-solid fa-gear"></i></button>
   {#if offen}
     <div class="tafel karte" role="dialog" aria-label="Anzeige">
       <div class="karte-titel">Thema</div>
@@ -30,6 +33,7 @@
         {/each}
       </div>
       <p class="klein text-3">Gilt für dieses Gerät.</p>
+      {#if ki.moeglich}<KiEinstellung />{/if}
       {#if zugang.konto}
         <div class="karte-titel abstand">Konto</div>
         <div class="konto"><span><i class="fa-solid fa-user"></i> {zugang.konto}</span><button class="knopf" onclick={() => void zugang.abmelden()}><i class="fa-solid fa-right-from-bracket"></i> Abmelden</button></div>

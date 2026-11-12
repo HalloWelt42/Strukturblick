@@ -16,7 +16,7 @@ import { meldungen } from "../../zustand/meldungen.svelte";
 import { zugang } from "../../zustand/zugang.svelte";
 import { xmlSchemaAbleitbar, xmlSchemaAblegen } from "../../zustand/schemaAbleiten";
 import { ANSICHTEN, ansichtWaehlbar } from "../ansichten/registrierung";
-import { WERKZEUGE } from "../werkzeuge/registrierung";
+import { WERKZEUGE, werkzeugSichtbar } from "../werkzeuge/registrierung";
 import { dateiWaehlen, herunterladen } from "../schale/dateien";
 import type { Tasten } from "../palette/tasten";
 import { lexikon } from "../lexikon/lexikonZustand.svelte";
@@ -216,7 +216,7 @@ export const WERKZEUG_WAHL: readonly Aktion[] = WERKZEUGE.map((w) => ({
   titel: w.titel,
   beschreibung: w.beschreibung,
   symbol: w.symbol,
-  verfuegbar: () => blatt() !== null,
+  verfuegbar: () => blatt() !== null && werkzeugSichtbar(w),
   ausfuehren: () => {
     ablageverwaltung.schliessen();
     blatt()?.zeigen({ art: "werkzeug", kennung: w.kennung });

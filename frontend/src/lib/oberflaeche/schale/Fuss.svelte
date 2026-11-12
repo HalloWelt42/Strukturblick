@@ -4,6 +4,7 @@
   import { FASSUNG, URHEBER } from "../../zustand/app";
   import { kannReparieren } from "../../analyse/reparatur/reparatur";
   import { lexikon } from "../lexikon/lexikonZustand.svelte";
+  import { ki } from "../../zustand/ki.svelte";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const a = $derived(blatt?.analyse ?? null);
@@ -42,6 +43,7 @@
     {#if blatt}
       <span class="teil"><span class="punkt" class:warn={!blatt.gespeichert}></span> {blatt.gespeichert ? "Abgelegt" : "Wird abgelegt"}</span>
     {/if}
+    {#if ki.verfuegbar && ki.stand}<span class="teil" title={ki.stand.bereit ? `KI über die Leitstelle mit ${ki.stand.modellname}` : ki.stand.meldung}><span class="punkt" class:warn={!ki.stand.bereit}></span> Leitstelle</span>{/if}
     <button class="teil fuss-knopf" class:aktiv={lexikon.offen} title="Lexikon: Hilfe zu allem in Strukturblick, durchsuchbar (F1)" onclick={() => lexikon.umschalten()}><i class="fa-solid fa-circle-question"></i> Hilfe</button>
     <a class="teil profil" href={URHEBER.profil} target="_blank" rel="noopener" title="Profil von {URHEBER.name} mit dem Quelltext (neuer Tab)"><i class="fa-brands fa-github"></i> {URHEBER.name}</a>
     <span class="teil mono">{FASSUNG}</span>

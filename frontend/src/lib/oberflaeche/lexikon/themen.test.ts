@@ -11,7 +11,7 @@ const ORDNER = new URL("./themen/", import.meta.url);
 const TYPOGRAFISCH = new RegExp(`[${[0x2013, 0x2014, 0x201c, 0x201d, 0x201e, 0x2018, 0x2019, 0x201a, 0xab, 0xbb].map((c) => String.fromCharCode(c)).join("")}]`);
 const BEREICHE = ["Anfang", "Arbeitsplatz", "Pfade und Abfragen", "Formate", "Prüfen", "Ansichten", "Werkzeuge", "Begriffe"];
 const ANSICHTEN = ["baum", "editor", "tabelle", "statistik", "struktur", "graph", "vergleich", "schema"];
-const WERKZEUGE = ["validieren", "bereinigen", "reparieren", "konvertieren", "rezepte", "code", "testdaten"];
+const WERKZEUGE = ["validieren", "bereinigen", "reparieren", "konvertieren", "rezepte", "code", "testdaten", "ki"];
 const SPRACHEN = ["jq", "jsonpath", "sql", "xpath", "suche", "json", "csv", "yaml", "toml", "xml", "text", "php", "python", "typescript", "ndjson", "markdown", "html", "sh", "bash"];
 
 interface Datei {

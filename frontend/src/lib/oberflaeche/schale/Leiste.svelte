@@ -4,7 +4,7 @@
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
   import { aktion } from "../aktionen/aktionen";
-  import { ABSCHNITTE, WERKZEUGE } from "../werkzeuge/registrierung";
+  import { ABSCHNITTE, WERKZEUGE, werkzeugSichtbar } from "../werkzeuge/registrierung";
   import { lexikon } from "../lexikon/lexikonZustand.svelte";
   import { rezepte } from "../../zustand/rezepte.svelte";
   import { knopfTitel } from "../aktionen/tastatur";
@@ -102,7 +102,7 @@
     {/if}
     {#each ABSCHNITTE as abschnitt (abschnitt.kennung)}
       <div class="leiste-titel">{abschnitt.titel}</div>
-      {#each WERKZEUGE.filter((w) => w.abschnitt === abschnitt.kennung) as w (w.kennung)}
+      {#each WERKZEUGE.filter((w) => w.abschnitt === abschnitt.kennung && werkzeugSichtbar(w)) as w (w.kennung)}
         {@const a = werkzeugAktion(w.kennung)}
         <button class="eintrag" class:aktiv={offenesWerkzeug === w.kennung} disabled={!a.verfuegbar()} title={a.verfuegbar() ? w.beschreibung : "Erst ein Dokument öffnen"} onclick={() => a.ausfuehren()}>
           <i class="fa-solid {w.symbol}"></i><span class="name">{w.titel}</span>

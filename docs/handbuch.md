@@ -11,7 +11,7 @@ schluessel_orte:
   - "pi5b: `{{wurzel}}/.env`: Adresse und App-Schlüssel der Kellerwolke als feste Einstellung, vom Ausrollen gesetzt"
   - "pi5b: `{{wurzel}}/zertifikate/`: Blattzertifikat mit Schlüssel aus der Hausstelle (vom Ausrollen)"
 einrichten: einrichten.sh
-stand: f4da234
+stand: 1248c5b
 ---
 
 # Strukturblick
@@ -57,7 +57,8 @@ Zurück und Vor und ein Lesezeichen führen genau dorthin; `/ablage` öffnet die
 Maßgeblich ist der Anfang der Kennung (8 Zeichen, länger, falls zwei Dokumente gleich beginnen); der Name steht nur
 zum Lesen dabei, Umbenennen bricht keinen Link. In die Adresse gehen: Code erzeugen (Ziel, Quelle, Wurzel,
 Namensraum, Schalter), Validieren (Schema), Konvertieren (Ziel), Bereinigen und Schema (Reiter), Graph (Fokus,
-Tiefe), Struktur (Typ), Statistik und Tabelle (Liste), Vergleich (Gegenseite aus der Ablage). Ein Dokument, das es in
+Tiefe), Struktur (Typ), Statistik und Tabelle (Liste), Vergleich (Gegenseite aus der Ablage), Mit KI (Aufgabe,
+Sprache; die Frage nicht). Ein Dokument, das es in
 der Ablage nicht gibt (etwa ein Link aus einem anderen Browser in der Bauart ohne Server), wird gemeldet; es bleibt
 beim zuletzt offenen.
 
@@ -285,6 +286,19 @@ Blöcken mit Anhalten und Fortsetzen, das Ergebnis geht als neues Dokument oder 
 alles als Dokument `<name>.testdaten.json` ab; geöffnet dient es dem Werkzeug als Vorlage und erzeugt dieselben Daten.
 Geänderte Einstellungen halten, solange das Dokument offen ist; dauerhaft über Speichern.
 
+"Mit KI" (Leiste, Erzeugen; nur in der Bauart mit Server) fragt ein Sprachmodell über die Leitstelle: Daten erklären,
+Frage in Abfrage übersetzen (SQL, jq, JSONPath, XPath, je nach Format), Schema aus Beschreibung, Beschreibung aus
+Schema und Testdaten vorschlagen (auch über "Von KI vorschlagen" im Werkzeug Testdaten). Hinaus geht nur ein Auszug:
+Name, Format, Felder mit Art und Auffälligkeiten und bis zu 20 Beispieleinträge (bei SQL die Tabellen mit Spalten und
+Beispielzeilen), höchstens 40.000 Zeichen; der Inspektor nennt unter "Gesendet" Felder, Beispiele und Zeichen. Jeder
+Vorschlag ist eine Vorschau mit Erklärung und Probelauf: die Abfrage rechnet einmal auf dem Dokument, ein Schema prüft
+das Dokument, eine Spezifikation erzeugt fünf Datensätze; was das Modell erfunden hat (unbekannte Erzeuger, Felder,
+Einstellungen), fällt weg und wird genannt. Übernommen wird nur auf Klick: In Abfrage übernehmen, Ergebnis oder Schema
+als neues Dokument, In Testdaten übernehmen, Kopieren; "Anders vorschlagen" fragt mit dem vorigen Vorschlag neu,
+"Verwerfen" bricht auch das Warten ab. Am Zahnrad stehen unter KI der Schalter "KI-Funktionen anbieten", der Stand der
+Leitstelle und die Sprachmodelle, die sie anbietet (Vorgabe Qwen3 Next 80B); beides gilt für alle Geräte. Die
+Fußleiste zeigt "Leitstelle" mit Punkt, solange KI an ist. "Zuletzt gefragt" im Inspektor bleibt im Browser.
+
 TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
 als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,
 8 und 2, Datum und Zeit. Ein Fehler betrifft nur seine Zeile; der Rest bleibt lesbar. Ändern, Einträge entfernen und
@@ -383,6 +397,8 @@ Aufbau und Regeln: `docs/ARCHITEKTUR.md` und `architektur/regeln.toml` im Repo.
 
 - pi5b mit Docker und der Vorbau von pi5b, der `strukturblick.pi5b.lan` an den Vorschaltdienst der App reicht.
 - [[Kellerwolke]]: Konto zum Anmelden, den App-Schlüssel besorgt das Ausrollen.
+- [[Leitstelle]] für Mit KI: den Zugang (Anwendung Strukturblick, Fähigkeit text) legt das Ausrollen an; ohne
+  Leitstelle fehlt nur das Werkzeug Mit KI.
 - Mac nach [[Grundlage Mac]] für Entwicklung und Ausrollen; Node 22 für die Oberfläche.
 - Für GitHub Pages: das öffentliche Repo HalloWelt42/Strukturblick mit eingeschaltetem Pages (Quelle GitHub Actions).
 
@@ -406,12 +422,13 @@ Probe: `backend/.venv/bin/python -m pytest -q` und `cd frontend && npx vitest ru
 tools/ausrollen.sh
 ```
 
-Baut auf pi5b unter {{wurzel}}, besorgt den App-Schlüssel der Kellerwolke und startet die App hinter ihrem
+Baut auf pi5b unter {{wurzel}}, besorgt den App-Schlüssel der Kellerwolke und den Zugang zur Leitstelle (Anwendung
+"Strukturblick" mit der Fähigkeit text, aus `[zugaenge]` in `deploy/ausrollen.toml`) und startet die App hinter ihrem
 Vorschaltdienst. Danach den Vorbau von pi5b ausrollen (`~/Entwicklung/Werkzeuge/Vorbau/tools/ausrollen-pi.sh
 vorbau-pi5b`), damit der Name `strukturblick.pi5b.lan` gilt.
 
 Probe: {{adresse}}/api/v1/app antwortet mit der Fassung; `https://strukturblick.pi5b.lan` zeigt die Anmeldung, nach
-dem Anmelden den Arbeitsplatz.
+dem Anmelden den Arbeitsplatz. Am Zahnrad steht unter KI "Leitstelle bereit"; in der Leiste unter Erzeugen steht Mit KI.
 
 ### 3. Bauart ohne Server auf GitHub Pages
 

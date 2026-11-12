@@ -22,6 +22,8 @@ export {
   namensvorschlag,
 } from "appkern-oberflaeche";
 
+export { kiStand, kiVorschlag, kiEinstellen } from "./ki";
+
 /** Große Dokumente brauchen beim Speichern länger als die Vorgabe des Appkerns (20 s). */
 const SPEICHERN_ZEITGRENZE_MS = 120_000;
 

@@ -53,6 +53,8 @@ class Abfrage {
   hoehe = $state<number | null>(null);
 
   private readonly dienst = new Abfragedienst();
+  /** Eigener Dienst für Proben (Vorschläge der KI), damit sie die Konsole nicht ablösen */
+  private readonly probeDienst = new Abfragedienst();
   private zeit: ReturnType<typeof setTimeout> | null = null;
 
   get ausdruck(): string {
@@ -113,6 +115,22 @@ class Abfrage {
     const b = arbeitsplatz.aktivesBlatt;
     const stamm = spracheVon(this.sprache).ueberAlle || !b ? "abfrage" : b.name.replace(/\.[^.]+$/, "");
     return `${stamm}-${this.sprache}.${AUSGABEFORMATE.find((f) => f.kennung === format)?.endung ?? format}`;
+  }
+
+  /** Einen Ausdruck zur Probe rechnen, ohne die Konsole zu berühren (Probelauf eines Vorschlags); liest nur */
+  async probe(b: Arbeitsblatt, sprache: SprachKennung, ausdruck: string): Promise<Abfrageausgang | null> {
+    const ueberAlle = spracheVon(sprache).ueberAlle;
+    const dokumente = (ueberAlle ? arbeitsplatz.blaetter : [b]).map(stand).filter((d) => d !== null);
+    if (!dokumente.length) return null;
+    const auftrag: Abfrageauftrag = { sprache, ausdruck, ziel: ueberAlle ? null : b.kennung, suche: { ...VORGABE_SUCHE }, ausgabe: null };
+    return this.probeDienst.rechnen(auftrag, dokumente, arbeitsplatz.blaetter.map((x) => x.kennung));
+  }
+
+  /** Einen Ausdruck in die Konsole übernehmen und rechnen (aus einem Vorschlag) */
+  uebernehmen(sprache: SprachKennung, ausdruck: string): void {
+    this.oeffnen(sprache);
+    this.ausdruck = ausdruck;
+    this.planen();
   }
 
   merken(): void {

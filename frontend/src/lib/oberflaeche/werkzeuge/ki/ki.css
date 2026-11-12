@@ -1,0 +1,315 @@
+/* Werkzeug Mit KI nach entwuerfe/ki.html (Vorbild teile/erzeugen.css, Abschnitt 6, dort .ez-): Aufgaben als
+   eingelassene Schiene, Frage groß, Vorschlag mit Code und Erklärung nebeneinander, Probelauf eingelassen. Nur Marken
+   aus dem Stil; Fließtext mindestens in der Stufe klein (große Schrift). */
+
+.ki-ansicht {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.ki-grundlage {
+  min-width: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.ki-modell {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+/* Rollfeld: oben kein Innenabstand, den Abstand geben die Karten (Sticky-Kopf ohne Lücke) */
+.ki-inhalt {
+  padding: 0 var(--a4) var(--a5);
+}
+.ki-inhalt > .karte {
+  margin-top: var(--a3);
+  padding: var(--a3) var(--a4) var(--a4);
+  max-width: 1180px;
+}
+.ki-karte-kopf {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a3);
+  margin-bottom: var(--a3);
+}
+.ki-karte-kopf h2 {
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+}
+.ki-karte-kopf .rechts,
+.ki-frage-fuss .rechts,
+.ki-aktionen .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+.ki-hinweis {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a2);
+  margin: var(--a2) 0 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.ki-hinweis > i {
+  flex: none;
+}
+.ki-hinweis.warn > i {
+  color: var(--warn);
+}
+
+/* ----- Aufgaben: eingelassene Schiene, gewählte Aufgabe erhaben ----- */
+
+.ki-aufgaben {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(11em, 100%), 1fr));
+  gap: 3px;
+  padding: 3px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  border-radius: var(--r-knopf);
+}
+.ki-aufgabe {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--a2) var(--a3);
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ki-aufgabe:hover {
+  color: var(--text-1);
+}
+.ki-aufgabe strong {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  font-weight: 600;
+}
+.ki-aufgabe span {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.ki-aufgabe.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.ki-aufgabe.aktiv strong {
+  color: var(--akzent);
+  text-shadow: 0 0 calc(10px * var(--leuchten)) color-mix(in srgb, var(--akzent-flaeche) 55%, transparent);
+}
+
+/* ----- Frage ----- */
+
+.ki-frage {
+  display: block;
+  width: 100%;
+  min-height: calc(var(--zeile) * 2.4);
+  padding: var(--a2) var(--a3);
+  border: 0;
+  outline: 0;
+  resize: vertical;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: var(--text-1);
+  font-family: inherit;
+  font-size: max(16px, var(--titel));
+  line-height: 1.4;
+}
+.ki-frage:focus-visible {
+  box-shadow: var(--vertieft), 0 0 0 2px var(--akzent-weich);
+}
+.ki-frage-fuss {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a3);
+  margin-top: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* ----- Vorschlag ----- */
+
+.ki-vorschlag {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--a4);
+  align-items: start;
+}
+.ki-vorschlag.eins {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ki-unterkopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin: 0 0 var(--a2);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.ki-unterkopf .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  font-size: var(--klein);
+}
+.ki-code {
+  margin: 0;
+  padding: var(--a3);
+  max-height: 28em;
+  overflow: auto;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  line-height: 1.6;
+  white-space: pre;
+  color: var(--text-1);
+}
+/* Datensätze und Werte im Probelauf: umbrechen statt seitlich rollen */
+.ki-code.umbrechen {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ki-erklaerung {
+  margin: 0;
+  padding: 0 0 0 1.4em;
+  font-size: var(--gross);
+  line-height: 1.5;
+}
+.ki-erklaerung li + li {
+  margin-top: var(--a2);
+}
+.ki-artikel {
+  font-size: var(--gross);
+  line-height: 1.55;
+}
+.ki-artikel p,
+.ki-artikel ul,
+.ki-artikel ol {
+  margin: 0 0 var(--a2);
+}
+.ki-artikel code,
+.ki-erklaerung code {
+  font-family: var(--schrift-mono);
+  font-size: 0.92em;
+  padding: 0 4px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.ki-probelauf {
+  margin-top: var(--a4);
+}
+.ki-tabelle-feld {
+  overflow-x: auto;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+}
+.ki-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.ki-tabelle th {
+  padding: var(--a2) var(--a3);
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-3);
+  white-space: nowrap;
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.ki-tabelle td {
+  padding: 6px var(--a3);
+  vertical-align: top;
+  font-family: var(--schrift-mono);
+  white-space: nowrap;
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.ki-tabelle tbody tr:nth-child(even) {
+  background: var(--flaeche-wechsel);
+}
+.ki-tabelle td.zahl {
+  text-align: right;
+}
+.ki-tabelle td.ki-umbruch {
+  white-space: normal;
+}
+.ki-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  margin-top: var(--a3);
+}
+.ki-wartet {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: var(--a3);
+  font-size: var(--gross);
+  color: var(--text-2);
+}
+
+/* ----- Inspektor ----- */
+
+.ki-liste {
+  display: flex;
+  flex-direction: column;
+}
+.ki-liste button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 6px var(--a2);
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--klein);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.ki-liste button:hover {
+  background: var(--akzent-weich);
+}
+.ki-liste button span {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* Schmal: Code und Erklärung untereinander */
+@media (max-width: 900px) {
+  .ki-vorschlag {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ki-inhalt {
+    padding: 0 var(--a3) var(--a4);
+  }
+}

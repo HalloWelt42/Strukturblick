@@ -1,0 +1,57 @@
+{
+  "kapitel": "mit-ki",
+  "titel": "Mit KI: fragen, prüfen, erst dann übernehmen",
+  "ticket": "STB-60",
+  "rolle": "erzaehler",
+  "voraussetzung": "Bauart mit Server, angemeldet, Leitstelle eingerichtet; Beispiele geöffnet, kunden.csv offen",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Unter Erzeugen steht Mit KI. Fünf Aufgaben: erklären, Fragen in Abfragen übersetzen, Schemas schreiben und beschreiben, Testdaten vorschlagen.",
+      "ziel": { "anker": "leiste-mit-ki", "notbehelf": "Leiste, Abschnitt Erzeugen, Mit KI" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Werkzeug Mit KI, Grundlage kunden.csv, rechts oben Qwen3 Next 80B über die Leitstelle mit grünem Punkt; Aufgabe Frage in Abfrage übersetzen gewählt, Antwort als SQL",
+      "geprueft": "2026-11-12, Probebetrieb mit Attrappe der Leitstelle, 1440 x 900, 1024 x 768 und 375 x 812"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Die Frage steht in Worten da. Zur Leitstelle gehen nur Tabellen, Spalten, Typen und zwanzig Beispielzeilen, nie das ganze Dokument.",
+      "ziel": { "anker": "ki-frage", "notbehelf": "Feld Frage" },
+      "aktion": { "art": "eingeben", "text": "Welche Kunden aus Leipzig haben mehr als 1.000 Euro Umsatz?" },
+      "erwartung": "Knopf Übersetzen wird aktiv; ⌘ Enter stellt die Frage",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Der Vorschlag ist eine Vorschau: links das SQL mit dem Abzeichen liest nur, rechts, wie das Modell die Frage gelesen hat, darunter der Probelauf auf dem ganzen Dokument.",
+      "ziel": { "anker": "ki-vorschlag", "notbehelf": "Karte Vorschlag" },
+      "aktion": { "art": "klicken", "text": "Übersetzen" },
+      "erwartung": "Abzeichen Vorschau, noch nichts übernommen; SQL über die Tabelle kunden; Erklärung als Liste; Probelauf mit Zeilenzahl, Dauer und den ersten fünf Zeilen; Inspektor Gesendet: Spalten mit Typen, 20 von 1.214 Beispielen, Ganzes Dokument nein",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Erst ein Klick übernimmt. Der Ausdruck steht dann im Abfragefeld und rechnet, als hätte man ihn getippt.",
+      "ziel": { "anker": "ki-in-abfrage", "notbehelf": "Knopf In Abfrage übernehmen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Abfrage offen mit SQL, Ausdruck aus dem Vorschlag, Ergebnis wie im Probelauf",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Aus dem Werkzeug Testdaten heraus fragt Von KI vorschlagen nach besseren Erzeugern. Was das Modell erfindet, fällt weg und wird genannt.",
+      "ziel": { "anker": "testdaten-von-ki", "notbehelf": "Werkzeug Testdaten, Knopf Von KI vorschlagen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Mit KI mit Aufgabe Testdaten vorschlagen; Tafel der Spezifikation mit Abzeichen geändert; Probelauf mit fünf Datensätzen, Startwert 4711; In Testdaten übernehmen setzt sie, Zurücksetzen holt die alte zurück",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 6,
+      "sprechtext": "Am Zahnrad steht, ob KI an ist, wie es der Leitstelle geht und welches Modell rechnet. Ausgeschaltet verschwindet Mit KI ganz.",
+      "ziel": { "anker": "zahnrad-ki", "notbehelf": "Zahnrad oben rechts, Abschnitt KI" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Schalter KI-Funktionen anbieten an, Leitstelle bereit mit Zahl der Angebote, Sprachmodelle als Karten mit geladen oder bereit und Rechner; Schalter aus: Mit KI fehlt in der Leiste, Von KI vorschlagen und Leitstelle im Fuß fehlen",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

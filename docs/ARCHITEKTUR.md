@@ -38,7 +38,7 @@ Stand: 11.11.2026, Ticket STB-3. Die Fassung 0.x ist an ihrem Zustand gescheiter
 | `kern` | Typen, Pfade (RFC 6901), Strukturindex, Sitzung, Verlauf, Befehle | nichts außer sich |
 | `formate` | Vertrag, Registrierung, JSON, NDJSON, CSV, YAML (später TOML, XML, XLSX, Markdown- und HTML-Tabellen) | `kern` |
 | `analyse` | Auswertungen über dem Strukturindex (Profil, Werte eines Pfads, später Statistik, Facetten) | `kern`, `formate` |
-| `dienste` | Worker-Anbindung, Ablage (Browser/Server), Fassung, später KI | `kern`, `formate`, `analyse` |
+| `dienste` | Worker-Anbindung, Ablage (Browser/Server), Fassung, KI (nur Server) | `kern`, `formate`, `analyse` |
 | `zustand` | Arbeitsblätter, Einstellungen (Svelte-Runen) | `kern`, `formate`, `analyse`, `dienste` |
 | `oberflaeche` | Schale, Ansichten, Inspektor, Bausteine (Svelte) | `zustand`, `kern`, `formate`, `analyse` |
 
@@ -50,6 +50,15 @@ mit marked zu HTML und durch DOMPurify geführt (`themen.ts`); ein Zustand für 
 Weg zum Öffnen an einem Thema und Abschnitt. Lebendige Teile im Text: `data-live="gewaehlt"`, Beispielblöcke mit
 Ausprobieren, Verweise `#thema/abschnitt`, `#ansicht:x`, `#werkzeug:x`. `themen.test.ts` prüft alle Themen (Kopf,
 Verweise, Hausregeln). Ansichten und Werkzeuge nennen ihr Thema in der Registrierung (`lexikon`), wenn es anders heißt.
+
+KI (STB-60): nur in der Bauart mit Server und nur über die Leitstelle. Der Server reicht weiter
+(`backend/app/ki/`: Einstellungen `ki_an` und `ki_modell`, Anweisungen je Aufgabe, feste Antwortform, Fehler der
+Leitstelle als Satz) und liest selbst kein Dokument. Was hinausgeht, baut die Oberfläche: `analyse/ki/auszug.ts`
+(Felder, Typen, höchstens 20 Beispiele, Grenze 40.000 Zeichen), ebenso das Prüfen der Antwort gegen das, was
+Strukturblick kennt (`analyse/ki/vorschlag.ts`). `zustand/ki.svelte.ts` hält Stand und Wahl, das Werkzeug
+(`oberflaeche/werkzeuge/ki/`) zeigt Vorschlag und Probelauf; die Probe einer Abfrage rechnet in einem eigenen
+Abfragedienst, damit die Konsole bleibt. Übernommen wird nur auf Klick. Werkzeuge, die nicht immer gehen, nennen in
+der Registrierung `sichtbar`; ohne Server oder ausgeschaltet fehlt Mit KI ganz.
 
 Adressen (Deeplinks, STB-48): `zustand/adresse.ts` übersetzt zwischen Pfad und Ort (Seite, Dokument, Ansicht oder
 Werkzeug, Stelle, Einstellungen), ohne Browser und testbar. Was eine Ansicht oder ein Werkzeug in die Adresse gibt,

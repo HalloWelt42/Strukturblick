@@ -14,6 +14,8 @@
   import Spezifikationstafel from "./Spezifikationstafel.svelte";
   import Erzeugenkarte from "./Erzeugenkarte.svelte";
   import Vorschaukarte from "./Vorschaukarte.svelte";
+  import { ki } from "../../../zustand/ki.svelte";
+  import { kiZustand } from "../ki/kiZustand.svelte";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
   const z = $derived(testdatenZustand(blatt));
@@ -24,6 +26,14 @@
     const v = vorlage;
     untrack(() => z.vorgabenUebernehmen(blatt, v));
   });
+
+  /** Die KI um einen besseren Vorschlag bitten (Werkzeug Mit KI, Aufgabe Testdaten); übernommen wird erst dort */
+  function vonKi(): void {
+    const k = kiZustand(blatt);
+    k.aufgabeWaehlen("testdaten");
+    blatt.zeigen({ art: "werkzeug", kennung: "ki" });
+    void k.fragen(blatt);
+  }
 
   /** Auftrag als eigenes Dokument neben diesem ablegen; es öffnet gleich im Werkzeug Testdaten */
   async function speichern(): Promise<void> {
@@ -48,6 +58,7 @@
     </div>
     <div class="rechts">
       {#if z.eigen}<button class="knopf still" title="Änderungen verwerfen, Spezifikation wieder aus der Vorlage" onclick={() => z.zuruecksetzen()}><i class="fa-solid fa-rotate-left"></i> Zurücksetzen</button>{/if}
+      {#if ki.verfuegbar && vorlage?.art === "daten"}<button class="knopf" disabled={!spez} title="Die KI wählt je Feld den passenden Erzeuger; erst als Vorschau mit fünf Datensätzen" onclick={vonKi}><i class="fa-solid fa-wand-magic-sparkles"></i> Von KI vorschlagen</button>{/if}
       <button class="knopf" disabled={!spez} title="Spezifikation, Anzahl, Startwert und Zielformat als Dokument ablegen" onclick={() => void speichern()}><i class="fa-solid fa-floppy-disk"></i> Spezifikation speichern</button>
     </div>
   </div>

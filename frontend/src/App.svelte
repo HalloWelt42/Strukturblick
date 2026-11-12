@@ -18,12 +18,18 @@
   import { starthinweis } from "./lib/zustand/starthinweis.svelte";
   import AblageSeite from "./lib/oberflaeche/ablage/AblageSeite.svelte";
   import { zugang } from "./lib/zustand/zugang.svelte";
+  import { ki } from "./lib/zustand/ki.svelte";
   import { adresseVerfolgen } from "./lib/oberflaeche/schale/adressleitung.svelte";
   import LexikonFenster from "./lib/oberflaeche/lexikon/LexikonFenster.svelte";
 
   // Sobald der Zugang bereit ist (ohne Server sofort, mit Server nach der Anmeldung), startet der Arbeitsplatz einmal
   $effect(() => {
     if (zugang.stand === "bereit") void zugang.arbeitsplatzStarten();
+  });
+
+  // KI über die Leitstelle (nur mit Server): Stand einmal nach der Anmeldung, danach auf Wunsch neu
+  $effect(() => {
+    if (ki.moeglich) untrack(() => void ki.laden());
   });
 
   // Adresse und Arbeitsplatz gleich halten (Deeplinks, Zurück/Vor), sobald der Arbeitsplatz steht

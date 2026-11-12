@@ -14,6 +14,8 @@ from appkern.app import Geruest
 from appkern.app.begleiter import Begleiter
 
 from .api import router
+from .ki.api import router as ki_router
+from .ki.dienst import KiDienst
 from .bestand import Bestand
 from .einstellungen import AppEinstellungen
 from .fassung import FASSUNG, WURZEL
@@ -34,13 +36,15 @@ def app_bauen(daten: Path, transport: httpx.AsyncBaseTransport | None = None) ->
     geruest = Geruest(name="Strukturblick", kennung="strukturblick", rolle="zeigt, prüft und baut Strukturdaten um",
                       symbol="fa-sitemap", farbe="#4e6379", fassung=FASSUNG, daten=daten,
                       einstellungen=AppEinstellungen, oberflaeche=WURZEL / "frontend" / "dist",
-                      leitstelle_wahlweise=True,      # KI kommt mit Stufe 7 über die Leitstelle; bis dahin ohne
+                      leitstelle_wahlweise=True,      # ohne Leitstelle fehlt nur das Werkzeug Mit KI
                       transport=transport)
     bestand = Bestand(geruest.db)
     geruest.begleiter_anmelden(Einrichtung(bestand))
     app = geruest.fastapi()
     app.state.geruest = geruest
     app.include_router(router(geruest, bestand))
+    geruest.einstellungen.anbieten("ki_modell", geruest.leitstelle_angebot("text"))
+    app.include_router(ki_router(geruest, KiDienst(lambda: geruest.leitstelle, lambda: geruest.einstellungen.stand)))
     geruest.oberflaeche_ausliefern(app)
     return app
 
