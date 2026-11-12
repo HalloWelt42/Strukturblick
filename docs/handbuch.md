@@ -203,6 +203,16 @@ Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
   Angaben, Zahlen rechtsbündig. Typen werden Text, null eine leere Zelle. Markdown wird ein neues Dokument, HTML eine
   Seite zum Herunterladen.
 
+Das Werkzeug Code erzeugen (Leiste, "Erzeugen") schreibt Klassen zu den Daten: PHP 8.4 (final readonly class mit
+fromArray), TypeScript (Interfaces für JSON.parse), Python mit Pydantic (BaseModel, Grenzen als Field) oder mit
+dataclasses (from_dict). Quelle ist das Schema der Daten (wie in der Ansicht Struktur abgeleitet) oder ein JSON Schema
+aus der Ablage. Einstellbar sind Wurzelname, Namensraum (PHP), readonly oder veränderbar und eine Datei oder je Klasse
+eine. Objekte werden Klassen ($defs mit ihrem Namen, eingebettete nach dem Feld), Datum und Zeitpunkt werden
+DateTimeImmutable, date und datetime (in TypeScript bleiben sie Text), null-fähige und fehlende Felder optional, feste
+Werte Aufzählungen; Grenzen aus dem Schema stehen am Feld (PHPDoc, Kommentar, Pydantic prüft sie). Schlüssel, die kein
+Bezeichner sind ("@nr", "class"), bekommen einen gültigen Namen und werden über den Schlüssel gelesen. Der Inspektor
+zeigt, wie Schema-Typen im Code ankommen und wie man die Daten einliest; mehrere Dateien lädt "Herunterladen" als ZIP.
+
 TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
 als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,
 8 und 2, Datum und Zeit. Ein Fehler betrifft nur seine Zeile; der Rest bleibt lesbar. Ändern, Einträge entfernen und

@@ -1,0 +1,41 @@
+{
+  "kapitel": "code",
+  "titel": "Code aus Daten und Schema erzeugen",
+  "ticket": "STB-46",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json im Vordergrund; bestellung.schema.json im Ordner Beispiele",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Wer die Bestellungen in einem Programm weiterverarbeiten will, braucht Klassen dafür. Code erzeugen schreibt sie aus den Daten, hier in PHP.",
+      "ziel": { "anker": "werkzeug-code", "notbehelf": "Leiste, Abschnitt Erzeugen, Code erzeugen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Bestellungen.php, 4 Klassen; final readonly class Bestellungen mit fromArray; Inspektor: Vom Schema zum Typ und Einlesen",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Statt aus den Daten geht es auch aus dem Schema des Lieferdienstes. Dann stehen dessen Grenzen am Feld, etwa höchstens drei Positionen.",
+      "ziel": { "anker": "code-quelle", "notbehelf": "Aus: Schema, bestellung.schema.json" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "PHPDoc: list<Position> $positionen ... 1 bis 3 Einträge; Inspektor nennt nr mit Muster ^B-[0-9]{5}$",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Dieselben Klassen gibt es in TypeScript und Python. Pydantic prüft die Grenzen beim Einlesen gleich mit.",
+      "ziel": { "anker": "code-ziel", "notbehelf": "Ziel: Python (Pydantic)" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "class Bestellung(BaseModel), positionen: list[Position] = Field(min_length=1, max_length=3 ...)",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Je Klasse eine Datei: Reiter wählen die Datei, Herunterladen packt alle in ein ZIP.",
+      "ziel": { "anker": "code-dateien", "notbehelf": "Dateien: Je Klasse, dann Herunterladen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Reiter bestellungen.py, bestellung.py, kunde.py, position.py; Download Bestellungen-pydantic.zip",
+      "geprueft": "2026-11-12, Download nicht ausgelöst"
+    }
+  ]
+}
