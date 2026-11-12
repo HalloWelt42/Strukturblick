@@ -1,0 +1,33 @@
+{
+  "kapitel": "xsd",
+  "titel": "XML gegen XML Schema prüfen",
+  "ticket": "STB-39",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, lieferungen.xml im Vordergrund; lieferungen.xsd und hofladen-position.xsd im Ordner Beispiele",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Bei XML prüft Validieren gegen XML Schema. Das Schema liegt in der Ablage; was es importiert, findet Strukturblick im selben Ordner.",
+      "ziel": { "anker": "validieren-xsd-ablage", "notbehelf": "Leiste Validieren, XML Schema: Aus der Ablage, lieferungen.xsd" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "12 Fehler, alle bezahlt; Inspektor: Importe 1 Schema bereit, geprüft in Bruchteilen einer Sekunde",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Jeder Befund steht auf Deutsch da, mit Stelle im Dokument. Hier verlangt das Schema einen Wahrheitswert, die Lieferscheine sagen aber ja und nein.",
+      "ziel": { "anker": "validieren-befund", "notbehelf": "Ersten Befund wählen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Meldung 'nein' passt nicht zum Typ xs:boolean; Fundstelle Zeile 11 mit unterstrichenem nein",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Große Schema-Sammlungen lassen sich als ZIP laden. Das Paket bleibt im Browser, wird nicht abgelegt, und das Schema, auf das das Dokument verweist, ist gleich gewählt.",
+      "ziel": { "anker": "validieren-xsd-paket", "notbehelf": "Knopf Schema-Paket (ZIP), eine ZIP-Datei mit XSD wählen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Paketname im Knopf, Liste der Schemas mit Kennzeichen laut Dokument",
+      "geprueft": "2026-11-12, per Test (ZIP mit Haupt- und Basisschema)"
+    }
+  ]
+}

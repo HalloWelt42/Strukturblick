@@ -39,7 +39,8 @@ Zum Üben gibt es erfundene Beispieldaten: "Beispiele zum Üben" auf der Startse
 Befehlspalette ("Beispiele öffnen"). Sie landen im Ordner Beispiele der eigenen Ablage: bestellungen.json (128
 Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten), dienste.yaml,
 bestellung.schema.json (Schema eines Lieferdienstes zum Validieren), kundenimport.ndjson (Kundenimport mit vier
-kaputten Zeilen zum Reparieren) webshop.toml (Einstellungen des Webshops in TOML) und lieferungen.xml (Lieferscheine in XML). Ein
+kaputten Zeilen zum Reparieren) webshop.toml (Einstellungen des Webshops in TOML), lieferungen.xml (Lieferscheine in XML) mit lieferungen.xsd und
+hofladen-position.xsd (XML Schema dazu, das zweite vom ersten importiert). Ein
 zweites Öffnen zeigt die vorhandenen samt Änderungen; frisch anfangen: die Beispiele in den Papierkorb legen.
 Quelle ist frontend/pruefdaten; Adressen unter example.org, Telefonnummern aus dem für Film und Fernsehen
 freigehaltenen Bereich 030 23125.
@@ -112,6 +113,15 @@ zeigt die Zeilen rundherum mit der falschen Stelle unterstrichen und springt in 
 eindeutigen Vorschlag (etwa eine fehlende führende Null bei einer Postleitzahl), setzt "Beheben" im Inspektor den
 Wert als ein Vorgang im Verlauf. "Bericht herunterladen" schreibt alle Befunde als Text. Zum Üben: die Beispiele
 öffnen und bestellung.schema.json wählen; es erlaubt höchstens drei Positionen je Bestellung.
+
+Bei XML-Dokumenten prüft Validieren gegen XML Schema (XSD), mit libxml2 im Browser (lädt beim ersten Prüfen). Das
+Schema kommt aus der Ablage (seine Importe sucht Strukturblick im selben Ordner nach Dateinamen) oder aus einem
+Schema-Paket als ZIP, das nur im Browser bleibt und nicht abgelegt wird (Importe nach Pfad im Paket). Verweist das
+Dokument selbst auf ein Schema (xsi:schemaLocation oder xsi:noNamespaceSchemaLocation), wird es vorgewählt. Befunde
+stehen wie bei JSON Schema mit Stelle, Meldung, Soll und Ist da; die häufigen Meldungen von libxml2 sind übersetzt,
+seltene stehen im Wortlaut mit "libxml2:" davor. Fehlt ein importiertes Schema oder hat das Schema selbst einen Fehler,
+sagt das der Hinweis. Zum Üben: lieferungen.xml mit lieferungen.xsd; das Schema verlangt bezahlt als Wahrheitswert,
+die Daten sagen ja und nein.
 
 Das Werkzeug Reparieren (Leiste, "Prüfen und umbauen"; bei Fehlern auch "Reparieren" im Fuß und im Baum) macht
 kaputtes JSON und JSON Lines lesbar. "Lesen als" wählt JSON Lines (ein Datensatz je Zeile) oder JSON (die ganze
