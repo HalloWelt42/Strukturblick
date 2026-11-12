@@ -76,6 +76,12 @@ export interface Klassenmodell {
   readonly hinweise: readonly string[];
 }
 
+/** Kommt eine Art irgendwo im Modell vor (etwa "zeitpunkt")? */
+export function enthaelt(m: Klassenmodell, art: Feldtyp["art"]): boolean {
+  const in_ = (t: Feldtyp): boolean => t.art === art || (t.art === "liste" && in_(t.von)) || (t.art === "vereinigung" && t.teile.some(in_));
+  return m.klassen.some((k) => k.felder.some((f) => in_(f.typ)));
+}
+
 /** Alle Klassen, die ein Typ braucht (für Importe je Datei) */
 export function klassenIn(t: Feldtyp, aus: Set<string> = new Set()): Set<string> {
   if (t.art === "klasse") aus.add(t.name);

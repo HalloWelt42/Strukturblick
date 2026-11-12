@@ -16,6 +16,8 @@
     <dl class="paare">
       <dt>Klassen</dt><dd class="mono">{e.modell.klassen.map((k) => k.name).join(", ")}</dd>
       <dt>Quelle</dt><dd class="mono">{e.quelle}</dd>
+      <dt>Schema</dt><dd>{e.schemafassung}</dd>
+      <dt>Braucht</dt><dd>{e.ausgabe.voraussetzung}</dd>
       <dt>{e.ausgabe.dateien.length === 1 ? "Datei" : "Dateien"}</dt><dd class="mono">{e.ausgabe.dateien.map((d) => d.name).join(", ")}</dd>
     </dl>
     {#if e.modell.hinweise.length}<p class="an-tafel-fuss cg-oben">{e.modell.hinweise.join("; ")}</p>{/if}

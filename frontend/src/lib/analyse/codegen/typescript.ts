@@ -57,7 +57,9 @@ export const TYPESCRIPT: Codeziel = {
   schreiben(m: Klassenmodell, o: Codeoptionen): Codeausgabe {
     const w = m.wurzel;
     const wurzelAlias = w.art === "klasse" ? null : [`export type ${o.wurzelname} = ${typ(w, o)};`];
-    const kopf = [`// ${o.kopf}`, ""];
+    // readonly T[] gibt es ab 3.4, import type (je Klasse) ab 3.8
+    const voraussetzung = `TypeScript ab ${o.jeKlasse ? "3.8" : "3.4"}`;
+    const kopf = [`// ${o.kopf}`, `// Braucht ${voraussetzung}`, ""];
     let dateien;
     if (o.jeKlasse) {
       dateien = m.klassen.map((k) => {
@@ -79,6 +81,7 @@ export const TYPESCRIPT: Codeziel = {
       abbildung: abbildungen(m, (f) => feldtyp(f, o)),
       einlesen: `const daten = JSON.parse(text) as ${name};`,
       hinweis: "Typen für JSON.parse; Formate und Grenzen stehen als Kommentar am Feld, zur Laufzeit prüft TypeScript sie nicht.",
+      voraussetzung,
     };
   },
 };

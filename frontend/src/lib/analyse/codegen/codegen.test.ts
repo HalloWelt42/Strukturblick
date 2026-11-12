@@ -66,6 +66,12 @@ describe("Zielsprachen", () => {
     const [d] = code("php").dateien;
     expect(d.name).toBe("Bestellungen.php");
     expect(d.text).toContain("namespace Lindenhof\\Bestellungen;");
+    expect(d.text).toContain("// Braucht PHP ab 8.2");
+    expect(code("php").voraussetzung).toBe("PHP ab 8.2");
+    expect(code("php", { unveraenderlich: false }).voraussetzung).toBe("PHP ab 8.1");
+    expect(code("typescript").voraussetzung).toBe("TypeScript ab 3.4");
+    expect(code("pydantic").voraussetzung).toBe("Python ab 3.10 und Pydantic 2");
+    expect(code("dataclasses").voraussetzung).toBe("Python ab 3.11");
     expect(d.text).toContain("use DateTimeImmutable;");
     expect(d.text).toContain("final readonly class Bestellung\n");
     expect(d.text).toContain("public ?string $notiz = null,");

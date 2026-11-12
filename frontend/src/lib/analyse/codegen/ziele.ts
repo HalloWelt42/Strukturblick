@@ -37,6 +37,8 @@ export interface Codeausgabe {
   readonly einlesen: string;
   /** Ein Satz unter dem Code (wo die Grenzen stehen) */
   readonly hinweis: string;
+  /** Ab welcher Fassung von Sprache und Bibliothek der Code läuft ("PHP ab 8.2"); steht auch im Kopf jeder Datei */
+  readonly voraussetzung: string;
 }
 
 export interface Codeziel {

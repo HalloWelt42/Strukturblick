@@ -2,7 +2,7 @@
 // Abhängigkeit, from_dict() wandelt Datum und Klassen um, Grenzen als Kommentar). Schlüssel, die kein Bezeichner
 // sind oder ein Schlüsselwort, bekommen einen gültigen Namen; Pydantic liest sie über alias, from_dict über den Schlüssel.
 
-import { feldKommentar, klassenIn, type Feld, type Feldtyp, type Klasse, type Klassenmodell } from "./modell";
+import { enthaelt, feldKommentar, klassenIn, type Feld, type Feldtyp, type Klasse, type Klassenmodell } from "./modell";
 import { abbildungen, feldnamen, type Codeausgabe, type Codeoptionen, type Codeziel } from "./ziele";
 
 const EIN = "    ";
@@ -117,10 +117,12 @@ function klasseDataclass(k: Klasse, o: Codeoptionen): string[] {
 // ----- Gemeinsam ---------------------------------------------------------------------------------------------------
 
 function schreiben(m: Klassenmodell, o: Codeoptionen, pydantic: boolean): Codeausgabe {
+  // Pydantic wertet "str | None" zur Laufzeit aus (ab 3.10); datetime.fromisoformat liest "Z" erst ab 3.11
+  const voraussetzung = pydantic ? "Python ab 3.10 und Pydantic 2" : `Python ab ${enthaelt(m, "zeitpunkt") ? "3.11" : "3.7"}`;
   const klasse = (k: Klasse) => (pydantic ? klassePydantic(k, o) : klasseDataclass(k, o));
   const datei = (ks: readonly Klasse[], extra: string[] = []): string => {
     const rumpf = ks.flatMap((k, i) => [...(i ? ["", ""] : []), ...klasse(k)]).join("\n");
-    return [`# ${o.kopf}`, ...importe(rumpf, pydantic), ...extra, "", "", rumpf, ""].join("\n");
+    return [`# ${o.kopf}`, `# Braucht ${voraussetzung}`, ...importe(rumpf, pydantic), ...extra, "", "", rumpf, ""].join("\n");
   };
   const modul = (n: string) => n.replace(/(\p{Ll})(\p{Lu})/gu, "$1_$2").toLowerCase();
   const dateien = o.jeKlasse
@@ -138,6 +140,7 @@ function schreiben(m: Klassenmodell, o: Codeoptionen, pydantic: boolean): Codeau
     abbildung: abbildungen(m, feldtyp),
     einlesen,
     hinweis: pydantic ? "Grenzen aus dem Schema stehen als Field(...) und werden beim Einlesen geprüft." : "Grenzen aus dem Schema stehen als Kommentar am Feld; dataclasses prüfen sie nicht.",
+    voraussetzung,
   };
 }
 

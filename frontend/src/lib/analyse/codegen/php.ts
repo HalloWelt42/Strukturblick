@@ -85,8 +85,11 @@ function klasseSchreiben(k: Klasse, o: Codeoptionen): string[] {
   return z;
 }
 
+/** readonly class gibt es ab 8.2; sonst trägt Klasse::fromArray(...) (first-class callable) ab 8.1 */
+const voraussetzung = (o: Codeoptionen): string => `PHP ab ${o.unveraenderlich ? "8.2" : "8.1"}`;
+
 function kopf(o: Codeoptionen, mitDatum: boolean): string[] {
-  return ["<?php", "", "declare(strict_types=1);", "", ...(o.namensraum ? [`namespace ${o.namensraum};`, ""] : []), ...(mitDatum ? ["use DateTimeImmutable;", ""] : []), `// ${o.kopf}`, ""];
+  return ["<?php", "", "declare(strict_types=1);", "", ...(o.namensraum ? [`namespace ${o.namensraum};`, ""] : []), ...(mitDatum ? ["use DateTimeImmutable;", ""] : []), `// ${o.kopf}`, `// Braucht ${voraussetzung(o)}`, ""];
 }
 
 const brauchtDatum = (ks: readonly Klasse[]): boolean => ks.some((k) => k.felder.some((f) => JSON.stringify(f.typ).includes('"datum"') || JSON.stringify(f.typ).includes('"zeitpunkt"')));
@@ -105,6 +108,6 @@ export const PHP: Codeziel = {
     const einlesen = w.art === "klasse"
       ? `$daten = json_decode($json, true, flags: JSON_THROW_ON_ERROR);\n$${variable(o.dateistamm) || "wurzel"} = ${w.name}::fromArray($daten);`
       : `$daten = json_decode($json, true, flags: JSON_THROW_ON_ERROR);\n$liste = ${umwandeln(w, "$daten") ?? "$daten"};`;
-    return { dateien, abbildung: abbildungen(m, (f) => (f.typ.art === "liste" ? `${eigenschaftstyp(f)}, im PHPDoc ${doktyp(f.typ)}` : eigenschaftstyp(f))), einlesen, hinweis: "Listentypen und Grenzen aus dem Schema stehen als PHPDoc am Konstruktor." };
+    return { dateien, abbildung: abbildungen(m, (f) => (f.typ.art === "liste" ? `${eigenschaftstyp(f)}, im PHPDoc ${doktyp(f.typ)}` : eigenschaftstyp(f))), einlesen, hinweis: "Listentypen und Grenzen aus dem Schema stehen als PHPDoc am Konstruktor.", voraussetzung: voraussetzung(o) };
   },
 };

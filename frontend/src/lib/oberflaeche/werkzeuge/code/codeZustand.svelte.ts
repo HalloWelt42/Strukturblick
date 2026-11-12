@@ -20,6 +20,16 @@ export interface Codeergebnis {
   readonly modell: Klassenmodell;
   readonly ausgabe: Codeausgabe;
   readonly quelle: string;
+  /** Fassung des Quellschemas aus $schema ("JSON Schema 2020-12", "JSON Schema Draft-07") */
+  readonly schemafassung: string;
+}
+
+/** Fassung eines JSON Schemas nach seiner $schema-Angabe */
+function schemafassung(schema: unknown): string {
+  const s = typeof schema === "object" && schema !== null ? (schema as Record<string, unknown>).$schema : undefined;
+  if (typeof s !== "string") return "JSON Schema ohne Fassungsangabe";
+  const m = /draft\/(\d{4}-\d{2})|draft-0?(\d+)/.exec(s);
+  return m ? `JSON Schema ${m[1] ?? `Draft-${m[2].padStart(2, "0")}`}` : "JSON Schema";
 }
 
 export class CodeZustand {
@@ -73,7 +83,7 @@ export class CodeZustand {
     const modell = ausJsonSchema(schema, wurzel);
     const optionen: Codeoptionen = { wurzelname: wurzel, namensraum: this.namensraum.trim(), unveraenderlich: this.unveraenderlich, jeKlasse: this.jeKlasse, kopf: `Erzeugt von Strukturblick ${FASSUNG} aus ${quelle}`, dateistamm: wurzel.replace(/(\p{Ll})(\p{Lu})/gu, "$1_$2").toLowerCase() };
     const ergebnis: Codeergebnis | { ok: false; fehler: string } = modell.klassen.length
-      ? { ok: true, modell, ausgabe: codeziel(this.ziel).schreiben(modell, optionen), quelle }
+      ? { ok: true, modell, ausgabe: codeziel(this.ziel).schreiben(modell, optionen), quelle, schemafassung: schemafassung(schema) }
       : { ok: false, fehler: "Keine Objekte im Schema: Code erzeugen braucht mindestens ein Objekt mit Feldern." };
     this.merk = { schluessel, analyse: a, ergebnis };
     return ergebnis;

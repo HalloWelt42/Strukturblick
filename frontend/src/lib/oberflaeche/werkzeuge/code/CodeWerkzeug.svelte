@@ -11,6 +11,7 @@
   import { herunterladen } from "../../schale/dateien";
   import CodeAnzeige from "../../bausteine/CodeAnzeige.svelte";
   import { anzahl } from "../../ansichten/tabelle/zahlen";
+  import { FASSUNG } from "../../../zustand/app";
   import { codeZustand } from "./codeZustand.svelte";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
@@ -107,7 +108,12 @@
           {:else}
             <i class="fa-solid fa-file-code"></i> <span class="mono">{datei.name}</span>
           {/if}
-          <span class="rechts klein text-3">{anzahl(e.modell.klassen.length)} {e.modell.klassen.length === 1 ? "Klasse" : "Klassen"}, {anzahl(zeilen)} Zeilen</span>
+          <span class="rechts cg-kopf-rechts">
+            <span class="abzeichen" title="Ab dieser Fassung läuft der Code; steht auch im Kopf jeder Datei">{e.ausgabe.voraussetzung}</span>
+            <span class="abzeichen zweit" title="Fassung des Schemas, aus dem der Code entstand ({e.quelle})">{e.schemafassung}</span>
+            <span class="abzeichen zweit" title="Fassung des Erzeugers">Strukturblick {FASSUNG}</span>
+            <span class="klein text-3">{anzahl(e.modell.klassen.length)} {e.modell.klassen.length === 1 ? "Klasse" : "Klassen"}, {anzahl(zeilen)} Zeilen</span>
+          </span>
         </div>
         <CodeAnzeige text={datei.text} sprache={ziel.sprache} beschriftung="Erzeugter Code: {datei.name}" />
       </section>
@@ -181,5 +187,12 @@
   }
   .cg-dateien {
     flex-wrap: wrap;
+  }
+  .cg-kopf-rechts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--a1) var(--a2);
   }
 </style>
