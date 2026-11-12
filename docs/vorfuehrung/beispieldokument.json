@@ -1,0 +1,33 @@
+{
+  "kapitel": "beispieldokument",
+  "titel": "Beispieldokument aus einem XML Schema",
+  "ticket": "STB-39",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, lieferungen.xsd im Vordergrund, Ansicht Schema",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Wie sieht ein Dokument aus, das zu diesem Schema passt? Der Knopf Beispieldokument erzeugt eins, wahlweise nur mit Pflichtteilen oder mit jedem Teil einmal.",
+      "ziel": { "anker": "schema-beispiel", "notbehelf": "Ansicht Schema, Knopf Beispieldokument" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Menü: Beispiel mit Wurzel lieferungen; Nur Pflichtteile, Jedes Teil einmal",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Jedes Teil einmal. Das Dokument landet neben dem Schema, verweist darauf und öffnet gleich im Werkzeug Validieren: keine Befunde.",
+      "ziel": { "anker": "schema-beispiel-alles", "notbehelf": "Eintrag Jedes Teil einmal" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "lieferungen.beispiel.xml, 9 Elemente; Validieren mit lieferungen.xsd, 0 Befunde",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Die Werte sind Platzhalter, halten sich aber an das Schema: die Lieferscheinnummer passt zum Muster, der Preis zu den Nachkommastellen, die Zahlweise ist ein erlaubter Wert.",
+      "ziel": { "anker": "ansicht-editor", "notbehelf": "Ansicht Editor" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "nr L-0000, zahlweise bar, plz 00000, preis 1.5, einheit Stück",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

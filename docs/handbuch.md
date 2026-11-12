@@ -120,6 +120,14 @@ Typ die Ableitungskette bis zum eingebauten Typ, Einschränkungen (Muster, Läng
 Attribute und wo der Typ verwendet wird; "Im Editor" springt zur Erklärung, "Öffnen" holt eine importierte Datei aus der
 Ablage. Zum Üben: lieferungen.xsd aus den Beispielen.
 
+"Beispieldokument" in der Ansicht Schema erzeugt ein gültiges XML-Dokument zur Wurzel, die im Elementbaum gewählt ist
+(sonst zur ersten): "Nur Pflichtteile" oder "Jedes Teil einmal". Es landet als name.beispiel.xml neben dem Schema,
+verweist darauf (xsi:schemaLocation) und öffnet gleich in Validieren. Die Werte sind Platzhalter, halten aber erlaubte
+Werte, Muster, Längen, Grenzen und Stellen ein; bei einer Auswahl steht die erste Möglichkeit, für ein abstraktes
+Element eins aus seiner Ersetzungsgruppe, für einen abstrakten Typ ein abgeleiteter (mit xsi:type). Optionale Teile,
+die sich endlos wiederholen würden, bleiben weg; über 5.000 Elemente kommen nur noch Pflichtteile dazu. Was sich nicht
+gültig erzeugen lässt (etwa ein abstrakter Typ ohne Ableitung im gelesenen Schema), nennt die Meldung.
+
 Beide Seiten stehen nebeneinander, Zeile für Zeile; Gleiches ist eingeklappt ("[2] bis [126]: 125 Einträge, gleich")
 und klappt per Klick auf. Rechts (bei wenig Breite darunter) stehen die Unterschiede mit Pfad wie
 bestellungen[nr="B-2"].bezahlt; ein Klick rollt die Seiten dorthin. Der Inspektor zeigt den gewählten Unterschied mit
