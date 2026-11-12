@@ -9,8 +9,6 @@ import { phpMiniprojekt } from "./phpProjekt";
 import { abbildungen, feldnamen, umbenannt, type Codeausgabe, type Codeoptionen, type Codeziel } from "./ziele";
 
 const EIN = "    ";
-/** Längste Zeile, in der Attribute noch neben der Eigenschaft stehen */
-const ZEILE_HOECHSTENS = 100;
 const schluesselText = (s: string): string => `'${s.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
 
 /** Als Klassenname verboten (ohne Rücksicht auf Groß- und Kleinschreibung) */
@@ -165,12 +163,8 @@ function klasseSchreiben(k: Klasse, o: Codeoptionen): string[] {
   if (doku.length) z.push(`${EIN}/**`, ...doku.map((d) => `${EIN}${d}`), `${EIN} */`);
   z.push(`${EIN}public function __construct(`);
   for (const f of felder) {
-    const eigenschaft = `public ${eigenschaftstyp(f)} $${variable(f.name)}${f.pflicht ? "" : " = null"},`;
-    const attr = o.attribute ? attribute(f).map((a) => `#[${a}]`) : [];
-    // Kurze Attribute in derselben Zeile (so ist auf einen Blick klar, wozu sie gehören), lange darüber
-    const eineZeile = `${EIN}${EIN}${[...attr, eigenschaft].join(" ")}`;
-    if (eineZeile.length <= ZEILE_HOECHSTENS) z.push(eineZeile);
-    else z.push(...attr.map((a) => `${EIN}${EIN}${a}`), `${EIN}${EIN}${eigenschaft}`);
+    if (o.attribute) for (const a of attribute(f)) z.push(`${EIN}${EIN}#[${a}]`);
+    z.push(`${EIN}${EIN}public ${eigenschaftstyp(f)} $${variable(f.name)}${f.pflicht ? "" : " = null"},`);
   }
   z.push(`${EIN}) {}`, "", `${EIN}/**`, `${EIN} * @param array<string, mixed> $daten`, `${EIN} */`, `${EIN}public static function fromArray(array $daten): self`, `${EIN}{`, `${EIN}${EIN}return new self(`);
   for (const f of felder) z.push(`${EIN}${EIN}${EIN}${variable(f.name)}: ${feldWert(f)},`);
