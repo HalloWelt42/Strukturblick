@@ -7,6 +7,8 @@ import BereinigenWerkzeug from "./bereinigen/BereinigenWerkzeug.svelte";
 import BereinigenInspektor from "./bereinigen/BereinigenInspektor.svelte";
 import RezepteWerkzeug from "./rezepte/RezepteWerkzeug.svelte";
 import RezepteInspektor from "./rezepte/RezepteInspektor.svelte";
+import ValidierenWerkzeug from "./validieren/ValidierenWerkzeug.svelte";
+import ValidierenInspektor from "./validieren/ValidierenInspektor.svelte";
 
 export interface Werkzeug {
   readonly kennung: string;
@@ -21,6 +23,15 @@ export interface Werkzeug {
 }
 
 export const WERKZEUGE: readonly Werkzeug[] = [
+  {
+    kennung: "validieren",
+    titel: "Validieren",
+    beschreibung: "Dokument gegen ein JSON Schema prüfen, Befunde mit Stelle und Vorschlag",
+    symbol: "fa-clipboard-check",
+    abschnitt: "pruefen",
+    komponente: ValidierenWerkzeug,
+    inspektor: ValidierenInspektor,
+  },
   {
     kennung: "bereinigen",
     titel: "Bereinigen",

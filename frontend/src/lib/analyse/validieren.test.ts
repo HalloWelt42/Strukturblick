@@ -68,3 +68,16 @@ describe("Validieren", () => {
     expect(schemaLesen('{"type": "object"}').ok).toBe(true);
   });
 });
+
+describe("Beispiel-Schema des Demosatzes", () => {
+  it("meldet die Bestellungen mit mehr als drei Positionen und sonst nichts", async () => {
+    const { readFileSync } = await import("node:fs");
+    const daten = readFileSync(new URL("../../../pruefdaten/bestellungen.json", import.meta.url), "utf8");
+    const schema = JSON.parse(readFileSync(new URL("../../../pruefdaten/bestellung.schema.json", import.meta.url), "utf8"));
+    const index = format("json").lesen(daten).index!;
+    const p = pruefen(index, daten, schema);
+    if (!p.ok) throw new Error(p.fehler);
+    expect(p.befunde.length).toBe(26);
+    expect(new Set(p.befunde.map((b) => b.regel))).toEqual(new Set(["maxItems 3"]));
+  });
+});

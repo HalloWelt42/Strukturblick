@@ -1,0 +1,476 @@
+/* Gemeinsame Bausteine der Werkzeuge Validieren, Reparieren, Konvertieren und weiterer (nach entwuerfe/teile/
+   werkzeuge.css, Präfix .wz-): Optionen unter der Ansichtswahl, Fläche und Tafeln, Code mit Zeilennummern, Befunde,
+   Band und Aktionen am Fuß. Werkzeugeigenes liegt neben dem jeweiligen Werkzeug. */
+
+/* ----- Optionen unter der Ansichtswahl ------------------------------------ */
+/* Wie die Werkzeugzeile, aber mit Umbruch: in schmalen Breiten rutschen die
+   Optionen in die nächste Reihe statt seitlich zu rollen. */
+
+.wz-optionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a4);
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  flex: none;
+  min-width: 0;
+}
+.wz-option {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+  max-width: 100%;
+}
+.wz-etikett {
+  font-size: var(--klein);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.wz-optionen .segment {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.wz-optionen .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+.wz-optionen .feld {
+  min-width: 0;
+}
+.wz-optionen .feld input {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+.wz-breite-kurz {
+  width: 15ch;
+}
+.wz-breite-mittel {
+  width: 26ch;
+}
+
+/* ----- Fläche im Inhalt ---------------------------------------------------- */
+/* Füllt den Inhalt; ist es zu niedrig, rollt der Inhalt selbst. Die Fläche ist
+   ein Container: unter 700 px stehen die beiden Tafeln untereinander. */
+
+.wz-flaeche {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a3);
+  height: 100%;
+  padding: var(--a3);
+  container-type: inline-size;
+}
+.wz-flaeche > * {
+  flex: none;
+}
+.wz-flaeche > .wz-raster,
+.wz-flaeche > .wz-tafel.wz-fuellt {
+  flex: 1 0 auto;
+  min-height: 300px;
+  height: 0; /* wächst über flex, nicht über den Inhalt */
+}
+
+.wz-raster {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: var(--a3);
+  min-width: 0;
+}
+.wz-raster.wz-liste-breit {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+}
+@container (max-width: 700px) {
+  .wz-raster,
+  .wz-raster.wz-liste-breit {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+  .wz-flaeche > .wz-raster {
+    min-height: 560px;
+  }
+}
+
+/* ----- Tafel: Kopf und rollendes Feld -------------------------------------- */
+
+.wz-tafel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.wz-tafel-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  min-height: calc(var(--knopf-hoehe) + 10px);
+  padding: var(--a1) var(--a2) var(--a1) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--klein);
+  font-weight: 600;
+  flex: none;
+  position: relative;
+  z-index: 1;
+}
+.wz-tafel-kopf > i:first-child {
+  color: var(--text-3);
+}
+.wz-tafel-kopf .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  font-weight: 400;
+}
+.wz-tafel-feld {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.wz-tafel-feld.wz-mulde {
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+}
+
+/* ----- Code mit Zeilennummern ---------------------------------------------- */
+/* Jede Zeile: Nummer, Zeichen (+ oder -) im Unterschied, Text. Ohne Umbruch
+   rollt das Feld seitlich; mit .wz-umbruch brechen lange Zeilen um. */
+
+.wz-code {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  line-height: 1.65;
+  padding: var(--a2) 0 var(--a4);
+  width: max-content;
+  min-width: 100%;
+}
+.wz-z {
+  display: flex;
+  white-space: pre;
+  padding-right: var(--a4);
+}
+.wz-nr {
+  flex: none;
+  width: 6ch;
+  padding-right: var(--a3);
+  text-align: right;
+  color: var(--text-3);
+  user-select: none;
+}
+.wz-zeichen {
+  flex: none;
+  width: 2ch;
+  color: var(--text-3);
+  user-select: none;
+}
+.wz-t {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.wz-code.wz-umbruch {
+  width: auto;
+}
+.wz-umbruch .wz-z {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.wz-z.wz-markiert {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .wz-z.wz-markiert {
+  background: var(--akzent-weich);
+}
+.wz-z.wz-hinzu {
+  background: var(--diff-hinzu);
+}
+.wz-z.wz-weg {
+  background: var(--diff-weg);
+}
+.wz-z.wz-hinzu .wz-zeichen,
+.wz-z.wz-weg .wz-zeichen {
+  color: var(--text-1);
+  font-weight: 700;
+}
+.wz-z.wz-ruhig .wz-t {
+  color: var(--text-3);
+}
+.wz-ausgelassen {
+  padding: 2px 0 2px calc(6ch + var(--a3));
+  font-family: var(--schrift);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* Stelle in der Zeile: falsch (Wellenlinie) und neu eingefügt (unterstrichen) */
+.wz-falsch {
+  text-decoration: underline wavy var(--fehler);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.wz-falsch.warn {
+  text-decoration-color: var(--warn);
+}
+.wz-neu {
+  background: var(--gut-weich);
+  color: var(--gut);
+  font-weight: 700;
+  text-decoration: underline var(--gut);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* Anmerkung unter einer Codezeile */
+.wz-anmerkung {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a2);
+  margin: 2px var(--a3) var(--a1) calc(6ch + 2ch);
+  padding: var(--a1) var(--a3);
+  background: var(--fehler-weich);
+  color: var(--fehler);
+  font-family: var(--schrift);
+  font-size: var(--klein);
+  white-space: normal;
+  max-width: 64ch;
+}
+.wz-anmerkung.warn {
+  background: var(--warn-weich);
+  color: var(--warn);
+}
+
+/* Syntaxfarben über die Typmarken */
+.wz-schl {
+  color: var(--typ-schluessel);
+  font-weight: 600;
+}
+.wz-sw {
+  color: var(--typ-liste);
+  font-weight: 600;
+}
+.wz-typ {
+  color: var(--typ-objekt);
+}
+.wz-var {
+  color: var(--typ-bool);
+}
+.wz-fn {
+  color: var(--typ-zahl);
+}
+.wz-kom {
+  color: var(--typ-null);
+  font-style: italic;
+}
+.wz-kom .wz-sw,
+.wz-kom .wz-typ {
+  font-style: italic;
+}
+.wz-trenn {
+  color: var(--text-3);
+}
+
+/* ----- Befunde (Validieren, Reparieren) ------------------------------------ */
+
+.wz-befund {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--a1) var(--a3);
+  padding: var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  color: var(--text-1);
+  text-decoration: none;
+  cursor: pointer;
+}
+/* Befund als Knopf: ohne Rahmen und Füllung des Browsers; Darüberfahren und Auswahl (spezifischer) färben weiter */
+button.wz-befund {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  text-align: left;
+}
+.wz-befund:hover {
+  background: var(--flaeche-wechsel);
+}
+.wz-befund.gewaehlt {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .wz-befund.gewaehlt {
+  background: var(--akzent-weich);
+}
+.wz-befund > .wz-symbol {
+  grid-row: 1 / span 4;
+  width: 1.4em;
+  text-align: center;
+  font-size: var(--titel);
+  line-height: 1.2;
+}
+.wz-symbol.fehler {
+  color: var(--fehler);
+}
+.wz-symbol.warn {
+  color: var(--warn);
+}
+.wz-symbol.gut {
+  color: var(--gut);
+}
+.wz-befund-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  min-width: 0;
+}
+.wz-pfad {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+.wz-meldung {
+  font-weight: 600;
+}
+.wz-soll-ist {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px var(--a3);
+  margin: 0;
+  font-size: var(--klein);
+}
+.wz-soll-ist dt {
+  color: var(--text-3);
+}
+.wz-soll-ist dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.wz-befund-fuss {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a3);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.wz-befund-fuss a {
+  color: var(--akzent);
+  text-decoration: none;
+  font-weight: 600;
+}
+.wz-befund-fuss a:hover {
+  text-decoration: underline;
+}
+
+/* Befund je Zeile (Reparieren): Zeilennummer vorn, ruhige Zeilen schmal */
+.wz-zeile-nr {
+  grid-row: 1 / span 4;
+  min-width: 4.5em;
+  font-size: var(--klein);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.wz-zeile-nr strong {
+  display: block;
+  font-family: var(--schrift-mono);
+  font-size: var(--titel);
+  color: var(--text-1);
+}
+.wz-befund.wz-still .wz-meldung {
+  font-weight: 400;
+  color: var(--text-2);
+}
+.wz-befund-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--a1);
+  font-size: var(--klein);
+}
+.wz-befund-liste li {
+  display: flex;
+  gap: var(--a2);
+  align-items: baseline;
+}
+.wz-befund-liste li > i {
+  width: 1.2em;
+  text-align: center;
+  flex: none;
+}
+
+/* ----- Band: kurzer Hinweis über den Tafeln -------------------------------- */
+
+.wz-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.wz-band > i {
+  color: var(--gut);
+}
+.wz-band strong {
+  color: var(--text-1);
+}
+.wz-band .rechts {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a2);
+  align-items: center;
+}
+
+/* ----- Aktionen am Fuß des Werkzeugs --------------------------------------- */
+
+.wz-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  min-height: calc(var(--knopf-hoehe) + 12px);
+  padding: 6px var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  flex: none;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.wz-aktionen > i {
+  color: var(--text-3);
+}
+.wz-aktionen .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+  align-items: center;
+}
+
+/* ----- Kleinigkeiten im Inspektor ------------------------------------------ */
+
+.wz-satz {
+  margin: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+.wz-abstand {
+  margin-top: var(--a2);
+}

@@ -27,4 +27,9 @@ export const BEISPIELE: readonly Beispiel[] = [
     beschreibung: "Dienste des Webshops in YAML mit Anker und Verweisen",
     laden: async () => (await import("../../../pruefdaten/dienste.yaml?raw")).default,
   },
+  {
+    name: "bestellung.schema.json",
+    beschreibung: "JSON Schema eines erfundenen Lieferdienstes für die Bestellungen (höchstens drei Positionen); zum Üben im Werkzeug Validieren",
+    laden: async () => (await import("../../../pruefdaten/bestellung.schema.json?raw")).default,
+  },
 ];
