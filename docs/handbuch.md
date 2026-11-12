@@ -459,8 +459,9 @@ Gerät oder nach dem Leeren des Browsers holt "Einspielen" alles zurück. Das ge
   Adresse der Kellerwolke, an der die App hängt.
 - Ein großes Dokument wird nicht abgelegt (Fuß zeigt dauerhaft "Wird abgelegt"): Grenze der Ablage 100 MB je
   Dokument, darüber antwortet sie mit 413; der Vorbau reicht ohne `koerper_max` höchstens 200 MB weiter.
-- Ein offener Tab zeigt nach dem Ausrollen noch die alte Fassung: er lädt von selbst neu, sobald alles abgelegt ist;
-  solange ein Dokument noch "Wird abgelegt" zeigt, wartet er.
+- Ein offener Tab zeigt nach dem Ausrollen noch die alte Fassung: von selbst lädt er nur in den ersten zehn Sekunden
+  nach dem Start; sonst fragt unten rechts ein Band (Jetzt neu laden, Später), damit kein laufender Vorgang abbricht.
+  Nach Später zeigt der Fuß "alt → neu", ein Klick darauf lädt neu. Neu laden legt vorher alles ab.
 - Kopieren eines Pfads meldet "Kopieren ging nicht": der Browser gibt die Zwischenablage nur über https oder
   localhost und nach einem Klick oder Tastendruck frei; der Pfad steht dann im Inspektor zum Markieren.
 - Die Abfrage meldet "jq brauchte mehr Speicher": jq sammelt zu viele Werte auf einmal, etwa [range(...)] über

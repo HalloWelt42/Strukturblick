@@ -7,7 +7,7 @@ import { BrowserAblage, type Ablageereignisse } from "./ablage-browser";
 import { SpeicherAblage } from "./ablage-speicher";
 
 export type { Ablageereignisse } from "./ablage-browser";
-export { fassungOhneServerVerfolgen } from "./fassung-ohne-server";
+export { fassungOhneServerVerfolgen, neuLadenOhneServer } from "./fassung-ohne-server";
 
 export type Bauart = "server" | "eigenstaendig";
 

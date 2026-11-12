@@ -116,7 +116,7 @@ Eine Facette zählt, welche Werte in einer Spalte stehen und wie oft. Ein Klick 
 
 ### Fassung
 
-Die Fassung ist die Versionsnummer von Strukturblick; sie steht rechts im Fuß und im Hinweis beim Start. Gibt es eine neue, lädt die App von selbst neu, sobald alles abgelegt ist. Mehr bei [Mit und ohne Server](#bauarten/neue-fassung-laedt-von-selbst).
+Die Fassung ist die Versionsnummer von Strukturblick; sie steht rechts im Fuß und im Hinweis beim Start. Gibt es eine neue, fragt ein Band unten rechts, ob jetzt neu geladen wird; von selbst lädt sie nur gleich nach dem Start. Mehr bei [Mit und ohne Server](#bauarten/neue-fassung-erst-fragen-dann-laden).
 
 ### Fokus
 

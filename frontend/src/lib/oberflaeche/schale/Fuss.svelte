@@ -5,6 +5,7 @@
   import { kannReparieren } from "../../analyse/reparatur/reparatur";
   import { lexikon } from "../lexikon/lexikonZustand.svelte";
   import { ki } from "../../zustand/ki.svelte";
+  import { fassungsstand } from "../../zustand/fassung.svelte";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const a = $derived(blatt?.analyse ?? null);
@@ -46,7 +47,11 @@
     {#if ki.verfuegbar && ki.stand}<span class="teil" title={ki.stand.bereit ? `KI über die Leitstelle mit ${ki.stand.modellname}` : ki.stand.meldung}><span class="punkt" class:warn={!ki.stand.bereit}></span> Leitstelle</span>{/if}
     <button class="teil fuss-knopf" class:aktiv={lexikon.offen} title="Lexikon: Hilfe zu allem in Strukturblick, durchsuchbar (F1)" onclick={() => lexikon.umschalten()}><i class="fa-solid fa-circle-question"></i> Hilfe</button>
     <a class="teil profil" href={URHEBER.profil} target="_blank" rel="noopener" title="Profil von {URHEBER.name} mit dem Quelltext (neuer Tab)"><i class="fa-brands fa-github"></i> {URHEBER.name}</a>
-    <span class="teil mono">{FASSUNG}</span>
+    {#if fassungsstand.neu && !fassungsstand.fragen}
+      <button class="teil fuss-knopf mono" title="Neue Fassung {fassungsstand.neu} ist da; neu laden legt vorher alles ab" onclick={() => void fassungsstand.neuLaden()}>{FASSUNG} <i class="fa-solid fa-arrow-right"></i> {fassungsstand.neu}</button>
+    {:else}
+      <span class="teil mono">{FASSUNG}</span>
+    {/if}
   </span>
 </footer>
 

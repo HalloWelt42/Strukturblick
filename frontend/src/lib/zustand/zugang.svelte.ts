@@ -1,8 +1,9 @@
 // Zugang zur App je Bauart: ohne Server geht es sofort los; mit Server erst Anmeldung (Kellerwolke-Konto) oder erste
 // Einrichtung, dann Start des Arbeitsplatzes mit der Ablage auf dem Server. Dazu der Abgleich der Fassung: eine neue
-// Fassung lädt von selbst, aber nie, solange etwas noch nicht abgelegt ist.
+// Fassung lädt nur kurz nach dem Start von selbst, später fragt ein Band (STB-61).
 
-import { BAUART, FASSUNG, ablageFuerBauart, ausweichAblage, fassungOhneServerVerfolgen, serverteil, type Serverteil } from "../dienste/bauart";
+import { BAUART, FASSUNG, ablageFuerBauart, ausweichAblage, fassungOhneServerVerfolgen, neuLadenOhneServer, serverteil, type Serverteil } from "../dienste/bauart";
+import { fassungsstand, vonSelbstErlaubt } from "./fassung.svelte";
 import { arbeitsplatz } from "./arbeitsplatz.svelte";
 import { ablageverwaltung } from "./ablageverwaltung.svelte";
 import { meldungen } from "./meldungen.svelte";
@@ -30,13 +31,22 @@ class Zugang {
   /** Name des angemeldeten Kontos, sonst null */
   readonly konto = $derived(this.teil?.sitzung.konto?.name ?? null);
 
+  /** Neuere Fassung, die die Bauart ohne Server auf der Startseite gefunden hat */
+  private neuOhneServer = $state<string | null>(null);
+
+  /** Startet Sitzung und Fassungsabgleich. Von selbst neu geladen wird nur kurz nach dem Start, sonst fragt das Band
+   *  (STB-61, zustand/fassung.svelte.ts). */
   async starten(): Promise<void> {
     this.teil = await serverteil();
-    const ruhig = () => arbeitsplatz.blaetter.every((b) => b.gespeichert);
-    if (this.teil) {
-      this.teil.fassungVerfolgen(FASSUNG, ruhig);
-      await this.teil.sitzungStarten();
-    } else fassungOhneServerVerfolgen(FASSUNG, ruhig);
+    const teil = this.teil;
+    if (teil) {
+      teil.fassungVerfolgen(FASSUNG, vonSelbstErlaubt);
+      fassungsstand.verbinden({ neu: () => teil.fassung.neu, laden: () => location.reload() });
+      await teil.sitzungStarten();
+    } else {
+      fassungOhneServerVerfolgen(FASSUNG, vonSelbstErlaubt, (neu) => (this.neuOhneServer = neu));
+      fassungsstand.verbinden({ neu: () => this.neuOhneServer, laden: () => this.neuOhneServer && neuLadenOhneServer(this.neuOhneServer) });
+    }
   }
 
   /** Startet den Arbeitsplatz einmal, sobald der Zugang bereit ist (vom Einstieg aus einem Effekt gerufen). Tolerant:

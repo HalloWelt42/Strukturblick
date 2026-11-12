@@ -51,11 +51,12 @@ Thema und Schriftgröße (Zahnrad oben rechts) und die zuletzt benutzten Einträ
 
 Eine Sicherung aus "Alles sichern" passt in beide Bauarten. So ziehst du mit allem vom Browser auf den Server um oder umgekehrt: sichern, in der anderen Bauart "Einspielen", fertig.
 
-## Neue Fassung lädt von selbst
+## Neue Fassung: erst fragen, dann laden
 
-Rechts im Fuß steht die Fassung von Strukturblick, die du gerade benutzt. Gibt es eine neue, kommt sie von allein:
+Rechts im Fuß steht die Fassung von Strukturblick, die du gerade benutzt. Ohne Server prüft die Seite beim Start, wenn du das Fenster wieder nach vorn holst, und alle fünf Minuten; mit Server meldet der Server die neue Fassung.
 
-- **Ohne Server** prüft die Seite beim Start, wenn du das Fenster wieder nach vorn holst, und alle fünf Minuten, solange es vorn ist. Gleich nach dem Start lädt sie sofort neu; später erst, wenn nichts mehr abzulegen ist.
-- **Mit Server** meldet der Server die neue Fassung, und der Tab lädt neu, sobald alles abgelegt ist.
+- **Gleich nach dem Start** (in den ersten zehn Sekunden, wenn alles abgelegt ist) lädt die Seite die neue Fassung von selbst; da hast du noch nichts getan, was verloren gehen könnte. Je Fassung versucht sie das nur einmal, damit ein Zwischenspeicher, der noch die alte Seite liefert, keine Endlosschleife auslöst.
+- **Danach nie von selbst.** Unten rechts erscheint ein Band "Neue Fassung ... ist da" mit **Jetzt neu laden** und **Später**. Neu laden legt vorher alles ab; laufende Vorgänge wie ein Erzeugen oder eine Frage an die KI enden dabei, darum entscheidest du den Zeitpunkt.
+- **Später** blendet das Band für diese Fassung aus. Der Fuß zeigt dann "2.34.1 → 2.35.0"; ein Klick darauf lädt neu, wann es dir passt.
 
-Solange ein Dokument noch "Wird abgelegt" zeigt, wartet das Neuladen also; verloren geht nichts. Nach dem Neuladen bist du dank [Adresse](#adressen) wieder beim selben Dokument, in derselben Ansicht und an derselben Stelle, und der Verlauf ist auch noch da. Je Fassung versucht es die Seite nur einmal, damit ein Zwischenspeicher, der noch die alte Seite liefert, keine Endlosschleife auslöst.
+Angeboten wird nur eine wirklich neuere Fassung. Meldet der Server eine ältere, etwa beim Entwickeln, bleibt alles, wie es ist. Nach dem Neuladen bist du dank [Adresse](#adressen) wieder beim selben Dokument, in derselben Ansicht und an derselben Stelle, und der Verlauf ist auch noch da.

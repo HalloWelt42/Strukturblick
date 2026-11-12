@@ -21,6 +21,7 @@
   import { ki } from "./lib/zustand/ki.svelte";
   import { adresseVerfolgen } from "./lib/oberflaeche/schale/adressleitung.svelte";
   import LexikonFenster from "./lib/oberflaeche/lexikon/LexikonFenster.svelte";
+  import FassungsBand from "./lib/oberflaeche/schale/FassungsBand.svelte";
 
   // Sobald der Zugang bereit ist (ohne Server sofort, mit Server nach der Anmeldung), startet der Arbeitsplatz einmal
   $effect(() => {
@@ -79,6 +80,7 @@
 </Ablagezone>
 {/if}
 <Meldung />
+<FassungsBand />
 <Kontextmenue />
 <LexikonFenster />
 {#if starthinweis.offen}<StartHinweis />{/if}
