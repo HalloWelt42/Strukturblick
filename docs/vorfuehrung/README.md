@@ -67,4 +67,5 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `beispieldokument.json` | Beispieldokument aus einem XML Schema (STB-39) | durchgespielt 12.11.2026 |
 | `graph.json` | Daten als Graph mit Fokus (STB-45) | durchgespielt 12.11.2026 |
 | `code.json` | Code aus Daten und Schema erzeugen (STB-46) | durchgespielt 12.11.2026 |
+| `tabelle-verschachtelt.json` | Objekte aufklappen, in Listen hineingehen (STB-49) | durchgespielt 12.11.2026 |
 | `adressen.json` | Deeplinks: Adresse zeigt Ort, Neuladen und Zurück führen dorthin (STB-48) | durchgespielt 12.11.2026 |

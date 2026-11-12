@@ -6,9 +6,12 @@ import { inhalt, istBehaelter, KEIN, KnotenArt, schluessel, type Strukturindex }
 import { teileAus, teileVon, zeigerAus, type Teil } from "../kern/pfade";
 
 export interface Spalte {
+  /** Anzeige und Schlüssel der Spalte; aufgeklappte Objekte mit Punkt ("kunde.plz") */
   readonly name: string;
   /** true: die Spalte zeigt den Eintrag selbst (Listen aus einfachen Werten oder gemischte Einträge) */
   readonly selbst: boolean;
+  /** Schlüssel vom Eintrag bis zur Zelle: ["nr"], aufgeklappt ["kunde", "plz"]; leer bei `selbst` */
+  readonly pfad: readonly string[];
 }
 
 export interface Tabelle {
@@ -22,11 +25,12 @@ export interface Tabelle {
   readonly zeileImText: Int32Array;
   /** Vereinigung der Schlüssel in Reihenfolge des ersten Auftretens */
   readonly spalten: readonly Spalte[];
-  /** Spalte nach Schlüssel (ohne die Spalte für Einträge selbst) */
+  /** Spalte nach Name (ohne die Spalte für Einträge selbst) */
   readonly spalteNach: ReadonlyMap<string, number>;
   /** Spalte für Einträge, die keine Objekte sind; -1 wenn es keine gibt */
   readonly wertSpalte: number;
-  /** Je Knoten des Index: Spalte, wenn der Knoten eine Zelle dieser Tabelle ist, sonst -1 */
+  /** Je Knoten des Index: Spalte, wenn der Knoten eine Zelle dieser Tabelle ist, sonst -1 (auch aufgeklappte Objekte,
+   *  deren Felder eigene Spalten sind) */
   readonly spalteVon: Int32Array;
 }
 
@@ -82,7 +86,12 @@ function ersteGleichartigeListe(index: Strukturindex): number {
 
 // ----- Modell -------------------------------------------------------------------------------------------------------
 
-export function tabelleBauen(index: Strukturindex, text: string, liste: number): Tabelle {
+/**
+ * Tabelle einer Liste. `aufgeklappt`: Namen von Spalten, deren Objekte in Spalten je Feld erscheinen ("kunde" gibt
+ * kunde.name, kunde.plz ...; "kunde.adresse" klappt darin weiter auf). Ein Eintrag, dessen Wert dort kein Objekt ist,
+ * behält die Spalte selbst (etwa null).
+ */
+export function tabelleBauen(index: Strukturindex, text: string, liste: number, aufgeklappt: ReadonlySet<string> = new Set()): Tabelle {
   const n = index.kinder[liste];
   const zeilen = new Int32Array(n);
   const spalteVon = new Int32Array(index.anzahl).fill(-1);
@@ -90,25 +99,30 @@ export function tabelleBauen(index: Strukturindex, text: string, liste: number):
   const spalteNach = new Map<string, number>();
   let wertSpalte = -1;
   let i = 0;
+  const einordnen = (c: number, pfad: readonly string[]): void => {
+    const name = pfad.join(".");
+    if (index.art[c] === KnotenArt.objekt && aufgeklappt.has(name)) {
+      for (let g = index.erstesKind[c]; g !== KEIN; g = index.naechstes[g]) einordnen(g, [...pfad, schluessel(index, text, g) ?? ""]);
+      return;
+    }
+    let j = spalteNach.get(name);
+    if (j === undefined) {
+      j = spalten.length;
+      spalten.push({ name, selbst: false, pfad });
+      spalteNach.set(name, j);
+    }
+    spalteVon[c] = j;
+  };
   for (let r = index.erstesKind[liste]; r !== KEIN; r = index.naechstes[r]) {
     zeilen[i++] = r;
     if (index.art[r] !== KnotenArt.objekt) {
       if (wertSpalte < 0) {
         wertSpalte = spalten.length;
-        spalten.push({ name: WERT_SPALTE_NAME, selbst: true });
+        spalten.push({ name: WERT_SPALTE_NAME, selbst: true, pfad: [] });
       }
       continue;
     }
-    for (let c = index.erstesKind[r]; c !== KEIN; c = index.naechstes[c]) {
-      const s = schluessel(index, text, c) ?? "";
-      let j = spalteNach.get(s);
-      if (j === undefined) {
-        j = spalten.length;
-        spalten.push({ name: s, selbst: false });
-        spalteNach.set(s, j);
-      }
-      spalteVon[c] = j;
-    }
+    for (let c = index.erstesKind[r]; c !== KEIN; c = index.naechstes[c]) einordnen(c, [schluessel(index, text, c) ?? ""]);
   }
   return { liste, listeTeile: teileVon(index, text, liste), zeilen, zeileImText: zeilenImText(index, text, zeilen), spalten, spalteNach, wertSpalte, spalteVon };
 }
@@ -132,12 +146,23 @@ function zeilenImText(index: Strukturindex, text: string, zeilen: Int32Array): I
 
 // ----- Zellen -------------------------------------------------------------------------------------------------------
 
+/** Zelle unter einem Objekt: direkt oder in einem aufgeklappten Objekt darunter (das selbst keine Spalte hat). */
+function zelleIn(t: Tabelle, index: Strukturindex, o: number, spalte: number): number {
+  for (let c = index.erstesKind[o]; c !== KEIN; c = index.naechstes[c]) {
+    if (t.spalteVon[c] === spalte) return c;
+    if (t.spalteVon[c] < 0 && index.art[c] === KnotenArt.objekt) {
+      const tief = zelleIn(t, index, c, spalte);
+      if (tief !== KEIN) return tief;
+    }
+  }
+  return KEIN;
+}
+
 /** Zelle in Zeile `zeile` (Stelle) und Spalte `spalte`; KEIN, wenn die Zeile den Schlüssel nicht hat. */
 export function zelle(t: Tabelle, index: Strukturindex, zeile: number, spalte: number): number {
   const r = t.zeilen[zeile];
   if (spalte === t.wertSpalte) return index.art[r] === KnotenArt.objekt ? KEIN : r;
-  for (let c = index.erstesKind[r]; c !== KEIN; c = index.naechstes[c]) if (t.spalteVon[c] === spalte) return c;
-  return KEIN;
+  return index.art[r] === KnotenArt.objekt ? zelleIn(t, index, r, spalte) : KEIN;
 }
 
 /** Alle Zellen einer Zeile in einem Durchgang (für die Anzeige der sichtbaren Zeilen). */
@@ -148,10 +173,14 @@ export function zellenDerZeile(t: Tabelle, index: Strukturindex, zeile: number):
     aus[t.wertSpalte] = r;
     return aus;
   }
-  for (let c = index.erstesKind[r]; c !== KEIN; c = index.naechstes[c]) {
-    const j = t.spalteVon[c];
-    if (j >= 0 && aus[j] === KEIN) aus[j] = c; // doppelter Schlüssel: der erste zählt, wie beim Zeiger
-  }
+  const sammeln = (o: number): void => {
+    for (let c = index.erstesKind[o]; c !== KEIN; c = index.naechstes[c]) {
+      const j = t.spalteVon[c];
+      if (j >= 0 && aus[j] === KEIN) aus[j] = c; // doppelter Schlüssel: der erste zählt, wie beim Zeiger
+      else if (j < 0 && index.art[c] === KnotenArt.objekt) sammeln(c);
+    }
+  };
+  sammeln(r);
   return aus;
 }
 
@@ -167,13 +196,37 @@ export interface Vorschau {
   readonly text: string;
 }
 
-/** Was eine Zelle zeigt: einfache Werte als Inhalt, verschachtelte als kurze Beschreibung. */
+/** So viele Teile zeigt die Vorschau eines Objekts oder einer Liste, dann "..." */
+const VORSCHAU_TEILE = 4;
+
+/** Name eines Eintrags für Pfadanzeigen: sein erster einfacher Wert (B-24018), sonst null */
+export function eintragName(index: Strukturindex, text: string, k: number): string | null {
+  if (index.art[k] !== KnotenArt.objekt) return istBehaelter(index.art[k]) ? null : inhalt(index, text, k);
+  for (let c = index.erstesKind[k]; c !== KEIN; c = index.naechstes[c]) if (!istBehaelter(index.art[c])) return inhalt(index, text, c);
+  return null;
+}
+
+/** Kurzer Inhalt für die Vorschau: einfacher Wert selbst, Liste [n]; ein Objekt als Listeneintrag mit seinem ersten
+ *  einfachen Wert (Brot), als Feld eines Objekts nur {...} */
+function kurzInhalt(index: Strukturindex, text: string, k: number, eintrag: boolean): string {
+  if (index.art[k] === KnotenArt.liste) return `[${index.kinder[k]}]`;
+  if (index.art[k] !== KnotenArt.objekt) return inhalt(index, text, k);
+  if (!eintrag) return "{...}";
+  for (let c = index.erstesKind[k]; c !== KEIN; c = index.naechstes[c]) if (!istBehaelter(index.art[c])) return inhalt(index, text, c);
+  return "{...}";
+}
+
+/** Was eine Zelle zeigt: einfache Werte als Inhalt, verschachtelte als kurzer Auszug ihres Inhalts:
+ *  Objekt {Lena Hartmann, 04109, Leipzig}, Liste [2] Brot Dinkel, Honig (je Eintrag sein erster einfacher Wert). */
 export function vorschau(index: Strukturindex, text: string, k: number): Vorschau {
   const art = index.art[k] as KnotenArt;
-  const n = index.kinder[k];
-  if (art === KnotenArt.objekt) return { art, text: `Objekt, ${n} Schlüssel` };
-  if (art === KnotenArt.liste) return { art, text: `Liste, ${n} ${n === 1 ? "Eintrag" : "Einträge"}` };
-  return { art, text: inhalt(index, text, k) };
+  if (!istBehaelter(art)) return { art, text: inhalt(index, text, k) };
+  const teile: string[] = [];
+  let c = index.erstesKind[k];
+  for (; c !== KEIN && teile.length < VORSCHAU_TEILE; c = index.naechstes[c]) teile.push(kurzInhalt(index, text, c, art === KnotenArt.liste));
+  const mehr = c !== KEIN ? ", ..." : "";
+  if (art === KnotenArt.objekt) return { art, text: `{${teile.join(", ")}${mehr}}` };
+  return { art, text: `[${index.kinder[k]}]${teile.length ? ` ${teile.join(", ")}${mehr}` : ""}` };
 }
 
 // ----- Zeiger -------------------------------------------------------------------------------------------------------
@@ -181,7 +234,7 @@ export function vorschau(index: Strukturindex, text: string, k: number): Vorscha
 /** Zeiger auf eine Zelle; die Spalte für Einträge selbst zeigt auf die Zeile. Gilt auch für fehlende Zellen. */
 export function zellZeiger(t: Tabelle, zeile: number, spalte: number): string {
   const s = t.spalten[spalte];
-  return zeigerAus(s.selbst ? [...t.listeTeile, zeile] : [...t.listeTeile, zeile, s.name]);
+  return zeigerAus([...t.listeTeile, zeile, ...s.pfad]);
 }
 
 export interface Ort {
@@ -199,8 +252,12 @@ export function ortVon(t: Tabelle, zeiger: string | null): Ort | null {
   const zeile = Number(teile[0]);
   if (!Number.isInteger(zeile) || zeile < 0 || zeile >= t.zeilen.length || String(zeile) !== teile[0]) return null;
   if (teile.length === 1) return { zeile, spalte: t.wertSpalte };
-  const spalte = t.spalteNach.get(teile[1]);
-  return { zeile, spalte: spalte ?? -1 };
+  // Längster Spaltenpfad, der zum Zeiger passt (aufgeklappt: kunde.plz vor kunde)
+  for (let n = teile.length - 1; n >= 1; n--) {
+    const spalte = t.spalteNach.get(teile.slice(1, 1 + n).map(String).join("."));
+    if (spalte !== undefined && t.spalten[spalte].pfad.length === n) return { zeile, spalte };
+  }
+  return { zeile, spalte: -1 };
 }
 
 // ----- Sicht: Filter und Sortierung ---------------------------------------------------------------------------------
@@ -237,14 +294,8 @@ function gefiltert(t: Tabelle, index: Strukturindex, text: string, nadel: string
   if (nadel === "") return Int32Array.from({ length: n }, (_, i) => i);
   const treffer = new Int32Array(n);
   let m = 0;
-  const passt = (k: number): boolean => !istBehaelter(index.art[k]) && inhalt(index, text, k).toLocaleLowerCase("de").includes(nadel);
-  for (let i = 0; i < n; i++) {
-    const r = t.zeilen[i];
-    let ja = false;
-    if (index.art[r] !== KnotenArt.objekt) ja = passt(r);
-    else for (let c = index.erstesKind[r]; c !== KEIN && !ja; c = index.naechstes[c]) ja = passt(c);
-    if (ja) treffer[m++] = i;
-  }
+  const passt = (k: number): boolean => k !== KEIN && !istBehaelter(index.art[k]) && inhalt(index, text, k).toLocaleLowerCase("de").includes(nadel);
+  for (let i = 0; i < n; i++) if (zellenDerZeile(t, index, i).some(passt)) treffer[m++] = i;
   return treffer.slice(0, m);
 }
 

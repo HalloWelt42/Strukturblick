@@ -238,6 +238,15 @@
 .tb-kopf-knopf.aktiv {
   color: var(--akzent);
 }
+/* Mehrere Knöpfe rechts in der Typzeile: nur der erste schiebt nach rechts */
+.tb-kopf-knopf + .tb-kopf-knopf {
+  margin-left: 0;
+}
+/* Aufgeklappte Spalte: Herkunft ("kunde.") gedämpft vor dem Feld */
+.tb-herkunft {
+  color: var(--text-3);
+  font-weight: 400;
+}
 .tb-profil {
   display: flex;
   flex-wrap: wrap;
@@ -327,6 +336,26 @@
 }
 .tb-verschachtelt {
   font-size: var(--klein);
+}
+/* Knopf in Zellen mit Liste (hineingehen) oder Objekt (aufklappen): ruhig, beim Darüberfahren deutlich */
+.tb-zell-knopf {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--knopf-hoehe) - 8px);
+  height: calc(var(--knopf-hoehe) - 12px);
+  border: 0;
+  border-radius: var(--r-knopf);
+  background: transparent;
+  color: var(--text-3);
+  font-size: var(--klein);
+  cursor: pointer;
+}
+.tb-zell-knopf:hover {
+  background: var(--akzent-weich);
+  color: var(--akzent);
 }
 .tb-zeile > .tb-zelle.tb-aktiv {
   outline: 2px solid var(--akzent-flaeche);

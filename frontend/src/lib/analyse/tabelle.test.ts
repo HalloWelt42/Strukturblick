@@ -72,14 +72,36 @@ describe("Tabellenmodell", () => {
     expect(t.spalten.map((s) => s.name)).toEqual(["a", WERT_SPALTE_NAME]);
     expect(inhalt(index, text, zelle(t, index, 1, 1))).toBe("7");
     expect(zelle(t, index, 0, 1)).toBe(KEIN);
-    expect(vorschau(index, text, zelle(t, index, 2, 1)).text).toBe("Liste, 2 Einträge");
+    expect(vorschau(index, text, zelle(t, index, 2, 1)).text).toBe("[2] 1, 2");
   });
-  it("beschreibt verschachtelte Werte kurz", () => {
-    const text = '[{"o": {"a": 1, "b": 2, "c": 3}, "l": [1]}]';
+  it("zeigt verschachtelte Werte als kurzen Auszug ihres Inhalts", () => {
+    const text = '[{"o": {"a": 1, "b": "zwei", "c": {"x": 1}}, "l": [1], "p": [{"artikel": "Brot", "menge": 1}, {"artikel": "Honig"}, 3, [], 5, 6], "leer": [], "nichts": {}}]';
     const index = json(text);
     const t = tabelleBauen(index, text, 0);
-    expect(vorschau(index, text, zelle(t, index, 0, 0))).toEqual({ art: KnotenArt.objekt, text: "Objekt, 3 Schlüssel" });
-    expect(vorschau(index, text, zelle(t, index, 0, 1)).text).toBe("Liste, 1 Eintrag");
+    expect(vorschau(index, text, zelle(t, index, 0, 0))).toEqual({ art: KnotenArt.objekt, text: "{1, zwei, {...}}" });
+    expect(vorschau(index, text, zelle(t, index, 0, 1)).text).toBe("[1] 1");
+    expect(vorschau(index, text, zelle(t, index, 0, 2)).text).toBe("[6] Brot, Honig, 3, [0], ...");
+    expect(vorschau(index, text, zelle(t, index, 0, 3)).text).toBe("[0]");
+    expect(vorschau(index, text, zelle(t, index, 0, 4)).text).toBe("{}");
+  });
+  it("klappt Objekte in Spalten je Feld auf, auch tiefer, und findet Zellen, Zeiger und Orte dort", () => {
+    const text = '[{"nr": 1, "kunde": {"name": "Anna", "adresse": {"plz": "04109"}}}, {"nr": 2, "kunde": null}, {"nr": 3, "kunde": {"name": "Bert", "ort": "Halle"}}]';
+    const index = json(text);
+    const flach = tabelleBauen(index, text, 0);
+    expect(flach.spalten.map((s) => s.name)).toEqual(["nr", "kunde"]);
+    const t = tabelleBauen(index, text, 0, new Set(["kunde", "kunde.adresse"]));
+    expect(t.spalten.map((s) => s.name)).toEqual(["nr", "kunde.name", "kunde.adresse.plz", "kunde", "kunde.ort"]);
+    expect(t.spalten[2].pfad).toEqual(["kunde", "adresse", "plz"]);
+    expect(inhalt(index, text, zelle(t, index, 0, 2))).toBe("04109");
+    expect(inhalt(index, text, zelle(t, index, 1, 3))).toBe("null");
+    expect(zelle(t, index, 0, 3)).toBe(KEIN);
+    expect(inhalt(index, text, zelle(t, index, 2, 4))).toBe("Halle");
+    expect([...zellenDerZeile(t, index, 2)].map((k) => (k === KEIN ? "-" : inhalt(index, text, k)))).toEqual(["3", "Bert", "-", "-", "Halle"]);
+    expect(zellZeiger(t, 0, 2)).toBe("/0/kunde/adresse/plz");
+    expect(ortVon(t, "/0/kunde/adresse/plz")).toEqual({ zeile: 0, spalte: 2 });
+    expect(ortVon(t, "/1/kunde")).toEqual({ zeile: 1, spalte: 3 });
+    expect(sichtBerechnen(t, index, text, { filter: "halle", sortierung: null })).toEqual(Int32Array.from([2]));
+    expect(sichtBerechnen(t, index, text, { filter: "04109", sortierung: null })).toEqual(Int32Array.from([0]));
   });
   it("nimmt CSV-Spalten aus der Kopfzeile, auch wenn spätere Zeilen mehr Zellen haben", () => {
     const text = "a;b\n1;2\n3;4;5\n";

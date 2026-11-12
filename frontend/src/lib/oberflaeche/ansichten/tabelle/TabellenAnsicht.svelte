@@ -5,7 +5,7 @@
   import "./tabelle.css";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import type { Analyse } from "../../../kern/befehl";
-  import { inhalt, istBehaelter, KEIN, type Strukturindex } from "../../../kern/strukturindex";
+  import { inhalt, istBehaelter, KEIN, KnotenArt, type Strukturindex } from "../../../kern/strukturindex";
   import { knotenZu, zeigerAus } from "../../../kern/pfade";
   import { listeFinden, ortVon, sichtBerechnen, tabelleBauen, zelle, zellZeiger, type Ort } from "../../../analyse/tabelle";
   import { eingabeAnfang, neuerWertAus } from "../../../analyse/werteingabe";
@@ -32,7 +32,7 @@
   const knotenOderKein = (ix: Strukturindex, zeiger: string | null): number => (zeiger === null || (zeiger !== "" && !zeiger.startsWith("/")) ? KEIN : knotenZu(ix, text, zeiger));
 
   const listeKnoten = $derived(index ? listeFinden(index, knotenOderKein(index, blatt.gewaehlt), knotenOderKein(index, zustand.liste)) : KEIN);
-  const tabelle = $derived(index && listeKnoten !== KEIN ? tabelleBauen(index, text, listeKnoten) : null);
+  const tabelle = $derived(index && listeKnoten !== KEIN ? tabelleBauen(index, text, listeKnoten, zustand.aufgeklappt) : null);
   const listeZeiger = $derived(tabelle ? zeigerAus(tabelle.listeTeile) : "");
   const sicht = $derived(tabelle && index ? sichtBerechnen(tabelle, index, text, { filter: zustand.filter, sortierung: zustand.sortierung }) : new Int32Array(0));
   const profile = $derived(tabelle && index ? tabelle.spalten.map((_, j) => spaltenprofil(tabelle, index, text, j)) : []);
@@ -61,13 +61,31 @@
     zustand.spaltenwahl = zeiger;
   }
 
+  // ----- Verschachteltes: hineingehen, aufklappen -----
+
+  /** Die Liste einer Zelle als Tabelle zeigen; der Pfad oben und Zurück führen wieder heraus */
+  function hinein(o: Ort): void {
+    if (!tabelle) return;
+    const zeiger = zellZeiger(tabelle, o.zeile, o.spalte);
+    zustand.liste = zeiger;
+    zustand.spaltenwahl = null;
+    zustand.filter = "";
+    blatt.waehlen(zeiger);
+  }
+
   // ----- Bearbeiten -----
 
-  /** Bearbeitung beginnen; nur mit der Analyse der aktuellen Revision und nur bei einfachen, vorhandenen Werten. */
+  /** Bearbeitung beginnen; nur mit der Analyse der aktuellen Revision und nur bei einfachen, vorhandenen Werten.
+   *  Doppelklick auf eine Liste geht hinein, auf ein Objekt klappt die Spalte auf. */
   function bearbeiten(o: Ort): boolean {
-    if (!blatt.aktuell || !tabelle || !index || o.spalte < 0) return false;
+    if (!tabelle || !index || o.spalte < 0) return false;
     const k = zelle(tabelle, index, o.zeile, o.spalte);
-    if (k === KEIN || istBehaelter(index.art[k])) return false;
+    if (k !== KEIN && istBehaelter(index.art[k]) && index.kinder[k] > 0) {
+      if (index.art[k] === KnotenArt.liste) hinein(o);
+      else zustand.aufklappen(tabelle.spalten[o.spalte].name);
+      return true;
+    }
+    if (!blatt.aktuell || k === KEIN || istBehaelter(index.art[k])) return false;
     zustand.bearbeitung = { zeiger: zellZeiger(tabelle, o.zeile, o.spalte), anfang: eingabeAnfang(index.art[k], inhalt(index, text, k)), art: index.art[k] };
     return true;
   }
@@ -138,6 +156,9 @@
       {spalteGewaehlt}
       onwaehlen={waehlen}
       onspalte={spalteWaehlen}
+      onhinein={hinein}
+      onaufklappen={(s) => zustand.aufklappen(s)}
+      onzuklappen={(s) => zustand.zuklappen(s)}
       onbearbeiten={bearbeiten}
       onuebernehmen={uebernehmen}
       onabbrechen={abbrechen}

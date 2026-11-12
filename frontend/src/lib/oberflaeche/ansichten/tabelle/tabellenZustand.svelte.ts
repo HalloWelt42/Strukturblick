@@ -35,6 +35,8 @@ export class TabellenZustand implements Adressierbar {
   spaltenwahl = $state<string | null>(null);
   bearbeitung = $state<Bearbeitung | null>(null);
   geaendert = $state<Geaendert | null>(null);
+  /** Spalten, deren Objekte in Spalten je Feld aufgeklappt sind ("kunde", tiefer "kunde.adresse") */
+  aufgeklappt = $state.raw<ReadonlySet<string>>(new Set());
 
   private markiertZeit: ReturnType<typeof setTimeout> | null = null;
 
@@ -44,6 +46,15 @@ export class TabellenZustand implements Adressierbar {
     if (!s || s.spalte !== spalte || s.selbst !== selbst) this.sortierung = { spalte, selbst, richtung: "auf" };
     else if (s.richtung === "auf") this.sortierung = { spalte, selbst, richtung: "ab" };
     else this.sortierung = null;
+  }
+
+  aufklappen(spalte: string): void {
+    this.aufgeklappt = new Set([...this.aufgeklappt, spalte]);
+  }
+
+  /** Zuklappen nimmt auch alles darunter mit (kunde schließt kunde.adresse) */
+  zuklappen(spalte: string): void {
+    this.aufgeklappt = new Set([...this.aufgeklappt].filter((s) => s !== spalte && !s.startsWith(`${spalte}.`)));
   }
 
   markieren(g: Geaendert): void {
@@ -56,11 +67,12 @@ export class TabellenZustand implements Adressierbar {
   }
 
   adresseWerte(): Werte {
-    return this.liste !== null ? { liste: this.liste } : {};
+    return { ...(this.liste !== null ? { liste: this.liste } : {}), ...(this.aufgeklappt.size ? { auf: [...this.aufgeklappt].join(",") } : {}) };
   }
 
   adresseUebernehmen(w: Werte): void {
     this.liste = w.liste ?? null;
+    this.aufgeklappt = new Set(w.auf ? w.auf.split(",").filter(Boolean) : []);
   }
 }
 

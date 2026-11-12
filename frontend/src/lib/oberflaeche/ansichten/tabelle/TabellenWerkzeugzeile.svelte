@@ -5,8 +5,9 @@
   import { untrack } from "svelte";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import type { Analyse } from "../../../kern/befehl";
-  import { zeigerAus } from "../../../kern/pfade";
-  import type { Tabelle } from "../../../analyse/tabelle";
+  import { knotenZu, zeigerAus } from "../../../kern/pfade";
+  import { KEIN, KnotenArt } from "../../../kern/strukturindex";
+  import { eintragName, type Tabelle } from "../../../analyse/tabelle";
   import type { TabellenZustand } from "./tabellenZustand.svelte";
   import { anzahl } from "./zahlen";
   import DialektWahl from "./DialektWahl.svelte";
@@ -35,6 +36,11 @@
     }, FILTER_NACH_MS);
   }
 
+  // Wird der Filter von außen geleert (Hineingehen, Zurück), leert sich auch das Feld
+  $effect(() => {
+    if (zustand.filter === "") untrack(() => !filterZeit && (getippt = ""));
+  });
+
   function aufheben(): void {
     if (filterZeit) clearTimeout(filterZeit);
     getippt = "";
@@ -42,10 +48,38 @@
   }
 
   const gefiltert = $derived(zustand.filter.trim() !== "");
+  // Pfad der gezeigten Liste; Einträge darin mit ihrem ersten Wert ([17] B-24018), damit klar ist, wessen Liste es ist
   const segmente = $derived([
     { titel: "$", zeiger: "" },
-    ...tabelle.listeTeile.map((t, i) => ({ titel: typeof t === "number" ? `[${t}]` : t, zeiger: zeigerAus(tabelle.listeTeile.slice(0, i + 1)) })),
+    ...tabelle.listeTeile.map((t, i) => {
+      const zeiger = zeigerAus(tabelle.listeTeile.slice(0, i + 1));
+      if (typeof t !== "number") return { titel: t, zeiger };
+      const k = analyse.index ? knotenZu(analyse.index, text, zeiger) : KEIN;
+      const name = k !== KEIN && analyse.index ? eintragName(analyse.index, text, k) : null;
+      return { titel: name ? `[${t}] ${name.length > 24 ? `${name.slice(0, 24)} ...` : name}` : `[${t}]`, zeiger };
+    }),
   ]);
+  /** Liegt die Liste in einem Eintrag einer anderen (hineingegangen), führt Zurück in jene, mit dem Eintrag gewählt */
+  const aussen = $derived.by(() => {
+    const i = tabelle.listeTeile.findLastIndex((t) => typeof t === "number");
+    return i < 0 ? null : { liste: zeigerAus(tabelle.listeTeile.slice(0, i)), eintrag: zeigerAus(tabelle.listeTeile.slice(0, i + 1)) };
+  });
+
+  function zurueck(): void {
+    // Erst merken: ab dem Wechsel der Liste rechnet `aussen` schon für die neue
+    const ziel = aussen;
+    if (!ziel) return;
+    zustand.liste = ziel.liste;
+    aufheben();
+    blatt.waehlen(ziel.eintrag);
+  }
+
+  /** Pfadteil: eine Liste zeigt sie als Tabelle, ein Eintrag die Liste, in der er steht (mit ihm gewählt) */
+  function gehen(zeiger: string): void {
+    const k = analyse.index ? knotenZu(analyse.index, text, zeiger) : KEIN;
+    if (k !== KEIN && analyse.index?.art[k] === KnotenArt.liste) zustand.liste = zeiger;
+    blatt.waehlen(zeiger);
+  }
   const dialekt = $derived(analyse.format.leseoptionen.length > 0);
 
   // ----- Export der sichtbaren Zeilen (Filter und Sortierung wie angezeigt) -----
@@ -77,10 +111,13 @@
 </script>
 
 <div class="werkzeugzeile tb-werkzeugzeile">
+  {#if aussen}
+    <button class="knopf still" title="Zurück in die Liste, in der dieser Eintrag steht" onclick={zurueck}><i class="fa-solid fa-arrow-left"></i><span class="tb-lang">Zurück</span></button>
+  {/if}
   <nav class="pfad" aria-label="Gezeigte Liste">
     {#each segmente as s, i (s.zeiger)}
       {#if i > 0}<span class="trenner"><i class="fa-solid fa-chevron-right"></i></span>{/if}
-      <button class="tb-pfadteil" class:letzter={i === segmente.length - 1} title="Im Inspektor zeigen" onclick={() => blatt.waehlen(s.zeiger)}>{s.titel}</button>
+      <button class="tb-pfadteil" class:letzter={i === segmente.length - 1} title={i === segmente.length - 1 ? "Gezeigte Liste; Klick zeigt sie im Inspektor" : "Dorthin wechseln"} onclick={() => gehen(s.zeiger)}>{s.titel}</button>
     {/each}
   </nav>
   <label class="feld tb-filter" title="Zeigt nur Zeilen, in denen der Text in einer Zelle vorkommt; Groß- und Kleinschreibung egal">

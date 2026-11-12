@@ -1,0 +1,41 @@
+{
+  "kapitel": "tabelle-verschachtelt",
+  "titel": "Was in Objekten und Listen einer Tabelle steckt",
+  "ticket": "STB-49",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json in der Ansicht Tabelle",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Jede Bestellung hat einen Kunden und mehrere Positionen. Die Zellen zeigen einen Auszug davon: beim Kunden Name, Postleitzahl und Stadt, bei den Positionen die Zahl und die ersten Artikel.",
+      "ziel": { "anker": "tabelle-zelle-kunde", "notbehelf": "Spalte kunde, erste Zeile" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "{Marta Demir, 06108, Halle (Saale)} und [2] Kartoffeln 2,5 kg, Apfelsaft naturtrüb 1 l",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900 und 900 x 800"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Ein Klick auf den Knopf im Kopf der Spalte kunde klappt die Felder als eigene Spalten auf. So lässt sich auch nach Postleitzahl sortieren oder filtern.",
+      "ziel": { "anker": "tabelle-aufklappen", "notbehelf": "Spaltenkopf kunde, Knopf mit Spaltensymbol" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Spalten kunde.name, kunde.plz, kunde.stadt; Adresse mit auf=kunde",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Der Pfeil in einer Positionszelle zeigt die Positionen dieser Bestellung als eigene Tabelle. Oben steht, wessen Positionen es sind.",
+      "ziel": { "anker": "tabelle-hinein", "notbehelf": "Spalte positionen, zweite Zeile, Pfeil rechts in der Zelle" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Pfad $ > bestellungen > [1] B-24018 > positionen; Spalten artikel, menge, preis",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Zurück führt wieder in die Bestellungen, und die Bestellung, aus der man kam, ist gewählt.",
+      "ziel": { "anker": "tabelle-zurueck", "notbehelf": "Werkzeugzeile, Knopf Zurück" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Liste bestellungen, Zeile B-24018 hervorgehoben",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

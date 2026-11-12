@@ -24,6 +24,14 @@ alle Werte desselben Pfads. Alle Ansichten arbeiten auf demselben Text: eine Än
 Textänderung an genau dieser Stelle, CSV-Dialekt, Kommentare und Formatierung bleiben. Rückgängig gilt für alle
 Ansichten gemeinsam, der Verlauf bleibt beim Neuladen erhalten.
 
+Verschachteltes in der Tabelle: Zellen mit Objekten oder Listen zeigen einen Auszug ihres Inhalts
+(`{Marta Demir, 06108, Halle (Saale)}`, `[2] Kartoffeln 2,5 kg, Apfelsaft ...`, bei Listen von Objekten je Eintrag
+sein erster Wert). Der Knopf in einer Objektzelle oder im Spaltenkopf klappt die Felder als eigene Spalten auf
+(`kunde.name`, `kunde.plz`, auch tiefer), der Knopf daneben im Kopf klappt wieder zu. Der Knopf in einer Listenzelle
+(oder ein Doppelklick) zeigt die Einträge als Tabelle; der Pfad oben nennt dann, wessen Liste es ist
+(`bestellungen > [1] B-24018 > positionen`), "Zurück" und jeder Pfadteil führen wieder hinaus. Aufgeklappte Spalten
+und die gezeigte Liste stehen in der Adresse.
+
 Die Seite Ablage (Ordnerknopf oben in der Leiste) verwaltet die Dokumente: Ordner (eine Ebene), Umbenennen,
 Verschieben, Herunterladen, mehrere auf einmal wählen. Entfernen legt in den Papierkorb, die Meldung bietet
 Rückgängig; nach 30 Tagen löscht die Ablage dort endgültig. "Alles sichern" schreibt alle Dokumente samt Verlauf und

@@ -26,6 +26,9 @@
     onwaehlen,
     onspalte,
     onbearbeiten,
+    onhinein,
+    onaufklappen,
+    onzuklappen,
     onuebernehmen,
     onabbrechen,
   }: {
@@ -42,6 +45,11 @@
     onwaehlen: (o: Ort) => void;
     onspalte: (spalte: number) => void;
     onbearbeiten: (o: Ort) => boolean;
+    /** Liste einer Zelle als Tabelle zeigen */
+    onhinein: (o: Ort) => void;
+    /** Objekte einer Spalte (Name) in Spalten aufklappen, zuklappen */
+    onaufklappen: (spalte: string) => void;
+    onzuklappen: (spalte: string) => void;
     onuebernehmen: (wert: string, schritt: 0 | 1 | -1) => Promise<void>;
     onabbrechen: () => void;
   } = $props();
@@ -132,7 +140,14 @@
       return;
     }
     const o = ortAus(e);
-    if (o) onwaehlen(o);
+    if (!o) return;
+    const knopf = (e.target as HTMLElement).closest<HTMLElement>("[data-hinein], [data-aufklappen]");
+    if (knopf && o.spalte >= 0) {
+      if (knopf.dataset.hinein !== undefined) onhinein(o);
+      else onaufklappen(tabelle.spalten[o.spalte].name);
+      return;
+    }
+    onwaehlen(o);
   }
 
   function doppelklick(e: MouseEvent): void {
@@ -204,7 +219,10 @@
           fix={j === 0}
           gewaehlt={spalteGewaehlt === j}
           sortierung={sortSpalte === j && zustand.sortierung ? zustand.sortierung.richtung : null}
+          aufklappbar={!s.selbst && profile[j]?.typ.art === KnotenArt.objekt}
           onsortieren={() => zustand.sortierungWeiter(s.name, s.selbst)}
+          onaufklappen={() => onaufklappen(s.name)}
+          onzuklappen={() => onzuklappen(s.pfad.slice(0, -1).join("."))}
           onbreite={(px) => breiteSetzen(s, px)}
         />
       {/each}

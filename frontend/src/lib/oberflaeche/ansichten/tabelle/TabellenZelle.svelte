@@ -1,6 +1,7 @@
 <script lang="ts">
-  // Eine Zelle: einfacher Wert als Text, verschachtelter als kurze Vorschau, fehlender Schlüssel und leerer Text
-  // gedämpft. Wählen und Doppelklick erledigt das Raster über data-zeile/data-spalte; hier steht nur die Anzeige.
+  // Eine Zelle: einfacher Wert als Text, verschachtelter als kurzer Auszug seines Inhalts mit Knopf (Liste: hineingehen,
+  // Objekt: in Spalten aufklappen), fehlender Schlüssel und leerer Text gedämpft. Wählen, Doppelklick und die Knöpfe
+  // erledigt das Raster über data-zeile/data-spalte und data-hinein/data-aufklappen; hier steht nur die Anzeige.
   import { KEIN, KnotenArt, type Strukturindex } from "../../../kern/strukturindex";
   import { vorschau } from "../../../analyse/tabelle";
   import ZellenEingabe from "./ZellenEingabe.svelte";
@@ -69,6 +70,11 @@
   {:else}
     <span class="tb-wert {klasse}" title={v.text.length > 40 ? v.text.slice(0, 1000) : undefined}>{v.text.length > ANZEIGE_HOECHSTENS ? v.text.slice(0, ANZEIGE_HOECHSTENS) + " ..." : v.text}</span>
     {#if randLeer}<span class="tb-leerzeichen" title="Leerzeichen am Ende"></span>{/if}
+    {#if v.art === KnotenArt.liste && index.kinder[k] > 0}
+      <button class="tb-zell-knopf" data-hinein tabindex="-1" title="Die {index.kinder[k]} Einträge als Tabelle zeigen (auch Doppelklick); Zurück führt wieder hierher" aria-label="In die Liste hineingehen"><i class="fa-solid fa-chevron-right"></i></button>
+    {:else if v.art === KnotenArt.objekt && index.kinder[k] > 0}
+      <button class="tb-zell-knopf" data-aufklappen tabindex="-1" title="Die Felder dieser Spalte als eigene Spalten zeigen (auch Doppelklick)" aria-label="In Spalten aufklappen"><i class="fa-solid fa-table-columns"></i></button>
+    {/if}
   {/if}
   {#if vorher !== null && bearbeitung === null}
     <i class="fa-solid fa-pen tb-geaendert-zeichen" title="Eben geändert, vorher {vorher}"></i>

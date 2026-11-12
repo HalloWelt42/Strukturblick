@@ -13,7 +13,10 @@
     fix,
     gewaehlt,
     sortierung,
+    aufklappbar,
     onsortieren,
+    onaufklappen,
+    onzuklappen,
     onbreite,
   }: {
     spalte: Spalte;
@@ -22,7 +25,12 @@
     fix: boolean;
     gewaehlt: boolean;
     sortierung: "auf" | "ab" | null;
+    /** Die Spalte enthält Objekte, die sich in Spalten je Feld aufklappen lassen */
+    aufklappbar: boolean;
     onsortieren: () => void;
+    onaufklappen: () => void;
+    /** Zuklappen des Objekts, aus dem die Spalte stammt (nur bei aufgeklappten Spalten) */
+    onzuklappen: () => void;
     /** Neue Breite in px; das Raster sorgt dafür, dass der Name immer Platz behält */
     onbreite: (px: number) => void;
   } = $props();
@@ -32,6 +40,9 @@
 
   let kopf = $state<HTMLElement | null>(null);
   const name = $derived(spalte.selbst ? spalte.name : spalte.name === "" ? '""' : spalte.name);
+  /** Aufgeklappte Spalten: Herkunft ("kunde.") gedämpft vor dem Feld */
+  const herkunft = $derived(spalte.pfad.length > 1 ? `${spalte.pfad.slice(0, -1).join(".")}.` : "");
+  const feld = $derived(spalte.pfad.length > 1 ? spalte.pfad[spalte.pfad.length - 1] : name);
   const gefuellt = $derived(profil.zeilen - profil.leer);
   const haeufung = $derived(profil.haeufigste.filter((h) => h.anzahl > 1));
   const symbol = $derived(sortierung === "auf" ? "fa-arrow-up-short-wide" : sortierung === "ab" ? "fa-arrow-down-wide-short" : "fa-sort");
@@ -68,9 +79,15 @@
 
 <div class="tb-kopfzelle" class:tb-fix={fix} class:tb-gewaehlt={gewaehlt} role="columnheader" aria-sort={sortierung === "auf" ? "ascending" : sortierung === "ab" ? "descending" : undefined} data-kopf={nummer} bind:this={kopf}>
   <div class="tb-kopf">
-    <span class="tb-name" title={spalte.selbst ? "Einträge, die keine Objekte sind" : `Spalte ${name}: Klick zeigt alle Werte im Inspektor`}>{name}</span>
+    <span class="tb-name" title={spalte.selbst ? "Einträge, die keine Objekte sind" : `Spalte ${name}: Klick zeigt alle Werte im Inspektor`}>{#if herkunft}<span class="tb-herkunft">{herkunft}</span>{feld}{:else}{name}{/if}</span>
     <span class="tb-typzeile">
       <span class="abzeichen" class:zweit={profil.typ.siehtAusWie === null} title={profil.typ.erklaerung}>{profil.typ.titel}</span>
+      {#if herkunft}
+        <button class="tb-kopf-knopf tb-klapp" title="{herkunft.slice(0, -1)} wieder zu einer Spalte zuklappen" aria-label="{herkunft.slice(0, -1)} zuklappen" onclick={(e) => { e.stopPropagation(); onzuklappen(); }}><i class="fa-solid fa-down-left-and-up-right-to-center"></i></button>
+      {/if}
+      {#if aufklappbar}
+        <button class="tb-kopf-knopf tb-klapp" title="Felder von {name} als eigene Spalten zeigen" aria-label="{name} aufklappen" onclick={(e) => { e.stopPropagation(); onaufklappen(); }}><i class="fa-solid fa-table-columns"></i></button>
+      {/if}
       <button class="tb-kopf-knopf" class:aktiv={sortierung !== null} title={sortTitel} aria-label={sortTitel} onclick={(e) => { e.stopPropagation(); onsortieren(); }}><i class="fa-solid {symbol}"></i></button>
     </span>
     <span class="tb-profil">
