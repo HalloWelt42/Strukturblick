@@ -4,7 +4,7 @@
 
 import type { Strukturindex } from "./strukturindex";
 
-export type FormatKennung = "json" | "ndjson" | "csv" | "yaml" | "toml";
+export type FormatKennung = "json" | "ndjson" | "csv" | "yaml" | "toml" | "xml";
 
 export type Schwere = "fehler" | "warnung" | "hinweis";
 
@@ -60,7 +60,7 @@ export interface Format {
   readonly kennung: FormatKennung;
   readonly name: string;                 // für Menschen ("CSV", "YAML")
   readonly endungen: readonly string[];  // ohne Punkt, klein
-  readonly sprache: string;              // Hervorhebung im Editor ("json", "yaml", "toml", "text")
+  readonly sprache: string;              // Hervorhebung im Editor ("json", "yaml", "toml", "xml", "text")
   readonly faehigkeiten: Faehigkeiten;
   /** Wählbare Leseweisen (leer, wenn es nichts zu wählen gibt) */
   readonly leseoptionen: readonly Leseoption[];

@@ -10,6 +10,7 @@ import {
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
 import { bracketMatching, codeFolding, foldGutter, foldKeymap, HighlightStyle, indentOnInput, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
 import { toml } from "@codemirror/legacy-modes/mode/toml";
+import { xml } from "@codemirror/legacy-modes/mode/xml";
 import { highlightSelectionMatches, openSearchPanel, search, searchKeymap } from "@codemirror/search";
 import { json } from "@codemirror/lang-json";
 import { yaml } from "@codemirror/lang-yaml";
@@ -19,7 +20,7 @@ import { diagnosenFeld, diagnosenRinne } from "./diagnosen";
 import { suchtreffer } from "./suche";
 
 /** Hervorhebung je `format.sprache`; andere Sprachen bleiben ohne. */
-const SPRACHEN: Readonly<Record<string, () => Extension>> = { json: () => json(), yaml: () => yaml(), toml: () => StreamLanguage.define(toml) };
+const SPRACHEN: Readonly<Record<string, () => Extension>> = { json: () => json(), yaml: () => yaml(), toml: () => StreamLanguage.define(toml), xml: () => StreamLanguage.define(xml) };
 
 export const spracheFuer = (sprache: string): Extension => SPRACHEN[sprache]?.() ?? [];
 
@@ -53,7 +54,9 @@ const PHRASEN: Record<string, string> = {
 };
 
 const HERVORHEBUNG = HighlightStyle.define([
-  { tag: [t.propertyName, t.definition(t.propertyName)], color: "var(--typ-schluessel)", fontWeight: "600" },
+  { tag: [t.propertyName, t.definition(t.propertyName), t.tagName], color: "var(--typ-schluessel)", fontWeight: "600" },
+  { tag: t.attributeName, color: "var(--typ-objekt)" },
+  { tag: t.angleBracket, color: "var(--text-3)" },
   { tag: [t.string, t.content, t.special(t.string)], color: "var(--typ-text)" },
   { tag: t.number, color: "var(--typ-zahl)" },
   { tag: t.bool, color: "var(--typ-bool)" },

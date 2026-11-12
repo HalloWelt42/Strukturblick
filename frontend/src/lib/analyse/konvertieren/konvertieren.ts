@@ -4,12 +4,13 @@
 
 import { stringify } from "yaml";
 import { tomlAus } from "./toml";
+import { xmlAus, xmlQuellVerluste } from "./xml";
 import { KEIN, KnotenArt, schluessel, type Strukturindex } from "../../kern/strukturindex";
 import { listeFinden } from "../tabelle";
 import { wertAus } from "../wert";
 import { csvSchreiben, istObjekt, tabellieren, type Listenweise, type Objektweise, type Spalte, type Trennzeichen } from "./tabellieren";
 
-export type Zielkennung = "json" | "ndjson" | "csv" | "yaml" | "toml";
+export type Zielkennung = "json" | "ndjson" | "csv" | "yaml" | "toml" | "xml";
 
 export interface Konvertieroptionen {
   readonly trennzeichen: Trennzeichen;
@@ -38,6 +39,8 @@ export interface Quelle {
   readonly fehler: number;
   /** Werte mit eigenem Typ für Datum und Zeit (TOML); in den übrigen Zielen werden sie Text */
   readonly datumswerte: number;
+  /** Unterscheidet das Format Zahl, Text und Wahrheitswert? (CSV und XML nicht) */
+  readonly typen: boolean;
 }
 
 export interface Umwandlung {
@@ -64,6 +67,7 @@ export const ZIELE: readonly Ziel[] = [
   { kennung: "json", name: "JSON", endung: "json", symbol: "fa-file-code", optionen: [] },
   { kennung: "yaml", name: "YAML", endung: "yaml", symbol: "fa-file-lines", optionen: [] },
   { kennung: "toml", name: "TOML", endung: "toml", symbol: "fa-file-lines", optionen: [] },
+  { kennung: "xml", name: "XML", endung: "xml", symbol: "fa-file-code", optionen: [] },
 ];
 
 export const ziel = (k: Zielkennung): Ziel => ZIELE.find((z) => z.kennung === k)!;
@@ -104,7 +108,8 @@ export function umwandeln(q: Quelle, zielKennung: Zielkennung, o: Konvertieropti
   if (q.fehler) vorn.push({ satz: `${anzahl(q.fehler)} ${q.fehler === 1 ? "Stelle ist" : "Stellen sind"} nicht lesbar`, text: "Was der Leser nicht versteht, kommt nur als Text oder gar nicht mit. Vorher mit Reparieren lesbar machen." });
   if (q.kommentare) allgemein.push({ satz: "Kommentare gehen verloren", text: `${z.name} ${z.kennung === "yaml" ? "kennt Kommentare, sie werden aber nicht mitgenommen" : "kennt keine Kommentare"}; Werte und Aufbau bleiben.` });
   if (q.datumswerte && z.kennung !== q.format) allgemein.push({ satz: "Datum und Zeit werden Text", text: `${q.formatName} hat für ${anzahl(q.datumswerte)} ${q.datumswerte === 1 ? "Wert" : "Werte"} einen eigenen Typ für Datum oder Zeit; ${z.name} schreibt sie als Text. Der Inhalt bleibt gleich.` });
-  if (q.format === "csv" && z.kennung !== "csv") allgemein.push({ satz: "Werte bleiben Text", text: "CSV kennt keine Typen, deshalb kommen Zahlen und Datumsangaben als Text an. Umwandeln geht vorher mit Bereinigen, Typen." });
+  if (!q.typen && z.kennung !== q.format) allgemein.push({ satz: "Werte bleiben Text", text: `${q.formatName} kennt keine Typen, deshalb kommen Zahlen und Datumsangaben als Text an. Umwandeln geht vorher mit Bereinigen, Typen.` });
+  if (q.format === "xml" && z.kennung !== "xml") allgemein.unshift(...xmlQuellVerluste(wertAus(q.index, q.text), z.name));
 
   if (z.kennung === "json" || z.kennung === "yaml") {
     const wert = wertAus(q.index, q.text);
@@ -112,6 +117,10 @@ export function umwandeln(q: Quelle, zielKennung: Zielkennung, o: Konvertieropti
     // Leser Text
     const text = z.kennung === "json" ? JSON.stringify(wert, null, 2) + "\n" : stringify(wert, { lineWidth: 0, version: "1.1" });
     return { text, verluste: [...vorn, ...allgemein], tabelle: null, datensaetze: null };
+  }
+  if (z.kennung === "xml") {
+    const x = xmlAus(wertAus(q.index, q.text));
+    return { text: x.text, verluste: [...vorn, ...x.verluste, ...allgemein], tabelle: null, datensaetze: null };
   }
   if (z.kennung === "toml") {
     const t = tomlAus(wertAus(q.index, q.text));
@@ -172,7 +181,7 @@ function csvVerluste(h: ReturnType<typeof hauptliste>, t: ReturnType<typeof tabe
 
 /** Hat der Quelltext Kommentare? JSON meldet es beim Lesen, YAML erkennt sie an # am Zeilenanfang oder nach Leerraum. */
 export function hatKommentare(format: string, text: string, merkmale: Readonly<Record<string, unknown>>): boolean {
-  if (format === "json" || format === "toml") return merkmale.kommentare === true;
+  if (format === "json" || format === "toml" || format === "xml") return merkmale.kommentare === true;
   if (format === "yaml") return /(^|\s)#/m.test(text);
   return false;
 }

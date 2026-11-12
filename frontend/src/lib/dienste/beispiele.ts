@@ -42,4 +42,9 @@ export const BEISPIELE: readonly Beispiel[] = [
     beschreibung: "Einstellungen des Webshops in TOML mit Tabellen, Tabellenliste und Kommentaren; zum Ansehen und Konvertieren",
     laden: async () => (await import("../../../pruefdaten/webshop.toml?raw")).default,
   },
+  {
+    name: "lieferungen.xml",
+    beschreibung: "Lieferscheine in XML mit Attributen, Namensraum, CDATA und Kommentar; Positionen mal einzeln, mal mehrere",
+    laden: async () => (await import("../../../pruefdaten/lieferungen.xml?raw")).default,
+  },
 ];

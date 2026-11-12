@@ -4,6 +4,7 @@
 import type { Ablage, Dokumentkopf } from "../dienste/ablage";
 import { Arbeitsblatt } from "./arbeitsblatt.svelte";
 import { meldungen } from "./meldungen.svelte";
+import { textAusBytes } from "../formate/kodierung";
 
 /** Größte Datei, die ohne Rückfrage geöffnet wird (Zeichen); darüber wird gewarnt (Einstellungen folgen in STB-8). */
 const WARNUNG_AB_ZEICHEN = 50 * 1024 * 1024;
@@ -88,8 +89,10 @@ class Arbeitsplatz {
 
   async dateiOeffnen(datei: File, ordner = ""): Promise<void> {
     if (datei.size > WARNUNG_AB_ZEICHEN) meldungen.zeigen({ text: `${datei.name} ist groß (${Math.round(datei.size / 1048576)} MB); das Lesen kann dauern`, art: "hinweis" });
-    const text = await datei.text();
-    await this.neu(datei.name, text, ordner);
+    const gelesen = textAusBytes(new Uint8Array(await datei.arrayBuffer()));
+    await this.neu(datei.name, gelesen.text, ordner);
+    if (gelesen.grund === "angabe" && gelesen.kodierung !== "UTF-8") meldungen.zeigen({ text: `${datei.name} ist in ${gelesen.kodierung} gespeichert und so gelesen; Herunterladen schreibt UTF-8`, art: "hinweis" });
+    if (gelesen.grund === "ersatz") meldungen.zeigen({ text: `${datei.name} ist kein gültiges UTF-8 und wurde als Windows-1252 gelesen; Umlaute bitte prüfen`, art: "hinweis" });
   }
 
   async ausAblageOeffnen(kennung: string): Promise<void> {

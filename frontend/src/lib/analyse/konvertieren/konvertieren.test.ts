@@ -17,7 +17,7 @@ const TEXT = `{
 
 function quelle(text: string, f = "json"): Quelle {
   const r = format(f as "json").lesen(text);
-  return { index: r.index!, text, format: f, formatName: f.toUpperCase(), kommentare: r.merkmale.kommentare === true, fehler: r.diagnosen.filter((d) => d.schwere === "fehler").length, datumswerte: Number(r.merkmale.datumswerte ?? 0) };
+  return { index: r.index!, text, format: f, formatName: f.toUpperCase(), kommentare: r.merkmale.kommentare === true, fehler: r.diagnosen.filter((d) => d.schwere === "fehler").length, datumswerte: Number(r.merkmale.datumswerte ?? 0), typen: format(f as "json").faehigkeiten.typen };
 }
 
 describe("Tabellieren", () => {
@@ -116,7 +116,7 @@ describe("Umwandeln", () => {
   });
 
   it("Ziele und Namen", () => {
-    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml", "toml"]);
+    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml", "toml", "xml"]);
     expect(zielname("bestellungen.json", "csv")).toBe("bestellungen.csv");
   });
 });
@@ -148,5 +148,28 @@ describe("Quelle TOML", () => {
     expect(u.verluste.map((v) => v.satz)).toEqual(["Kommentare gehen verloren", "Datum und Zeit werden Text"]);
     expect(u.verluste[1].text).toBe("TOML hat für 2 Werte einen eigenen Typ für Datum oder Zeit; JSON schreibt sie als Text. Der Inhalt bleibt gleich.");
     expect(JSON.parse(u.text)).toEqual({ stand: "2026-11-10", ab: "08:00:00", n: 1 });
+  });
+});
+
+describe("XML", () => {
+  it("nach XML: Wurzel, Attribute aus @, Listen als Wiederholung, Verluste genannt; zurückgelesen fehlerfrei", () => {
+    const u = umwandeln(quelle(TEXT), "xml");
+    expect(u.verluste.map((v) => v.satz)).toEqual(["XML braucht genau ein Wurzelelement", "Typen gehen verloren: Zahlen werden Text", "null wird ein leeres Element"]);
+    expect(u.text).toContain("<daten>\n  <shop>Hofladen Lindenhof</shop>");
+    expect(u.text).toContain("    <positionen>\n      <artikel>Saft</artikel>");
+    expect(format("xml").lesen(u.text).diagnosen).toEqual([]);
+  });
+
+  it("Attribute, Text und Namen, die XML nicht erlaubt", () => {
+    const u = umwandeln(quelle('{"a": {"@id": "x<1", "#text": "T & U", "1. Wahl": [], "b c": 2}}'), "xml");
+    expect(u.text).toBe('<?xml version="1.0" encoding="UTF-8"?>\n<a id="x&lt;1">T &amp; U\n  <b_c>2</b_c>\n</a>\n');
+    expect(u.verluste.map((v) => v.satz)).toEqual(["Typen gehen verloren: Zahlen werden Text", "Leere Listen fallen weg", "2 Namen sind in XML nicht erlaubt"]);
+  });
+
+  it("aus XML: mal Liste, mal einzeln; Attribute als Felder; Werte bleiben Text", () => {
+    const x = "<l><e n=\"1\"><p>a</p><p>b</p></e><e n=\"2\"><p>c</p></e></l>";
+    const u = umwandeln(quelle(x, "xml"), "json");
+    expect(u.verluste.map((v) => v.satz)).toEqual(["`p` ist mal Liste, mal einzeln", "Attribute werden Felder", "Werte bleiben Text"]);
+    expect(JSON.parse(u.text)).toEqual({ l: { e: [{ "@n": "1", p: ["a", "b"] }, { "@n": "2", p: "c" }] } });
   });
 });

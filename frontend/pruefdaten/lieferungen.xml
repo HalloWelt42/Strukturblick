@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Lieferscheine des Hofladens Lindenhof (erfunden, zum Üben) -->
+<lieferungen xmlns:hl="urn:example:hofladen" stand="2026-11-10" anzahl="12">
+  <lieferung nr="L-2401" datum="2026-11-01">
+    <kunde>
+      <name>Ole Hansen</name>
+      <plz>06108</plz>
+      <ort>Halle (Saale)</ort>
+    </kunde>
+    <hl:position menge="2" preis="5.10">Quark &amp; Schmand Paket</hl:position>
+    <bezahlt>nein</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2402" datum="2026-11-02">
+    <kunde>
+      <name>Petra Nguyen</name>
+      <plz>01067</plz>
+      <ort>Dresden</ort>
+    </kunde>
+    <hl:position menge="1" preis="7.50">Honig 500 g</hl:position>
+    <hl:position menge="3" preis="5.10">Quark &amp; Schmand Paket</hl:position>
+    <hinweis><![CDATA[Bitte beim Nachbarn <Haus 2> abgeben]]></hinweis>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2403" datum="2026-11-03">
+    <kunde>
+      <name>Karl Weiß</name>
+      <plz>04229</plz>
+      <ort>Leipzig</ort>
+    </kunde>
+    <hl:position menge="4" preis="5.10">Quark &amp; Schmand Paket</hl:position>
+    <hl:position menge="1" preis="6.90">Bergkäse 300 g</hl:position>
+    <hl:position menge="2" preis="2.49">Apfelsaft naturtrüb 1 l</hl:position>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2404" datum="2026-11-04">
+    <kunde>
+      <name>Mira Albers</name>
+      <plz>99084</plz>
+      <ort>Erfurt</ort>
+    </kunde>
+    <hl:position menge="3" preis="2.49">Apfelsaft naturtrüb 1 l</hl:position>
+    <bezahlt>nein</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2405" datum="2026-11-05">
+    <kunde>
+      <name>Selin Kaya</name>
+      <plz>07743</plz>
+      <ort>Jena</ort>
+    </kunde>
+    <hl:position menge="4" preis="2.49">Apfelsaft naturtrüb 1 l</hl:position>
+    <hl:position menge="4" preis="7.50">Honig 500 g</hl:position>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2406" datum="2026-11-06">
+    <kunde>
+      <name>Bernd Löwe</name>
+      <plz>08056</plz>
+      <ort>Zwickau</ort>
+    </kunde>
+    <hl:position menge="3" preis="5.10">Quark &amp; Schmand Paket</hl:position>
+    <hl:position menge="3" preis="4.20">Kartoffeln 2,5 kg</hl:position>
+    <hl:position menge="1" preis="7.50">Honig 500 g</hl:position>
+    <hinweis><![CDATA[Bitte beim Nachbarn <Haus 2> abgeben]]></hinweis>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2407" datum="2026-11-07">
+    <kunde>
+      <name>Ole Hansen</name>
+      <plz>06108</plz>
+      <ort>Halle (Saale)</ort>
+    </kunde>
+    <hl:position menge="4" preis="4.20">Kartoffeln 2,5 kg</hl:position>
+    <bezahlt>nein</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2408" datum="2026-11-08">
+    <kunde>
+      <name>Petra Nguyen</name>
+      <plz>01067</plz>
+      <ort>Dresden</ort>
+    </kunde>
+    <hl:position menge="4" preis="3.80">Hofeier 10 Stück</hl:position>
+    <hl:position menge="3" preis="7.50">Honig 500 g</hl:position>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2409" datum="2026-11-09">
+    <kunde>
+      <name>Karl Weiß</name>
+      <plz>04229</plz>
+      <ort>Leipzig</ort>
+    </kunde>
+    <hl:position menge="4" preis="7.50">Honig 500 g</hl:position>
+    <hl:position menge="2" preis="5.10">Quark &amp; Schmand Paket</hl:position>
+    <hl:position menge="4" preis="2.49">Apfelsaft naturtrüb 1 l</hl:position>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2410" datum="2026-11-01">
+    <kunde>
+      <name>Mira Albers</name>
+      <plz>99084</plz>
+      <ort>Erfurt</ort>
+    </kunde>
+    <hl:position menge="1" preis="2.49">Apfelsaft naturtrüb 1 l</hl:position>
+    <hinweis><![CDATA[Bitte beim Nachbarn <Haus 2> abgeben]]></hinweis>
+    <bezahlt>nein</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2411" datum="2026-11-02">
+    <kunde>
+      <name>Selin Kaya</name>
+      <plz>07743</plz>
+      <ort>Jena</ort>
+    </kunde>
+    <hl:position menge="4" preis="4.20">Kartoffeln 2,5 kg</hl:position>
+    <hl:position menge="4" preis="5.10">Quark &amp; Schmand Paket</hl:position>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+  <lieferung nr="L-2412" datum="2026-11-03">
+    <kunde>
+      <name>Bernd Löwe</name>
+      <plz>08056</plz>
+      <ort>Zwickau</ort>
+    </kunde>
+    <hl:position menge="3" preis="7.50">Honig 500 g</hl:position>
+    <hl:position menge="1" preis="4.20">Kartoffeln 2,5 kg</hl:position>
+    <hl:position menge="3" preis="2.49">Apfelsaft naturtrüb 1 l</hl:position>
+    <bezahlt>ja</bezahlt>
+  </lieferung>
+</lieferungen>
