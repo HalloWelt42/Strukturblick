@@ -13,7 +13,7 @@ export const YAML_FORMAT: Format = {
   name: "YAML",
   endungen: ["yaml", "yml"],
   sprache: "yaml",
-  faehigkeiten: { kommentare: true, tabellarisch: false, typen: true },
+  faehigkeiten: { kommentare: true, tabellarisch: false, typen: true, schemasprache: "json-schema" },
   leseoptionen: [],
   erkennen: (text) => erkennenYaml(text),
   lesen: (text) => lesenYaml(text),

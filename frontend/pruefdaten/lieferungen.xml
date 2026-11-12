@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Lieferscheine des Hofladens Lindenhof (erfunden, zum Üben) -->
-<lieferungen xmlns:hl="urn:example:hofladen" stand="2026-11-10" anzahl="12">
+<lieferungen xmlns:hl="urn:example:hofladen" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="lieferungen.xsd" stand="2026-11-10" anzahl="12">
   <lieferung nr="L-2401" datum="2026-11-01">
     <kunde>
       <name>Ole Hansen</name>

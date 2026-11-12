@@ -7,6 +7,7 @@ import { alsJsonSchema, schemaAbleiten } from "../../../analyse/schema";
 import { pruefen, schemaLesen, type Pruefung } from "../../../analyse/validieren";
 import { ablageverwaltung } from "../../../zustand/ablageverwaltung.svelte";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+import { XsdZustand } from "./xsdZustand.svelte";
 
 export type Schemaquelle = { readonly art: "daten" } | { readonly art: "dokument"; readonly kennung: string; readonly name: string };
 export type Befundfilter = "alle" | "fehler" | "warnung";
@@ -18,6 +19,8 @@ export class ValidierenZustand {
   ladefehler = $state<string | null>(null);
   filter = $state<Befundfilter>("alle");
   gewaehlt = $state(0);
+  /** Prüfen gegen XML Schema (bei XML-Dokumenten) */
+  readonly xsd = new XsdZustand();
   private merk: { analyse: Analyse; schluessel: string; pruefung: Pruefung; schema: Record<string, unknown> | null } | null = null;
 
   async dokumentWaehlen(kennung: string, name: string): Promise<void> {
@@ -46,6 +49,11 @@ export class ValidierenZustand {
   pruefung(blatt: Arbeitsblatt): { pruefung: Pruefung; schema: Record<string, unknown> | null } | null {
     const a = blatt.analyse;
     if (!a?.index) return null;
+    if (a.format.faehigkeiten.schemasprache === "xml-schema") {
+      const x = this.xsd.aktuell(blatt);
+      const warten = this.xsd.laeuft ? "Wird geprüft ..." : this.xsd.wahl ? "Wird geprüft ..." : "Ein XML Schema wählen: aus der Ablage oder aus einem Schema-Paket (ZIP).";
+      return { pruefung: x ?? { ok: false, fehler: warten }, schema: null };
+    }
     const q = this.quelle;
     const schluessel = q.art === "daten" ? "daten" : `dokument:${this.schemaText ?? ""}`;
     if (this.merk?.analyse === a && this.merk.schluessel === schluessel) return this.merk;

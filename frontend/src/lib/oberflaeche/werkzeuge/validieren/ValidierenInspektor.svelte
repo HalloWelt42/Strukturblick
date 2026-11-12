@@ -46,8 +46,15 @@
 <div class="karte">
   <div class="karte-titel">Schema</div>
   <dl class="paare">
-    <dt>Quelle</dt><dd class="mono">{z.quelle.art === "daten" ? `aus ${blatt.name} abgeleitet` : z.quelle.name}</dd>
-    <dt>Fassung</dt><dd>{fassung}</dd>
+    {#if blatt.analyse?.format.faehigkeiten.schemasprache === "xml-schema"}
+      <dt>Quelle</dt><dd class="mono">{z.xsd.wahl ? (z.xsd.wahl.art === "paket" ? z.xsd.wahl.pfad : z.xsd.wahl.name) : "noch keins"}</dd>
+      <dt>Fassung</dt><dd>XML Schema 1.0, geprüft mit libxml2</dd>
+      {#if z.xsd.ergebnis}<dt>Importe</dt><dd>{anzahl(z.xsd.ergebnis.importe)} {z.xsd.ergebnis.importe === 1 ? "Schema" : "Schemas"} bereit{z.xsd.paket ? ` (Paket ${z.xsd.paket.name})` : ""}</dd>{/if}
+      {#if z.xsd.aktuell(blatt)?.fehlend?.length}<dt>Fehlt</dt><dd class="mono">{z.xsd.aktuell(blatt)?.fehlend?.join(", ")}</dd>{/if}
+    {:else}
+      <dt>Quelle</dt><dd class="mono">{z.quelle.art === "daten" ? `aus ${blatt.name} abgeleitet` : z.quelle.name}</dd>
+      <dt>Fassung</dt><dd>{fassung}</dd>
+    {/if}
     {#if p?.ok}<dt>Geprüft</dt><dd>{anzahl(p.befunde.length)} Befunde in {(Math.max(1, p.dauer) / 1000).toLocaleString("de-DE", { maximumFractionDigits: 2 })} s</dd>{/if}
   </dl>
 </div>

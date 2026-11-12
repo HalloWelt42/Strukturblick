@@ -47,6 +47,7 @@
     "idb": "^8.0.4",
     "jq-wasm": "^3.0.0-jq-1.8.2",
     "jsonpath-plus": "^11.3.0",
+    "libxml2-wasm": "^0.7.2",
     "smol-toml": "^1.9.1",
     "sql.js": "^1.16.0",
     "yaml": "^2.9.1",

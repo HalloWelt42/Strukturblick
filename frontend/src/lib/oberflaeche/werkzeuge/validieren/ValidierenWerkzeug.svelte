@@ -11,6 +11,7 @@
   import { validierenZustand } from "./validierenZustand.svelte";
   import Befundliste from "./Befundliste.svelte";
   import Fundstelle from "./Fundstelle.svelte";
+  import XsdOptionen from "./XsdOptionen.svelte";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
   const z = $derived(validierenZustand(blatt));
@@ -19,6 +20,17 @@
   const befunde = $derived(p?.ok ? p.befunde : []);
   const gezeigt = $derived(befunde.filter((b) => z.filter === "alle" || b.art === z.filter));
   const befund = $derived(gezeigt[Math.min(z.gewaehlt, gezeigt.length - 1)] ?? null);
+
+  const istXml = $derived(blatt.analyse?.format.faehigkeiten.schemasprache === "xml-schema");
+  // XML: Schema laut Dokument vorschlagen und bei jeder Änderung neu prüfen
+  $effect(() => {
+    if (!istXml) return;
+    if (!z.xsd.wahl) z.xsd.vorschlagWaehlen(blatt);
+    void blatt.analyse;
+    void z.xsd.wahl;
+    void z.xsd.paket;
+    void z.xsd.pruefen(blatt);
+  });
 
   let menueOffen = $state(false);
   const schemaDokumente = $derived(arbeitsplatz.dokumente.filter((d) => d.kennung !== blatt.kennung && /\.json$/i.test(d.name)).sort((a, b) => Number(/schema/i.test(b.name)) - Number(/schema/i.test(a.name)) || a.name.localeCompare(b.name, "de")));
@@ -40,7 +52,7 @@
 
   function bericht(): void {
     if (!p?.ok) return;
-    const quelle = z.quelle.art === "daten" ? "aus den Daten abgeleitet" : z.quelle.name;
+    const quelle = istXml ? (z.xsd.wahl?.name ?? "") : z.quelle.art === "daten" ? "aus den Daten abgeleitet" : z.quelle.name;
     const zeilen = [`Prüfbericht für ${blatt.name}`, `Schema: ${quelle}`, `Befunde: ${befunde.length} (${befunde.filter((b) => b.art === "fehler").length} Fehler, ${befunde.filter((b) => b.art === "warnung").length} Warnungen)`, ""];
     for (const b of befunde) zeilen.push(`Zeile ${b.zeile}, Spalte ${b.spalte}  ${b.art === "fehler" ? "Fehler" : "Warnung"}  ${b.zeiger || "/"}`, `  ${b.meldung}`, `  Erwartet: ${b.erwartet}`, `  Gefunden: ${b.gefunden}`, `  Regel: ${b.regel} (${b.imSchema})`, "");
     herunterladen(`${blatt.name.replace(/\.[^.]+$/, "")}.pruefbericht.txt`, zeilen.join("\n"));
@@ -50,6 +62,9 @@
 <svelte:window onpointerdown={(e) => menueOffen && !(e.target as HTMLElement).closest(".va-menue") && (menueOffen = false)} />
 
 <div class="va-ansicht">
+  {#if istXml}
+  <XsdOptionen {blatt} x={z.xsd} />
+  {:else}
   <div class="wz-optionen">
     <div class="wz-option">
       <span class="wz-etikett">Schema</span>
@@ -78,6 +93,7 @@
       {#if z.quelle.art === "dokument"}<button class="knopf" title="Schema neu laden, etwa nach einer Änderung daran" onclick={() => void z.neuLaden()}><i class="fa-solid fa-rotate"></i> Erneut prüfen</button>{/if}
     </div>
   </div>
+  {/if}
   <div class="inhalt">
     <div class="wz-flaeche">
       {#if !p}

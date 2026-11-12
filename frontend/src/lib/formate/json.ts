@@ -51,7 +51,7 @@ export const JSON_FORMAT: Format = {
   name: "JSON",
   endungen: ["json", "jsonc", "geojson"],
   sprache: "json",
-  faehigkeiten: { kommentare: true, tabellarisch: false, typen: true },
+  faehigkeiten: { kommentare: true, tabellarisch: false, typen: true, schemasprache: "json-schema" },
   leseoptionen: [],
   erkennen,
   lesen,

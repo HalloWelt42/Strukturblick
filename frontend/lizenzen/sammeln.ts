@@ -32,6 +32,7 @@ const EINGEBETTET: readonly { readonly titel: string; readonly datei: string }[]
   { titel: "Oniguruma (in jq-wasm eingebettet, reguläre Ausdrücke)", datei: "oniguruma-COPYING.txt" },
   { titel: "SQLite (in sql.js eingebettet)", datei: "sqlite-HINWEIS.txt" },
   { titel: "@cfworker/json-schema (Lizenztext aus dem Quell-Repository, das Paket bringt keinen mit)", datei: "cfworker-json-schema-LICENSE.txt" },
+  { titel: "libxml2 (in libxml2-wasm eingebettet, Lizenztext aus dem Paket)", datei: "libxml2-LICENSE.txt" },
 ];
 
 export function lizenzenSammeln(projekt: string): string {

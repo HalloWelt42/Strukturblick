@@ -54,6 +54,8 @@ export interface Faehigkeiten {
   readonly kommentare: boolean;          // kennt Kommentare
   readonly tabellarisch: boolean;        // ist von Natur aus eine Tabelle (Zeilen und Spalten)
   readonly typen: boolean;               // unterscheidet Zahl, Text, Wahrheitswert, nichts (CSV nicht)
+  /** Womit sich Dokumente des Formats prüfen lassen: JSON Schema (über den Wert) oder XML Schema (über den Text) */
+  readonly schemasprache: "json-schema" | "xml-schema";
 }
 
 export interface Format {

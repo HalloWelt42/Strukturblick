@@ -12,7 +12,7 @@ export const XML_FORMAT: Format = {
   name: "XML",
   endungen: ["xml", "xsd", "wsdl", "xsl", "xslt"],
   sprache: "xml",
-  faehigkeiten: { kommentare: true, tabellarisch: false, typen: false },
+  faehigkeiten: { kommentare: true, tabellarisch: false, typen: false, schemasprache: "xml-schema" },
   leseoptionen: [],
   erkennen: (text) => erkennenXml(text),
   lesen: (text) => lesenXml(text),

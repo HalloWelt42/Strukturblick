@@ -12,7 +12,7 @@ export const TOML_FORMAT: Format = {
   name: "TOML",
   endungen: ["toml"],
   sprache: "toml",
-  faehigkeiten: { kommentare: true, tabellarisch: false, typen: true },
+  faehigkeiten: { kommentare: true, tabellarisch: false, typen: true, schemasprache: "json-schema" },
   leseoptionen: [],
   erkennen: (text) => erkennenToml(text),
   lesen: (text) => lesenToml(text),

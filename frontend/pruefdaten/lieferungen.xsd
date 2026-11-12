@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Schema der Lieferscheine des Hofladens (erfunden, zum Üben). Die Positionen kommen aus hofladen-position.xsd. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:hl="urn:example:hofladen">
+  <xs:import namespace="urn:example:hofladen" schemaLocation="hofladen-position.xsd"/>
+
+  <xs:simpleType name="PLZ">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{5}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="lieferungen">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="lieferung" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="kunde">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="plz" type="PLZ"/>
+                    <xs:element name="ort" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element ref="hl:position" maxOccurs="unbounded"/>
+              <xs:element name="hinweis" type="xs:string" minOccurs="0"/>
+              <xs:element name="bezahlt" type="xs:boolean"/>
+            </xs:sequence>
+            <xs:attribute name="nr" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="L-[0-9]{4}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="datum" type="xs:date" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="stand" type="xs:date" use="required"/>
+      <xs:attribute name="anzahl" type="xs:positiveInteger"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

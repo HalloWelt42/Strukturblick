@@ -47,4 +47,14 @@ export const BEISPIELE: readonly Beispiel[] = [
     beschreibung: "Lieferscheine in XML mit Attributen, Namensraum, CDATA und Kommentar; Positionen mal einzeln, mal mehrere",
     laden: async () => (await import("../../../pruefdaten/lieferungen.xml?raw")).default,
   },
+  {
+    name: "lieferungen.xsd",
+    beschreibung: "XML Schema zu lieferungen.xml; importiert hofladen-position.xsd und verlangt bezahlt als Wahrheitswert; zum Üben im Werkzeug Validieren",
+    laden: async () => (await import("../../../pruefdaten/lieferungen.xsd?raw")).default,
+  },
+  {
+    name: "hofladen-position.xsd",
+    beschreibung: "XML Schema der Positionen im Namensraum des Hofladens, von lieferungen.xsd importiert",
+    laden: async () => (await import("../../../pruefdaten/hofladen-position.xsd?raw")).default,
+  },
 ];

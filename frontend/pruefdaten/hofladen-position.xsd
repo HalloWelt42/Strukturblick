@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Position eines Lieferscheins im Namensraum des Hofladens (erfunden, zum Üben) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:example:hofladen"
+           elementFormDefault="qualified">
+  <xs:element name="position">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="menge" type="xs:positiveInteger" use="required"/>
+          <xs:attribute name="preis" type="xs:decimal" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
