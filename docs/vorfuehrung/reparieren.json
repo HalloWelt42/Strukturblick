@@ -1,0 +1,49 @@
+{
+  "kapitel": "reparieren",
+  "titel": "Kaputte Daten lesbar machen",
+  "ticket": "STB-41",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, kundenimport.ndjson im Vordergrund, noch nicht repariert",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Der Kundenimport hat vier kaputte Zeilen. Der Fuß zeigt sie als Fehler und bietet gleich Reparieren an.",
+      "ziel": { "anker": "fuss-reparieren", "notbehelf": "Knopf Reparieren in der Fußleiste neben 4 Fehler" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Werkzeug Reparieren, Lesen als JSON Lines, Band 16 von 20 Zeilen unverändert",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Jede kaputte Zeile sagt, wo es klemmt und was die Reparatur tut. In Zeile 2 fehlt ein Komma, und die Zeile endet mitten im Ortsnamen.",
+      "ziel": { "anker": "reparieren-zeile", "notbehelf": "Eintrag Zeile 2 in der Liste Befund je Zeile" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Spalte 22 Komma fehlt, Spalte 71 Zeile endet mitten im Text; Vorschau mit Minus- und Pluszeile",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Geraten wird nichts. Der abgeschnittene Ort bleibt Dresd, und dass das Feld angelegt fehlt, steht als Hinweis da. Das ergänzt ein Mensch von Hand.",
+      "ziel": { "anker": "reparieren-hinweis", "notbehelf": "Gelbe Hinweise unter Zeile 2 in der Vorschau" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Hinweise ort Dresd vermutlich abgeschnitten und angelegt fehlt",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Jede Zeile lässt sich ausnehmen. Dann zählt das Band neu, und unten steht, wie viele Datensätze danach lesbar sind.",
+      "ziel": { "anker": "reparieren-lassen", "notbehelf": "Zeile 16, Knopf Zeile so lassen" },
+      "aktion": { "art": "klicken", "nachher": "wieder Vorschlag übernehmen wählen" },
+      "erwartung": "Band 17 von 20 Zeilen unverändert; unten 19 lesbare Zeilen, 1 noch nicht",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Übernehmen ist ein einziger Schritt im Verlauf. Danach sind alle 21 Datensätze lesbar, und Rückgängig holt den alten Stand zurück.",
+      "ziel": { "anker": "reparieren-uebernehmen", "notbehelf": "Knopf Übernehmen unten rechts" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Meldung Repariert: 4 Zeilen, 26 Zeichen ergänzt, 11 gelöscht; Fuß Keine Fehler; Verlauf mit Ort Reparieren",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

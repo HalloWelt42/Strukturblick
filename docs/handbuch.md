@@ -37,8 +37,9 @@ Lizenz und den Lizenzen aller Bausteine; der Bau sammelt sie selbst (frontend/li
 
 Zum Üben gibt es erfundene Beispieldaten: "Beispiele zum Üben" auf der Startseite, in der Ablage oder über die
 Befehlspalette ("Beispiele öffnen"). Sie landen im Ordner Beispiele der eigenen Ablage: bestellungen.json (128
-Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten), dienste.yaml und
-bestellung.schema.json (Schema eines Lieferdienstes zum Validieren). Ein
+Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten), dienste.yaml,
+bestellung.schema.json (Schema eines Lieferdienstes zum Validieren) und kundenimport.ndjson (Kundenimport mit vier
+kaputten Zeilen zum Reparieren). Ein
 zweites Öffnen zeigt die vorhandenen samt Änderungen; frisch anfangen: die Beispiele in den Papierkorb legen.
 Quelle ist frontend/pruefdaten; Adressen unter example.org, Telefonnummern aus dem für Film und Fernsehen
 freigehaltenen Bereich 030 23125.
@@ -96,6 +97,21 @@ zeigt die Zeilen rundherum mit der falschen Stelle unterstrichen und springt in 
 eindeutigen Vorschlag (etwa eine fehlende führende Null bei einer Postleitzahl), setzt "Beheben" im Inspektor den
 Wert als ein Vorgang im Verlauf. "Bericht herunterladen" schreibt alle Befunde als Text. Zum Üben: die Beispiele
 öffnen und bestellung.schema.json wählen; es erlaubt höchstens drei Positionen je Bestellung.
+
+Das Werkzeug Reparieren (Leiste, "Prüfen und umbauen"; bei Fehlern auch "Reparieren" im Fuß und im Baum) macht
+kaputtes JSON und JSON Lines lesbar. "Lesen als" wählt JSON Lines (ein Datensatz je Zeile) oder JSON (die ganze
+Datei); vorgewählt ist das Format des Dokuments. Die Reparatur folgt festen Regeln, gleiche Datei ergibt gleichen
+Vorschlag: fehlende Kommas, Doppelpunkte und Klammern ergänzen, abgeschnittene Texte und Objekte schließen, einfache
+Anführungszeichen in doppelte setzen, Schlüssel und Texte ohne Anführungszeichen einfassen, True, None und NaN in
+JSON-Wörter umschreiben, Zahlen wie +1, .5 oder 007 (als Text) richten, Kommentare und überzählige Kommas in JSON
+Lines entfernen, zwei Datensätze einer Zeile auf zwei Zeilen verteilen. Werte werden nicht geraten: Fehlt einer,
+steht null und ein Hinweis; fehlen einem Datensatz Felder, die die übrigen haben, sagt ein Hinweis welche. Wo keine
+Regel greift, steht "bitte von Hand" mit Spalte.
+
+Je Zeile stehen Spalte, Meldung und Vorschlag; rechts die Vorschau als Unterschied (alte Zeile mit der Stelle, neue
+mit dem Ergänzten). Jede Zeile lässt sich mit "Zeile so lassen" ausnehmen; das Band oben zählt, wie viele Zeichen
+ergänzt und gelöscht werden, die Zeile unten, wie viele Datensätze danach lesbar sind. "Übernehmen" ist ein Vorgang
+im Verlauf, "Verwerfen" schließt das Werkzeug ohne Änderung.
 
 Das Werkzeug Bereinigen (Leiste, "Prüfen und umbauen", oder die Befehlspalette) arbeitet auf der Liste, die
 auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz im Segment geschlossen wird:
