@@ -59,3 +59,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `toml.json` | Einstellungen in TOML (STB-42) | durchgespielt 12.11.2026 |
 | `xml.json` | Lieferscheine in XML (STB-42) | durchgespielt 12.11.2026 |
 | `xlsx.json` | Tabellendateien öffnen und schreiben (STB-42) | durchgespielt 12.11.2026 |
+| `tabellentext.json` | Tabellen in Markdown und HTML (STB-42) | durchgespielt 12.11.2026 |

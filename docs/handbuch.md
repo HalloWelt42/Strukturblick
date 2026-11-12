@@ -1,5 +1,5 @@
 ---
-zweck: "Zeigt, prüft und baut Strukturdaten um (JSON, NDJSON, CSV, YAML, TOML, XML): Baum, Editor, Tabelle und Inspektor auf einem Text mit gemeinsamem Verlauf; mit Server auf pi5b, ohne Server auf GitHub Pages."
+zweck: "Zeigt, prüft und baut Strukturdaten um (JSON, NDJSON, CSV, YAML, TOML, XML, Markdown-Tabellen): Baum, Editor, Tabelle und Inspektor auf einem Text mit gemeinsamem Verlauf; mit Server auf pi5b, ohne Server auf GitHub Pages."
 geraet: [pi5b]
 abhaengigkeiten: [kellerwolke, appkern, vorbau]
 daten:
@@ -18,7 +18,7 @@ stand: f4da234
 
 ## Zweck
 
-Strukturblick öffnet Strukturdaten (JSON, NDJSON, CSV, YAML, TOML, XML) und zeigt sie als Baum, im Editor und als Tabelle;
+Strukturblick öffnet Strukturdaten (JSON, NDJSON, CSV, YAML, TOML, XML, Markdown-Tabellen) und zeigt sie als Baum, im Editor und als Tabelle;
 der Inspektor zeigt das Gewählte, kopiert seinen Pfad (jq, JSONPath, Zeiger, PHP, Python, TypeScript) und zählt
 alle Werte desselben Pfads. Alle Ansichten arbeiten auf demselben Text: eine Änderung in der Tabelle ist eine
 Textänderung an genau dieser Stelle, CSV-Dialekt, Kommentare und Formatierung bleiben. Rückgängig gilt für alle
@@ -114,7 +114,7 @@ ergänzt und gelöscht werden, die Zeile unten, wie viele Datensätze danach les
 im Verlauf, "Verwerfen" schließt das Werkzeug ohne Änderung.
 
 Das Werkzeug Konvertieren (Leiste, "Prüfen und umbauen") schreibt das Dokument in ein anderes Format um: CSV, JSON
-Lines, JSON, YAML, TOML, XML oder XLSX (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
+Lines, JSON, YAML, TOML, XML, Markdown, HTML oder XLSX (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
 mit "Als neues Dokument" ein eigener Reiter im selben Ordner oder mit "Herunterladen" eine Datei. Über Quelle und
 Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
 
@@ -137,6 +137,9 @@ Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
   der Liste kommen auf das Blatt Angaben. Zahlen, Wahrheitswerte und Datum behalten ihren Typ, Nummern mit führender
   Null bleiben Text, die Kopfzeile ist fett und bleibt beim Rollen stehen. Das Ergebnis wird heruntergeladen; ein
   neues Dokument entsteht daraus nicht, weil es kein Text ist.
+- Markdown und HTML zeigen die Hauptliste als Tabelle zum Lesen, Felder außerhalb der Liste als zweite Tabelle
+  Angaben, Zahlen rechtsbündig. Typen werden Text, null eine leere Zelle. Markdown wird ein neues Dokument, HTML eine
+  Seite zum Herunterladen.
 
 TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
 als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,
@@ -153,6 +156,15 @@ gemeldet. Ändern und Entfernen wirken nur an ihren Stellen; Kommentare, Einrüc
 Beim Öffnen einer Datei erkennt Strukturblick die Kodierung: Bytereihenfolge-Marke, die Angabe encoding in der
 XML-Deklaration (etwa ISO-8859-1), sonst UTF-8; ist eine Datei kein gültiges UTF-8, wird sie als Windows-1252 gelesen.
 Eine Meldung sagt, wenn nicht UTF-8 gelesen wurde; Herunterladen schreibt immer UTF-8.
+
+Markdown-Tabellen liest Strukturblick wie CSV: Kopfzeile, darunter die Trennzeile (|---|---|), darunter die
+Datenzeilen; äußere Striche sind freiwillig, \| steht für einen Strich im Inhalt, <br> für einen Zeilenumbruch. Steht
+mehr als eine Tabelle im Text, heißen sie nach ihrer Überschrift; Text um die Tabellen bleibt unberührt. Ändern,
+Zeilen und Spalten entfernen wirken nur an ihren Stellen.
+
+HTML-Seiten (.html) werden wie Tabellendateien eingelesen: Strukturblick nimmt nur die Tabellen heraus (Name aus der
+Beschriftung oder der Überschrift davor) und macht daraus ein JSON-Dokument; Zellen über mehrere Spalten oder Zeilen
+nennt die Meldung. Alle Werte sind dann Text.
 
 Tabellendateien (.xlsx) lassen sich öffnen wie andere Dateien (Datei öffnen oder hineinziehen). Strukturblick arbeitet
 auf Text, deshalb wird daraus ein JSON-Dokument mit einer Liste je Blatt: Die erste Zeile gibt die Feldnamen, wenn sie

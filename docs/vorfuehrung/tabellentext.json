@@ -1,0 +1,33 @@
+{
+  "kapitel": "tabellentext",
+  "titel": "Tabellen in Markdown und HTML",
+  "ticket": "STB-42",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json im Vordergrund",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Für einen Bericht oder eine Notiz gibt es die Bestellungen auch als Markdown-Tabelle. Felder wie shop und stand stehen in einer zweiten Tabelle Angaben, Zahlen rechtsbündig.",
+      "ziel": { "anker": "konvertieren-ziel", "notbehelf": "Leiste Konvertieren, Ziel Markdown" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Karte mit 3 Punkten (Listen, Typen, null); Vorschau mit ## bestellungen und Trennzeile",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Als neues Dokument ist die Markdown-Datei selbst wieder lesbar: zwei Tabellen, nach ihrer Überschrift benannt, und jede Zelle lässt sich ändern.",
+      "ziel": { "anker": "konvertieren-neu", "notbehelf": "Knopf Als neues Dokument" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Reiter bestellungen.md, Fuß Markdown, Keine Fehler; Baum mit bestellungen (297) und Angaben",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Und eine HTML-Seite mit Tabellen, etwa eine gespeicherte Preisliste, lässt sich hineinziehen. Strukturblick nimmt nur die Tabellen heraus; der Preis wird sogar als Betrag erkannt.",
+      "ziel": { "anker": "ablagezone", "notbehelf": "Eine HTML-Seite mit Tabelle auf das Fenster ziehen" },
+      "aktion": { "art": "ziehen" },
+      "erwartung": "Neues Dokument mit Liste je Tabelle; Meldung nennt Zahl der Tabellen und Zeilen; Tabelle mit Spalte Text, sieht aus wie Betrag",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}
