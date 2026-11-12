@@ -61,8 +61,7 @@
 
   async function trefferAlsDokument(): Promise<void> {
     const werte = trefferWerte();
-    const neu = await arbeitsplatz.neu(`${stamm}-treffer.json`, werteAusgeben(werte, "json"), blatt.ordner);
-    neu.zeigen({ art: "ansicht", kennung: "baum" });
+    const neu = await arbeitsplatz.neu(`${stamm}-treffer.json`, werteAusgeben(werte, "json"), blatt.ordner, { art: "ansicht", kennung: "baum" });
     meldungen.zeigen({ text: `Neues Dokument ${neu.name} mit ${werte.length} Treffern`, art: "erfolg" });
   }
 

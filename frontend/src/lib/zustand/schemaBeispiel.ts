@@ -15,8 +15,7 @@ export async function beispielAblegen(blatt: Arbeitsblatt, modell: XsdModell, wu
     return;
   }
   const name = freierName(`${blatt.name.replace(/\.[^.]+$/, "")}.beispiel.xml`, belegteNamen(blatt.ordner));
-  const neu = await arbeitsplatz.neu(name, b.text, blatt.ordner);
-  neu.zeigen({ art: "werkzeug", kennung: "validieren" });
+  const neu = await arbeitsplatz.neu(name, b.text, blatt.ordner, { art: "werkzeug", kennung: "validieren" });
   const teile = [
     `${name} erzeugt: ${b.elemente.toLocaleString("de-DE")} Elemente${b.gekuerzt ? ", ab 5.000 nur noch Pflichtteile" : ""}`,
     ...(b.hinweise.length ? [`Nicht ganz gültig: ${b.hinweise.join("; ")}`] : []),

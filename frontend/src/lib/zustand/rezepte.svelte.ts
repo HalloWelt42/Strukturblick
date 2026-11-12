@@ -136,8 +136,7 @@ class Rezepte {
   async uebernehmen(blatt: Arbeitsblatt, r: Rezept, lauf: Lauf, ziel: "neu" | "dokument", name: string): Promise<void> {
     let ergebnis: string;
     if (ziel === "neu") {
-      const neu = await arbeitsplatz.neu(name.trim() || blatt.name, lauf.text, blatt.ordner);
-      neu.zeigen({ art: "ansicht", kennung: "tabelle" });
+      const neu = await arbeitsplatz.neu(name.trim() || blatt.name, lauf.text, blatt.ordner, { art: "ansicht", kennung: "tabelle" });
       ergebnis = `als neues Dokument ${neu.name}`;
       meldungen.zeigen({ text: `Rezept ${r.name} angewendet: neues Dokument ${neu.name}`, art: "erfolg" });
     } else {

@@ -104,8 +104,7 @@
   }
 
   async function alsDokument(): Promise<void> {
-    const neu = await arbeitsplatz.neu(`${stamm}-${auswahl}.${endung(neuFormat)}`, werteAusgeben(werte(), neuFormat), blatt.ordner);
-    neu.zeigen({ art: "ansicht", kennung: "tabelle" });
+    const neu = await arbeitsplatz.neu(`${stamm}-${auswahl}.${endung(neuFormat)}`, werteAusgeben(werte(), neuFormat), blatt.ordner, { art: "ansicht", kennung: "tabelle" });
     meldungen.zeigen({ text: `Neues Dokument ${neu.name} mit ${anzahl(sicht.length)} Zeilen`, art: "erfolg" });
   }
 </script>

@@ -103,8 +103,7 @@ class Abfrage {
   async alsDokument(alsTabelle = false): Promise<void> {
     const text = await this.ganzerText();
     if (text === null) return;
-    const blatt = await arbeitsplatz.neu(`abfrage-${this.sprache}.json`, text);
-    blatt.zeigen({ art: "ansicht", kennung: alsTabelle ? "tabelle" : "baum" });
+    await arbeitsplatz.neu(`abfrage-${this.sprache}.json`, text, "", { art: "ansicht", kennung: alsTabelle ? "tabelle" : "baum" });
     this.ergebnisZeigen = false;
     abfrageverlauf.merken(this.sprache, this.ausdruck);
   }

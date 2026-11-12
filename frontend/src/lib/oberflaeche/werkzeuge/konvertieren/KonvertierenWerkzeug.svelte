@@ -33,8 +33,7 @@
     // Nach dem Anlegen ist das neue Dokument aktiv; Name und Ziel der Quelle vorher festhalten
     const quelle = blatt.name;
     const ziel = zk;
-    const neu = await arbeitsplatz.neu(neuerName, u.text, blatt.ordner);
-    neu.zeigen({ art: "ansicht", kennung: ziel === "csv" ? "tabelle" : "baum" });
+    const neu = await arbeitsplatz.neu(neuerName, u.text, blatt.ordner, { art: "ansicht", kennung: ziel === "csv" ? "tabelle" : "baum" });
     meldungen.zeigen({ text: `Neues Dokument ${neu.name}; ${quelle} bleibt unverändert`, art: "erfolg" });
   }
 

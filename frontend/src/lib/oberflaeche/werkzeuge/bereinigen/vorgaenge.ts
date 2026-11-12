@@ -34,8 +34,7 @@ export async function alsNeuesDokument(blatt: Arbeitsblatt, s: Tabellenstand, ze
   const f = s.analyse.format.faehigkeiten;
   const format: Ausgabeformat = f.tabellarisch && !f.typen ? "csv" : "json";
   const stamm = blatt.name.replace(/\.[^.]+$/, "");
-  const neu = await arbeitsplatz.neu(`${stamm}-auswahl.${format}`, werteAusgeben(sichtWerte(s.tabelle, s.index, s.text, zeilen), format), blatt.ordner);
-  neu.zeigen({ art: "ansicht", kennung: "tabelle" });
+  const neu = await arbeitsplatz.neu(`${stamm}-auswahl.${format}`, werteAusgeben(sichtWerte(s.tabelle, s.index, s.text, zeilen), format), blatt.ordner, { art: "ansicht", kennung: "tabelle" });
   meldungen.zeigen({ text: `Neues Dokument ${neu.name} mit ${anzahl(zeilen.length)} Zeilen`, art: "erfolg" });
 }
 

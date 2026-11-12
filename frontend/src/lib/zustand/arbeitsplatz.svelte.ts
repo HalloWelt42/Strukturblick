@@ -2,7 +2,7 @@
 // Dokumente. Nur die Schale greift hierauf zu; Ansichten bekommen ihr Blatt als Eigenschaft (Regel A5).
 
 import type { Ablage, Dokumentkopf } from "../dienste/ablage";
-import { Arbeitsblatt } from "./arbeitsblatt.svelte";
+import { Arbeitsblatt, type Platz } from "./arbeitsblatt.svelte";
 import { meldungen } from "./meldungen.svelte";
 import { textAusBytes } from "../formate/kodierung";
 import { einleserFuer } from "../formate/einlesen/registrierung";
@@ -67,13 +67,15 @@ class Arbeitsplatz {
     void this.standSpeichern();
   }
 
-  /** Neues Dokument aus Text (Einfügen, Leer); öffnet je nach Inhalt im Editor oder in der Struktur. */
-  async neu(name: string, text: string, ordner = ""): Promise<Arbeitsblatt> {
+  /** Neues Dokument aus Text (Einfügen, Leer); öffnet in `platz` oder je nach Inhalt im Editor oder in der Struktur.
+   *  Der Platz steht fest, bevor das Blatt aktiv wird (sonst entstünden zwei Einträge im Verlauf der Adresse). */
+  async neu(name: string, text: string, ordner = "", platz?: Platz): Promise<Arbeitsblatt> {
     const blatt = new Arbeitsblatt(
       { kennung: neueKennung(), name, ordner, formatWahl: null, optionen: {}, text, verlauf: { eintraege: [], zeiger: 0 }, geaendert: new Date().toISOString() },
       this.ablage,
     );
-    if (text.trim() === "") blatt.zeigen({ art: "ansicht", kennung: "editor" });
+    if (platz) blatt.zeigen(platz);
+    else if (text.trim() === "") blatt.zeigen({ art: "ansicht", kennung: "editor" });
     this.blaetter.push(blatt);
     this.aktivesBlatt = blatt;
     this.seite = "blatt";
