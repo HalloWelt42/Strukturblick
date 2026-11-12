@@ -12,7 +12,7 @@ from app.main import app_bauen
 from .test_app import anmelden, kellerwolke
 
 MODELLE = {"data": [
-    {"id": "qwen/qwen3-next-80b", "x-leitstelle": {"name": "Qwen3 Next 80B", "geladen": True, "knoten_name": "MacBook",
+    {"id": "qwen/qwen3-next-80b", "x-leitstelle": {"name": "Qwen3 Next 80B", "geladen": True, "knoten": "k1", "knoten_name": "MacBook",
                                                    "faehigkeiten": ["text"], "steckbrief": {"zweck": "Allgemein"}}},
     {"id": "whisper", "x-leitstelle": {"name": "Whisper", "faehigkeiten": ["hoeren"]}},
 ]}
@@ -38,7 +38,7 @@ class Leitstelle:
             inhalt = json.dumps({"ergebnis": ".kunden[] | select(.ort == \"Leipzig\")", "erklaerung": ["Liest " + chr(0x201E) + "ort" + chr(0x201C) + " genau."]})
             return httpx.Response(200, json={"model": "qwen/qwen3-next-80b", "choices": [{"message": {"content": inhalt}, "finish_reason": "stop"}],
                                              "usage": {"prompt_tokens": 900, "completion_tokens": 40, "total_tokens": 940}},
-                                  headers={"x-leitstelle-modell": "qwen/qwen3-next-80b", "x-leitstelle-knoten": "MacBook",
+                                  headers={"x-leitstelle-modell": "qwen/qwen3-next-80b", "x-leitstelle-knoten": "k1",
                                            "x-leitstelle-auftrag": "a1"})
         return httpx.Response(404, json={"detail": "nicht da"})
 

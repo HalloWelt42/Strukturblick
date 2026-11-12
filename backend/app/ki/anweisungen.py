@@ -24,8 +24,10 @@ Antworte nur mit einem JSON-Objekt {"ergebnis": "...", "erklaerung": ["...", "..
 SPRACHEN: dict[Zielsprache, str] = {
     "sql": """Schreibe eine einzige SELECT-Abfrage für SQLite. Die Tabellen und Spalten stehen im Auszug unter
 "SQL-Tabellen"; nimm genau diese Namen. Nur lesen: kein INSERT, UPDATE, DELETE, CREATE, DROP oder PRAGMA.
-Achte auf Schreibweisen aus den Beispielen: Groß und klein, Leerzeichen am Rand, Abkürzungen, deutsche Beträge wie
-1.234,50 als Text (dann Punkt entfernen, Komma zu Punkt und mit CAST(... AS REAL) vergleichen).""",
+Achte auf Schreibweisen aus den Beispielen: Texte vergleichst du mit lower(trim(spalte)), damit Groß und klein und
+Leerzeichen am Rand nicht stören; Abkürzungen aus den Beispielen nimmst du mit IN (...) dazu. Deutsche Beträge wie
+1.234,50 stehen als Text; als Zahl genau so: CAST(REPLACE(REPLACE(spalte, '.', ''), ',', '.') AS REAL).
+Was die Erklärung sagt, muss der Ausdruck auch tun.""",
     "jq": """Schreibe einen jq-Ausdruck (jq 1.7), der auf dem ganzen Dokument läuft. Der Auszug zeigt die Pfade in
 jq-Schreibweise. Nimm keine Funktionen, die jq 1.7 nicht kennt.""",
     "jsonpath": """Schreibe einen JSONPath-Ausdruck nach RFC 9535, beginnend mit $. Filter mit ?(...) und @ sind

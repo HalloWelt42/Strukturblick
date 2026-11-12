@@ -56,6 +56,17 @@ class KiDienst:
                                            geladen=m.geladen, rechner=m.knoten_name or m.knoten, extern=m.extern)
                                 for m in modelle])
 
+    @staticmethod
+    async def _rechnername(ls: Leitstelle, knoten: str | None) -> str | None:
+        """Die Leitstelle nennt im Kopf die Kennung des Rechners; lesbar ist sein Name aus ihrem Angebot. Antwortet sie
+        darauf nicht, bleibt die Kennung (der Vorschlag ist dann trotzdem da)."""
+        if not knoten:
+            return None
+        try:
+            return next((m.knoten_name for m in await ls.modelle() if m.knoten == knoten and m.knoten_name), knoten)
+        except LeitstellenFehler:
+            return knoten
+
     async def vorschlagen(self, a: Auftrag) -> Vorschlag:
         e = self._einstellungen()
         if not e.ki_an:
@@ -89,7 +100,8 @@ class KiDienst:
         if a.aufgabe == "erklaeren":
             ergebnis = saeubern(ergebnis)
         modell = antwort.modell or e.ki_modell
+        rechner = await self._rechnername(ls, antwort.knoten)
         return Vorschlag(ergebnis=ergebnis.strip(), erklaerung=[saeubern(str(s)).strip() for s in erklaerung if str(s).strip()],
-                         modell=modell, rechner=antwort.knoten, dauer_ms=dauer_ms,
+                         modell=modell, rechner=rechner, dauer_ms=dauer_ms,
                          verbrauch=Verbrauch(eingabe=antwort.verbrauch.eingabe, ausgabe=antwort.verbrauch.ausgabe)
                          if antwort.verbrauch else None, auftrag=antwort.auftrag)
