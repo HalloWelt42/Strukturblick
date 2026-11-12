@@ -650,6 +650,7 @@ button.eintrag:disabled {
   height: auto;
   margin: var(--a2) 0 0;
   padding: var(--a2) 0 0;
+  gap: 0;
   justify-content: center;
   overflow: visible;
   background: none;
@@ -659,6 +660,11 @@ button.eintrag:disabled {
 :root[data-leiste="schmal"] .leiste-titel .rechts {
   display: flex;
   margin: 0;
+}
+/* Ganz oben braucht es keine Linie */
+:root[data-leiste="schmal"] .leiste-feld > .leiste-titel:first-child {
+  margin-top: 0;
+  box-shadow: none;
 }
 :root[data-leiste="schmal"] .leiste-fuss {
   justify-content: center;
@@ -710,6 +716,7 @@ button.eintrag:disabled {
     height: auto;
     margin: var(--a2) 0 0;
     padding: var(--a2) 0 0;
+    gap: 0;
     justify-content: center;
     overflow: visible;
     background: none;
@@ -719,6 +726,11 @@ button.eintrag:disabled {
   :root .leiste-titel .rechts {
     display: flex;
     margin: 0;
+  }
+  /* Ganz oben braucht es keine Linie */
+  :root .leiste-feld > .leiste-titel:first-child {
+    margin-top: 0;
+    box-shadow: none;
   }
   :root .leiste-fuss {
     justify-content: center;
