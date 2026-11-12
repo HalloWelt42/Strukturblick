@@ -11,6 +11,8 @@ import ValidierenWerkzeug from "./validieren/ValidierenWerkzeug.svelte";
 import ValidierenInspektor from "./validieren/ValidierenInspektor.svelte";
 import ReparierenWerkzeug from "./reparieren/ReparierenWerkzeug.svelte";
 import ReparierenInspektor from "./reparieren/ReparierenInspektor.svelte";
+import KonvertierenWerkzeug from "./konvertieren/KonvertierenWerkzeug.svelte";
+import KonvertierenInspektor from "./konvertieren/KonvertierenInspektor.svelte";
 
 export interface Werkzeug {
   readonly kennung: string;
@@ -51,6 +53,15 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     abschnitt: "pruefen",
     komponente: ReparierenWerkzeug,
     inspektor: ReparierenInspektor,
+  },
+  {
+    kennung: "konvertieren",
+    titel: "Konvertieren",
+    beschreibung: "In ein anderes Format umschreiben (CSV, JSON Lines, JSON, YAML) und sehen, was das Ziel nicht kann",
+    symbol: "fa-shuffle",
+    abschnitt: "pruefen",
+    komponente: KonvertierenWerkzeug,
+    inspektor: KonvertierenInspektor,
   },
   {
     kennung: "rezepte",

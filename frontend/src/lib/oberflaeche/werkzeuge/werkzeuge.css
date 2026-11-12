@@ -437,6 +437,101 @@ button.wz-befund {
   align-items: center;
 }
 
+/* ----- Verlustkarte (Konvertieren) ----------------------------------------- */
+/* Steht vor dem Ergebnis und sagt ehrlich, was das Zielformat nicht kann. */
+
+.wz-verlust {
+  margin-top: 0;
+}
+.wz-verlust .karte-titel > i {
+  color: var(--warn);
+}
+.wz-verlust-raster {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: var(--a3) var(--a5);
+}
+@container (max-width: 760px) {
+  .wz-verlust-raster {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.wz-verlust-punkt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a1);
+  min-width: 0;
+}
+.wz-verlust-punkt + .wz-verlust-punkt {
+  margin-top: var(--a3);
+}
+.wz-verlust-satz {
+  font-weight: 600;
+}
+.wz-verlust-satz .abzeichen {
+  margin-right: var(--a1);
+}
+.wz-verlust-text {
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+
+/* Auswahl mit genau einem gewählten Eintrag (wie ein Radioknopf, kantig) */
+.wz-wahl-gruppe {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px;
+  margin-top: var(--a1);
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.wz-wahl {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--a2);
+  padding: var(--a2) var(--a3);
+  color: var(--text-2);
+  text-decoration: none;
+  cursor: pointer;
+}
+button.wz-wahl {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  text-align: left;
+}
+.wz-wahl > i {
+  margin-top: 0.2em;
+  color: var(--text-3);
+}
+.wz-wahl:hover {
+  color: var(--text-1);
+}
+.wz-wahl.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  color: var(--text-1);
+}
+.wz-wahl.aktiv > i {
+  color: var(--akzent);
+}
+.wz-wahl-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.wz-wahl-text b {
+  font-weight: 600;
+}
+.wz-wahl-text small {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
 /* ----- Aktionen am Fuß des Werkzeugs --------------------------------------- */
 
 .wz-aktionen {
