@@ -56,7 +56,7 @@
       <div class="karte-titel">Spalten</div>
       <div class="kv-spalten">
         {#each gruppen as g, i (i)}
-          <span class="mono">{namen(g.namen)}</span><span class="text-3">{herkunft(g)}</span>
+          <div class="kv-gruppe"><span class="mono">{namen(g.namen)}</span><span class="text-3">{herkunft(g)}</span></div>
         {/each}
       </div>
     </div>
@@ -74,12 +74,16 @@
 
 <style>
   .kv-spalten {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) max-content;
-    gap: var(--a1) var(--a3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--a2);
     font-size: var(--klein);
   }
-  .kv-spalten > .mono {
+  .kv-gruppe {
+    display: flex;
+    flex-direction: column;
+  }
+  .kv-gruppe > .mono {
     overflow-wrap: break-word;
   }
 </style>
