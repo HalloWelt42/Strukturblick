@@ -14,6 +14,7 @@ import { starthinweis } from "../../zustand/starthinweis.svelte";
 import { einstellungen, SCHRIFTSTUFEN, THEMEN } from "../../zustand/einstellungen.svelte";
 import { meldungen } from "../../zustand/meldungen.svelte";
 import { zugang } from "../../zustand/zugang.svelte";
+import { xmlSchemaAbleitbar, xmlSchemaAblegen } from "../../zustand/schemaAbleiten";
 import { ANSICHTEN, ansichtWaehlbar } from "../ansichten/registrierung";
 import { WERKZEUGE } from "../werkzeuge/registrierung";
 import { dateiWaehlen, herunterladen } from "../schale/dateien";
@@ -154,6 +155,17 @@ const DOKUMENTE: readonly Aktion[] = [
     ausfuehren: () => {
       const b = blatt();
       if (b) herunterladen(b.name, b.text);
+    },
+  },
+  {
+    kennung: "xml-schema-ableiten",
+    titel: "XML Schema ableiten",
+    beschreibung: "Aus den Daten des XML-Dokuments ein XSD ableiten und neben das Dokument legen",
+    symbol: "fa-sitemap",
+    verfuegbar: () => xmlSchemaAbleitbar(blatt()),
+    ausfuehren: () => {
+      const b = blatt();
+      if (b) void xmlSchemaAblegen(b);
     },
   },
   {

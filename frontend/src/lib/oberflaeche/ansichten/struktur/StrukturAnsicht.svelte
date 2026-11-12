@@ -1,12 +1,14 @@
 <script lang="ts">
   // Ansicht Struktur (entwuerfe/struktur.html): das abgeleitete Schema als Baum von Typkarten. Pflichtfelder tragen *,
   // Kanten nennen die Vielfalt (1, 0..1, 0..n). Zoom und Einpassen über CSS-Zoom der Leinwand; "Als JSON Schema" lädt
-  // das Schema herunter. Ein Klick auf einen Typ zeigt ihn im Inspektor, auf ein Feld wählt sein erstes Vorkommen.
+  // das Schema herunter; bei XML legt "XML Schema ableiten" ein XSD neben das Dokument. Ein Klick auf einen Typ zeigt ihn
+  // im Inspektor, auf ein Feld wählt sein erstes Vorkommen.
   import "../ansichten.css";
   import "./struktur.css";
   import { zeigerVon } from "../../../kern/pfade";
   import { alsJsonSchema, beschreiben, type Schemafeld, type Typ } from "../../../analyse/schema";
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+  import { xmlSchemaAbleitbar, xmlSchemaAblegen } from "../../../zustand/schemaAbleiten";
   import { herunterladen } from "../../schale/dateien";
   import { strukturZustand, ZOOM_STUFEN } from "./strukturZustand.svelte";
   import TypZweig from "./TypZweig.svelte";
@@ -22,6 +24,7 @@
     return eintraege.length ? eintraege : schema.typen.slice(0, 1);
   });
   const gewaehlt = $derived(z.typ ?? schema?.typen[0]?.name ?? "");
+  const xml = $derived(xmlSchemaAbleitbar(blatt));
 
   let leinwand: HTMLElement | undefined = $state();
 
@@ -72,7 +75,10 @@
         <button class="knopf nur-symbol" title="Vergrößern" disabled={z.zoom >= ZOOM_STUFEN.at(-1)!} onclick={() => zoomen(1)}><i class="fa-solid fa-magnifying-glass-plus"></i></button>
         <button class="knopf" title="Ganzes Diagramm ins Feld einpassen" onclick={einpassen}><i class="fa-solid fa-expand"></i><span class="nur-breit"> Einpassen</span></button>
       </div>
-      <button class="knopf primaer" disabled={!schema?.typen.length} title="Abgeleitetes Schema als Datei (JSON Schema 2020-12)" onclick={schemaLaden}><i class="fa-solid fa-file-export"></i> Als JSON Schema</button>
+      <button class="knopf" class:primaer={!xml} disabled={!schema?.typen.length} title="Abgeleitetes Schema als Datei (JSON Schema 2020-12)" onclick={schemaLaden}><i class="fa-solid fa-file-export"></i>{#if xml}<span class="nur-breit"> Als JSON Schema</span>{:else} Als JSON Schema{/if}</button>
+      {#if xml}
+        <button class="knopf primaer" disabled={!blatt.analyse} title="XML Schema (XSD) aus den Daten ableiten und neben das Dokument legen, je Namensraum eine Datei" onclick={() => void xmlSchemaAblegen(blatt)}><i class="fa-solid fa-sitemap"></i> XML Schema ableiten</button>
+      {/if}
     </div>
   </div>
   <div class="inhalt">

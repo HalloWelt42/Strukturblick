@@ -85,6 +85,19 @@ describe("XML gegen XSD", () => {
   });
 });
 
+describe("Dokumente, an denen libxml2 abbricht", () => {
+  it("meldet Entities aus einer DTD statt abzustürzen", async () => {
+    const xml = `<?xml version="1.0"?>
+<!DOCTYPE a [
+  <!ENTITY extern SYSTEM "datei.txt">
+]>
+<a>&extern;</a>`;
+    const p = await xsdPruefen(null, xml, { pfad: "a.xsd", text: '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="a" type="xs:string"/></xs:schema>' }, []);
+    expect(p).toMatchObject({ ok: false });
+    expect(p.ok ? "" : p.fehler).toContain("Entities in einer DTD");
+  });
+});
+
 describe("Beispiel lieferungen.xml mit lieferungen.xsd", () => {
   it("findet über den Import die Positionen und meldet nur bezahlt (ja und nein sind keine Wahrheitswerte)", async () => {
     const { readFileSync } = await import("node:fs");

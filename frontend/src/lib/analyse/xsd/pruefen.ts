@@ -118,7 +118,11 @@ export async function xsdPruefen(index: Strukturindex | null, text: string, haup
     try {
       pruefer.validate(dokument);
     } catch (e) {
-      if (!(e instanceof b.XmlLibError)) throw e;
+      // Ohne Einzelmeldungen bricht libxml2 etwa an Entities aus einer DTD ab, die es hier nicht laden darf
+      if (!(e instanceof b.XmlLibError)) {
+        const dtd = /<!ENTITY/.test(text.slice(0, 20000));
+        return { ok: false, fehler: dtd ? "libxml2 kann das Dokument nicht prüfen: Es erklärt Entities in einer DTD (<!ENTITY ...>), die hier absichtlich nicht geladen werden." : `libxml2 kann das Dokument nicht prüfen (${e instanceof Error ? e.message : String(e)}).` };
+      }
       details = e.details;
     }
     const anfaenge = zeilenanfaenge(text);
