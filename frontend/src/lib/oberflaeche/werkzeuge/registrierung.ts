@@ -13,14 +13,23 @@ import ReparierenWerkzeug from "./reparieren/ReparierenWerkzeug.svelte";
 import ReparierenInspektor from "./reparieren/ReparierenInspektor.svelte";
 import KonvertierenWerkzeug from "./konvertieren/KonvertierenWerkzeug.svelte";
 import KonvertierenInspektor from "./konvertieren/KonvertierenInspektor.svelte";
+import CodeWerkzeug from "./code/CodeWerkzeug.svelte";
+import CodeInspektor from "./code/CodeInspektor.svelte";
+
+/** Abschnitte der Leiste mit Werkzeugen, in dieser Reihenfolge */
+export const ABSCHNITTE = [
+  { kennung: "pruefen", titel: "Prüfen und umbauen" },
+  { kennung: "erzeugen", titel: "Erzeugen" },
+] as const;
+export type Abschnitt = (typeof ABSCHNITTE)[number]["kennung"];
 
 export interface Werkzeug {
   readonly kennung: string;
   readonly titel: string;
   readonly beschreibung: string;
   readonly symbol: string;               // Font-Awesome-Klasse
-  /** Wo die Leiste es zeigt: unter "Prüfen und umbauen" oder als Kopf des Abschnitts Rezepte */
-  readonly abschnitt: "pruefen" | "rezepte";
+  /** Wo die Leiste es zeigt: in einem der ABSCHNITTE oder als Kopf des Abschnitts Rezepte */
+  readonly abschnitt: Abschnitt | "rezepte";
   readonly komponente: Component<{ blatt: Arbeitsblatt }>;
   /** Karten der rechten Spalte, solange das Werkzeug offen ist */
   readonly inspektor: Component<{ blatt: Arbeitsblatt }>;
@@ -71,6 +80,15 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     abschnitt: "rezepte",
     komponente: RezepteWerkzeug,
     inspektor: RezepteInspektor,
+  },
+  {
+    kennung: "code",
+    titel: "Code erzeugen",
+    beschreibung: "Klassen in PHP, TypeScript oder Python aus dem Schema der Daten oder aus einem JSON Schema",
+    symbol: "fa-file-code",
+    abschnitt: "erzeugen",
+    komponente: CodeWerkzeug,
+    inspektor: CodeInspektor,
   },
 ];
 

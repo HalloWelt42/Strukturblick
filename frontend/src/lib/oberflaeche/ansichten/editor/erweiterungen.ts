@@ -223,3 +223,27 @@ export function aufbau(sprache: string, wege: Tastenwege, beschriftung: string):
     ],
   };
 }
+
+/** Nur zum Lesen (erzeugter Code): Zeilennummern, Faltung, Hervorhebung und Aussehen wie im Editor, ohne Bearbeiten */
+export function leseAufbau(beschriftung: string): Aufbau {
+  const fach = new Compartment();
+  return {
+    sprache: fach,
+    erweiterungen: [
+      EditorState.readOnly.of(true),
+      EditorState.phrases.of(PHRASEN),
+      EditorView.contentAttributes.of({ "aria-label": beschriftung }),
+      lineNumbers(),
+      foldGutter({ markerDOM: falte }),
+      faltung,
+      highlightSpecialChars({ specialChars: STEUERZEICHEN }),
+      drawSelection(),
+      syntaxHighlighting(HERVORHEBUNG),
+      highlightSelectionMatches(),
+      search({ top: true }),
+      keymap.of([...defaultKeymap, ...searchKeymap, ...foldKeymap]),
+      fach.of([]),
+      AUSSEHEN,
+    ],
+  };
+}

@@ -1,0 +1,115 @@
+// Code erzeugen: JSON Schema zu Klassenmodell (Verweise, eingebettete Objekte, null, enum, Grenzen) und die vier
+// Zielsprachen an bestellung.schema.json und an Sonderfällen (Schlüssel, die kein Bezeichner sind, optionale Klassen,
+// Listen von Datumswerten, Wurzel als Liste).
+
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import { format } from "../../formate/registrierung";
+import { alsJsonSchema, schemaAbleiten } from "../schema";
+import { ausJsonSchema } from "./ausJsonSchema";
+import { codeziel } from "./codeziele";
+import type { Codeoptionen } from "./ziele";
+
+const lies = (name: string) => readFileSync(new URL(`../../../../pruefdaten/${name}`, import.meta.url), "utf8");
+const OPTIONEN: Codeoptionen = { wurzelname: "Bestellungen", namensraum: "Lindenhof\\Bestellungen", unveraenderlich: true, jeKlasse: false, kopf: "Erzeugt von Strukturblick aus bestellung.schema.json", dateistamm: "bestellungen" };
+const BESTELLUNG = ausJsonSchema(JSON.parse(lies("bestellung.schema.json")), "Bestellungen");
+const code = (ziel: string, o: Partial<Codeoptionen> = {}) => codeziel(ziel).schreiben(BESTELLUNG, { ...OPTIONEN, ...o });
+
+const SONDERFAELLE = {
+  type: "array",
+  items: {
+    type: "object",
+    required: ["@nr", "class", "termine"],
+    properties: {
+      "@nr": { type: "string" },
+      class: { enum: ["a", "b", null] },
+      termine: { type: "array", items: { type: "string", format: "date" } },
+      ort: { anyOf: [{ $ref: "#/$defs/Ort" }, { type: "null" }] },
+      wert: { type: ["integer", "string"] },
+    },
+  },
+  $defs: { Ort: { type: "object", required: ["plz"], properties: { plz: { type: "string", pattern: "^[0-9]{5}$" } } } },
+};
+
+describe("Klassenmodell aus JSON Schema", () => {
+  it("liest Klassen, Typen, Pflicht, null und Grenzen", () => {
+    expect(BESTELLUNG.klassen.map((k) => k.name)).toEqual(["Bestellungen", "Bestellung", "Kunde", "Position"]);
+    const b = BESTELLUNG.klassen[1];
+    expect(b.felder.map((f) => [f.name, f.typ.art, f.pflicht, f.nullbar])).toEqual([
+      ["nr", "text", true, false], ["datum", "datum", true, false], ["kunde", "klasse", true, false],
+      ["positionen", "liste", true, false], ["bezahlt", "wahrheit", true, false], ["notiz", "text", false, true],
+    ]);
+    expect(b.felder[3].regeln).toEqual({ minAnzahl: 1, maxAnzahl: 3 });
+    expect(BESTELLUNG.klassen[3].felder.find((f) => f.name === "preis")!.regeln).toEqual({ minExklusiv: 0 });
+  });
+
+  it("nimmt eingebettete Objekte, enum mit null, anyOf mit null und eine Liste als Wurzel", () => {
+    const m = ausJsonSchema(SONDERFAELLE, "Termine");
+    expect(m.wurzel).toEqual({ art: "liste", von: { art: "klasse", name: "TermineEintrag" } });
+    const f = m.klassen[0].felder;
+    expect(f.find((x) => x.name === "class")).toMatchObject({ typ: { art: "aufzaehlung", werte: ["a", "b"] }, nullbar: true });
+    expect(f.find((x) => x.name === "ort")).toMatchObject({ typ: { art: "klasse", name: "Ort" }, nullbar: true, pflicht: false });
+    expect(f.find((x) => x.name === "wert")!.typ.art).toBe("vereinigung");
+  });
+
+  it("geht auch aus den Daten (abgeleitetes Schema)", () => {
+    const text = lies("bestellungen.json");
+    const index = format("json").lesen(text).index!;
+    const m = ausJsonSchema(alsJsonSchema(schemaAbleiten(index, text), "bestellungen.json"), "Bestellungen");
+    expect(m.klassen[0].name).toBe("Bestellungen");
+    expect(m.klassen.length).toBeGreaterThan(2);
+  });
+});
+
+describe("Zielsprachen", () => {
+  it("PHP: readonly-Klassen mit fromArray, Datum, Listen und PHPDoc", () => {
+    const [d] = code("php").dateien;
+    expect(d.name).toBe("Bestellungen.php");
+    expect(d.text).toContain("namespace Lindenhof\\Bestellungen;");
+    expect(d.text).toContain("use DateTimeImmutable;");
+    expect(d.text).toContain("final readonly class Bestellung\n");
+    expect(d.text).toContain("public ?string $notiz = null,");
+    expect(d.text).toContain("* @param list<Position> $positionen Der Lieferdienst nimmt höchstens drei Positionen je Bestellung an; 1 bis 3 Einträge");
+    expect(d.text).toContain("datum: new DateTimeImmutable($daten['datum']),");
+    expect(d.text).toContain("positionen: array_map(Position::fromArray(...), $daten['positionen']),");
+    expect(d.text).toContain("notiz: $daten['notiz'] ?? null,");
+    expect(code("php", { unveraenderlich: false }).dateien[0].text).toContain("final class Bestellung\n");
+    expect(code("php", { jeKlasse: true }).dateien.map((x) => x.name)).toEqual(["Bestellungen.php", "Bestellung.php", "Kunde.php", "Position.php"]);
+  });
+
+  it("TypeScript: Interfaces mit readonly, optional und null", () => {
+    const [d] = code("typescript").dateien;
+    expect(d.name).toBe("bestellungen.ts");
+    expect(d.text).toContain("export interface Bestellung {");
+    expect(d.text).toContain("  readonly notiz?: string | null;");
+    expect(d.text).toContain("  readonly positionen: readonly Position[];");
+    expect(d.text).toContain("/** Datum JJJJ-MM-TT */");
+    const je = code("typescript", { jeKlasse: true }).dateien;
+    expect(je.find((x) => x.name === "Bestellung.ts")!.text).toContain('import type { Kunde } from "./Kunde";');
+  });
+
+  it("Python: Pydantic mit Field-Grenzen, dataclasses mit from_dict", () => {
+    const p = code("pydantic").dateien[0].text;
+    expect(p).toContain("class Bestellung(BaseModel):");
+    expect(p).toContain("model_config = ConfigDict(frozen=True)");
+    expect(p).toContain("positionen: list[Position] = Field(min_length=1, max_length=3, description=");
+    expect(p).toContain("preis: float = Field(gt=0)");
+    expect(p).toContain("notiz: str | None = Field(default=None)");
+    expect(p).toContain("from datetime import date, datetime");
+    const d = code("dataclasses").dateien[0].text;
+    expect(d).toContain("@dataclass(frozen=True)\nclass Bestellung:");
+    expect(d).toContain('datum=date.fromisoformat(d["datum"]),');
+    expect(d).toContain('positionen=[Position.from_dict(x) for x in d["positionen"]],');
+    expect(d).toContain('notiz=d.get("notiz"),');
+  });
+
+  it("macht aus Schlüsseln, die kein Bezeichner sind, gültige Namen", () => {
+    const m = ausJsonSchema(SONDERFAELLE, "Termine");
+    const o = { ...OPTIONEN, wurzelname: "Termine", dateistamm: "termine" };
+    expect(codeziel("pydantic").schreiben(m, o).dateien[0].text).toContain('    nr: str = Field(alias="@nr")');
+    expect(codeziel("pydantic").schreiben(m, o).dateien[0].text).toContain('class_: Literal["a", "b"] | None = Field(alias="class")');
+    expect(codeziel("typescript").schreiben(m, o).dateien[0].text).toContain('readonly "@nr": string;');
+    expect(codeziel("php").schreiben(m, o).dateien[0].text).toContain("            nr: $daten['@nr'],");
+    expect(codeziel("dataclasses").schreiben(m, o).dateien[0].text).toContain('termine=[date.fromisoformat(x) for x in d["termine"]],');
+  });
+});
