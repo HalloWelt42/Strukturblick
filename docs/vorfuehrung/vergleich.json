@@ -1,0 +1,41 @@
+{
+  "kapitel": "vergleich",
+  "titel": "Zwei Stände vergleichen",
+  "ticket": "STB-44",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json im Vordergrund; daraus mit Konvertieren bestellungen.toml als neues Dokument angelegt",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Die Ansicht Vergleich stellt das Dokument einer Gegenseite gegenüber: einem anderen Dokument, einem früheren Stand oder einer Datei. Hier die Bestellungen gegen ihre Fassung in TOML.",
+      "ziel": { "anker": "vergleich-gegenseite", "notbehelf": "Ansicht Vergleich, Offenes Dokument, bestellungen.toml" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "128 Paare über nr; 103 hinzu: die notiz-Felder mit null, die TOML nicht kennt",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Die Bestellungen werden über ihre Nummer gepaart, nicht über ihre Stelle. Gleiches ist eingeklappt, nur die Unterschiede stehen offen da.",
+      "ziel": { "anker": "vergleich-seiten", "notbehelf": "Beide Seiten nebeneinander, Falten mit gleich" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Falten wie kunde 3 Schlüssel, gleich; rechts grün notiz: null, links schraffiert",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Nach einer Änderung lässt sich mit einem früheren Stand vergleichen. Der Inspektor zeigt Vorher und Jetzt und nimmt den alten Wert auf Wunsch zurück, als eigener Schritt im Verlauf.",
+      "ziel": { "anker": "vergleich-uebernehmen", "notbehelf": "Eine Menge im Inspektor ändern, dann Vergleich, Früherer Stand, Stand 0; Unterschied wählen, Vorher-Wert übernehmen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Zuerst 1 geändert (menge 1 auf 3), danach 0 Unterschiede, Stand 2",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Als JSON Patch gibt es die Unterschiede auch für Programme: die Vorgänge, die Vorher in Jetzt verwandeln.",
+      "ziel": { "anker": "vergleich-patch", "notbehelf": "Inspektor, Karte Als JSON Patch" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "replace mit Pfad /bestellungen/0/positionen/0/menge und Wert 3",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

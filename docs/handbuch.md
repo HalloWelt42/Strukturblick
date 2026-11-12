@@ -89,6 +89,21 @@ Kanten nennen 1, 0..1 oder 0..n. Namen kommen aus den Schlüsseln, Listeneinträ
 Einzahl. "Als JSON Schema" lädt das Schema (Entwurf 2020-12) herunter; der Inspektor zeigt den gewählten Typ und
 seinen Ausschnitt zum Kopieren.
 
+Die Ansicht Vergleich (⌥ ⌘ 6) vergleicht das Dokument mit einer Gegenseite: einem anderen offenen Dokument, einem aus
+der Ablage, einem früheren Stand aus dem Verlauf (vorgewählt ist der Anfang, sobald es Änderungen gibt) oder einer
+Datei, die dafür nicht abgelegt wird. Verglichen wird der Aufbau, nicht der Text: Objekte nach Schlüsseln (ihre
+Reihenfolge zählt nicht), Listen über ein Schlüsselfeld, das Strukturblick selbst erkennt, wenn es nach Kennung aussieht
+(nr, id ...) und in beiden Listen eindeutig ist; ein anderes Feld oder "nach Stelle" lässt sich wählen. Nach Stelle
+werden gleiche Einträge ausgerichtet, ein eingefügter Eintrag macht die folgenden also nicht zu Änderungen. Eine andere
+Reihenfolge ist ein eigener Unterschied, außer "Reihenfolge ignorieren" ist an.
+
+Beide Seiten stehen nebeneinander, Zeile für Zeile; Gleiches ist eingeklappt ("[2] bis [126]: 125 Einträge, gleich")
+und klappt per Klick auf. Rechts (bei wenig Breite darunter) stehen die Unterschiede mit Pfad wie
+bestellungen[nr="B-2"].bezahlt; ein Klick rollt die Seiten dorthin. Der Inspektor zeigt den gewählten Unterschied mit
+Zeiger und Werten, übernimmt den Wert der Gegenseite ins Dokument (ein Vorgang im Verlauf) und zeigt die Stelle im
+Baum. "Als JSON Patch" (RFC 6902) lädt die Vorgänge herunter, die Vorher in Jetzt verwandeln; "Seiten tauschen" dreht
+die Richtung um.
+
 Das Werkzeug Validieren (Leiste, "Prüfen und umbauen") prüft die Daten gegen ein JSON Schema (Entwurf 2020-12 und
 älter): "Aus der Ablage" nimmt ein .json-Dokument der Ablage als Schema, "Aus den Daten" das Schema, das auch die
 Struktur zeigt. Jeder Befund nennt Stelle (Pfad, Zeile, Eintrag), was erwartet war, was da steht, und die Regel im
@@ -216,7 +231,7 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 | ⌥ ⌘ N | Neues Dokument |
 | ⌥ ⌘ W | Dokument schließen |
 | ⌥ ⌘ A | Ablage verwalten oder schließen |
-| ⌥ ⌘ 1 bis 5 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur |
+| ⌥ ⌘ 1 bis 6 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur, Vergleich |
 | ⌥ ⌘ E | Abfrage öffnen oder einklappen |
 | F3, ⇧ F3 | Nächster, voriger Treffer im Baum |
 
