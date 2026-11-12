@@ -17,7 +17,7 @@ const TEXT = `{
 
 function quelle(text: string, f = "json"): Quelle {
   const r = format(f as "json").lesen(text);
-  return { index: r.index!, text, format: f, formatName: f.toUpperCase(), kommentare: r.merkmale.kommentare === true, fehler: r.diagnosen.filter((d) => d.schwere === "fehler").length };
+  return { index: r.index!, text, format: f, formatName: f.toUpperCase(), kommentare: r.merkmale.kommentare === true, fehler: r.diagnosen.filter((d) => d.schwere === "fehler").length, datumswerte: Number(r.merkmale.datumswerte ?? 0) };
 }
 
 describe("Tabellieren", () => {
@@ -116,7 +116,37 @@ describe("Umwandeln", () => {
   });
 
   it("Ziele und Namen", () => {
-    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml"]);
+    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml", "toml"]);
     expect(zielname("bestellungen.json", "csv")).toBe("bestellungen.csv");
+  });
+});
+
+describe("Ziel TOML", () => {
+  it("null fällt weg und wird gemeldet; zurückgelesen gleich bis auf null", () => {
+    const u = umwandeln(quelle(TEXT), "toml");
+    expect(u.verluste.map((v) => v.satz)).toEqual(["TOML kennt kein null"]);
+    expect(u.verluste[0].text).toContain("1 Stelle fällt weg");
+    expect(u.text).toContain("[[bestellungen]]");
+    const zurueck = format("toml").lesen(u.text);
+    expect(zurueck.diagnosen).toEqual([]);
+    const w = umwandeln({ ...quelle(u.text, "toml") }, "json");
+    const erwartet = JSON.parse(TEXT);
+    delete erwartet.bestellungen[1].notiz;
+    expect(JSON.parse(w.text)).toEqual(erwartet);
+  });
+
+  it("eine Liste oben steht unter eintraege", () => {
+    const u = umwandeln(quelle('[{"a": 1}, {"a": 2}]'), "toml");
+    expect(u.verluste[0].satz).toBe("TOML braucht oben ein Objekt");
+    expect(u.text).toBe("[[eintraege]]\na = 1\n\n[[eintraege]]\na = 2\n");
+  });
+});
+
+describe("Quelle TOML", () => {
+  it("nennt Kommentare und Datumswerte, die Text werden", () => {
+    const u = umwandeln(quelle('# Kopf\nstand = 2026-11-10\nab = 08:00:00\nn = 1\n', "toml"), "json");
+    expect(u.verluste.map((v) => v.satz)).toEqual(["Kommentare gehen verloren", "Datum und Zeit werden Text"]);
+    expect(u.verluste[1].text).toBe("TOML hat für 2 Werte einen eigenen Typ für Datum oder Zeit; JSON schreibt sie als Text. Der Inhalt bleibt gleich.");
+    expect(JSON.parse(u.text)).toEqual({ stand: "2026-11-10", ab: "08:00:00", n: 1 });
   });
 });

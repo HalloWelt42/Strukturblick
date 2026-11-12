@@ -5,8 +5,9 @@ import { JSON_FORMAT } from "./json";
 import { NDJSON_FORMAT } from "./ndjson";
 import { CSV_FORMAT } from "./csv";
 import { YAML_FORMAT } from "./yaml";
+import { TOML_FORMAT } from "./toml";
 
-export const FORMATE: readonly Format[] = [JSON_FORMAT, NDJSON_FORMAT, CSV_FORMAT, YAML_FORMAT];
+export const FORMATE: readonly Format[] = [JSON_FORMAT, NDJSON_FORMAT, CSV_FORMAT, YAML_FORMAT, TOML_FORMAT];
 
 const NACH_KENNUNG = new Map<FormatKennung, Format>(FORMATE.map((f) => [f.kennung, f]));
 

@@ -30,9 +30,12 @@
 
   async function alsDokument(): Promise<void> {
     if (!u || !zk) return;
+    // Nach dem Anlegen ist das neue Dokument aktiv; Name und Ziel der Quelle vorher festhalten
+    const quelle = blatt.name;
+    const ziel = zk;
     const neu = await arbeitsplatz.neu(neuerName, u.text, blatt.ordner);
-    neu.zeigen({ art: "ansicht", kennung: zk === "csv" ? "tabelle" : "baum" });
-    meldungen.zeigen({ text: `Neues Dokument ${neu.name}; ${blatt.name} bleibt unverändert`, art: "erfolg" });
+    neu.zeigen({ art: "ansicht", kennung: ziel === "csv" ? "tabelle" : "baum" });
+    meldungen.zeigen({ text: `Neues Dokument ${neu.name}; ${quelle} bleibt unverändert`, art: "erfolg" });
   }
 
   function zielWaehlen(k: Zielkennung): void {

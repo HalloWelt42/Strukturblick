@@ -1,0 +1,38 @@
+# Einstellungen des Webshops vom Hofladen Lindenhof (erfunden, zum Üben)
+name = "Hofladen Lindenhof"
+stand = 2026-11-10T08:15:00+01:00
+waehrung = "EUR"
+mindestbestellwert = 15.0
+
+[kontakt]
+telefon = "030 23125 410"
+mail = "laden@example.org"
+oeffnungszeiten = ["Di 9-18", "Fr 9-18", "Sa 8-13"]
+
+[abholung]
+ort = "Hofladen, Lindenweg 4"
+ab = 08:00:00
+bis = 13:00:00
+
+# Versandarten, die im Shop zur Wahl stehen
+[[versand]]
+art = "Abholung"
+preis = 0
+dauer_tage = 0
+
+[[versand]]
+art = "Kurier im Umkreis"
+preis = 4.9
+dauer_tage = 1
+umkreis_km = 25
+
+[[versand]]
+art = "Paket"
+preis = 6.9
+dauer_tage = 2
+gebiete = ["DE"]
+kuehlware = false
+
+[zahlung]
+arten = ["Rechnung", "Lastschrift", "Bar bei Abholung"]
+skonto = { prozent = 2, tage = 10 }

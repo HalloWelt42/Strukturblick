@@ -8,7 +8,8 @@ import {
   keymap, lineNumbers, rectangularSelection, type KeyBinding,
 } from "@codemirror/view";
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
-import { bracketMatching, codeFolding, foldGutter, foldKeymap, HighlightStyle, indentOnInput, syntaxHighlighting } from "@codemirror/language";
+import { bracketMatching, codeFolding, foldGutter, foldKeymap, HighlightStyle, indentOnInput, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
+import { toml } from "@codemirror/legacy-modes/mode/toml";
 import { highlightSelectionMatches, openSearchPanel, search, searchKeymap } from "@codemirror/search";
 import { json } from "@codemirror/lang-json";
 import { yaml } from "@codemirror/lang-yaml";
@@ -18,7 +19,7 @@ import { diagnosenFeld, diagnosenRinne } from "./diagnosen";
 import { suchtreffer } from "./suche";
 
 /** Hervorhebung je `format.sprache`; andere Sprachen bleiben ohne. */
-const SPRACHEN: Readonly<Record<string, () => Extension>> = { json: () => json(), yaml: () => yaml() };
+const SPRACHEN: Readonly<Record<string, () => Extension>> = { json: () => json(), yaml: () => yaml(), toml: () => StreamLanguage.define(toml) };
 
 export const spracheFuer = (sprache: string): Extension => SPRACHEN[sprache]?.() ?? [];
 

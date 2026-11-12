@@ -37,4 +37,9 @@ export const BEISPIELE: readonly Beispiel[] = [
     beschreibung: "Kundenimport als JSON Lines mit vier kaputten Zeilen (abgeschnitten, einfache Anführungszeichen, zwei Datensätze in einer Zeile); zum Üben im Werkzeug Reparieren",
     laden: async () => (await import("../../../pruefdaten/kundenimport.ndjson?raw")).default,
   },
+  {
+    name: "webshop.toml",
+    beschreibung: "Einstellungen des Webshops in TOML mit Tabellen, Tabellenliste und Kommentaren; zum Ansehen und Konvertieren",
+    laden: async () => (await import("../../../pruefdaten/webshop.toml?raw")).default,
+  },
 ];
