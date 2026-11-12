@@ -41,6 +41,7 @@
     "@fortawesome/fontawesome-free": "^7.3.1",
     "@lezer/highlight": "^1.2.5",
     "appkern-oberflaeche": "github:HalloWelt42/appkern",
+    "fflate": "^0.8.3",
     "idb": "^8.0.4",
     "jq-wasm": "^3.0.0-jq-1.8.2",
     "jsonpath-plus": "^11.3.0",

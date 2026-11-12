@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { format } from "../../formate/registrierung";
 import { umwandeln, VORGABEN, zieleFuer, zielname, type Quelle } from "./konvertieren";
 import { tabellieren } from "./tabellieren";
+import { xlsxLesen } from "../../formate/xlsx/lesen";
 
 const TEXT = `{
   "shop": "Hofladen Lindenhof",
@@ -116,7 +117,7 @@ describe("Umwandeln", () => {
   });
 
   it("Ziele und Namen", () => {
-    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml", "toml", "xml"]);
+    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml", "toml", "xml", "xlsx"]);
     expect(zielname("bestellungen.json", "csv")).toBe("bestellungen.csv");
   });
 });
@@ -171,5 +172,18 @@ describe("XML", () => {
     const u = umwandeln(quelle(x, "xml"), "json");
     expect(u.verluste.map((v) => v.satz)).toEqual(["`p` ist mal Liste, mal einzeln", "Attribute werden Felder", "Werte bleiben Text"]);
     expect(JSON.parse(u.text)).toEqual({ l: { e: [{ "@n": "1", p: ["a", "b"] }, { "@n": "2", p: "c" }] } });
+  });
+});
+
+describe("Ziel XLSX", () => {
+  it("Tabellendatei mit Typen; Felder außerhalb der Liste auf dem Blatt Angaben; Karte ohne Typverlust", () => {
+    const u = umwandeln(quelle(TEXT), "xlsx");
+    expect(u.daten).toBeInstanceOf(Uint8Array);
+    expect(u.verluste.map((v) => v.satz)).toEqual(["`positionen` sind Listen: 3 Möglichkeiten", "null und leer sehen gleich aus"]);
+    const m = xlsxLesen(u.daten!);
+    expect(m.blaetter.map((b) => b.name)).toEqual(["bestellungen", "Angaben"]);
+    expect(m.blaetter[0].zeilen[1]).toEqual(["B-1", "Jonas Brandt", "01067", "Honig", 1, 7.5, true, "Samstag"]);
+    expect(m.blaetter[1].zeilen).toEqual([["Feld", "Wert"], ["shop", "Hofladen Lindenhof"], ["stand", "2026-11-10T08:15:00+01:00"]]);
+    expect(u.tabelle?.zeilen).toBe(3);
   });
 });

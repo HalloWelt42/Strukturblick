@@ -91,7 +91,7 @@
         <Verlustkarte {z} zielName={zielInfo.name} verluste={u.verluste} />
         <div class="wz-raster">
           <Textvorschau titel="Quelle" symbol="fa-file-code" name={blatt.name} abzeichen={blatt.analyse?.format.name ?? ""} text={blatt.analyseText} />
-          <Textvorschau titel="Ergebnis" symbol={zielInfo.symbol} name={neuerName} abzeichen="Vorschau" text={u.text} rest={u.tabelle ? "Zeilen" : u.datensaetze !== null ? "Datensätze" : "Zeilen"} />
+          <Textvorschau titel="Ergebnis" symbol={zielInfo.symbol} name={neuerName} abzeichen={zielInfo.datei ? "Zellen als Text" : "Vorschau"} text={u.text} rest={u.tabelle ? "Zeilen" : u.datensaetze !== null ? "Datensätze" : "Zeilen"} />
         </div>
       {/if}
     </div>
@@ -101,8 +101,8 @@
     <i class="fa-solid fa-circle-info"></i>
     <span>{blatt.name} bleibt unverändert.</span>
     <span class="rechts">
-      <button class="knopf" disabled={!u} onclick={() => u && herunterladen(neuerName, u.text)}><i class="fa-solid fa-download"></i> Herunterladen</button>
-      <button class="knopf primaer" disabled={!u} onclick={() => void alsDokument()}><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>
+      <button class="knopf" class:primaer={zielInfo?.datei} disabled={!u} onclick={() => u && herunterladen(neuerName, u.daten ?? u.text, zielInfo?.datei?.art)}><i class="fa-solid fa-download"></i> Herunterladen</button>
+      {#if !zielInfo?.datei}<button class="knopf primaer" disabled={!u} onclick={() => void alsDokument()}><i class="fa-solid fa-file-circle-plus"></i> Als neues Dokument</button>{/if}
     </span>
   </div>
 </div>

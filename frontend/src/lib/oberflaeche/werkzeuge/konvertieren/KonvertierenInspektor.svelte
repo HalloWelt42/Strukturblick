@@ -15,7 +15,7 @@
 
   const groesse = $derived.by(() => {
     if (!u) return "";
-    const bytes = new TextEncoder().encode(u.text).length;
+    const bytes = u.daten?.length ?? new TextEncoder().encode(u.text).length;
     return bytes < 1024 ? `${anzahl(bytes)} Byte` : bytes < 1048576 ? `etwa ${anzahl(Math.round(bytes / 1024))} KB` : `etwa ${(bytes / 1048576).toLocaleString("de-DE", { maximumFractionDigits: 1 })} MB`;
   });
   const zeilenText = $derived.by(() => {
@@ -48,7 +48,7 @@
       {#if u.datensaetze !== null}<dt>Datensätze</dt><dd class="mono">{anzahl(u.datensaetze)}</dd>{:else}<dt>Zeilen</dt><dd class="mono">{zeilenText}</dd>{/if}
       {#if u.tabelle}<dt>Spalten</dt><dd class="mono">{anzahl(u.tabelle.spalten.length)}</dd>{/if}
       <dt>Größe</dt><dd class="mono">{groesse}</dd>
-      <dt>Kodierung</dt><dd>UTF-8</dd>
+      {#if u.daten}<dt>Blätter</dt><dd class="mono">{u.blaetter ?? 1}</dd>{:else}<dt>Kodierung</dt><dd>UTF-8</dd>{/if}
     </dl>
   </div>
   {#if gruppen.length}
@@ -63,8 +63,12 @@
   {/if}
   <div class="karte">
     <div class="karte-titel">Wohin</div>
-    <p class="wz-satz"><b>Als neues Dokument</b> öffnet {zielname(blatt.name, zk)} in einem eigenen Reiter und legt es in der Ablage ab, im selben Ordner wie {blatt.name}.</p>
-    <p class="wz-satz wz-abstand"><b>Herunterladen</b> speichert die Datei auf diesem Gerät.</p>
+    {#if u.daten}
+      <p class="wz-satz"><b>Herunterladen</b> speichert {zielname(blatt.name, zk)} auf diesem Gerät. Eine Tabellendatei ist kein Text; als Dokument lässt sie sich wieder öffnen, dann als JSON mit einer Liste je Blatt.</p>
+    {:else}
+      <p class="wz-satz"><b>Als neues Dokument</b> öffnet {zielname(blatt.name, zk)} in einem eigenen Reiter und legt es in der Ablage ab, im selben Ordner wie {blatt.name}.</p>
+      <p class="wz-satz wz-abstand"><b>Herunterladen</b> speichert die Datei auf diesem Gerät.</p>
+    {/if}
   </div>
 {/if}
 <div class="karte">
