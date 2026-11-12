@@ -1,5 +1,5 @@
 // Registrierung der Ansichten: die eine Liste, aus der die Ansichtswahl entsteht (keine hart geschriebenen Reiter).
-// Neue Ansichten melden sich hier an; ihre Stelle in der Liste gibt das Kürzel (⌥ ⌘ 1 bis 7). Eine Ansicht, die nur zu
+// Neue Ansichten melden sich hier an; ihre Stelle in der Liste gibt das Kürzel (⌥ ⌘ 1 bis 8). Eine Ansicht, die nur zu
 // bestimmten Dokumenten passt (Schema nur bei XML Schema), sagt das über verfuegbar.
 
 import type { Component } from "svelte";
@@ -10,6 +10,8 @@ import TabellenAnsicht from "./tabelle/TabellenAnsicht.svelte";
 import StatistikAnsicht from "./statistik/StatistikAnsicht.svelte";
 import StrukturAnsicht from "./struktur/StrukturAnsicht.svelte";
 import StrukturInspektor from "./struktur/StrukturInspektor.svelte";
+import GraphAnsicht from "./graph/GraphAnsicht.svelte";
+import GraphInspektor from "./graph/GraphInspektor.svelte";
 import VergleichAnsicht from "./vergleich/VergleichAnsicht.svelte";
 import VergleichInspektor from "./vergleich/VergleichInspektor.svelte";
 import SchemaAnsicht from "./schema/SchemaAnsicht.svelte";
@@ -33,6 +35,7 @@ export const ANSICHTEN: readonly Ansicht[] = [
   { kennung: "tabelle", titel: "Tabelle", symbol: "fa-table", komponente: TabellenAnsicht },
   { kennung: "statistik", titel: "Statistik", symbol: "fa-chart-column", komponente: StatistikAnsicht },
   { kennung: "struktur", titel: "Struktur", symbol: "fa-diagram-project", komponente: StrukturAnsicht, inspektor: StrukturInspektor },
+  { kennung: "graph", titel: "Graph", symbol: "fa-circle-nodes", komponente: GraphAnsicht, inspektor: GraphInspektor },
   { kennung: "vergleich", titel: "Vergleich", symbol: "fa-code-compare", komponente: VergleichAnsicht, inspektor: VergleichInspektor },
   { kennung: "schema", titel: "Schema", symbol: "fa-sitemap", komponente: SchemaAnsicht, inspektor: SchemaInspektor, verfuegbar: istSchemaDokument },
 ];

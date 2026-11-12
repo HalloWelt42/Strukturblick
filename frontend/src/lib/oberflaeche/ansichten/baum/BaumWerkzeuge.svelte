@@ -87,22 +87,6 @@
 </div>
 
 <style>
-  .teil {
-    padding: 2px 6px;
-    border: 0;
-    background: transparent;
-    color: var(--text-2);
-    font: inherit;
-    cursor: pointer;
-  }
-  .teil:hover {
-    background: var(--akzent-weich);
-    color: var(--text-1);
-  }
-  .teil.letzter {
-    color: var(--akzent);
-    font-weight: 600;
-  }
   .suche {
     width: 190px;
   }

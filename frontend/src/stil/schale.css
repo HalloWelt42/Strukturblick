@@ -291,16 +291,23 @@ button.eintrag:disabled {
   overflow: hidden;
   white-space: nowrap;
 }
-.pfad a {
+.pfad a,
+.pfad button {
   padding: 2px 6px;
+  border: 0;
+  background: transparent;
   color: var(--text-2);
+  font: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
-.pfad a:hover {
+.pfad a:hover,
+.pfad button:hover {
   background: var(--akzent-weich);
   color: var(--text-1);
 }
-.pfad a.letzter {
+.pfad a.letzter,
+.pfad button.letzter {
   color: var(--akzent);
   font-weight: 600;
 }

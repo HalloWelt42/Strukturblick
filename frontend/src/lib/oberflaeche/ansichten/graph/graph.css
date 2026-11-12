@@ -1,0 +1,96 @@
+/* Ansicht Graph (nach entwuerfe/teile/ansichten.css, Teil Graph): Wertkarten mit Schlüssel, Art, Wert und Umfang;
+   der Fokus leuchtet, die Karte eine Ebene höher ist eingelassen. Die Verzweigung liegt in ../ansichten.css. */
+
+/* ----- 4. Graph: Wertkarten ------------------------------------------------ */
+
+.an-wk {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: calc(var(--a6) * 6);
+  max-width: calc(var(--a6) * 10);
+  padding: var(--a2) var(--a3);
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.an-wk:hover {
+  background-color: var(--flaeche-panel-2);
+}
+.an-wk-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+}
+.an-wk-schl {
+  font-family: var(--schrift-mono);
+  font-weight: 600;
+  color: var(--typ-schluessel);
+}
+.an-wk-art {
+  margin-left: auto;
+  padding: 0 6px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.an-wk-wert {
+  font-family: var(--schrift-mono);
+  font-size: var(--gross);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.an-wk-info {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-size: var(--klein);
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.an-wk-mehr {
+  color: var(--akzent);
+}
+/* Fokus: leuchtender Rahmen ringsum */
+.an-wk.an-fokus {
+  box-shadow: var(--kante), 0 0 0 2px var(--akzent-flaeche),
+    0 0 calc(18px * var(--leuchten)) var(--akzent-flaeche), var(--schatten-ruhig);
+}
+.an-wk.an-gewaehlt {
+  background-color: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .an-wk.an-gewaehlt {
+  background-color: var(--akzent-weich);
+}
+/* Eine Ebene höher: eingelassen statt erhaben */
+.an-wk.an-kontext {
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  color: var(--text-2);
+}
+
+/* Als Knopf: Schrift und Ausrichtung wie eine Karte */
+button.an-wk {
+  border: 0;
+  font: inherit;
+  text-align: left;
+}
+/* Gekürzte Kinder: nur die Zahl, nicht anklickbar */
+.an-wk.an-wk-weitere,
+.an-wk.an-wk-weitere:hover {
+  min-width: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: var(--klein);
+  color: var(--text-3);
+  cursor: default;
+}
