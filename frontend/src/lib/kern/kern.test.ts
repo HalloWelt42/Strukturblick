@@ -115,6 +115,10 @@ describe("Sitzung", () => {
     expect(s.text).toBe("ort=Leipzig");
     s.springen(2);
     expect(s.text).toBe("plz=1\nort=Leipzig");
+    // Text eines Stands, ohne den Stand zu ändern
+    expect([s.textBei(0), s.textBei(1), s.textBei(2), s.verlauf.zeiger]).toEqual(["ort=Lpz.", "ort=Leipzig", "plz=1\nort=Leipzig", 2]);
+    s.springen(1);
+    expect(s.textBei(2)).toBe("plz=1\nort=Leipzig");
   });
 
   it("fasst eine Geste zu einem Schritt zusammen", () => {

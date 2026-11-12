@@ -1,0 +1,272 @@
+/* Ansicht Vergleich (aus entwuerfe/teile/ansichten.css, Abschnitt 6). Ohne den farbigen Strich unter den Köpfen der
+   Seiten: Die Abzeichen Vorher und Jetzt sagen, welche Seite welche ist. */
+
+/* Optionen als Haken (kein natives Kästchen) */
+.an-wahl {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--klein);
+  color: var(--text-1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.an-haken {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3em;
+  height: 1.3em;
+  flex: none;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  color: transparent;
+}
+.an-haken.an-an {
+  background-color: var(--akzent-flaeche);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--auf-akzent);
+}
+.an-wahl-knopf {
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  font-family: var(--schrift-mono);
+}
+
+/* Aufbau: Seiten links, Unterschiede rechts; bei wenig Breite darunter */
+.an-vg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--inspektor-breite);
+  gap: var(--a3);
+  height: 100%;
+  min-height: 0;
+  padding: var(--a3);
+}
+.an-vg-seiten,
+.an-ud {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background-color: var(--flaeche-panel);
+  box-shadow: var(--kante), var(--schatten-ruhig);
+}
+.an-vg-koepfe {
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2px;
+  background: var(--rand-1);
+}
+.an-vg-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-width: 0;
+  min-height: var(--knopf-hoehe);
+  padding: 0 var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  font-size: var(--klein);
+}
+.an-vg-kopf .an-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.an-vg-kopf .an-neben {
+  margin-left: auto;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.an-vg-feld {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+/* Zeilen beider Seiten in einem Raster, damit sie auf gleicher Höhe stehen */
+.an-vg-raster {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 2px;
+  background: var(--rand-1);
+}
+.an-vg-zelle {
+  --an-ton: transparent;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: var(--zeile);
+  padding: 0 var(--a3) 0 calc(var(--a3) + var(--an-ebene, 0) * 1.5ch);
+  background: linear-gradient(var(--an-ton), var(--an-ton)) var(--flaeche-panel);
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  white-space: nowrap;
+  overflow: hidden;
+  scroll-margin-top: var(--zeile);
+}
+.an-vg-zelle > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.an-vg-zelle.an-geaendert {
+  --an-ton: var(--diff-geaendert);
+}
+.an-vg-zelle.an-hinzu {
+  --an-ton: var(--diff-hinzu);
+}
+.an-vg-zelle.an-weg {
+  --an-ton: var(--diff-weg);
+}
+.an-vg-zelle.an-leer {
+  background: repeating-linear-gradient(-45deg, var(--rand-1) 0 1px, transparent 1px 9px) var(--flaeche-panel);
+}
+.an-vg-zelle.an-markiert {
+  box-shadow: inset 0 0 0 2px var(--akzent-flaeche);
+}
+.an-k {
+  color: var(--typ-schluessel);
+}
+.an-idx {
+  color: var(--text-3);
+}
+.an-alt,
+.an-neu {
+  padding: 0 var(--a1);
+}
+.an-alt {
+  background: var(--diff-weg);
+}
+.an-neu {
+  background: var(--diff-hinzu);
+}
+/* Eingeklappte gleiche Teile über beide Seiten */
+.an-vg-falte {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: var(--zeile);
+  padding-left: calc(var(--a3) + var(--an-ebene, 0) * 1.5ch);
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--klein);
+  color: var(--text-2);
+  cursor: pointer;
+}
+.an-vg-falte i {
+  color: var(--text-3);
+}
+
+/* Liste der Unterschiede */
+.an-ud-kopf {
+  flex: none;
+  display: grid;
+  gap: var(--a2);
+  padding: var(--a3);
+  background-color: var(--flaeche-panel-2);
+  background-image: var(--erhaben);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.an-ud-kopf .karte-titel {
+  margin: 0;
+}
+.an-ud-summe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+.abzeichen.an-null {
+  background: var(--mulde);
+  color: var(--text-3);
+}
+.an-ud-liste {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.an-ud-eintrag {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--a1) var(--a2);
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+button.an-ud-eintrag {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  text-align: left;
+}
+.an-ud-eintrag:hover {
+  background-color: var(--akzent-weich);
+}
+.an-ud-art {
+  grid-row: span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7em;
+  height: 1.7em;
+  font-size: var(--klein);
+}
+.an-ud-art.an-geaendert {
+  background: var(--warn-weich);
+  color: var(--warn);
+}
+.an-ud-art.an-hinzu {
+  background: var(--gut-weich);
+  color: var(--gut);
+}
+.an-ud-art.an-weg {
+  background: var(--fehler-weich);
+  color: var(--fehler);
+}
+.an-ud-pfad {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  overflow-wrap: anywhere;
+}
+.an-ud-werte {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a1) var(--a2);
+  min-width: 0;
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+}
+.an-ud-werte > i {
+  color: var(--text-3);
+}
+.an-ud-werte .an-alt,
+.an-ud-werte .an-neu {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.an-ud-fuss {
+  flex: none;
+  padding: var(--a2) var(--a3);
+  box-shadow: inset 0 1px 0 var(--rand-1);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+@container an-raum (max-width: 1199px) {
+  .an-vg {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}

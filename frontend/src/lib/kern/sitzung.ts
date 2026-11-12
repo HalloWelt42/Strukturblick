@@ -138,6 +138,16 @@ export class Sitzung {
     return true;
   }
 
+  /** Text an einem Stand des Verlaufs (0 = Anfang), ohne den Stand zu ändern (für Vergleiche). */
+  textBei(zeiger: number): string {
+    const e = this.verlaufStand.eintraege;
+    const ziel = Math.max(0, Math.min(zeiger, e.length));
+    let text = this.textStand;
+    for (let z = this.verlaufStand.zeiger; z > ziel; z--) for (const s of [...e[z - 1].schritte].reverse()) text = anwenden(text, s.umkehrung).text;
+    for (let z = this.verlaufStand.zeiger; z < ziel; z++) for (const s of e[z].schritte) text = anwenden(text, s.aenderungen).text;
+    return text;
+  }
+
   /** Zu einem Stand springen (0 = Anfang); spätere Einträge bleiben zum Wiederholen erhalten. */
   springen(zeiger: number): void {
     const ziel = Math.max(0, Math.min(zeiger, this.verlaufStand.eintraege.length));
