@@ -98,6 +98,19 @@ Reihenfolge zählt nicht), Listen über ein Schlüsselfeld, das Strukturblick se
 werden gleiche Einträge ausgerichtet, ein eingefügter Eintrag macht die folgenden also nicht zu Änderungen. Eine andere
 Reihenfolge ist ein eigener Unterschied, außer "Reihenfolge ignorieren" ist an.
 
+Die Ansicht Schema (⌥ ⌘ 7) gibt es nur bei XML-Schema-Dokumenten (Wurzel xs:schema). Sie liest das Schema samt allem,
+was es importiert oder einbindet; die Dateien dafür sucht Strukturblick im selben Ordner der Ablage, was fehlt, nennt das
+Hinweisband. Drei Reiter: Elementbaum zeigt, was in einem gültigen Dokument wo stehen darf, Ebene für Ebene beim
+Aufklappen, mit Vielfalt (1, 0..1, 0..n) und * für Pflicht. Erweiterte Typen bringen Inhalt und Attribute ihrer Basis
+mit, eine Auswahl steht als eigener Knoten "eins von", ein abstraktes Element zeigt die Elemente seiner Ersetzungsgruppe,
+und wo sich ein Typ wiederholt, endet der Zweig mit der Marke rekursiv. Typen listet alle benannten Typen mit Art,
+Ableitung, Zahl der erlaubten Werte und Verwendungen, mit Suche und Filtern (Komplex, Einfach, Mit Werten, Ungenutzt).
+Statistik zählt Dateien, Namensräume, Elemente, Typen und Tiefe, zeigt Ableitungen und eingebaute Typen als Balken, die
+meistgenutzten Basistypen, die gelesenen Dateien und ungenutzte Typen. Der Inspektor zeigt zur gewählten Stelle oder zum
+Typ die Ableitungskette bis zum eingebauten Typ, Einschränkungen (Muster, Längen, Grenzen), erlaubte Werte mit Erklärung,
+Attribute und wo der Typ verwendet wird; "Im Editor" springt zur Erklärung, "Öffnen" holt eine importierte Datei aus der
+Ablage. Zum Üben: lieferungen.xsd aus den Beispielen.
+
 Beide Seiten stehen nebeneinander, Zeile für Zeile; Gleiches ist eingeklappt ("[2] bis [126]: 125 Einträge, gleich")
 und klappt per Klick auf. Rechts (bei wenig Breite darunter) stehen die Unterschiede mit Pfad wie
 bestellungen[nr="B-2"].bezahlt; ein Klick rollt die Seiten dorthin. Der Inspektor zeigt den gewählten Unterschied mit
@@ -241,7 +254,7 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 | ⌥ ⌘ N | Neues Dokument |
 | ⌥ ⌘ W | Dokument schließen |
 | ⌥ ⌘ A | Ablage verwalten oder schließen |
-| ⌥ ⌘ 1 bis 6 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur, Vergleich |
+| ⌥ ⌘ 1 bis 7 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur, Vergleich, Schema (nur bei XML Schema) |
 | ⌥ ⌘ E | Abfrage öffnen oder einklappen |
 | F3, ⇧ F3 | Nächster, voriger Treffer im Baum |
 

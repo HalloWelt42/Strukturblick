@@ -1,0 +1,49 @@
+{
+  "kapitel": "schema",
+  "titel": "Ein XML Schema im Überblick",
+  "ticket": "STB-39",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, lieferungen.xsd im Vordergrund; hofladen-position.xsd im Ordner Beispiele",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Ein XML Schema liest sich als Quelltext schwer. Die Ansicht Schema gibt es nur bei solchen Dokumenten, sie zeigt, was in einem gültigen Dokument wo stehen darf.",
+      "ziel": { "anker": "ansicht-schema", "notbehelf": "Ansichtswahl Schema oder ⌥ ⌘ 7" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Reiter Elementbaum, Typen 9, Statistik; eine Wurzel lieferungen",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Eine Ebene weiter, und noch einmal: Lieferung mit Nummer, Datum und Zahlweise, darunter Kunde und Positionen. Rechts steht, wie oft etwas vorkommen darf, der Stern heißt Pflicht.",
+      "ziel": { "anker": "schema-ebene-weiter", "notbehelf": "Knopf Eine Ebene weiter, dreimal" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "17 Zeilen; hl:position mit 1..n, hinweis mit 0..1; die Position aus dem importierten Schema mit ihren Attributen",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Ein Klick auf die Zahlweise: Der Inspektor zeigt den Typ, woraus er abgeleitet ist und welche Werte erlaubt sind.",
+      "ziel": { "anker": "schema-zeile", "notbehelf": "Zeile @zahlweise" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Gewählte Stelle @zahlweise, 0..1; Typ Zahlweise schränkt xs:string ein; erlaubte Werte bar, Rechnung, Lastschrift",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Im Reiter Typen stehen alle benannten Typen mit Ableitung und wie oft sie verwendet werden. Im Editor springt man direkt zur Erklärung.",
+      "ziel": { "anker": "schema-typen", "notbehelf": "Reiter Typen, Zeile Person, im Inspektor Im Editor" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "9 Typen; Person: eigener Aufbau, Basis von Kunde; der Editor steht auf Zeile 33",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Die Statistik fasst zusammen: Dateien, Namensräume, Typen, Tiefe, Ableitungen und welche eingebauten Typen das Schema trägt.",
+      "ziel": { "anker": "schema-statistik", "notbehelf": "Reiter Statistik" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "2 Dateien, 2 Namensräume, 4 komplexe und 5 einfache Typen, Tiefe 4; xs:string vorn bei den eingebauten Typen",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}
