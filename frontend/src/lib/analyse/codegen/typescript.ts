@@ -3,6 +3,7 @@
 // Unveränderlich heißt readonly an Feldern und Listen. Schlüssel, die kein Bezeichner sind, stehen in Anführungszeichen.
 
 import { feldKommentar, klassenIn, type Feld, type Feldtyp, type Klasse, type Klassenmodell } from "./modell";
+import { typescriptMiniprojekt } from "./typescriptProjekt";
 import { abbildungen, type Codeausgabe, type Codeoptionen, type Codeziel } from "./ziele";
 
 const EIN = "  ";
@@ -19,10 +20,12 @@ function typ(t: Feldtyp, o: Codeoptionen): string {
     case "null": return "null";
     case "klasse": return t.name;
     case "liste": {
-      const innen = typ(t.von, o);
-      const klammern = /[|&]/.test(innen) ? `(${innen})` : innen;
+      const innen = `${typ(t.von, o)}${t.eintragNull ? " | null" : ""}`;
+      // Vereinigungen und innere readonly-Listen brauchen Klammern ("readonly (readonly X[])[]")
+      const klammern = /[|&]/.test(innen) || innen.startsWith("readonly ") ? `(${innen})` : innen;
       return `${o.unveraenderlich ? "readonly " : ""}${klammern}[]`;
     }
+    case "zuordnung": return o.unveraenderlich ? `Readonly<Record<string, ${typ(t.von, o)}>>` : `Record<string, ${typ(t.von, o)}>`;
     case "aufzaehlung": return t.werte.map((w) => JSON.stringify(w)).join(" | ") || "never";
     case "vereinigung": return t.teile.map((x) => typ(x, o)).join(" | ");
     default: return "unknown";
@@ -54,6 +57,8 @@ export const TYPESCRIPT: Codeziel = {
   name: "TypeScript",
   sprache: "typescript",
   namensraum: false,
+  attribute: false,
+  miniprojekt: (m, o, daten) => typescriptMiniprojekt(m, o, daten),
   schreiben(m: Klassenmodell, o: Codeoptionen): Codeausgabe {
     const w = m.wurzel;
     const wurzelAlias = w.art === "klasse" ? null : [`export type ${o.wurzelname} = ${typ(w, o)};`];

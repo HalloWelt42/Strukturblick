@@ -17,6 +17,14 @@ export interface Codeoptionen {
   readonly kopf: string;
   /** Stamm der Datei bei "eine Datei" ("bestellungen") */
   readonly dateistamm: string;
+  /** Grenzen als Attribute der Sprache statt als Kommentar (nur wo das Ziel es kennt: PHP mit Symfony Validator) */
+  readonly attribute: boolean;
+}
+
+/** Daten, die das Miniprojekt einliest: Dateiname im Ordner daten/ und Inhalt als JSON */
+export interface Miniprojektdaten {
+  readonly name: string;
+  readonly text: string;
 }
 
 export interface Codedatei {
@@ -48,14 +56,45 @@ export interface Codeziel {
   readonly sprache: "php" | "typescript" | "python";
   /** Kennt die Sprache einen Namensraum im Code (PHP namespace)? */
   readonly namensraum: boolean;
+  /** Lassen sich Grenzen als Attribute schreiben (Einstellung "Grenzen als")? */
+  readonly attribute: boolean;
   schreiben(m: Klassenmodell, o: Codeoptionen): Codeausgabe;
+  /** Lauffähiges kleines Projekt: Klassen, Daten, Leseprogramm, Abhängigkeiten, README (Pfade mit Ordnern) */
+  miniprojekt(m: Klassenmodell, o: Codeoptionen, daten: Miniprojektdaten): Codedatei[];
+}
+
+/**
+ * Klassennamen, die in einer Sprache nicht gehen (reservierte Wörter, eingebaute Typen, eigene Importe), bekommen ein
+ * "Typ" angehängt; alle Verweise im Modell folgen. So muss kein Schreiber Sonderfälle der Quelle kennen.
+ */
+export function umbenannt(m: Klassenmodell, verboten: (name: string) => boolean): Klassenmodell {
+  const neu = new Map<string, string>();
+  const vergeben = new Set(m.klassen.map((k) => k.name));
+  for (const k of m.klassen) {
+    if (!verboten(k.name)) continue;
+    let n = `${k.name}Typ`;
+    for (let i = 2; vergeben.has(n) || verboten(n); i++) n = `${k.name}Typ${i}`;
+    vergeben.add(n);
+    neu.set(k.name, n);
+  }
+  if (!neu.size) return m;
+  const typ = (t: Feldtyp): Feldtyp =>
+    t.art === "klasse" ? { art: "klasse", name: neu.get(t.name) ?? t.name }
+    : t.art === "liste" || t.art === "zuordnung" ? { ...t, von: typ(t.von) }
+    : t.art === "vereinigung" ? { art: "vereinigung", teile: t.teile.map(typ) }
+    : t;
+  return {
+    ...m,
+    wurzel: typ(m.wurzel),
+    klassen: m.klassen.map((k) => ({ ...k, name: neu.get(k.name) ?? k.name, felder: k.felder.map((f) => ({ ...f, typ: typ(f.typ) })) })),
+  };
 }
 
 /** Felder, deren Abbildung einen Satz wert ist (null, optional, Datum, Liste, feste Werte, Grenzen), höchstens `grenze` */
 export function abbildungen(m: Klassenmodell, typText: (f: Feld) => string, grenze = 8): Abbildung[] {
   const aus: Abbildung[] = [];
   const gesehen = new Set<string>();
-  const wichtig = (t: Feldtyp): boolean => ["datum", "zeitpunkt", "liste", "aufzaehlung", "vereinigung", "beliebig"].includes(t.art);
+  const wichtig = (t: Feldtyp): boolean => ["datum", "zeitpunkt", "liste", "zuordnung", "aufzaehlung", "vereinigung", "beliebig"].includes(t.art);
   for (const k of m.klassen) for (const f of k.felder) {
     if (aus.length >= grenze || gesehen.has(f.name)) continue;
     const regeln = grenzenText(f.regeln);
@@ -68,6 +107,7 @@ export function abbildungen(m: Klassenmodell, typText: (f: Feld) => string, gren
     if (f.typ.art === "zeitpunkt") teile.push("aus format date-time");
     if (f.typ.art === "aufzaehlung") teile.push(`feste Werte: ${f.typ.werte.map((w) => JSON.stringify(w)).join(", ")}`);
     if (f.typ.art === "beliebig") teile.push("ohne feste Form");
+    if (f.typ.art === "zuordnung") teile.push("Schlüssel frei, Werte gleich gebaut");
     teile.push(...regeln);
     aus.push({ feld: f.name, typ: typText(f), erklaerung: teile.join(", ") });
   }

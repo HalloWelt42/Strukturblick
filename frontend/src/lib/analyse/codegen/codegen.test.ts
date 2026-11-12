@@ -11,7 +11,7 @@ import { codeziel } from "./codeziele";
 import type { Codeoptionen } from "./ziele";
 
 const lies = (name: string) => readFileSync(new URL(`../../../../pruefdaten/${name}`, import.meta.url), "utf8");
-const OPTIONEN: Codeoptionen = { wurzelname: "Bestellungen", namensraum: "Lindenhof\\Bestellungen", unveraenderlich: true, jeKlasse: false, kopf: "Erzeugt von Strukturblick aus bestellung.schema.json", dateistamm: "bestellungen" };
+const OPTIONEN: Codeoptionen = { wurzelname: "Bestellungen", namensraum: "Lindenhof\\Bestellungen", unveraenderlich: true, jeKlasse: false, kopf: "Erzeugt von Strukturblick aus bestellung.schema.json", dateistamm: "bestellungen", attribute: false };
 const BESTELLUNG = ausJsonSchema(JSON.parse(lies("bestellung.schema.json")), "Bestellungen");
 const code = (ziel: string, o: Partial<Codeoptionen> = {}) => codeziel(ziel).schreiben(BESTELLUNG, { ...OPTIONEN, ...o });
 
@@ -90,6 +90,8 @@ describe("Zielsprachen", () => {
     expect(d.text).toContain("  readonly notiz?: string | null;");
     expect(d.text).toContain("  readonly positionen: readonly Position[];");
     expect(d.text).toContain("/** Datum JJJJ-MM-TT */");
+    const listen = ausJsonSchema({ type: "object", properties: { matrix: { type: "array", items: { type: "array", items: { type: "integer" } } } } }, "Raster");
+    expect(codeziel("typescript").schreiben(listen, OPTIONEN).dateien[0].text).toContain("readonly matrix?: readonly (readonly number[])[];");
     const je = code("typescript", { jeKlasse: true }).dateien;
     expect(je.find((x) => x.name === "Bestellung.ts")!.text).toContain('import type { Kunde } from "./Kunde";');
   });
@@ -117,5 +119,52 @@ describe("Zielsprachen", () => {
     expect(codeziel("typescript").schreiben(m, o).dateien[0].text).toContain('readonly "@nr": string;');
     expect(codeziel("php").schreiben(m, o).dateien[0].text).toContain("            nr: $daten['@nr'],");
     expect(codeziel("dataclasses").schreiben(m, o).dateien[0].text).toContain('termine=[date.fromisoformat(x) for x in d["termine"]],');
+  });
+});
+
+describe("Allgemein: Zuordnungen, allOf, nur Definitionen, reservierte Namen", () => {
+  const SCHEMA = {
+    definitions: {
+      Basis: { type: "object", required: ["id"], properties: { id: { type: "string" } } },
+      Error: { allOf: [{ $ref: "#/definitions/Basis" }, { type: "object", properties: { code: { type: "integer" } } }] },
+      Import: { type: "object", properties: { werte: { type: "object", additionalProperties: { $ref: "#/definitions/Basis" } }, None: { type: "string" } } },
+    },
+  };
+  const m = ausJsonSchema(SCHEMA, "Wurzel");
+
+  it("liest Definitionen ohne Bezug, führt allOf zusammen und erkennt Zuordnungen", () => {
+    expect(m.klassen.map((k) => k.name)).toEqual(["Basis", "Error", "Import"]);
+    expect(m.klassen[1].felder.map((f) => [f.name, f.pflicht])).toEqual([["id", true], ["code", false]]);
+    expect(m.klassen[2].felder[0].typ).toEqual({ art: "zuordnung", von: { art: "klasse", name: "Basis" } });
+  });
+
+  it("schreibt Zuordnungen je Sprache und benennt reservierte Klassen um", () => {
+    const php = codeziel("php").schreiben(m, OPTIONEN).dateien[0].text;
+    expect(php).toContain("final readonly class ErrorTyp");
+    expect(php).toContain("* @param array<string, Basis>|null $werte");
+    expect(php).toContain("werte: isset($daten['werte']) ? array_map(Basis::fromArray(...), $daten['werte']) : null,");
+    expect(codeziel("typescript").schreiben(m, OPTIONEN).dateien[0].text).toContain("readonly werte?: Readonly<Record<string, Basis>>;");
+    const py = codeziel("pydantic").schreiben(m, OPTIONEN).dateien[0].text;
+    expect(py).toContain("class ImportTyp(BaseModel):".replace("ImportTyp", "Import"));
+    expect(py).toContain("werte: dict[str, Basis] | None = Field(default=None)");
+    expect(py).toContain('None_: str | None = Field(default=None, alias="None")');
+    const dc = codeziel("dataclasses").schreiben(m, { ...OPTIONEN, jeKlasse: true }).dateien;
+    expect(dc.map((d) => d.name)).toEqual(["basis.py", "error.py", "import_.py"]);
+    expect(dc[2].text).toContain('werte={k: Basis.from_dict(v) for k, v in d["werte"].items()} if d.get("werte") is not None else None,');
+  });
+});
+
+describe("Miniprojekt", () => {
+  const daten = { name: "bestellungen.json", text: "{}" };
+  it("bringt je Sprache Klassen, Daten, Leseprogramm, Abhängigkeiten und README mit", () => {
+    const namen = (ziel: string, o: Partial<Codeoptionen> = {}) => codeziel(ziel).miniprojekt(BESTELLUNG, { ...OPTIONEN, ...o }, daten).map((d) => d.name);
+    expect(namen("php", { attribute: true })).toEqual(["src/Bestellungen.php", "src/Bestellung.php", "src/Kunde.php", "src/Position.php", "composer.json", "lesen.php", "daten/bestellungen.json", "README.md"]);
+    expect(namen("typescript")).toEqual(["src/bestellungen.ts", "src/lesen.ts", "package.json", "tsconfig.json", "daten/bestellungen.json", "README.md"]);
+    expect(namen("pydantic")).toEqual(["klassen/__init__.py", "klassen/bestellungen.py", "lesen.py", "requirements.txt", "daten/bestellungen.json", "README.md"]);
+    expect(namen("dataclasses")).toEqual(["klassen/__init__.py", "klassen/bestellungen.py", "lesen.py", "daten/bestellungen.json", "README.md"]);
+    const php = codeziel("php").miniprojekt(BESTELLUNG, { ...OPTIONEN, attribute: true }, daten);
+    expect(JSON.parse(php.find((d) => d.name === "composer.json")!.text)).toMatchObject({ require: { php: ">=8.2", "symfony/validator": "^7.0" }, autoload: { "psr-4": { "Lindenhof\\Bestellungen\\": "src/" } } });
+    expect(php.find((d) => d.name === "lesen.php")!.text).toContain("$praefix = 'Lindenhof\\\\Bestellungen\\\\';");
+    expect(php.find((d) => d.name === "src/Bestellung.php")!.text).toContain("#[Assert\\Count(min: 1, max: 3)]");
   });
 });

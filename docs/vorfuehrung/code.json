@@ -36,6 +36,14 @@
       "aktion": { "art": "klicken" },
       "erwartung": "Reiter bestellungen.py, bestellung.py, kunde.py, position.py; Download Bestellungen-pydantic.zip",
       "geprueft": "2026-11-12, Download nicht ausgelöst"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Bei PHP stehen die Grenzen auf Wunsch als Attribute des Symfony Validators. Projekt als ZIP liefert alles, was zum Ausprobieren nötig ist: Klassen, Daten, Leseprogramm und README.",
+      "ziel": { "anker": "code-projekt", "notbehelf": "Ziel PHP, Grenzen als: Attribute, dann Projekt als ZIP" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "#[Assert\\Count(min: 1, max: 3)] am Feld positionen; Kopf: PHP ab 8.2 und symfony/validator 7; ZIP Bestellungen-php.zip mit src/, composer.json, lesen.php, daten/, README.md",
+      "geprueft": "2026-11-12, Projekt in Docker: ohne Composer gelesen, mit composer install 26 Verstöße gefunden"
     }
   ]
 }

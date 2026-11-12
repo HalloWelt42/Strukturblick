@@ -42,9 +42,32 @@ export function ausJsonSchema(schema: unknown, wurzelname: string): Klassenmodel
     return n;
   };
 
+  /** allOf: Teile (auch über Verweise) zu einem Objekt zusammenführen, Felder und Pflichten vereint */
+  const zusammenfuehren = (s: Json, tiefe = 0): Json => {
+    if (!Array.isArray(s.allOf) || tiefe > 20) return s;
+    const { allOf, ...rest } = s;
+    // Felder der Teile in ihrer Reihenfolge (wie bei Vererbung zuerst die Basis), die eigenen zuletzt
+    let felder: Json = {};
+    const pflicht: unknown[] = [];
+    let weitere: Json = {};
+    for (const teil of (allOf as unknown[]).filter(istObjekt)) {
+      const ref = typeof teil.$ref === "string" ? /^#\/(?:\$defs|definitions)\/(.+)$/.exec(teil.$ref)?.[1] : undefined;
+      const t = zusammenfuehren(ref && istObjekt(defs[ref]) ? (defs[ref] as Json) : teil, tiefe + 1);
+      felder = { ...felder, ...(istObjekt(t.properties) ? t.properties : {}) };
+      if (Array.isArray(t.required)) pflicht.push(...t.required);
+      weitere = { ...weitere, ...t };
+    }
+    felder = { ...felder, ...(istObjekt(rest.properties) ? rest.properties : {}) };
+    if (Array.isArray(rest.required)) pflicht.push(...rest.required);
+    const aus: Json = { ...weitere, ...rest, properties: felder, required: [...new Set(pflicht)] };
+    if (aus.type === undefined && Object.keys(felder).length) aus.type = "object";
+    return aus;
+  };
+
   /** Objekt-Schema als Klasse anlegen (einmal je $defs-Eintrag) und ihren Namen liefern */
-  const klasse = (s: Json, wunsch: string, def?: string): string => {
+  const klasse = (roh: Json, wunsch: string, def?: string): string => {
     if (def && vonDef.has(def)) return vonDef.get(def)!;
+    const s = zusammenfuehren(roh);
     const name = freierName(wunsch);
     if (def) vonDef.set(def, name);
     // Platz zuerst belegen: so stehen Klassen in der Reihenfolge des ersten Bezugs (Eltern vor Kindern)
@@ -62,11 +85,12 @@ export function ausJsonSchema(schema: unknown, wurzelname: string): Klassenmodel
   /** Typ eines Teilschemas; `name` ist der Feldname (für eingebettete Klassen) */
   const typ = (s: Json, name: string, tiefe = 0): { typ: Feldtyp; nullbar: boolean; regeln: Regeln } => {
     if (tiefe > 30) return { typ: { art: "beliebig" }, nullbar: false, regeln: {} };
+    s = zusammenfuehren(s);
     if (typeof s.$ref === "string") {
       const m = /^#\/(?:\$defs|definitions)\/(.+)$/.exec(s.$ref);
       const ziel = m ? defs[decodeURIComponent(m[1]).replace(/~1/g, "/").replace(/~0/g, "~")] : undefined;
       if (!m || !istObjekt(ziel)) { hinweise.add(`Verweis ${s.$ref} nicht aufgelöst`); return { typ: { art: "beliebig" }, nullbar: false, regeln: {} }; }
-      if (istObjektSchema(ziel)) return { typ: { art: "klasse", name: klasse(ziel, m[1], m[1]) }, nullbar: false, regeln: {} };
+      if (istObjektSchema(zusammenfuehren(ziel)) && istObjekt(zusammenfuehren(ziel).properties)) return { typ: { art: "klasse", name: klasse(ziel, m[1], m[1]) }, nullbar: false, regeln: {} };
       const t = typ(ziel, name, tiefe + 1);
       return { ...t, regeln: { ...t.regeln, ...regeln(ziel) } };
     }
@@ -97,12 +121,19 @@ export function ausJsonSchema(schema: unknown, wurzelname: string): Klassenmodel
           const items = istObjekt(s.items) ? s.items : {};
           // Einträge heißen in der Einzahl; gibt es keine, mit Zusatz (sonst gleicher Name wie die Liste)
           const eintrag = klassenname(einzahl(name)) === klassenname(name) ? `${name} Eintrag` : einzahl(name);
-          return { art: "liste", von: Object.keys(items).length ? typ(items, eintrag, tiefe + 1).typ : { art: "beliebig" } };
+          if (!Object.keys(items).length) return { art: "liste", von: { art: "beliebig" } };
+          const t = typ(items, eintrag, tiefe + 1);
+          return { art: "liste", von: t.typ, ...(t.nullbar ? { eintragNull: true } : {}) };
         }
-        case "object":
+        case "object": {
           if (istObjekt(s.properties) && Object.keys(s.properties).length) return { art: "klasse", name: klasse(s, name) };
+          // Beliebige Schlüssel mit gleich gebauten Werten: Zuordnung (Map, Record, dict)
+          if (istObjekt(s.additionalProperties) && Object.keys(s.additionalProperties).length) {
+            return { art: "zuordnung", von: typ(s.additionalProperties, `${name} Eintrag`, tiefe + 1).typ };
+          }
           hinweise.add(`${name}: Objekt ohne feste Felder, im Code als freie Zuordnung`);
           return { art: "beliebig" };
+        }
         default: return { art: "beliebig" };
       }
     };
@@ -112,6 +143,8 @@ export function ausJsonSchema(schema: unknown, wurzelname: string): Klassenmodel
   };
 
   const w = typ(wurzel, wurzelname);
+  // Definitionen, auf die die Wurzel nicht verweist (Schemas, die nur $defs liefern), bekommen auch ihre Klasse
+  for (const [name, d] of Object.entries(defs)) if (istObjekt(d) && istObjekt(zusammenfuehren(d).properties)) klasse(d, name, name);
   return { klassen: [...klassen.values()], wurzel: w.typ, hinweise: [...hinweise] };
 }
 

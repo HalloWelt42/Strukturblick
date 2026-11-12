@@ -34,6 +34,16 @@
     }
   }
 
+  /** Gesamtpaket: lauffähiges Miniprojekt mit Klassen, Daten, Leseprogramm und README als ZIP */
+  function projektHerunterladen(): void {
+    const projekt = z.miniprojekt(blatt);
+    if (!projekt) return;
+    const ordner = `${z.wurzel(blatt)}-${ziel.kennung}`;
+    const zip = zipSync(Object.fromEntries(projekt.map((d) => [`${ordner}/${d.name}`, strToU8(d.text)])));
+    herunterladen(`${ordner}.zip`, zip, "application/zip");
+    meldungen.zeigen({ text: `${ordner}.zip: ${projekt.length} Dateien. Entpacken und den Befehl aus der README ausführen.`, art: "erfolg" });
+  }
+
   /** Eine Datei direkt, mehrere als ZIP (Browser blocken viele Downloads auf einmal) */
   function alleHerunterladen(): void {
     if (dateien.length === 1) return herunterladen(dateien[0].name, dateien[0].text);
@@ -85,6 +95,15 @@
         <button class:aktiv={!z.unveraenderlich} onclick={() => (z.unveraenderlich = false)}>veränderbar</button>
       </nav>
     </div>
+    {#if ziel.attribute}
+      <div class="wz-option">
+        <span class="wz-etikett">Grenzen als</span>
+        <nav class="segment" aria-label="Grenzen als">
+          <button class:aktiv={!z.attribute} title="Grenzen als Kommentar (PHPDoc); ohne Abhängigkeit" onclick={() => (z.attribute = false)}>PHPDoc</button>
+          <button class:aktiv={z.attribute} title="Attribute des Symfony Validators (#[Assert\Count] ...); prüfbar mit symfony/validator, list<T> bleibt PHPDoc" onclick={() => (z.attribute = true)}>Attribute</button>
+        </nav>
+      </div>
+    {/if}
     <div class="wz-option">
       <span class="wz-etikett">Dateien</span>
       <nav class="segment" aria-label="Dateien">
@@ -125,7 +144,8 @@
       <span>{e.ausgabe.hinweis}</span>
       <span class="rechts">
         <button class="knopf" onclick={() => void kopieren()}><i class="fa-solid fa-copy"></i> Kopieren</button>
-        <button class="knopf primaer" title={dateien.length > 1 ? `Alle ${dateien.length} Dateien als ZIP` : datei?.name} onclick={alleHerunterladen}><i class="fa-solid fa-download"></i> Herunterladen</button>
+        <button class="knopf" title={dateien.length > 1 ? `Alle ${dateien.length} Klassendateien als ZIP` : `Nur ${datei?.name}`} onclick={alleHerunterladen}><i class="fa-solid fa-download"></i> Herunterladen</button>
+        <button class="knopf primaer" title="Lauffähiges Miniprojekt: Klassen, die Daten dieses Dokuments, ein Leseprogramm, Abhängigkeiten und README" onclick={projektHerunterladen}><i class="fa-solid fa-file-zipper"></i> Projekt als ZIP</button>
       </span>
     </div>
   {/if}

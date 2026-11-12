@@ -33,6 +33,10 @@
     </div>
   {/if}
   <div class="karte">
+    <div class="karte-titel">Projekt als ZIP</div>
+    <p class="an-tafel-fuss">Klassen, die Daten dieses Dokuments als JSON, ein Leseprogramm und eine README: entpacken, Befehl aus der README ausführen. PHP, TypeScript (ab Node 22.18) und dataclasses laufen ohne Installation; Pydantic, die Prüfung mit Symfony und tsc holt der übliche Weg (pip install, composer install, npm install).</p>
+  </div>
+  <div class="karte">
     <div class="karte-titel">Einlesen</div>
     <pre class="wertfeld cg-code">{e.ausgabe.einlesen}</pre>
   </div>

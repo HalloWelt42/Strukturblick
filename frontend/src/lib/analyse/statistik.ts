@@ -155,7 +155,7 @@ class Sammler {
     if (art === KnotenArt.wahrheitswert) { if (s === "true") this.wahr++; else this.falsch++; return; }
     if (art === KnotenArt.zahl) {
       const z = Number(s);
-      if (!Number.isNaN(z)) { this.zahlen.push(z); if (!Number.isInteger(z) || /[.eE]/.test(s)) this.ganz = false; }
+      if (!Number.isNaN(z)) { this.zahlen.push(z); if (!Number.isSafeInteger(z) || /[.eE]/.test(s)) this.ganz = false; }
       return;
     }
     // Text

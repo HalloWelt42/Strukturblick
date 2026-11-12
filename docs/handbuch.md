@@ -212,6 +212,17 @@ DateTimeImmutable, date und datetime (in TypeScript bleiben sie Text), null-fäh
 Werte Aufzählungen; Grenzen aus dem Schema stehen am Feld (PHPDoc, Kommentar, Pydantic prüft sie). Schlüssel, die kein
 Bezeichner sind ("@nr", "class"), bekommen einen gültigen Namen und werden über den Schlüssel gelesen. Der Inspektor
 zeigt, wie Schema-Typen im Code ankommen und wie man die Daten einliest; mehrere Dateien lädt "Herunterladen" als ZIP.
+Objekte mit freien Schlüsseln und gleich gebauten Werten (additionalProperties) werden Zuordnungen (array<string, X>,
+Record, dict), allOf wird zu einer Klasse zusammengeführt, Schemas nur mit Definitionen bekommen eine Klasse je
+Definition. Bei PHP stehen die Grenzen wahlweise als PHPDoc oder als Attribute des Symfony Validators (#[Assert\Count]
+...), list<T> bleibt PHPDoc. Der Kopf der Tafel und jeder Datei nennt, was der Code braucht (etwa "PHP ab 8.2 und
+symfony/validator 7"), die Fassung des Schemas und von Strukturblick samt HalloWelt42 und Webadresse.
+
+"Projekt als ZIP" liefert ein lauffähiges Miniprojekt: die Klassen, die Daten des Dokuments als JSON, ein
+Leseprogramm, das einliest und eine Übersicht zeigt, die übliche Abhängigkeitsdatei und eine README. PHP (Composer mit
+PSR-4, lesen.php mit eigenem Autoloader), TypeScript (ab Node 22.18 direkt mit node src/lesen.ts, sonst npm start) und
+dataclasses laufen ohne Installation; die Prüfung mit Symfony holt composer install, Pydantic pip install. Geprüft an
+247 echten JSON-Dateien und 91 JSON Schemas in Docker (PHP 8.1, 8.2, 8.5, Python 3.10 und 3.11, Node 22, tsc --strict).
 
 TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
 als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,

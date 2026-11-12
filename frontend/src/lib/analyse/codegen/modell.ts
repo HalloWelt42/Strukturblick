@@ -5,7 +5,9 @@
 export type Feldtyp =
   | { readonly art: "text" | "ganz" | "zahl" | "wahrheit" | "datum" | "zeitpunkt" | "null" | "beliebig" }
   | { readonly art: "klasse"; readonly name: string }
-  | { readonly art: "liste"; readonly von: Feldtyp }
+  | { readonly art: "liste"; readonly von: Feldtyp; readonly eintragNull?: boolean }
+  /** Objekt mit beliebigen Schlüsseln und gleich gebauten Werten (additionalProperties) */
+  | { readonly art: "zuordnung"; readonly von: Feldtyp }
   | { readonly art: "aufzaehlung"; readonly werte: readonly (string | number | boolean | null)[] }
   | { readonly art: "vereinigung"; readonly teile: readonly Feldtyp[] };
 
@@ -58,7 +60,8 @@ export function grenzenText(r: Regeln): string[] {
 
 /** Kommentar zu einem Feld: Erklärung (ohne Schlusspunkt), Zusätze und Grenzen, mit Semikolon getrennt */
 export function feldKommentar(f: Feld, ...zusaetze: (string | null)[]): string {
-  return [f.beschreibung?.replace(/[.\s]+$/, "") ?? null, ...zusaetze, ...grenzenText(f.regeln)].filter(Boolean).join("; ");
+  // Einzeilig: ein Zeilenumbruch beendete sonst etwa einen #-Kommentar in Python
+  return [f.beschreibung?.replace(/[.\s]+$/, "") ?? null, ...zusaetze, ...grenzenText(f.regeln)].filter(Boolean).join("; ").replace(/\s+/g, " ");
 }
 
 export interface Klasse {
@@ -78,14 +81,14 @@ export interface Klassenmodell {
 
 /** Kommt eine Art irgendwo im Modell vor (etwa "zeitpunkt")? */
 export function enthaelt(m: Klassenmodell, art: Feldtyp["art"]): boolean {
-  const in_ = (t: Feldtyp): boolean => t.art === art || (t.art === "liste" && in_(t.von)) || (t.art === "vereinigung" && t.teile.some(in_));
+  const in_ = (t: Feldtyp): boolean => t.art === art || ((t.art === "liste" || t.art === "zuordnung") && in_(t.von)) || (t.art === "vereinigung" && t.teile.some(in_));
   return m.klassen.some((k) => k.felder.some((f) => in_(f.typ)));
 }
 
 /** Alle Klassen, die ein Typ braucht (für Importe je Datei) */
 export function klassenIn(t: Feldtyp, aus: Set<string> = new Set()): Set<string> {
   if (t.art === "klasse") aus.add(t.name);
-  else if (t.art === "liste") klassenIn(t.von, aus);
+  else if (t.art === "liste" || t.art === "zuordnung") klassenIn(t.von, aus);
   else if (t.art === "vereinigung") for (const x of t.teile) klassenIn(x, aus);
   return aus;
 }

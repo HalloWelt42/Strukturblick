@@ -8,9 +8,10 @@ import { schemaLesen } from "../../../analyse/validieren";
 import { ausJsonSchema } from "../../../analyse/codegen/ausJsonSchema";
 import { codeziel } from "../../../analyse/codegen/codeziele";
 import { klassenname, type Klassenmodell } from "../../../analyse/codegen/modell";
-import type { Codeausgabe, Codeoptionen } from "../../../analyse/codegen/ziele";
+import type { Codeausgabe, Codedatei, Codeoptionen } from "../../../analyse/codegen/ziele";
+import { wertAus } from "../../../analyse/wert";
 import { ablageverwaltung } from "../../../zustand/ablageverwaltung.svelte";
-import { FASSUNG } from "../../../zustand/app";
+import { FASSUNG, URHEBER } from "../../../zustand/app";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
 
 export type Codequelle = { readonly art: "daten" } | { readonly art: "dokument"; readonly kennung: string; readonly name: string };
@@ -22,6 +23,7 @@ export interface Codeergebnis {
   readonly quelle: string;
   /** Fassung des Quellschemas aus $schema ("JSON Schema 2020-12", "JSON Schema Draft-07") */
   readonly schemafassung: string;
+  readonly optionen: Codeoptionen;
 }
 
 /** Fassung eines JSON Schemas nach seiner $schema-Angabe */
@@ -40,6 +42,8 @@ export class CodeZustand {
   namensraum = $state("App\\Daten");
   unveraenderlich = $state(true);
   jeKlasse = $state(false);
+  /** Grenzen als Attribute (nur wo das Ziel es kennt) */
+  attribute = $state(false);
   datei = $state(0);
   private merk: { schluessel: string; analyse: Analyse | null; ergebnis: Codeergebnis | { ok: false; fehler: string } } | null = null;
 
@@ -61,12 +65,33 @@ export class CodeZustand {
     this.datei = 0;
   }
 
+  private optionen(wurzel: string, quelle: string): Codeoptionen {
+    return {
+      wurzelname: wurzel,
+      namensraum: this.namensraum.trim(),
+      unveraenderlich: this.unveraenderlich,
+      jeKlasse: this.jeKlasse,
+      kopf: `Erzeugt von Strukturblick ${FASSUNG} (${URHEBER.name}, ${URHEBER.webseite}) aus ${quelle}`,
+      dateistamm: wurzel.replace(/(\p{Ll})(\p{Lu})/gu, "$1_$2").toLowerCase(),
+      attribute: this.attribute && codeziel(this.ziel).attribute,
+    };
+  }
+
+  /** Lauffähiges Miniprojekt zum aktuellen Ergebnis; die Daten sind das Dokument, als JSON */
+  miniprojekt(blatt: Arbeitsblatt): Codedatei[] | null {
+    const e = this.ergebnis(blatt);
+    const a = blatt.analyse;
+    if (!e?.ok || !a?.index) return null;
+    const daten = { name: `${blatt.name.replace(/\.[^.]+$/, "")}.json`, text: `${JSON.stringify(wertAus(a.index, blatt.analyseText, 0), null, 2)}\n` };
+    return codeziel(this.ziel).miniprojekt(e.modell, e.optionen, daten);
+  }
+
   ergebnis(blatt: Arbeitsblatt): Codeergebnis | { ok: false; fehler: string } | null {
     const a = blatt.analyse;
     const q = this.quelle;
     if (q.art === "daten" && !a?.index) return null;
     const wurzel = this.wurzel(blatt);
-    const schluessel = [this.ziel, q.art === "dokument" ? `${q.kennung}:${this.schemaText ?? ""}` : "daten", wurzel, this.namensraum, this.unveraenderlich, this.jeKlasse].join("|");
+    const schluessel = [this.ziel, q.art === "dokument" ? `${q.kennung}:${this.schemaText ?? ""}` : "daten", wurzel, this.namensraum, this.unveraenderlich, this.jeKlasse, this.attribute].join("|");
     if (this.merk && this.merk.schluessel === schluessel && (q.art === "dokument" || this.merk.analyse === a)) return this.merk.ergebnis;
     let schema: unknown;
     let quelle: string;
@@ -81,9 +106,9 @@ export class CodeZustand {
       quelle = q.name;
     }
     const modell = ausJsonSchema(schema, wurzel);
-    const optionen: Codeoptionen = { wurzelname: wurzel, namensraum: this.namensraum.trim(), unveraenderlich: this.unveraenderlich, jeKlasse: this.jeKlasse, kopf: `Erzeugt von Strukturblick ${FASSUNG} aus ${quelle}`, dateistamm: wurzel.replace(/(\p{Ll})(\p{Lu})/gu, "$1_$2").toLowerCase() };
+    const optionen = this.optionen(wurzel, quelle);
     const ergebnis: Codeergebnis | { ok: false; fehler: string } = modell.klassen.length
-      ? { ok: true, modell, ausgabe: codeziel(this.ziel).schreiben(modell, optionen), quelle, schemafassung: schemafassung(schema) }
+      ? { ok: true, modell, ausgabe: codeziel(this.ziel).schreiben(modell, optionen), quelle, schemafassung: schemafassung(schema), optionen }
       : { ok: false, fehler: "Keine Objekte im Schema: Code erzeugen braucht mindestens ein Objekt mit Feldern." };
     this.merk = { schluessel, analyse: a, ergebnis };
     return ergebnis;
