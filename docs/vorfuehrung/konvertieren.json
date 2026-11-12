@@ -1,0 +1,49 @@
+{
+  "kapitel": "konvertieren",
+  "titel": "In ein anderes Format umschreiben",
+  "ticket": "STB-42",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json im Vordergrund",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Konvertieren steht in der Leiste unter Prüfen und umbauen. Vorgewählt ist CSV, und bevor ein Ergebnis kommt, sagt die Karte oben ehrlich, was CSV nicht kann.",
+      "ziel": { "anker": "werkzeug-konvertieren", "notbehelf": "Leiste, Eintrag Konvertieren" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Verlustkarte mit 4 Punkten; Quelle und Ergebnis nebeneinander",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Jede Bestellung hat mehrere Positionen, eine Zeile aber nur Platz für einen Wert je Spalte. Drei Wege stehen zur Wahl: eine Zeile je Position, Spalten je Position oder die Liste als Text in einer Zelle. Jeder Weg sagt vorher, wie viele Zeilen und Spalten herauskommen.",
+      "ziel": { "anker": "konvertieren-listen", "notbehelf": "Auswahl unter positionen sind Listen" },
+      "aktion": { "art": "klicken", "vorher": "Spalten je Eintrag wählen, danach zurück auf Eine Zeile je Eintrag" },
+      "erwartung": "Zeile je Eintrag 297 Zeilen; Spalten je Eintrag 128 Zeilen und 12 Spalten für positionen",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Die übrigen Punkte nennen den Preis: In CSV werden Zahlen Text, null und leer sehen gleich aus, und Felder außerhalb der Liste wie shop fehlen.",
+      "ziel": { "anker": "konvertieren-verluste", "notbehelf": "Rechte Spalte der Verlustkarte" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Punkte Typen, null und leer, shop und stand fehlen",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Nach YAML geht nichts verloren; die Karte sagt das genauso deutlich. Texte, die wie ein Datum aussehen, bleiben dabei Text.",
+      "ziel": { "anker": "konvertieren-ziel", "notbehelf": "Segment Von JSON nach, YAML" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Karte Nichts geht verloren; Ergebnis bestellungen.yaml",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Als neues Dokument legt das Ergebnis im selben Ordner ab und öffnet es; das Original bleibt unverändert.",
+      "ziel": { "anker": "konvertieren-neu", "notbehelf": "Knopf Als neues Dokument unten rechts, vorher wieder CSV" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Reiter bestellungen.csv in der Tabelle mit 297 Zeilen",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

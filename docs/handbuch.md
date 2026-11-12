@@ -113,6 +113,25 @@ mit dem Ergänzten). Jede Zeile lässt sich mit "Zeile so lassen" ausnehmen; das
 ergänzt und gelöscht werden, die Zeile unten, wie viele Datensätze danach lesbar sind. "Übernehmen" ist ein Vorgang
 im Verlauf, "Verwerfen" schließt das Werkzeug ohne Änderung.
 
+Das Werkzeug Konvertieren (Leiste, "Prüfen und umbauen") schreibt das Dokument in ein anderes Format um: CSV, JSON
+Lines, JSON oder YAML (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
+mit "Als neues Dokument" ein eigener Reiter im selben Ordner oder mit "Herunterladen" eine Datei. Über Quelle und
+Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
+
+- CSV hat eine Zeile je Eintrag der Hauptliste (der Liste, die auch die Tabelle zeigt). Steckt in den Einträgen eine
+  Liste (etwa positionen), gibt es drei Wege: eine Zeile je Element (die übrigen Werte wiederholen sich), Spalten je
+  Element (positionen.0.artikel ...) oder die Liste als JSON-Text in einer Zelle; jeder Weg nennt Zeilen und Spalten.
+  Objekte werden Spalten mit Punkt (kunde.name) oder JSON-Text. Trennzeichen Semikolon, Komma oder Tab, mit oder
+  ohne Kopfzeile.
+- Weitere Punkte, wo sie zutreffen: Typen werden in CSV Text (mit Beispielen und Nummern mit führender Null), null
+  und leer sehen gleich aus, Felder außerhalb der Hauptliste fehlen in CSV und JSON Lines, Kommentare gehen
+  verloren, aus CSV bleiben Werte Text, nicht lesbare Stellen kommen nur als Text mit (vorher Reparieren).
+- YAML wird nach den Regeln von 1.1 geschrieben: Texte wie yes, on oder 2026-11-01 stehen in Anführungszeichen und
+  bleiben in jedem Leser Text.
+
+Der Inspektor zeigt Zeilen, Spalten, Größe und bei CSV, woher jede Spalte kommt (aus dem Eintrag, aufgeklappt, je
+Element der Liste).
+
 Das Werkzeug Bereinigen (Leiste, "Prüfen und umbauen", oder die Befehlspalette) arbeitet auf der Liste, die
 auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz im Segment geschlossen wird:
 

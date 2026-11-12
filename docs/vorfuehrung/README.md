@@ -55,3 +55,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `kontextmenues.json` | Ordnen mit der rechten Maustaste (STB-36) | durchgespielt 12.11.2026 |
 | `validieren.json` | Daten gegen ein Schema prüfen (STB-34) | durchgespielt 12.11.2026 |
 | `reparieren.json` | Kaputte Daten lesbar machen (STB-41) | durchgespielt 12.11.2026 |
+| `konvertieren.json` | In ein anderes Format umschreiben (STB-42) | durchgespielt 12.11.2026 |
