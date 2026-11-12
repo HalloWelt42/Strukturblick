@@ -132,7 +132,7 @@ export function xlsxLesen(bytes: Uint8Array): Arbeitsmappe {
   }
   const hinweise: string[] = [];
   if (formeln) hinweise.push(`${formeln.toLocaleString("de-DE")} ${formeln === 1 ? "Formel" : "Formeln"}: übernommen ist das zuletzt berechnete Ergebnis`);
-  if (fehlerwerte) hinweise.push(`${fehlerwerte.toLocaleString("de-DE")} Fehlerwerte wie #DIV/0! stehen als Text da`);
-  if (verbunden) hinweise.push(`${verbunden.toLocaleString("de-DE")} verbundene Zellbereiche: nur die erste Zelle trägt den Wert`);
+  if (fehlerwerte) hinweise.push(`${fehlerwerte.toLocaleString("de-DE")} ${fehlerwerte === 1 ? "Fehlerwert wie #DIV/0! steht" : "Fehlerwerte wie #DIV/0! stehen"} als Text da`);
+  if (verbunden) hinweise.push(`${verbunden.toLocaleString("de-DE")} ${verbunden === 1 ? "verbundener Zellbereich" : "verbundene Zellbereiche"}: nur die erste Zelle trägt den Wert`);
   return { blaetter, hinweise };
 }

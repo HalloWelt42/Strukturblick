@@ -48,7 +48,7 @@ describe("XLSX lesen", () => {
       ["2026-11-05T14:30:00", "Hofeier 10 Stück", 3, 3.8, true, "Grüße & Dank"],
     ]);
     expect(m.blaetter[1].zeilen).toEqual([["Lindenhof"], ["PLZ", "01067", 42]]);
-    expect(m.hinweise).toEqual(["1 Formel: übernommen ist das zuletzt berechnete Ergebnis", "1 verbundene Zellbereiche: nur die erste Zelle trägt den Wert"]);
+    expect(m.hinweise).toEqual(["1 Formel: übernommen ist das zuletzt berechnete Ergebnis", "1 verbundener Zellbereich: nur die erste Zelle trägt den Wert"]);
   });
 
   it("öffnet als JSON-Dokument: Kopfzeile wird Feldnamen, leere Zeilen fallen weg", () => {
