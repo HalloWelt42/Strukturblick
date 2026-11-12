@@ -60,7 +60,9 @@ describe("Klassenmodell aus JSON Schema", () => {
     expect(m.klassen.length).toBeGreaterThan(2);
     // Attribute: im Code, in der Abbildung des Inspektors und im Hinweis (wenige Grenzen aus Daten)
     const a = codeziel("php").schreiben(m, { ...OPTIONEN, attribute: true });
-    expect(a.dateien[0].text).toContain("#[Assert\\Regex('/^[0-9]+$/u')]");
+    // Kurz: in einer Zeile mit der Eigenschaft; lang (über 100 Zeichen): darüber (siehe bestellungen unten)
+    expect(a.dateien[0].text).toContain("        #[Assert\\Regex('/^[0-9]+$/u')] public string $plz,\n");
+    expect(a.dateien[0].text).toContain("        #[Assert\\Valid] public Kunde $kunde,\n");
     expect(a.abbildung.find((x) => x.feld === "plz")?.typ).toBe("string, #[Assert\\Regex('/^[0-9]+$/u')]");
     expect(a.abbildung.find((x) => x.feld === "bestellungen")?.typ).toBe("array, im PHPDoc list<Bestellung>, #[Assert\\All([new Assert\\Type(Bestellung::class)])], #[Assert\\Valid]");
     expect(a.dateien[0].text).toContain("     * @param list<Bestellung> $bestellungen\n");
