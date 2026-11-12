@@ -131,6 +131,18 @@ function klasseSchreiben(k: Klasse, o: Codeoptionen): string[] {
   return z;
 }
 
+/** Was im Modus Attribute am Feld steht; ohne Grenzen im Schema bleibt es bei Valid für verschachtelte Klassen */
+function attributHinweis(m: Klassenmodell): string {
+  const alle = m.klassen.flatMap((k) => k.felder.flatMap(attribute));
+  const grenzen = alle.filter((a) => a !== "Assert\\Valid").length;
+  const valid = alle.length - grenzen;
+  const zahl = (n: number, eins: string, viele: string) => `${n} ${n === 1 ? eins : viele}`;
+  if (!alle.length) return "Das Schema hat keine Grenzen, daher keine Attribute. Ein JSON Schema mit Grenzen aus der Ablage liefert sie.";
+  const teile = [grenzen ? zahl(grenzen, "Grenze", "Grenzen") : "", valid ? `${zahl(valid, "Prüfung", "Prüfungen")} verschachtelter Klassen (Valid)` : ""].filter(Boolean);
+  const wenige = grenzen ? "" : " Aus Daten abgeleitet gibt es kaum Grenzen; ein JSON Schema aus der Ablage liefert mehr.";
+  return `Attribute des Symfony Validators am Feld: ${teile.join(", ")}. Listentypen bleiben PHPDoc.${wenige}`;
+}
+
 /** readonly class gibt es ab 8.2; sonst trägt Klasse::fromArray(...) (first-class callable) ab 8.1 */
 export const phpVoraussetzung = (o: Codeoptionen): string => `PHP ab ${o.unveraenderlich ? "8.2" : "8.1"}${o.attribute ? " und symfony/validator 7" : ""}`;
 
@@ -163,12 +175,17 @@ export const PHP: Codeziel = {
   schreiben(roh: Klassenmodell, o: Codeoptionen): Codeausgabe {
     const m = phpModell(roh);
     const einlesen = `$daten = json_decode($json, true, flags: JSON_THROW_ON_ERROR);\n$wurzel = ${phpWurzel(m, "$daten")};${o.attribute ? "\n\n// Prüfen (symfony/validator)\n$fehler = Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator()->validate($wurzel);" : ""}`;
-    const zuListe = (f: Feld) => (f.typ.art === "liste" || f.typ.art === "zuordnung" ? `${eigenschaftstyp(f)}, im PHPDoc ${doktyp(f.typ)}` : eigenschaftstyp(f));
+    const typText = (f: Feld) =>
+      [
+        eigenschaftstyp(f),
+        ...(f.typ.art === "liste" || f.typ.art === "zuordnung" ? [`im PHPDoc ${doktyp(f.typ)}`] : []),
+        ...(o.attribute ? attribute(f).map((a) => `#[${a}]`) : []),
+      ].join(", ");
     return {
       dateien: phpDateien(m, o, o.jeKlasse),
-      abbildung: abbildungen(m, zuListe),
+      abbildung: abbildungen(m, typText),
       einlesen,
-      hinweis: o.attribute ? "Grenzen stehen als Attribute des Symfony Validators am Feld, Listentypen als PHPDoc." : "Listentypen und Grenzen aus dem Schema stehen als PHPDoc am Konstruktor.",
+      hinweis: o.attribute ? attributHinweis(m) : "Listentypen und Grenzen aus dem Schema stehen als PHPDoc am Konstruktor.",
       voraussetzung: phpVoraussetzung(o),
     };
   },

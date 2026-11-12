@@ -215,7 +215,8 @@ zeigt, wie Schema-Typen im Code ankommen und wie man die Daten einliest; mehrere
 Objekte mit freien Schlüsseln und gleich gebauten Werten (additionalProperties) werden Zuordnungen (array<string, X>,
 Record, dict), allOf wird zu einer Klasse zusammengeführt, Schemas nur mit Definitionen bekommen eine Klasse je
 Definition. Bei PHP stehen die Grenzen wahlweise als PHPDoc oder als Attribute des Symfony Validators (#[Assert\Count]
-...), list<T> bleibt PHPDoc. Der Kopf der Tafel und jeder Datei nennt, was der Code braucht (etwa "PHP ab 8.2 und
+...), list<T> bleibt PHPDoc. Der Inspektor nennt die Attribute je Feld, der Hinweis unter der Tafel zählt sie; aus
+Daten abgeleitet gibt es kaum Grenzen (etwa Muster), mehr liefert ein JSON Schema aus der Ablage. Der Kopf der Tafel und jeder Datei nennt, was der Code braucht (etwa "PHP ab 8.2 und
 symfony/validator 7"), die Fassung des Schemas und von Strukturblick samt HalloWelt42 und Webadresse.
 
 "Projekt als ZIP" liefert ein lauffähiges Miniprojekt: die Klassen, die Daten des Dokuments als JSON, ein

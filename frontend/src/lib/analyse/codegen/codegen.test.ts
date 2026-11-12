@@ -58,6 +58,13 @@ describe("Klassenmodell aus JSON Schema", () => {
     const m = ausJsonSchema(alsJsonSchema(schemaAbleiten(index, text), "bestellungen.json"), "Bestellungen");
     expect(m.klassen[0].name).toBe("Bestellungen");
     expect(m.klassen.length).toBeGreaterThan(2);
+    // Attribute: im Code, in der Abbildung des Inspektors und im Hinweis (wenige Grenzen aus Daten)
+    const a = codeziel("php").schreiben(m, { ...OPTIONEN, attribute: true });
+    expect(a.dateien[0].text).toContain("#[Assert\\Regex('/^[0-9]+$/u')]");
+    expect(a.abbildung.find((x) => x.feld === "plz")?.typ).toBe("string, #[Assert\\Regex('/^[0-9]+$/u')]");
+    expect(a.abbildung.find((x) => x.feld === "bestellungen")?.typ).toBe("array, im PHPDoc list<Bestellung>, #[Assert\\Valid]");
+    expect(a.hinweis).toBe("Attribute des Symfony Validators am Feld: 1 Grenze, 3 Prüfungen verschachtelter Klassen (Valid). Listentypen bleiben PHPDoc.");
+    expect(codeziel("php").schreiben(m, OPTIONEN).abbildung.find((x) => x.feld === "plz")?.typ).toBe("string");
   });
 });
 
