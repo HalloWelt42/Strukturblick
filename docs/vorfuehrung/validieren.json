@@ -42,7 +42,7 @@
       "sprechtext": "Aus den Daten prüft gegen das Schema, das Strukturblick selbst ableitet. Die Beispiel-Bestellungen passen dazu, deshalb gibt es keinen Befund. Bericht herunterladen hält alle Befunde als Text fest.",
       "ziel": { "anker": "validieren-aus-daten", "notbehelf": "Segment Aus den Daten" },
       "aktion": { "art": "klicken" },
-      "erwartung": "Keine Befunde, Hinweis alle 128 Einträge ohne Befund",
+      "erwartung": "Keine Befunde, unten 128 von 128 Einträgen ohne Befund",
       "geprueft": "2026-11-12"
     }
   ]
