@@ -1,0 +1,49 @@
+{
+  "kapitel": "validieren",
+  "titel": "Daten gegen ein Schema prüfen",
+  "ticket": "STB-34",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json im Vordergrund",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Validieren steht in der Leiste unter Prüfen und umbauen. Es prüft die offenen Daten gegen ein JSON Schema, also gegen eine Beschreibung, wie die Daten aussehen sollen.",
+      "ziel": { "anker": "werkzeug-validieren", "notbehelf": "Leiste, Abschnitt Prüfen und umbauen, Eintrag Validieren" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Werkzeug belegt den Platz der Ansicht, Segment Aus der Ablage und Aus den Daten",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Als Schema nehmen wir bestellung.schema.json aus den Beispielen. Ein erfundener Lieferdienst nimmt höchstens drei Positionen je Bestellung an.",
+      "ziel": { "anker": "validieren-schema", "notbehelf": "Menü neben Aus der Ablage, Eintrag bestellung.schema.json" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "26 Fehler, alle mit Regel maxItems 3; unten 102 von 128 Einträgen ohne Befund",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Jeder Befund nennt die Stelle, was erwartet war und was da steht. Die Fundstelle daneben zeigt die Zeilen rundherum, die falsche Stelle ist unterstrichen.",
+      "ziel": { "anker": "validieren-befund", "notbehelf": "Ersten Befund in der Liste anklicken" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Fundstelle mit Zeilennummern und roter Anmerkung, Inspektor zeigt Soll, Ist und Regel im Schema",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Mit Im Editor springt man genau an die Zeile. Gibt es einen eindeutigen Vorschlag, etwa eine fehlende führende Null, behebt ihn der Inspektor mit einem Klick, und der Verlauf kann es zurücknehmen.",
+      "ziel": { "anker": "validieren-im-editor", "notbehelf": "Knopf Im Editor unter der Fundstelle" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Editor mit Schreibmarke in der gemeldeten Zeile (positionen der Bestellung B-24023)",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Aus den Daten prüft gegen das Schema, das Strukturblick selbst ableitet. Die Beispiel-Bestellungen passen dazu, deshalb gibt es keinen Befund. Bericht herunterladen hält alle Befunde als Text fest.",
+      "ziel": { "anker": "validieren-aus-daten", "notbehelf": "Segment Aus den Daten" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Keine Befunde, Hinweis alle 128 Einträge ohne Befund",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

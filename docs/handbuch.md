@@ -37,7 +37,8 @@ Lizenz und den Lizenzen aller Bausteine; der Bau sammelt sie selbst (frontend/li
 
 Zum Üben gibt es erfundene Beispieldaten: "Beispiele zum Üben" auf der Startseite, in der Ablage oder über die
 Befehlspalette ("Beispiele öffnen"). Sie landen im Ordner Beispiele der eigenen Ablage: bestellungen.json (128
-Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten) und dienste.yaml. Ein
+Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten), dienste.yaml und
+bestellung.schema.json (Schema eines Lieferdienstes zum Validieren). Ein
 zweites Öffnen zeigt die vorhandenen samt Änderungen; frisch anfangen: die Beispiele in den Papierkorb legen.
 Quelle ist frontend/pruefdaten; Adressen unter example.org, Telefonnummern aus dem für Film und Fernsehen
 freigehaltenen Bereich 030 23125.
@@ -86,6 +87,15 @@ Die Ansicht Struktur (⌥ ⌘ 5) leitet aus allen Werten das Schema ab: je Objek
 Kanten nennen 1, 0..1 oder 0..n. Namen kommen aus den Schlüsseln, Listeneinträge aus dem Listennamen in der
 Einzahl. "Als JSON Schema" lädt das Schema (Entwurf 2020-12) herunter; der Inspektor zeigt den gewählten Typ und
 seinen Ausschnitt zum Kopieren.
+
+Das Werkzeug Validieren (Leiste, "Prüfen und umbauen") prüft die Daten gegen ein JSON Schema (Entwurf 2020-12 und
+älter): "Aus der Ablage" nimmt ein .json-Dokument der Ablage als Schema, "Aus den Daten" das Schema, das auch die
+Struktur zeigt. Jeder Befund nennt Stelle (Pfad, Zeile, Eintrag), was erwartet war, was da steht, und die Regel im
+Schema; Fehler und Warnungen lassen sich getrennt filtern, ein Format wie date gilt als Warnung. Die Fundstelle
+zeigt die Zeilen rundherum mit der falschen Stelle unterstrichen und springt in Editor oder Baum. Gibt es einen
+eindeutigen Vorschlag (etwa eine fehlende führende Null bei einer Postleitzahl), setzt "Beheben" im Inspektor den
+Wert als ein Vorgang im Verlauf. "Bericht herunterladen" schreibt alle Befunde als Text. Zum Üben: die Beispiele
+öffnen und bestellung.schema.json wählen; es erlaubt höchstens drei Positionen je Bestellung.
 
 Das Werkzeug Bereinigen (Leiste, "Prüfen und umbauen", oder die Befehlspalette) arbeitet auf der Liste, die
 auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz im Segment geschlossen wird:
