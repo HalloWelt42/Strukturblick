@@ -1,5 +1,5 @@
 ---
-zweck: "Zeigt, prüft und baut Strukturdaten um (JSON, NDJSON, CSV, YAML, TOML): Baum, Editor, Tabelle und Inspektor auf einem Text mit gemeinsamem Verlauf; mit Server auf pi5b, ohne Server auf GitHub Pages."
+zweck: "Zeigt, prüft und baut Strukturdaten um (JSON, NDJSON, CSV, YAML, TOML, XML): Baum, Editor, Tabelle und Inspektor auf einem Text mit gemeinsamem Verlauf; mit Server auf pi5b, ohne Server auf GitHub Pages."
 geraet: [pi5b]
 abhaengigkeiten: [kellerwolke, appkern, vorbau]
 daten:
@@ -18,7 +18,7 @@ stand: f4da234
 
 ## Zweck
 
-Strukturblick öffnet Strukturdaten (JSON, NDJSON, CSV, YAML, TOML) und zeigt sie als Baum, im Editor und als Tabelle;
+Strukturblick öffnet Strukturdaten (JSON, NDJSON, CSV, YAML, TOML, XML) und zeigt sie als Baum, im Editor und als Tabelle;
 der Inspektor zeigt das Gewählte, kopiert seinen Pfad (jq, JSONPath, Zeiger, PHP, Python, TypeScript) und zählt
 alle Werte desselben Pfads. Alle Ansichten arbeiten auf demselben Text: eine Änderung in der Tabelle ist eine
 Textänderung an genau dieser Stelle, CSV-Dialekt, Kommentare und Formatierung bleiben. Rückgängig gilt für alle
@@ -39,7 +39,7 @@ Zum Üben gibt es erfundene Beispieldaten: "Beispiele zum Üben" auf der Startse
 Befehlspalette ("Beispiele öffnen"). Sie landen im Ordner Beispiele der eigenen Ablage: bestellungen.json (128
 Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten), dienste.yaml,
 bestellung.schema.json (Schema eines Lieferdienstes zum Validieren), kundenimport.ndjson (Kundenimport mit vier
-kaputten Zeilen zum Reparieren) und webshop.toml (Einstellungen des Webshops in TOML). Ein
+kaputten Zeilen zum Reparieren) webshop.toml (Einstellungen des Webshops in TOML) und lieferungen.xml (Lieferscheine in XML). Ein
 zweites Öffnen zeigt die vorhandenen samt Änderungen; frisch anfangen: die Beispiele in den Papierkorb legen.
 Quelle ist frontend/pruefdaten; Adressen unter example.org, Telefonnummern aus dem für Film und Fernsehen
 freigehaltenen Bereich 030 23125.
@@ -114,7 +114,7 @@ ergänzt und gelöscht werden, die Zeile unten, wie viele Datensätze danach les
 im Verlauf, "Verwerfen" schließt das Werkzeug ohne Änderung.
 
 Das Werkzeug Konvertieren (Leiste, "Prüfen und umbauen") schreibt das Dokument in ein anderes Format um: CSV, JSON
-Lines, JSON, YAML oder TOML (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
+Lines, JSON, YAML, TOML oder XML (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
 mit "Als neues Dokument" ein eigener Reiter im selben Ordner oder mit "Herunterladen" eine Datei. Über Quelle und
 Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
 
@@ -130,11 +130,25 @@ Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
   bleiben in jedem Leser Text.
 - TOML braucht oben ein Objekt (eine Liste kommt unter eintraege, jeder Eintrag als eigener Abschnitt in doppelten eckigen Klammern) und kennt
   kein null: solche Felder fallen weg, die Karte nennt sie. Aus TOML werden Datum und Zeit in den übrigen Zielen Text.
+- XML braucht ein Wurzelelement (sonst steht alles unter daten), Felder mit @ werden Attribute, #text wird Text, Listen
+  werden wiederholte Elemente, null ein leeres Element; Namen, die XML nicht erlaubt, werden angepasst und genannt.
+  Aus XML sagt die Karte, welche Elemente mal einzeln, mal als Liste vorkommen (ein einzelnes wird keine Liste).
 
 TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
 als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,
 8 und 2, Datum und Zeit. Ein Fehler betrifft nur seine Zeile; der Rest bleibt lesbar. Ändern, Einträge entfernen und
 Spalten entfernen wirken nur an ihren Stellen, Kommentare und Anordnung bleiben; null lässt TOML nicht zu.
+
+XML liest Strukturblick ebenfalls selbst, nach festen Regeln: Ein Element mit Attributen oder Kind-Elementen wird ein
+Objekt, Attribute heißen @name, Text daneben #text, ein Element nur mit Text wird Text, gleichnamige Geschwister werden
+eine Liste. XML kennt keine Typen; alle Werte sind Text (umwandeln mit Bereinigen, Typen). Geprüft wird streng wie
+von einem XML-Parser: Entities, & und < an falscher Stelle, die Lage der XML-Deklaration, Namensräume, -- in
+Kommentaren und verbotene Steuerzeichen. Entities aus einer DTD werden aus Sicherheitsgründen nicht aufgelöst, nur
+gemeldet. Ändern und Entfernen wirken nur an ihren Stellen; Kommentare, Einrückung und Namensräume bleiben.
+
+Beim Öffnen einer Datei erkennt Strukturblick die Kodierung: Bytereihenfolge-Marke, die Angabe encoding in der
+XML-Deklaration (etwa ISO-8859-1), sonst UTF-8; ist eine Datei kein gültiges UTF-8, wird sie als Windows-1252 gelesen.
+Eine Meldung sagt, wenn nicht UTF-8 gelesen wurde; Herunterladen schreibt immer UTF-8.
 
 Der Inspektor zeigt Zeilen, Spalten, Größe und bei CSV, woher jede Spalte kommt (aus dem Eintrag, aufgeklappt, je
 Element der Liste).
