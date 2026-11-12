@@ -27,7 +27,7 @@ class Dokument(BaseModel):
     kennung: str = Field(pattern=KENNUNG)
     name: str = Field(min_length=1, max_length=255)
     ordner: str = Field("", max_length=80)
-    formatWahl: Literal["json", "ndjson", "csv", "yaml", "toml", "xml"] | None = None
+    formatWahl: Literal["json", "ndjson", "csv", "yaml", "toml", "xml", "markdown"] | None = None
     optionen: dict[str, Leseoption] = Field(default_factory=dict)
     text: str
     verlauf: Verlauf = Field(default_factory=Verlauf)

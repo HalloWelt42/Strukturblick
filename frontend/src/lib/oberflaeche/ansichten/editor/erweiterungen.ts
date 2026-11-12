@@ -14,13 +14,14 @@ import { xml } from "@codemirror/legacy-modes/mode/xml";
 import { highlightSelectionMatches, openSearchPanel, search, searchKeymap } from "@codemirror/search";
 import { json } from "@codemirror/lang-json";
 import { yaml } from "@codemirror/lang-yaml";
+import { markdown } from "@codemirror/lang-markdown";
 import { tags as t } from "@lezer/highlight";
 import { ZEILENTRENNER } from "./abgleich";
 import { diagnosenFeld, diagnosenRinne } from "./diagnosen";
 import { suchtreffer } from "./suche";
 
 /** Hervorhebung je `format.sprache`; andere Sprachen bleiben ohne. */
-const SPRACHEN: Readonly<Record<string, () => Extension>> = { json: () => json(), yaml: () => yaml(), toml: () => StreamLanguage.define(toml), xml: () => StreamLanguage.define(xml) };
+const SPRACHEN: Readonly<Record<string, () => Extension>> = { json: () => json(), yaml: () => yaml(), toml: () => StreamLanguage.define(toml), xml: () => StreamLanguage.define(xml), markdown: () => markdown() };
 
 export const spracheFuer = (sprache: string): Extension => SPRACHEN[sprache]?.() ?? [];
 

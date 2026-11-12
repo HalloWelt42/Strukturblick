@@ -6,6 +6,7 @@
 import { GRENZEN, xlsxSchreiben, type Ausgabeblatt } from "../../formate/xlsx/schreiben";
 import type { Konvertieroptionen, Verlustpunkt } from "./konvertieren";
 import { csvSchreiben, istObjekt, tabellieren, type Tabellierung } from "./tabellieren";
+import { ausTabellierung, htmlSchreiben, markdownSchreiben, type Texttabelle } from "./textabellen";
 
 /** Die Liste, die eine Tabelle wird, ihr Name und die obersten Felder außerhalb von ihr samt Werten */
 export interface Hauptliste {
@@ -52,6 +53,33 @@ function nullPunkt(t: Tabellierung): Verlustpunkt[] {
     if (n > meiste.n) meiste = { spalte: i, n };
   });
   return meiste.n ? [{ satz: "null und leer sehen gleich aus", text: `\`${t.spalten[meiste.spalte].name}\` ist in ${anzahl(meiste.n)} von ${anzahl(t.zeilen.length)} Zeilen \`null\` und wird zur leeren Zelle, wie ein leerer Text.` }] : [];
+}
+
+/** Zahlen und Wahrheitswerte werden in Textformaten Text; Beispiele aus den ersten Zeilen */
+function typBeispiele(t: Tabellierung): string[] {
+  const beispiele: string[] = [];
+  for (const z of t.zeilen.slice(0, 2000)) {
+    for (const w of z) if ((typeof w === "number" || typeof w === "boolean") && beispiele.length < 3 && !beispiele.includes(String(w))) beispiele.push(String(w));
+    if (beispiele.length >= 3) break;
+  }
+  return beispiele;
+}
+
+/** Felder außerhalb der Liste als zweite Tabelle "Angaben" (Werte, die selbst Behälter sind, als JSON-Text) */
+function angaben(h: Hauptliste): Texttabelle[] {
+  return h.aussen.length ? [{ titel: ANGABEN, spalten: ["Feld", "Wert"], zeilen: h.aussen.map((k) => [k, h.aussenWerte[k]]) }] : [];
+}
+
+/** Markdown oder HTML: Tabellen zum Lesen; Typen werden Text, Felder außerhalb stehen unter Angaben */
+export function textabellenZiel(h: Hauptliste, o: Konvertieroptionen, ziel: "markdown" | "html", titel: string): { text: string; t: Tabellierung; verluste: Verlustpunkt[] } {
+  const t = tabellieren(h.eintraege, o.objekte, o.listen);
+  const tabellen = [ausTabellierung(h.name || titel, t), ...angaben(h)];
+  const punkte = listenPunkt(h, t, o);
+  const beispiele = typBeispiele(t);
+  const name = ziel === "markdown" ? "Markdown" : "HTML";
+  if (beispiele.length) punkte.push({ satz: "Typen gehen verloren: Zahlen werden Text", text: `In ${name} ist jede Zelle Text. ${code(beispiele)} stehen als Zeichen da; Zahlen stehen zum Lesen rechtsbündig.` });
+  punkte.push(...nullPunkt(t));
+  return { text: ziel === "markdown" ? markdownSchreiben(tabellen) : htmlSchreiben(titel, tabellen), t, verluste: punkte };
 }
 
 /** CSV: Text mit Trennzeichen; alles wird Text */

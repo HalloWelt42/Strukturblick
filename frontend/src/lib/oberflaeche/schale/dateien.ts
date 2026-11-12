@@ -1,14 +1,14 @@
 // Datei wählen und herunterladen (Browser), ohne native Dialoge außer dem Datei-Wähler des Systems.
 
 import { ENDUNGEN } from "../../formate/registrierung";
-import { TABELLENDATEI_ENDUNGEN } from "../../formate/xlsx/oeffnen";
+import { EINLESE_ENDUNGEN } from "../../formate/einlesen/registrierung";
 
 export function dateiWaehlen(): Promise<File[]> {
   return new Promise((fertig) => {
     const eingabe = document.createElement("input");
     eingabe.type = "file";
     eingabe.multiple = true;
-    eingabe.accept = [...ENDUNGEN, ...TABELLENDATEI_ENDUNGEN].map((e) => "." + e).join(",");
+    eingabe.accept = [...ENDUNGEN, ...EINLESE_ENDUNGEN].map((e) => "." + e).join(",");
     eingabe.onchange = () => fertig([...(eingabe.files ?? [])]);
     eingabe.oncancel = () => fertig([]);
     eingabe.click();

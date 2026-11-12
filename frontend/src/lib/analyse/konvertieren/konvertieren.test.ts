@@ -117,7 +117,7 @@ describe("Umwandeln", () => {
   });
 
   it("Ziele und Namen", () => {
-    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml", "toml", "xml", "xlsx"]);
+    expect(zieleFuer("json").map((z) => z.kennung)).toEqual(["csv", "ndjson", "yaml", "toml", "xml", "markdown", "html", "xlsx"]);
     expect(zielname("bestellungen.json", "csv")).toBe("bestellungen.csv");
   });
 });
@@ -185,5 +185,32 @@ describe("Ziel XLSX", () => {
     expect(m.blaetter[0].zeilen[1]).toEqual(["B-1", "Jonas Brandt", "01067", "Honig", 1, 7.5, true, "Samstag"]);
     expect(m.blaetter[1].zeilen).toEqual([["Feld", "Wert"], ["shop", "Hofladen Lindenhof"], ["stand", "2026-11-10T08:15:00+01:00"]]);
     expect(u.tabelle?.zeilen).toBe(3);
+  });
+});
+
+describe("Ziele Markdown und HTML", () => {
+  it("Markdown: Hauptliste und Angaben als Tabellen mit Überschrift; zurückgelesen dieselben Werte als Text", () => {
+    const u = umwandeln(quelle(TEXT), "markdown");
+    expect(u.verluste.map((v) => v.satz)).toEqual(["`positionen` sind Listen: 3 Möglichkeiten", "Typen gehen verloren: Zahlen werden Text", "null und leer sehen gleich aus"]);
+    expect(u.text.split("\n").slice(0, 4)).toEqual([
+      "## bestellungen",
+      "",
+      "| nr  | kunde.name     | kunde.plz | positionen.artikel | positionen.menge | positionen.preis | bezahlt | notiz   |",
+      "|-----|----------------|-----------|--------------------|-----------------:|-----------------:|---------|---------|",
+    ]);
+    const r = format("markdown").lesen(u.text);
+    expect(r.diagnosen).toEqual([]);
+    const zurueck = JSON.parse(umwandeln({ ...quelle(u.text, "markdown") }, "json").text);
+    expect(zurueck.bestellungen[1]).toEqual({ nr: "B-1", "kunde.name": "Jonas Brandt", "kunde.plz": "01067", "positionen.artikel": "Saft", "positionen.menge": "2", "positionen.preis": "2.49", bezahlt: "true", notiz: "Samstag" });
+    expect(zurueck.Angaben).toEqual([{ Feld: "shop", Wert: "Hofladen Lindenhof" }, { Feld: "stand", Wert: "2026-11-10T08:15:00+01:00" }]);
+  });
+
+  it("HTML: eigene Seite mit Tabellen, als Datei; liest sich als HTML-Tabelle wieder ein", async () => {
+    const u = umwandeln({ ...quelle(TEXT), titel: "Hofladen" }, "html");
+    expect(u.daten).toBeInstanceOf(Uint8Array);
+    expect(u.text).toContain("<title>Hofladen</title>");
+    expect(u.text).toContain('<td class="zahl">7.5</td>');
+    const { htmlTabellenLesen } = await import("../../formate/html/tabellen");
+    expect(htmlTabellenLesen(u.text).tabellen.map((t) => [t.name, t.zeilen.length])).toEqual([["bestellungen", 4], ["Angaben", 3]]);
   });
 });

@@ -5,6 +5,7 @@
 import { strFromU8, unzipSync } from "fflate";
 import { xmlLesen, type Element, type Textstueck } from "../xml/dom";
 import { bezug, datumAusSerie, istDatumsformat } from "./zellen";
+import { EinlesenFehler } from "../einlesen/tabellen";
 
 export type Zellwert = string | number | boolean | null;
 
@@ -19,7 +20,7 @@ export interface Arbeitsmappe {
   readonly hinweise: string[];
 }
 
-export class XlsxFehler extends Error {}
+export class XlsxFehler extends EinlesenFehler {}
 
 const lokal = (name: string): string => name.slice(name.indexOf(":") + 1);
 const kinder = (el: Element | undefined, name: string): Element[] => (el?.kinder.filter((k): k is Element => k.art === "element" && lokal(k.name) === name) ?? []);

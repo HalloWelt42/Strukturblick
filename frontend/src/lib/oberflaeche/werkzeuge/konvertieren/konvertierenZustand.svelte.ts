@@ -28,7 +28,7 @@ export class KonvertierenZustand {
     const schluessel = `${z} ${JSON.stringify(this.optionen)}`;
     if (this.merk?.analyse === a && this.merk.schluessel === schluessel) return this.merk.umwandlung;
     const text = blatt.analyseText;
-    const umwandlung = umwandeln({ index: a.index, text, format: a.format.kennung, formatName: a.format.name, kommentare: hatKommentare(a.format.kennung, text, a.merkmale), fehler: a.diagnosen.filter((d) => d.schwere === "fehler").length, datumswerte: Number(a.merkmale.datumswerte ?? 0), typen: a.format.faehigkeiten.typen }, z, this.optionen);
+    const umwandlung = umwandeln({ index: a.index, text, format: a.format.kennung, formatName: a.format.name, kommentare: hatKommentare(a.format.kennung, text, a.merkmale), fehler: a.diagnosen.filter((d) => d.schwere === "fehler").length, datumswerte: Number(a.merkmale.datumswerte ?? 0), typen: a.format.faehigkeiten.typen, titel: blatt.name.replace(/\.[^.]+$/, "") }, z, this.optionen);
     this.merk = { analyse: a, schluessel, umwandlung };
     return umwandlung;
   }

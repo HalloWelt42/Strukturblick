@@ -9,9 +9,9 @@ import { KEIN, KnotenArt, schluessel, type Strukturindex } from "../../kern/stru
 import { listeFinden } from "../tabelle";
 import { wertAus } from "../wert";
 import type { Listenweise, Objektweise, Spalte, Trennzeichen } from "./tabellieren";
-import { code, csvZiel, xlsxZiel, type Hauptliste } from "./tabellenziele";
+import { code, csvZiel, textabellenZiel, xlsxZiel, type Hauptliste } from "./tabellenziele";
 
-export type Zielkennung = "json" | "ndjson" | "csv" | "yaml" | "toml" | "xml" | "xlsx";
+export type Zielkennung = "json" | "ndjson" | "csv" | "yaml" | "toml" | "xml" | "xlsx" | "markdown" | "html";
 
 export interface Konvertieroptionen {
   readonly trennzeichen: Trennzeichen;
@@ -42,6 +42,8 @@ export interface Quelle {
   readonly datumswerte: number;
   /** Unterscheidet das Format Zahl, Text und Wahrheitswert? (CSV und XML nicht) */
   readonly typen: boolean;
+  /** Titel für Ziele mit Überschrift (HTML), etwa der Dokumentname ohne Endung */
+  readonly titel?: string;
 }
 
 export interface Umwandlung {
@@ -76,6 +78,8 @@ export const ZIELE: readonly Ziel[] = [
   { kennung: "yaml", name: "YAML", endung: "yaml", symbol: "fa-file-lines", optionen: [] },
   { kennung: "toml", name: "TOML", endung: "toml", symbol: "fa-file-lines", optionen: [] },
   { kennung: "xml", name: "XML", endung: "xml", symbol: "fa-file-code", optionen: [] },
+  { kennung: "markdown", name: "Markdown", endung: "md", symbol: "fa-table-list", optionen: ["objekte"] },
+  { kennung: "html", name: "HTML", endung: "html", symbol: "fa-table", optionen: ["objekte"], datei: { art: "text/html;charset=utf-8" } },
   { kennung: "xlsx", name: "XLSX", endung: "xlsx", symbol: "fa-table-cells", optionen: ["objekte"], datei: { art: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } },
 ];
 
@@ -146,6 +150,11 @@ export function umwandeln(q: Quelle, zielKennung: Zielkennung, o: Konvertieropti
   if (z.kennung === "xlsx") {
     const x = xlsxZiel(h, o);
     return { text: x.vorschau, daten: x.daten, blaetter: h.aussen.length ? 2 : 1, verluste: [...vorn, ...x.verluste, ...allgemein], tabelle: { spalten: x.t.spalten, zeilen: x.t.zeilen.length }, datensaetze: null };
+  }
+  if (z.kennung === "markdown" || z.kennung === "html") {
+    const x = textabellenZiel(h, o, z.kennung, q.titel ?? h.name);
+    const daten = z.kennung === "html" ? new TextEncoder().encode(x.text) : undefined;
+    return { text: x.text, daten, blaetter: undefined, verluste: [...vorn, ...x.verluste, ...allgemein], tabelle: { spalten: x.t.spalten, zeilen: x.t.zeilen.length }, datensaetze: null };
   }
   const c = csvZiel(h, o);
   return { text: c.text, verluste: [...vorn, ...c.verluste, ...allgemein], tabelle: { spalten: c.t.spalten, zeilen: c.t.zeilen.length }, datensaetze: null };

@@ -4,7 +4,7 @@
 
 import type { Strukturindex } from "./strukturindex";
 
-export type FormatKennung = "json" | "ndjson" | "csv" | "yaml" | "toml" | "xml";
+export type FormatKennung = "json" | "ndjson" | "csv" | "yaml" | "toml" | "xml" | "markdown";
 
 export type Schwere = "fehler" | "warnung" | "hinweis";
 

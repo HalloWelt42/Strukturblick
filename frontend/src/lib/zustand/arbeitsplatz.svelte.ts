@@ -5,8 +5,8 @@ import type { Ablage, Dokumentkopf } from "../dienste/ablage";
 import { Arbeitsblatt } from "./arbeitsblatt.svelte";
 import { meldungen } from "./meldungen.svelte";
 import { textAusBytes } from "../formate/kodierung";
-import { TABELLENDATEI_ENDUNGEN, xlsxAlsDokument } from "../formate/xlsx/oeffnen";
-import { XlsxFehler } from "../formate/xlsx/lesen";
+import { einleserFuer } from "../formate/einlesen/registrierung";
+import { EinlesenFehler, type Einleser } from "../formate/einlesen/tabellen";
 
 /** Größte Datei, die ohne Rückfrage geöffnet wird (Zeichen); darüber wird gewarnt (Einstellungen folgen in STB-8). */
 const WARNUNG_AB_ZEICHEN = 50 * 1024 * 1024;
@@ -92,21 +92,22 @@ class Arbeitsplatz {
   async dateiOeffnen(datei: File, ordner = ""): Promise<void> {
     if (datei.size > WARNUNG_AB_ZEICHEN) meldungen.zeigen({ text: `${datei.name} ist groß (${Math.round(datei.size / 1048576)} MB); das Lesen kann dauern`, art: "hinweis" });
     const bytes = new Uint8Array(await datei.arrayBuffer());
-    if (TABELLENDATEI_ENDUNGEN.includes(datei.name.split(".").pop()?.toLowerCase() ?? "")) return this.tabellendateiOeffnen(datei.name, bytes, ordner);
+    const einleser = einleserFuer(datei.name);
+    if (einleser) return this.einlesen(einleser, datei.name, bytes, ordner);
     const gelesen = textAusBytes(bytes);
     await this.neu(datei.name, gelesen.text, ordner);
     if (gelesen.grund === "angabe" && gelesen.kodierung !== "UTF-8") meldungen.zeigen({ text: `${datei.name} ist in ${gelesen.kodierung} gespeichert und so gelesen; Herunterladen schreibt UTF-8`, art: "hinweis" });
     if (gelesen.grund === "ersatz") meldungen.zeigen({ text: `${datei.name} ist kein gültiges UTF-8 und wurde als Windows-1252 gelesen; Umlaute bitte prüfen`, art: "hinweis" });
   }
 
-  /** Tabellendatei (XLSX) als JSON-Dokument mit einer Liste je Blatt; die Datei selbst bleibt, wie sie ist */
-  private async tabellendateiOeffnen(name: string, bytes: Uint8Array, ordner: string): Promise<void> {
+  /** Datei, die nicht als Text bearbeitet wird (Tabellendatei, HTML-Seite), als JSON-Dokument; die Datei bleibt, wie sie ist */
+  private async einlesen(einleser: Einleser, name: string, bytes: Uint8Array, ordner: string): Promise<void> {
     try {
-      const d = xlsxAlsDokument(bytes, name);
+      const d = einleser.einlesen(bytes, name);
       await this.neu(d.name, d.text, ordner);
       meldungen.zeigen({ text: d.meldung, art: "hinweis" });
     } catch (e) {
-      if (!(e instanceof XlsxFehler)) throw e;
+      if (!(e instanceof EinlesenFehler)) throw e;
       meldungen.zeigen({ text: `${name}: ${e.message}`, art: "fehler" });
     }
   }
