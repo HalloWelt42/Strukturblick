@@ -1,0 +1,33 @@
+{
+  "kapitel": "graph",
+  "titel": "Daten als Graph mit Fokus",
+  "ticket": "STB-45",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json im Vordergrund",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Der Graph zeigt die Daten als Karten, aber nie alles auf einmal: einen Ausschnitt ab einem Fokus, hier die Wurzel, zwei Ebenen tief.",
+      "ziel": { "anker": "ansicht-graph", "notbehelf": "Ansichtswahl Graph oder ⌥ ⌘ 6" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Fokus $, Tiefe 2, Hinweis: Ausschnitt 16 von 2.472 Knoten; Karten shop, stand, bestellungen mit [0] bis [11] und Plus",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Ein Doppelklick auf die zweite Bestellung setzt den Fokus dorthin. Links steht die Liste als Rückweg, rechts die Felder, darunter Kunde und Positionen.",
+      "ziel": { "anker": "graph-karte", "notbehelf": "Doppelklick auf die Karte [1] B-24018" },
+      "aktion": { "art": "doppelklick" },
+      "erwartung": "Pfad $ > bestellungen > [1]; Rückweg bestellungen, 128 Einträge; Fokus [1] leuchtet; 12 von 2.472 Knoten",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Ein Klick wählt den Kunden. Der Inspektor nennt Pfad und Schlüssel und blättert zur vorigen oder nächsten Bestellung.",
+      "ziel": { "anker": "graph-karte", "notbehelf": "Karte kunde" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Gewählt .bestellungen[1].kunde, Schlüssel name, plz, stadt, Ebene 3; Knöpfe [0] B-24017 und [2] B-24019",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

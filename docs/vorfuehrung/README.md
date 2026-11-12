@@ -65,3 +65,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `schema.json` | Ein XML Schema im Überblick (STB-39) | durchgespielt 12.11.2026 |
 | `xsd-ableiten.json` | XML Schema aus Daten ableiten (STB-39) | durchgespielt 12.11.2026 |
 | `beispieldokument.json` | Beispieldokument aus einem XML Schema (STB-39) | durchgespielt 12.11.2026 |
+| `graph.json` | Daten als Graph mit Fokus (STB-45) | durchgespielt 12.11.2026 |

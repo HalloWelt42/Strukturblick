@@ -8,7 +8,7 @@
     {
       "nr": 1,
       "sprechtext": "Ein XML Schema liest sich als Quelltext schwer. Die Ansicht Schema gibt es nur bei solchen Dokumenten, sie zeigt, was in einem gültigen Dokument wo stehen darf.",
-      "ziel": { "anker": "ansicht-schema", "notbehelf": "Ansichtswahl Schema oder ⌥ ⌘ 7" },
+      "ziel": { "anker": "ansicht-schema", "notbehelf": "Ansichtswahl Schema oder ⌥ ⌘ 8" },
       "aktion": { "art": "klicken" },
       "erwartung": "Reiter Elementbaum, Typen 9, Statistik; eine Wurzel lieferungen",
       "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"

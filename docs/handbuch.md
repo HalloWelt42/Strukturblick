@@ -99,7 +99,14 @@ ganze Zahl, Dezimalzahl, Datum, Zeitpunkt, Uhrzeit, sonst Text; Ziffern mit füh
 xsi:type im Dokument werden benannt erklärt, xsi:nil macht ein Element nillable. Das Ausgangsdokument ist gegen das
 Ergebnis gültig; vor dem Einsatz für andere Daten prüfen und wo nötig lockern.
 
-Die Ansicht Vergleich (⌥ ⌘ 6) vergleicht das Dokument mit einer Gegenseite: einem anderen offenen Dokument, einem aus
+Die Ansicht Graph (⌥ ⌘ 6) zeigt einen Ausschnitt der Daten als Wertkarten: ab einem Fokus eine bis drei Ebenen tief
+(Tiefe oben rechts), links die Karte eine Ebene höher als Rückweg. Jede Karte nennt Schlüssel oder Stelle, Art, den Wert
+oder bei Objekten den ersten Text darin, und den Umfang; ein Plus heißt, darunter liegt mehr, als die Tiefe zeigt. Klick
+wählt eine Karte (Inspektor und die anderen Ansichten folgen), Doppelklick oder "Fokus hierher" setzt den Fokus, der Pfad
+oben springt zu einem Vorfahren. Der Inspektor blättert zum vorigen oder nächsten Nachbarn des Fokus. Sehr lange Listen
+zeigt der Fokus mit 50, tiefere Ebenen mit 12 Einträgen, den Rest als Zahl.
+
+Die Ansicht Vergleich (⌥ ⌘ 7) vergleicht das Dokument mit einer Gegenseite: einem anderen offenen Dokument, einem aus
 der Ablage, einem früheren Stand aus dem Verlauf (vorgewählt ist der Anfang, sobald es Änderungen gibt) oder einer
 Datei, die dafür nicht abgelegt wird. Verglichen wird der Aufbau, nicht der Text: Objekte nach Schlüsseln (ihre
 Reihenfolge zählt nicht), Listen über ein Schlüsselfeld, das Strukturblick selbst erkennt, wenn es nach Kennung aussieht
@@ -107,7 +114,7 @@ Reihenfolge zählt nicht), Listen über ein Schlüsselfeld, das Strukturblick se
 werden gleiche Einträge ausgerichtet, ein eingefügter Eintrag macht die folgenden also nicht zu Änderungen. Eine andere
 Reihenfolge ist ein eigener Unterschied, außer "Reihenfolge ignorieren" ist an.
 
-Die Ansicht Schema (⌥ ⌘ 7) gibt es nur bei XML-Schema-Dokumenten (Wurzel xs:schema). Sie liest das Schema samt allem,
+Die Ansicht Schema (⌥ ⌘ 8) gibt es nur bei XML-Schema-Dokumenten (Wurzel xs:schema). Sie liest das Schema samt allem,
 was es importiert oder einbindet; die Dateien dafür sucht Strukturblick im selben Ordner der Ablage, was fehlt, nennt das
 Hinweisband. Drei Reiter: Elementbaum zeigt, was in einem gültigen Dokument wo stehen darf, Ebene für Ebene beim
 Aufklappen, mit Vielfalt (1, 0..1, 0..n) und * für Pflicht. Erweiterte Typen bringen Inhalt und Attribute ihrer Basis
@@ -271,7 +278,7 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 | ⌥ ⌘ N | Neues Dokument |
 | ⌥ ⌘ W | Dokument schließen |
 | ⌥ ⌘ A | Ablage verwalten oder schließen |
-| ⌥ ⌘ 1 bis 7 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur, Vergleich, Schema (nur bei XML Schema) |
+| ⌥ ⌘ 1 bis 8 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur, Graph, Vergleich, Schema (nur bei XML Schema) |
 | ⌥ ⌘ E | Abfrage öffnen oder einklappen |
 | F3, ⇧ F3 | Nächster, voriger Treffer im Baum |
 
