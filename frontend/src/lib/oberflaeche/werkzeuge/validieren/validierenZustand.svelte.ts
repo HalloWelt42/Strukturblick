@@ -7,12 +7,13 @@ import { alsJsonSchema, schemaAbleiten } from "../../../analyse/schema";
 import { pruefen, schemaLesen, type Pruefung } from "../../../analyse/validieren";
 import { ablageverwaltung } from "../../../zustand/ablageverwaltung.svelte";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+import type { Adressierbar, Adresskontext, Werte } from "../../../zustand/adresse";
 import { XsdZustand } from "./xsdZustand.svelte";
 
 export type Schemaquelle = { readonly art: "daten" } | { readonly art: "dokument"; readonly kennung: string; readonly name: string };
 export type Befundfilter = "alle" | "fehler" | "warnung";
 
-export class ValidierenZustand {
+export class ValidierenZustand implements Adressierbar {
   quelle = $state<Schemaquelle>({ art: "daten" });
   /** Text des gewählten Schemadokuments (geladen beim Wählen und bei "Erneut prüfen") */
   schemaText = $state.raw<string | null>(null);
@@ -22,6 +23,16 @@ export class ValidierenZustand {
   /** Prüfen gegen XML Schema (bei XML-Dokumenten) */
   readonly xsd = new XsdZustand();
   private merk: { analyse: Analyse; schluessel: string; pruefung: Pruefung; schema: Record<string, unknown> | null } | null = null;
+
+  adresseWerte(k: Adresskontext): Werte {
+    return this.quelle.art === "dokument" ? { schema: k.kurz(this.quelle.kennung) } : {};
+  }
+
+  async adresseUebernehmen(w: Werte, k: Adresskontext): Promise<void> {
+    const schema = w.schema ? k.dokument(w.schema) : null;
+    if (!schema) this.datenWaehlen();
+    else if (this.quelle.art !== "dokument" || this.quelle.kennung !== schema.kennung) await this.dokumentWaehlen(schema.kennung, schema.name);
+  }
 
   async dokumentWaehlen(kennung: string, name: string): Promise<void> {
     this.quelle = { art: "dokument", kennung, name };

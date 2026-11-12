@@ -2,6 +2,7 @@
 // Suche und Filter der Typen. Die Übersicht (gelesenes Schema, Kennzahlen, Verwendungen) wird je Stand des Dokuments und
 // der Schemas im selben Ordner einmal gerechnet, die Kinder im Elementbaum erst beim Aufklappen.
 
+import type { Adressierbar, Werte } from "../../../zustand/adresse";
 import type { Analyse } from "../../../kern";
 import type { Schemadatei } from "../../../analyse/xsd/dateien";
 import { kinderVon, wurzeln, type Baumknoten } from "../../../analyse/xsd/elementbaum";
@@ -13,6 +14,7 @@ import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
 import { schemasDerAblage, schemasImOrdner } from "../../../zustand/schemadateien";
 
 export type Reiter = "baum" | "typen" | "statistik";
+const REITER: readonly Reiter[] = ["baum", "typen", "statistik"];
 export type Typfilter = "alle" | "komplex" | "einfach" | "werte" | "ungenutzt";
 export type Schemawahl = { readonly art: "knoten"; readonly kennung: string } | { readonly art: "typ"; readonly schluessel: QName } | null;
 
@@ -29,7 +31,7 @@ export function istSchemaDokument(blatt: Arbeitsblatt): boolean {
   return blatt.analyse?.format.faehigkeiten.schemasprache === "xml-schema" && istXmlSchema(blatt.analyseText);
 }
 
-export class SchemaZustand {
+export class SchemaZustand implements Adressierbar {
   reiter = $state<Reiter>("baum");
   offen = $state.raw<ReadonlySet<string>>(new Set());
   wahl = $state.raw<Schemawahl>(null);
@@ -41,6 +43,14 @@ export class SchemaZustand {
   private laeuft = false;
   private merk: { analyse: Analyse; nachbarn: SchemaZustand["nachbarn"]; uebersicht: Uebersicht } | null = null;
   private kinderMerk = new Map<string, Baumknoten[]>();
+
+  adresseWerte(): Werte {
+    return this.reiter !== REITER[0] ? { reiter: this.reiter } : {};
+  }
+
+  adresseUebernehmen(w: Werte): void {
+    this.reiter = REITER.find((r) => r === w.reiter) ?? REITER[0];
+  }
 
   uebersicht(blatt: Arbeitsblatt): Uebersicht | null {
     const a = blatt.analyse;

@@ -2,14 +2,23 @@
 // Optionen gemerkt, damit Hauptbereich und Inspektor dasselbe Ergebnis teilen.
 
 import type { Analyse } from "../../../kern";
-import { hatKommentare, umwandeln, VORGABEN, zieleFuer, type Konvertieroptionen, type Umwandlung, type Zielkennung } from "../../../analyse/konvertieren/konvertieren";
+import { hatKommentare, umwandeln, VORGABEN, ZIELE, zieleFuer, type Konvertieroptionen, type Umwandlung, type Zielkennung } from "../../../analyse/konvertieren/konvertieren";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+import type { Adressierbar, Werte } from "../../../zustand/adresse";
 
-export class KonvertierenZustand {
+export class KonvertierenZustand implements Adressierbar {
   /** Gewähltes Ziel; null heißt das erste passende */
   gewaehltesZiel = $state<Zielkennung | null>(null);
   optionen = $state<Konvertieroptionen>({ ...VORGABEN });
   private merk: { analyse: Analyse; schluessel: string; umwandlung: Umwandlung } | null = null;
+
+  adresseWerte(): Werte {
+    return this.gewaehltesZiel ? { ziel: this.gewaehltesZiel } : {};
+  }
+
+  adresseUebernehmen(w: Werte): void {
+    this.gewaehltesZiel = ZIELE.find((z) => z.kennung === w.ziel)?.kennung ?? null;
+  }
 
   ziel(blatt: Arbeitsblatt): Zielkennung | null {
     const ziele = zieleFuer(blatt.analyse?.format.kennung ?? "");

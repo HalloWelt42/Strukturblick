@@ -1,0 +1,57 @@
+{
+  "kapitel": "adressen",
+  "titel": "Die Adresse merkt sich, wo man ist",
+  "ticket": "STB-48",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json im Vordergrund, Ansicht Baum",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Die Adresszeile zeigt immer, wo man gerade ist: das Dokument, seinen Namen und die Ansicht.",
+      "ziel": { "anker": "adresszeile", "notbehelf": "Adresszeile des Browsers" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "/dokument/<8 Zeichen der Kennung>/bestellungen-json/baum",
+      "geprueft": "2026-11-12, Bauart mit Server (Entwicklung) und Nachbau von Pages unter /Strukturblick/"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Wählt man eine Stelle im Baum, kommt sie dazu. Auch Einstellungen der Werkzeuge stehen dort, etwa beim Code erzeugen Ziel und Grenzen.",
+      "ziel": { "anker": "werkzeug-code", "notbehelf": "Code erzeugen, Grenzen als: Attribute, Dateien: Je Klasse" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "/dokument/.../code?grenzen=attribute&dateien=je-klasse; ein Wechsel nur der Einstellung legt keinen neuen Eintrag im Verlauf an",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Lädt man die Seite neu, steht alles wieder so da: dasselbe Werkzeug mit denselben Einstellungen.",
+      "ziel": { "anker": "neu-laden", "notbehelf": "Seite neu laden" },
+      "aktion": { "art": "neu-laden" },
+      "erwartung": "Code erzeugen offen, Attribute und Je Klasse aktiv",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Zurück und Vor im Browser gehen die Orte durch, an denen man war, samt gewählter Stelle.",
+      "ziel": { "anker": "zurueck", "notbehelf": "Zurück im Browser, zweimal" },
+      "aktion": { "art": "zurueck" },
+      "erwartung": "Graph, dann Baum mit ?stelle=/bestellungen, dann Code erzeugen mit seinen Einstellungen",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Einen Link kann man aufheben oder teilen. Er öffnet das Dokument gleich in der richtigen Ansicht, auch wenn es gerade zu ist.",
+      "ziel": { "anker": "adresszeile", "notbehelf": "Adresse /dokument/<Kennung>/preise-json/graph?tiefe=3 eingeben" },
+      "aktion": { "art": "eingeben" },
+      "erwartung": "preise.json als neuer Reiter, Ansicht Graph, Tiefe 3",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 6,
+      "sprechtext": "Gibt es das Dokument in dieser Ablage nicht, sagt Strukturblick das und bleibt beim zuletzt offenen.",
+      "ziel": { "anker": "adresszeile", "notbehelf": "Adresse /dokument/00000000/x/graph eingeben" },
+      "aktion": { "art": "eingeben" },
+      "erwartung": "Meldung: Das Dokument aus der Adresse gibt es in dieser Ablage nicht; Adresse wechselt auf das offene Dokument",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

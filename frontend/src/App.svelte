@@ -1,6 +1,6 @@
 <script lang="ts">
   // Schale nach den abgenommenen Entwürfen (entwuerfe/arbeitsplatz.html): Kopf, Leiste, Hauptbereich, Inspektor, Fuß.
-  import { onMount } from "svelte";
+  import { onMount, untrack } from "svelte";
   import { arbeitsplatz } from "./lib/zustand/arbeitsplatz.svelte";
   import Kopf from "./lib/oberflaeche/schale/Kopf.svelte";
   import Leiste from "./lib/oberflaeche/schale/Leiste.svelte";
@@ -20,10 +20,16 @@
   import { starthinweis } from "./lib/zustand/starthinweis.svelte";
   import AblageSeite from "./lib/oberflaeche/ablage/AblageSeite.svelte";
   import { zugang } from "./lib/zustand/zugang.svelte";
+  import { adresseVerfolgen } from "./lib/oberflaeche/schale/adressleitung.svelte";
 
   // Sobald der Zugang bereit ist (ohne Server sofort, mit Server nach der Anmeldung), startet der Arbeitsplatz einmal
   $effect(() => {
     if (zugang.stand === "bereit") void zugang.arbeitsplatzStarten();
+  });
+
+  // Adresse und Arbeitsplatz gleich halten (Deeplinks, Zurück/Vor), sobald der Arbeitsplatz steht
+  $effect(() => {
+    if (arbeitsplatz.bereit) return untrack(adresseVerfolgen);
   });
 
   onMount(() => {

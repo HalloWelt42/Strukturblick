@@ -44,6 +44,13 @@ Stand: 11.11.2026, Ticket STB-3. Die Fassung 0.x ist an ihrem Zustand gescheiter
 
 Ansichten und Werkzeuge melden sich an einer Registrierung an. Die Schale baut Ansichtswahl und Leiste nur aus ihr auf, ohne hart geschriebene Reiter.
 
+Adressen (Deeplinks, STB-48): `zustand/adresse.ts` übersetzt zwischen Pfad und Ort (Seite, Dokument, Ansicht oder
+Werkzeug, Stelle, Einstellungen), ohne Browser und testbar. Was eine Ansicht oder ein Werkzeug in die Adresse gibt,
+sagt sie selbst: ihr Zustand erfüllt `Adressierbar` (Werte abweichend von der Vorgabe, Übernehmen mit Vorgabe für
+Fehlendes), die Registrierung nennt ihn (`adresse`). `oberflaeche/schale/adressleitung.svelte.ts` hält Adresszeile
+und Arbeitsplatz gleich: beim Start und bei Zurück/Vor führt die Adresse, sonst folgt sie; Ortswechsel legen einen
+Verlaufseintrag an, Feinheiten ersetzen ihn. Die Basis kommt aus `import.meta.env.BASE_URL` (Bau: `STRUKTURBLICK_BASIS`).
+
 ## Ablauf einer Änderung
 
 ```

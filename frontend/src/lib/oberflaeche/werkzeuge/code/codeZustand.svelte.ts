@@ -6,13 +6,14 @@ import type { Analyse } from "../../../kern";
 import { alsJsonSchema, schemaAbleiten } from "../../../analyse/schema";
 import { schemaLesen } from "../../../analyse/validieren";
 import { ausJsonSchema } from "../../../analyse/codegen/ausJsonSchema";
-import { codeziel } from "../../../analyse/codegen/codeziele";
+import { CODEZIELE, codeziel } from "../../../analyse/codegen/codeziele";
 import { klassenname, type Klassenmodell } from "../../../analyse/codegen/modell";
 import type { Codeausgabe, Codedatei, Codeoptionen } from "../../../analyse/codegen/ziele";
 import { wertAus } from "../../../analyse/wert";
 import { ablageverwaltung } from "../../../zustand/ablageverwaltung.svelte";
 import { FASSUNG, URHEBER } from "../../../zustand/app";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+import type { Adressierbar, Adresskontext, Werte } from "../../../zustand/adresse";
 
 export type Codequelle = { readonly art: "daten" } | { readonly art: "dokument"; readonly kennung: string; readonly name: string };
 
@@ -34,12 +35,14 @@ function schemafassung(schema: unknown): string {
   return m ? `JSON Schema ${m[1] ?? `Draft-${m[2].padStart(2, "0")}`}` : "JSON Schema";
 }
 
-export class CodeZustand {
+const VORGABE_NAMENSRAUM = "App\\Daten";
+
+export class CodeZustand implements Adressierbar {
   ziel = $state("php");
   quelle = $state<Codequelle>({ art: "daten" });
   schemaText = $state.raw<string | null>(null);
   wurzelname = $state("");
-  namensraum = $state("App\\Daten");
+  namensraum = $state(VORGABE_NAMENSRAUM);
   unveraenderlich = $state(true);
   jeKlasse = $state(false);
   /** Grenzen als Attribute (nur wo das Ziel es kennt) */
@@ -84,6 +87,31 @@ export class CodeZustand {
     if (!e?.ok || !a?.index) return null;
     const daten = { name: `${blatt.name.replace(/\.[^.]+$/, "")}.json`, text: `${JSON.stringify(wertAus(a.index, blatt.analyseText, 0), null, 2)}\n` };
     return codeziel(this.ziel).miniprojekt(e.modell, e.optionen, daten);
+  }
+
+  /** Für die Adresse: Ziel, Quelle, Namen und Schalter, soweit sie von der Vorgabe abweichen */
+  adresseWerte(k: Adresskontext): Werte {
+    const w: Record<string, string> = {};
+    if (this.ziel !== CODEZIELE[0].kennung) w.ziel = this.ziel;
+    if (this.quelle.art === "dokument") w.schema = k.kurz(this.quelle.kennung);
+    if (this.wurzelname.trim()) w.wurzel = this.wurzelname.trim();
+    if (this.namensraum !== VORGABE_NAMENSRAUM) w.namensraum = this.namensraum;
+    if (!this.unveraenderlich) w.klassen = "veraenderbar";
+    if (this.attribute) w.grenzen = "attribute";
+    if (this.jeKlasse) w.dateien = "je-klasse";
+    return w;
+  }
+
+  async adresseUebernehmen(w: Werte, k: Adresskontext): Promise<void> {
+    this.ziel = CODEZIELE.some((z) => z.kennung === w.ziel) ? w.ziel : CODEZIELE[0].kennung;
+    this.wurzelname = w.wurzel ?? "";
+    this.namensraum = w.namensraum ?? VORGABE_NAMENSRAUM;
+    this.unveraenderlich = w.klassen !== "veraenderbar";
+    this.attribute = w.grenzen === "attribute";
+    this.jeKlasse = w.dateien === "je-klasse";
+    const schema = w.schema ? k.dokument(w.schema) : null;
+    if (!schema) this.datenWaehlen();
+    else if (this.quelle.art !== "dokument" || this.quelle.kennung !== schema.kennung) await this.dokumentWaehlen(schema.kennung, schema.name);
   }
 
   ergebnis(blatt: Arbeitsblatt): Codeergebnis | { ok: false; fehler: string } | null {

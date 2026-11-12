@@ -8,6 +8,7 @@ import { wertAus } from "../../../analyse/wert";
 import { vergleichen, type Vergleich, type Vergleichsoptionen } from "../../../analyse/vergleich/vergleichen";
 import { ablageverwaltung } from "../../../zustand/ablageverwaltung.svelte";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+import type { Adressierbar, Adresskontext, Werte } from "../../../zustand/adresse";
 
 export type Gegenseite =
   | { readonly art: "dokument"; readonly kennung: string; readonly name: string }
@@ -19,7 +20,7 @@ export interface Seite {
   readonly neben: string;
 }
 
-export class VergleichZustand {
+export class VergleichZustand implements Adressierbar {
   gegenseite = $state<Gegenseite | null>(null);
   /** Text der Gegenseite (beim Wählen geladen; beim Stand jedes Mal frisch aus dem Verlauf) */
   gegenText = $state.raw<string | null>(null);
@@ -31,6 +32,16 @@ export class VergleichZustand {
   /** Pfad des gewählten Unterschieds */
   gewaehlt = $state<string | null>(null);
   private merk: { analyse: Analyse; gegen: string; schluessel: string; vergleich: Vergleich | null; fehler: string | null } | null = null;
+
+  /** Für die Adresse taugt nur ein Dokument der Ablage als Gegenseite (Stände und Dateien gibt es nur hier) */
+  adresseWerte(k: Adresskontext): Werte {
+    return this.gegenseite?.art === "dokument" ? { mit: k.kurz(this.gegenseite.kennung) } : {};
+  }
+
+  async adresseUebernehmen(w: Werte, k: Adresskontext): Promise<void> {
+    const mit = w.mit ? k.dokument(w.mit) : null;
+    if (mit && (this.gegenseite?.art !== "dokument" || this.gegenseite.kennung !== mit.kennung)) await this.dokumentWaehlen(mit.kennung, mit.name);
+  }
 
   /** Ein Dokument als Gegenseite; ist es offen, gilt sein aktueller Text, sonst der abgelegte */
   async dokumentWaehlen(kennung: string, name: string, offenerText?: string): Promise<void> {

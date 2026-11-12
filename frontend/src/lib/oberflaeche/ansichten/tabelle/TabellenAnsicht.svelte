@@ -10,12 +10,12 @@
   import { listeFinden, ortVon, sichtBerechnen, tabelleBauen, zelle, zellZeiger, type Ort } from "../../../analyse/tabelle";
   import { eingabeAnfang, neuerWertAus } from "../../../analyse/werteingabe";
   import { spaltenprofil } from "../../../analyse/spaltenprofil";
-  import { TabellenZustand } from "./tabellenZustand.svelte";
+  import { tabellenZustand } from "./tabellenZustand.svelte";
   import TabellenWerkzeugzeile from "./TabellenWerkzeugzeile.svelte";
   import TabellenRaster from "./TabellenRaster.svelte";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
-  const zustand = $derived(blatt.zustandFuer("tabelle", () => new TabellenZustand()));
+  const zustand = $derived(tabellenZustand(blatt));
 
   // Analyse zusammen mit dem Text genau ihrer Revision; solange neu gelesen wird, gilt das letzte stimmige Paar.
   interface Lesestand { readonly analyse: Analyse; readonly text: string }

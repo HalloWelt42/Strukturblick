@@ -12,7 +12,8 @@ const PARAMETER = "fassung";
 
 async function serverFassung(): Promise<string | null> {
   try {
-    const antwort = await fetch(`./index.html?${PARAMETER}=${Date.now()}`, { cache: "no-store" });
+    // Startseite über die Basis der Bauart, damit es auch unter tiefen Pfaden (Deeplinks) die eigene ist
+    const antwort = await fetch(`${import.meta.env.BASE_URL}index.html?${PARAMETER}=${Date.now()}`, { cache: "no-store" });
     if (!antwort.ok) return null;
     return /<meta name="app-fassung" content="([^"]+)"/.exec(await antwort.text())?.[1] ?? null;
   } catch {

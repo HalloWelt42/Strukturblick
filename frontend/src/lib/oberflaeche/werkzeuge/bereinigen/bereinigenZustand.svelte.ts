@@ -2,6 +2,7 @@
 // Zielwerte). Gerechnet wird in analyse/bereinigen; teure Schritte (Tabelle, Filter, Werte je Spalte) merkt sich der
 // Zustand zur gerade gelesenen Analyse, damit Hauptbereich und Inspektor dasselbe Ergebnis teilen, ohne doppelt zu rechnen.
 
+import type { Adressierbar, Werte } from "../../../zustand/adresse";
 import type { Analyse } from "../../../kern";
 import { KEIN, type Strukturindex } from "../../../kern/strukturindex";
 import { knotenZu, zeigerAus } from "../../../kern/pfade";
@@ -54,8 +55,17 @@ export const ZEILEN_JE_SEITE = 50;
 /** Schlüssel einer Gruppe ähnlicher Werte (bleibt gleich, solange dieselben Schreibweisen drin sind) */
 export const gruppenSchluessel = (spalte: string, g: Gruppe): string => [spalte, ...g.varianten.map((v) => v.wert).sort()].join("\n");
 
-export class BereinigenZustand {
+export class BereinigenZustand implements Adressierbar {
   reiter = $state<Reiter>("facetten");
+
+  adresseWerte(): Werte {
+    return this.reiter !== REITER[0].kennung ? { reiter: this.reiter } : {};
+  }
+
+  adresseUebernehmen(w: Werte): void {
+    this.reiter = REITER.find((r) => r.kennung === w.reiter)?.kennung ?? REITER[0].kennung;
+  }
+
   /** Offene Facetten nach Spaltennamen; null, solange der Nutzer nichts gewählt hat (dann gilt der Vorschlag) */
   facetten = $state<string[] | null>(null);
   /** Filter in der Reihenfolge, in der sie dazukamen (die Zählung je Schritt folgt ihr) */

@@ -38,6 +38,9 @@ jobs:
         run: npm run test:leistung
       - name: Bau ohne Server
         working-directory: frontend
+        # Deeplinks: absolute Basis unter dem Unterpfad des Repos; 404.html (Kopie der Startseite) fängt tiefe Pfade
+        env:
+          STRUKTURBLICK_BASIS: /${{ github.event.repository.name }}/
         run: npm run build:eigenstaendig
       - name: Entwürfe dazu
         run: cp -R entwuerfe frontend/dist-eigenstaendig/entwuerfe

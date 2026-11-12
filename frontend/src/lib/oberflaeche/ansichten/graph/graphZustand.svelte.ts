@@ -4,13 +4,26 @@
 import { KEIN, knotenZu, type Analyse } from "../../../kern";
 import { graphAusschnitt, type Ausschnitt } from "../../../analyse/graph";
 import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+import type { Adressierbar, Werte } from "../../../zustand/adresse";
 
 export const TIEFEN = [1, 2, 3] as const;
 
-export class GraphZustand {
+const VORGABE_TIEFE = 2;
+
+export class GraphZustand implements Adressierbar {
   fokus = $state("");
-  tiefe = $state(2);
+  tiefe = $state(VORGABE_TIEFE);
   private merk: { analyse: Analyse; fokus: string; tiefe: number; ausschnitt: Ausschnitt } | null = null;
+
+  adresseWerte(): Werte {
+    return { ...(this.fokus ? { fokus: this.fokus } : {}), ...(this.tiefe !== VORGABE_TIEFE ? { tiefe: String(this.tiefe) } : {}) };
+  }
+
+  adresseUebernehmen(w: Werte): void {
+    this.fokus = w.fokus ?? "";
+    const t = Number(w.tiefe);
+    this.tiefe = (TIEFEN as readonly number[]).includes(t) ? t : VORGABE_TIEFE;
+  }
 
   /** Fokusknoten im aktuellen Index; gibt es den Zeiger nicht mehr, die Wurzel */
   fokusKnoten(blatt: Arbeitsblatt): number {

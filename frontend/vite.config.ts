@@ -1,7 +1,8 @@
 // Bau von Strukturblick 2.0. Die Fassung kommt aus ../version.json (eine Quelle): eingebaut ins Skript und als Meta in
 // die Startseite; der Server meldet die der ausgelieferten Startseite, weicht sie ab, lädt ein offener Tab von selbst
 // neu. Die Bauart wählt VITE_BAUART: "server" (pi5b, mit Anmeldung und Ablage) oder "eigenstaendig" (GitHub Pages,
-// alles im Browser). Relative Pfade, damit die eigenständige Bauart unter jedem Unterpfad läuft.
+// alles im Browser). Die Basis ist absolut, damit Deeplinks (/dokument/...) die Bausteine finden: "/" auf dem Server,
+// auf Pages der Unterpfad des Repos aus STRUKTURBLICK_BASIS (setzt der Bau für Pages, siehe .github/workflows/pages.yml).
 import { defineConfig } from "vitest/config";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { readFileSync } from "node:fs";
@@ -15,7 +16,7 @@ const fassungEinsetzen = {
 };
 
 export default defineConfig({
-  base: "./",
+  base: process.env.STRUKTURBLICK_BASIS ?? "/",
   plugins: [svelte(), fassungEinsetzen, lizenzenPlugin(fileURLToPath(new URL(".", import.meta.url)))],
   define: {
     __APP_FASSUNG__: JSON.stringify(FASSUNG),

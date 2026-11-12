@@ -29,6 +29,17 @@ Verschieben, Herunterladen, mehrere auf einmal wählen. Entfernen legt in den Pa
 Rückgängig; nach 30 Tagen löscht die Ablage dort endgültig. "Alles sichern" schreibt alle Dokumente samt Verlauf und
 Ordnern in eine Datei, "Einspielen" fügt eine solche Datei hinzu, ohne Vorhandenes zu überschreiben.
 
+Die Adresszeile zeigt immer, wo man ist (Deeplinks): `/dokument/<Kennung>/<Name>/<Ansicht oder Werkzeug>`, dahinter
+die Einstellungen, die von der Vorgabe abweichen, und die gewählte Stelle, etwa
+`/dokument/3f9c2a71/bestellungen-json/code?ziel=pydantic&grenzen=attribute&stelle=/bestellungen/0`. Neuladen,
+Zurück und Vor und ein Lesezeichen führen genau dorthin; `/ablage` öffnet die Ablage, `/` das zuletzt offene Dokument.
+Maßgeblich ist der Anfang der Kennung (8 Zeichen, länger, falls zwei Dokumente gleich beginnen); der Name steht nur
+zum Lesen dabei, Umbenennen bricht keinen Link. In die Adresse gehen: Code erzeugen (Ziel, Quelle, Wurzel,
+Namensraum, Schalter), Validieren (Schema), Konvertieren (Ziel), Bereinigen und Schema (Reiter), Graph (Fokus,
+Tiefe), Struktur (Typ), Statistik und Tabelle (Liste), Vergleich (Gegenseite aus der Ablage). Ein Dokument, das es in
+der Ablage nicht gibt (etwa ein Link aus einem anderen Browser in der Bauart ohne Server), wird gemeldet; es bleibt
+beim zuletzt offenen.
+
 Bei jedem Start und Neuladen erscheint ein Hinweis: Nutzung nur privat und kostenfrei (Copyright HalloWelt42),
 was mit den Daten geschieht (ohne Server: nichts verlässt den Browser; mit Server: Ablage auf pi5b, gerechnet im
 Browser), Betaphase und dass die Beispiele erfunden sind. Von dort führt ein Link zu `lizenzen.txt` mit der eigenen
@@ -355,6 +366,11 @@ dem Anmelden den Arbeitsplatz.
 
 Der Ablauf `.github/workflows/pages.yml` baut bei jedem Push auf `main` die Bauart ohne Server
 (`npm run build:eigenstaendig`) und veröffentlicht sie. Einmalig: im Repo Settings, Pages, Source "GitHub Actions".
+
+Der Bau nimmt als Basis den Unterpfad des Repos (`STRUKTURBLICK_BASIS=/<Repo>/`, setzt der Ablauf) und legt
+`404.html` als Kopie der Startseite dazu: Pages liefert sie für jeden tiefen Pfad, die Seite liest ihren Ort dann
+selbst. Ohne die Variable baut Vite mit der Basis `/` (Server auf pi5b, der jeden Weg ohne Dateiendung mit der
+Startseite beantwortet).
 
 Probe: `https://hallowelt42.github.io/Strukturblick/` zeigt den Arbeitsplatz ohne Anmeldung; eine hineingezogene
 Datei erscheint im Baum, nach dem Neuladen ist sie noch da. In der Ablage einen Ordner anlegen und die Datei dorthin

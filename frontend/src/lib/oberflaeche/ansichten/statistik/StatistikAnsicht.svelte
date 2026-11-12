@@ -13,11 +13,11 @@
   import { anzahl, prozent } from "../tabelle/zahlen";
   import StatistikProfil from "./StatistikProfil.svelte";
   import StatistikHisto from "./StatistikHisto.svelte";
-  import { StatistikZustand } from "./statistikZustand.svelte";
+  import { statistikZustand } from "./statistikZustand.svelte";
 
   let { blatt }: { blatt: Arbeitsblatt } = $props();
 
-  const z = $derived(blatt.zustandFuer("statistik", () => new StatistikZustand()));
+  const z = $derived(statistikZustand(blatt));
   const quelle = lesestand(() => blatt);
   const stand = $derived(quelle.stand);
   const index = $derived(stand?.analyse.index ?? null);

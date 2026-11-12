@@ -28,7 +28,7 @@
   <div class="hinweis-fuss">
     <span class="hinweis-links">
       <a class="knopf still profil" href={URHEBER.profil} target="_blank" rel="noopener" title="Profil von {URHEBER.name} mit dem Quelltext (neuer Tab)"><i class="fa-brands fa-github"></i> {URHEBER.name}</a>
-      <a class="knopf still" href="./lizenzen.txt" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines"></i> Lizenz und Lizenzen der verwendeten Bausteine</a>
+      <a class="knopf still" href={`${import.meta.env.BASE_URL}lizenzen.txt`} target="_blank" rel="noopener"><i class="fa-solid fa-file-lines"></i> Lizenz und Lizenzen der verwendeten Bausteine</a>
     </span>
     <button class="knopf primaer" bind:this={knopf} onclick={() => starthinweis.schliessen()}><i class="fa-solid fa-check"></i> Verstanden</button>
   </div>

@@ -3,6 +3,8 @@
 // Text des Blatts; hier liegt allein, wie die Tabelle ihn zeigt.
 
 import type { Sortierung } from "../../../analyse/tabelle";
+import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
+import type { Adressierbar, Werte } from "../../../zustand/adresse";
 
 export interface Bearbeitung {
   readonly zeiger: string;
@@ -20,7 +22,7 @@ export interface Geaendert {
 /** Wie lange eine eben geänderte Zelle markiert bleibt */
 const MARKIERT_MS = 2500;
 
-export class TabellenZustand {
+export class TabellenZustand implements Adressierbar {
   filter = $state("");
   sortierung = $state<Sortierung | null>(null);
   /** Breite je Spalte in px, Schlüssel aus Liste und Spalte (siehe breitenSchluessel) */
@@ -52,6 +54,16 @@ export class TabellenZustand {
       this.markiertZeit = null;
     }, MARKIERT_MS);
   }
+
+  adresseWerte(): Werte {
+    return this.liste !== null ? { liste: this.liste } : {};
+  }
+
+  adresseUebernehmen(w: Werte): void {
+    this.liste = w.liste ?? null;
+  }
 }
 
 export const breitenSchluessel = (listeZeiger: string, spalte: string, selbst: boolean): string => `${listeZeiger}\u0000${selbst ? "" : "/"}${spalte}`;
+
+export const tabellenZustand = (blatt: Arbeitsblatt): TabellenZustand => blatt.zustandFuer("tabelle", () => new TabellenZustand());

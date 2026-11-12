@@ -3,6 +3,11 @@
 
 import type { Component } from "svelte";
 import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
+import type { Adressierbar } from "../../zustand/adresse";
+import { validierenZustand } from "./validieren/validierenZustand.svelte";
+import { bereinigenZustand } from "./bereinigen/bereinigenZustand.svelte";
+import { konvertierenZustand } from "./konvertieren/konvertierenZustand.svelte";
+import { codeZustand } from "./code/codeZustand.svelte";
 import BereinigenWerkzeug from "./bereinigen/BereinigenWerkzeug.svelte";
 import BereinigenInspektor from "./bereinigen/BereinigenInspektor.svelte";
 import RezepteWerkzeug from "./rezepte/RezepteWerkzeug.svelte";
@@ -33,6 +38,8 @@ export interface Werkzeug {
   readonly komponente: Component<{ blatt: Arbeitsblatt }>;
   /** Karten der rechten Spalte, solange das Werkzeug offen ist */
   readonly inspektor: Component<{ blatt: Arbeitsblatt }>;
+  /** Einstellungen, die in die Adresse gehören (STB-48) */
+  readonly adresse?: (blatt: Arbeitsblatt) => Adressierbar;
 }
 
 export const WERKZEUGE: readonly Werkzeug[] = [
@@ -44,6 +51,7 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     abschnitt: "pruefen",
     komponente: ValidierenWerkzeug,
     inspektor: ValidierenInspektor,
+    adresse: validierenZustand,
   },
   {
     kennung: "bereinigen",
@@ -53,6 +61,7 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     abschnitt: "pruefen",
     komponente: BereinigenWerkzeug,
     inspektor: BereinigenInspektor,
+    adresse: bereinigenZustand,
   },
   {
     kennung: "reparieren",
@@ -71,6 +80,7 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     abschnitt: "pruefen",
     komponente: KonvertierenWerkzeug,
     inspektor: KonvertierenInspektor,
+    adresse: konvertierenZustand,
   },
   {
     kennung: "rezepte",
@@ -89,6 +99,7 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     abschnitt: "erzeugen",
     komponente: CodeWerkzeug,
     inspektor: CodeInspektor,
+    adresse: codeZustand,
   },
 ];
 
