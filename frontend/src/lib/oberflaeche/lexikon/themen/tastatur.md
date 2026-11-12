@@ -18,6 +18,7 @@ Die Kürzel stehen auch dort, wo du sie brauchst: im [Befehlsfeld](#befehlsfeld)
 |---|---|---|
 | ⌘ K | Strg K | Befehlsfeld öffnen oder schließen, auch mitten im Editor |
 | F1 | F1 | Lexikon öffnen oder schließen |
+| ⌘ B | Strg B | Linke Leiste einklappen (nur Symbole) oder ausklappen; der Knopf unten in der Leiste tut dasselbe |
 | ⌘ Z | Strg Z | Rückgängig |
 | ⇧ ⌘ Z oder ⌘ Y | Strg Umschalt Z oder Strg Y | Wiederholen |
 | ⌘ S | Strg S | Jetzt ablegen (geschieht sonst von selbst) |

@@ -601,6 +601,37 @@ button.eintrag:disabled {
     display: none;
   }
 }
+/* Eingeklappte Leiste (STB-63, Knopf im Fuß der Leiste oder ⌘ B): nur Symbole wie unter 900 px, in jeder Breite;
+   die Namen stehen im Hinweis der Einträge */
+:root[data-leiste="schmal"] {
+  --leiste-breite: 56px;
+}
+:root[data-leiste="schmal"] .leiste .name,
+:root[data-leiste="schmal"] .leiste .rechts,
+:root[data-leiste="schmal"] .leiste-fuss span,
+:root[data-leiste="schmal"] .leiste-fuss > i,
+:root[data-leiste="schmal"] .leiste .dok-weg {
+  display: none;
+}
+:root[data-leiste="schmal"] .leiste .eintrag {
+  justify-content: center;
+}
+/* Statt der Überschriften trennt eine feine Linie die Gruppen */
+:root[data-leiste="schmal"] .leiste-titel {
+  height: 1px;
+  margin: var(--a2) var(--a3);
+  padding: 0;
+  overflow: hidden;
+  background: var(--rand-2);
+}
+:root[data-leiste="schmal"] .leiste-fuss {
+  justify-content: center;
+}
+.leisten-knopf {
+  margin-left: auto;
+  flex: none;
+}
+
 /* Unter 900 px: Leiste nur mit Symbolen */
 @media (max-width: 899px) {
   .app {
@@ -609,7 +640,8 @@ button.eintrag:disabled {
   .leiste .name,
   .leiste .rechts,
   .leiste-titel,
-  .leiste-fuss span {
+  .leiste-fuss span,
+  .leisten-knopf {
     display: none;
   }
   .leiste .eintrag {

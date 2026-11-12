@@ -365,6 +365,7 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 |---|---|
 | ⌘ K | Ins Befehlsfeld oben rechts, auch aus dem Editor |
 | F1 | Lexikon (Hilfe) öffnen oder schließen |
+| ⌘ B | Linke Leiste einklappen (nur Symbole, mit Trennlinien zwischen den Gruppen) oder ausklappen; auch der Knopf unten in der Leiste; gilt für dieses Gerät |
 | ⌘ Z, ⇧ ⌘ Z oder ⌘ Y | Rückgängig, Wiederholen im gemeinsamen Verlauf des Dokuments, auch im Editor (in Eingabefeldern und im Abfragefeld deren eigenes) |
 | ⌘ S | Jetzt ablegen (geschieht sonst von selbst) |
 | ⇧ ⌘ S | Dokument herunterladen |

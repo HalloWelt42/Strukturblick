@@ -277,6 +277,17 @@ const ANZEIGE: readonly Aktion[] = [
     verfuegbar: () => einstellungen.schrift !== s.kennung,
     ausfuehren: () => einstellungen.setzen({ schrift: s.kennung }),
   })),
+  {
+    kennung: "leiste",
+    get titel() {
+      return einstellungen.leiste === "schmal" ? "Leiste ausklappen" : "Leiste einklappen";
+    },
+    beschreibung: "Linke Leiste nur mit Symbolen oder mit Namen; gilt für dieses Gerät",
+    symbol: "fa-table-columns",
+    tasten: [{ taste: "b", befehl: true }],
+    verfuegbar: () => true,
+    ausfuehren: () => einstellungen.leisteUmschalten(),
+  },
 ];
 
 const ZUGANG: readonly Aktion[] = [

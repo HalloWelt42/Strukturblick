@@ -12,6 +12,7 @@
   import { dokumentMenue, ordnerMenue } from "../aktionen/kontextmenues";
   import { fokussieren } from "../bausteine/fokus";
   import { leistenStand } from "./leistenStand.svelte";
+  import { einstellungen } from "../../zustand/einstellungen.svelte";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const offen = $derived(new Set(arbeitsplatz.blaetter.map((b) => b.kennung)));
@@ -49,6 +50,7 @@
   const oeffnen = aktion("datei-oeffnen");
   const laden = aktion("herunterladen");
   const verwalten = aktion("ablage");
+  const leisteAktion = aktion("leiste");
   const offenesWerkzeug = $derived(!ablageOffen && blatt?.platz.art === "werkzeug" ? blatt.platz.kennung : null);
   const werkzeugAktion = (kennung: string) => aktion(`werkzeug-${kennung}`);
   const rezepteAktion = werkzeugAktion("rezepte");
@@ -122,7 +124,10 @@
       <i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span>
     </button>
   </div>
-  <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>{arbeitsplatz.ablage.hinweis}</span></div>
+  <div class="leiste-fuss">
+    <i class="fa-solid fa-circle-info" title={arbeitsplatz.ablage.hinweis}></i><span>{arbeitsplatz.ablage.hinweis}</span>
+    <button class="knopf still nur-symbol leisten-knopf" title={knopfTitel(leisteAktion)} aria-label={leisteAktion.titel} aria-pressed={einstellungen.leiste === "schmal"} onclick={() => leisteAktion.ausfuehren()}><i class="fa-solid {einstellungen.leiste === 'schmal' ? 'fa-angles-right' : 'fa-angles-left'}"></i></button>
+  </div>
 </aside>
 
 <style>
