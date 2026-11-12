@@ -67,7 +67,7 @@
   <div class="leiste-feld">
     <div class="leiste-titel">{arbeitsplatz.ablage.ort} <span class="rechts"><button class="knopf still nur-symbol" class:aktiv-knopf={ablageOffen} title={knopfTitel(verwalten, ablageOffen ? "Ablage schließen" : "Ablage verwalten: Ordner, Umbenennen, Papierkorb")} onclick={() => verwalten.ausfuehren()}><i class="fa-solid fa-folder-open"></i></button></span></div>
     <div class="knopf-spalte">
-      <button class="knopf" title={knopfTitel(oeffnen)} onclick={() => oeffnen.ausfuehren()}><i class="fa-solid fa-folder-open"></i> <span class="name">Datei öffnen</span></button>
+      <button class="knopf" title={knopfTitel(oeffnen)} onclick={() => oeffnen.ausfuehren()}><i class="fa-solid fa-file-import"></i> <span class="name">Datei öffnen</span></button>
       <button class="knopf" disabled={!laden.verfuegbar()} title={knopfTitel(laden)} onclick={() => laden.ausfuehren()}><i class="fa-solid fa-download"></i> <span class="name">Herunterladen</span></button>
     </div>
     {#if arbeitsplatz.dokumente.length || ablageverwaltung.ordner.length}
@@ -133,15 +133,6 @@
 <style>
   .aktiv-knopf {
     color: var(--akzent);
-  }
-  .knopf-spalte {
-    display: flex;
-    flex-direction: column;
-    gap: var(--a2);
-    padding: 0 var(--a2) var(--a2);
-  }
-  .knopf-spalte .knopf {
-    justify-content: flex-start;
   }
   .leiste-fuss span {
     white-space: normal;

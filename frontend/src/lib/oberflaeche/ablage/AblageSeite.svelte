@@ -89,7 +89,7 @@
           <div class="vw-ablagezone">
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <span>Dateien hierher ziehen, sie landen in <strong>{wahl || arbeitsplatz.ablage.ort}</strong>.</span>
-            <span class="rechts"><button class="knopf" onclick={oeffnen}><i class="fa-solid fa-folder-open"></i> Datei wählen</button></span>
+            <span class="rechts"><button class="knopf" onclick={oeffnen}><i class="fa-solid fa-file-import"></i> Datei wählen</button></span>
           </div>
           <DokumentTabelle {auswahl} {dokumente} />
         {/if}

@@ -135,6 +135,16 @@
   overflow-y: auto;
   padding: var(--a2) var(--a2) var(--a4);
 }
+/* Knöpfe oben in der Leiste (Datei öffnen, Herunterladen) */
+.knopf-spalte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+  padding: 0 var(--a2) var(--a2);
+}
+.knopf-spalte .knopf {
+  justify-content: flex-start;
+}
 .leiste-titel {
   display: flex;
   align-items: center;
@@ -616,6 +626,17 @@ button.eintrag:disabled {
 :root[data-leiste="schmal"] .leiste .eintrag {
   justify-content: center;
 }
+/* Knöpfe oben nur mit Symbol, mittig */
+:root[data-leiste="schmal"] .leiste .knopf-spalte {
+  align-items: center;
+  padding: 0 0 var(--a2);
+}
+:root[data-leiste="schmal"] .leiste .knopf-spalte .knopf {
+  width: var(--knopf-hoehe);
+  padding: 0;
+  gap: 0;
+  justify-content: center;
+}
 /* Statt der Überschriften trennt eine feine Linie die Gruppen */
 :root[data-leiste="schmal"] .leiste-titel {
   height: 1px;
@@ -623,6 +644,21 @@ button.eintrag:disabled {
   padding: 0;
   overflow: hidden;
   background: var(--rand-2);
+}
+/* Überschriften mit Knopf (Ablage verwalten, Alle Rezepte): Linie darüber, der Knopf bleibt erreichbar */
+:root[data-leiste="schmal"] .leiste-titel:has(button) {
+  height: auto;
+  margin: var(--a2) 0 0;
+  padding: var(--a2) 0 0;
+  justify-content: center;
+  overflow: visible;
+  background: none;
+  box-shadow: inset 0 1px 0 var(--rand-2);
+  font-size: 0;
+}
+:root[data-leiste="schmal"] .leiste-titel .rechts {
+  display: flex;
+  margin: 0;
 }
 :root[data-leiste="schmal"] .leiste-fuss {
   justify-content: center;
@@ -632,19 +668,59 @@ button.eintrag:disabled {
   flex: none;
 }
 
-/* Unter 900 px: Leiste nur mit Symbolen */
+/* Unter 900 px: Leiste immer nur mit Symbolen, dieselben Regeln wie eingeklappt; der Knopf fehlt dort */
 @media (max-width: 899px) {
   .app {
     grid-template-columns: 56px minmax(0, 1fr);
   }
-  .leiste .name,
-  .leiste .rechts,
-  .leiste-titel,
-  .leiste-fuss span,
   .leisten-knopf {
     display: none;
   }
-  .leiste .eintrag {
+  :root .leiste .name,
+  :root .leiste .rechts,
+  :root .leiste-fuss span,
+  :root .leiste-fuss > i,
+  :root .leiste .dok-weg {
+    display: none;
+  }
+  :root .leiste .eintrag {
+    justify-content: center;
+  }
+  /* Knöpfe oben nur mit Symbol, mittig */
+  :root .leiste .knopf-spalte {
+    align-items: center;
+    padding: 0 0 var(--a2);
+  }
+  :root .leiste .knopf-spalte .knopf {
+    width: var(--knopf-hoehe);
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+  }
+  /* Statt der Überschriften trennt eine feine Linie die Gruppen */
+  :root .leiste-titel {
+    height: 1px;
+    margin: var(--a2) var(--a3);
+    padding: 0;
+    overflow: hidden;
+    background: var(--rand-2);
+  }
+  /* Überschriften mit Knopf (Ablage verwalten, Alle Rezepte): Linie darüber, der Knopf bleibt erreichbar */
+  :root .leiste-titel:has(button) {
+    height: auto;
+    margin: var(--a2) 0 0;
+    padding: var(--a2) 0 0;
+    justify-content: center;
+    overflow: visible;
+    background: none;
+    box-shadow: inset 0 1px 0 var(--rand-2);
+    font-size: 0;
+  }
+  :root .leiste-titel .rechts {
+    display: flex;
+    margin: 0;
+  }
+  :root .leiste-fuss {
     justify-content: center;
   }
   .ansicht-kopf .segment > * span {

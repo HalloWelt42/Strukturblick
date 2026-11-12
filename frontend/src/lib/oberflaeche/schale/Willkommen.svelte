@@ -20,7 +20,7 @@
     <h1><i class="fa-solid fa-sitemap"></i> Strukturdaten ansehen, prüfen, umbauen</h1>
     <p class="text-3">Datei hierher ziehen, öffnen oder Text einfügen. {arbeitsplatz.ablage.hinweis}</p>
     <div class="knopf-reihe">
-      <button class="knopf primaer" onclick={oeffnen}><i class="fa-solid fa-folder-open"></i> Datei öffnen</button>
+      <button class="knopf primaer" onclick={oeffnen}><i class="fa-solid fa-file-import"></i> Datei öffnen</button>
       <button class="knopf" onclick={() => void arbeitsplatz.neu("unbenannt", "")}><i class="fa-solid fa-file"></i> Leeres Dokument</button>
       <button class="knopf" title={BEISPIELE.map((b) => `${b.name}: ${b.beschreibung}`).join("\n")} onclick={() => void beispieleOeffnen()}><i class="fa-solid fa-flask"></i> Beispiele zum Üben</button>
     </div>

@@ -97,7 +97,7 @@ const DOKUMENTE: readonly Aktion[] = [
     get beschreibung() {
       return `Vom Gerät in die Ablage (${arbeitsplatz.ablage.ort})`;
     },
-    symbol: "fa-folder-open",
+    symbol: "fa-file-import",
     tasten: [{ taste: "o", befehl: true }],
     ueberall: true,
     verfuegbar: () => true,
