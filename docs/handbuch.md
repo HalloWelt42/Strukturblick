@@ -246,6 +246,19 @@ PSR-4, lesen.php mit eigenem Autoloader), TypeScript (ab Node 22.18 direkt mit n
 dataclasses laufen ohne Installation; die Prüfung mit Symfony holt composer install, Pydantic pip install. Geprüft an
 247 echten JSON-Dateien und 91 JSON Schemas in Docker (PHP 8.1, 8.2, 8.5, Python 3.10 und 3.11, Node 22, tsc --strict).
 
+"Testdaten" (Leiste, Erzeugen) macht erfundene Daten nach dem Vorbild des Dokuments. Die Spezifikation leitet je Feld
+der Liste (wie in Statistik und Tabelle) einen Erzeuger aus den Werten ab: laufende Nummer mit Muster (K-#####), Name,
+Postleitzahl, Ort, Straße, E-Mail, Telefon, Datum, Zeitpunkt, Zahl oder Betrag (auch deutsch mit Tausenderpunkt), ja
+oder nein, Auswahl aus festen Werten mit Gewicht, Text, fester Wert, UUID; Objekte und Listen (mit Länge von bis)
+bleiben verschachtelt. Je Datensatz passen Name und E-Mail sowie Postleitzahl, Ort und Vorwahl zusammen; E-Mail-Adressen
+enden auf .example und erreichen niemanden. Je Feld lässt sich ein Anteil leerer Werte einstellen (Schlüssel fehlt,
+null, leerer Text). Ein Klick auf eine Zeile wählt das Feld, der Inspektor ändert Name, Erzeuger und Einstellungen und
+zeigt das Feld in der Vorlage und Beispiele. Anzahl (bis 1 Million), Startwert (gleicher Startwert, gleiche Daten) und
+Zielformat (CSV mit Trennzeichen, JSON, NDJSON, YAML; vorgewählt wie die Vorlage) stehen unter "Erzeugen"; es läuft in
+Blöcken mit Anhalten und Fortsetzen, das Ergebnis geht als neues Dokument oder als Datei. "Spezifikation speichern" legt
+alles als Dokument `<name>.testdaten.json` ab; geöffnet dient es dem Werkzeug als Vorlage und erzeugt dieselben Daten.
+Geänderte Einstellungen halten, solange das Dokument offen ist; dauerhaft über Speichern.
+
 TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
 als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,
 8 und 2, Datum und Zeit. Ein Fehler betrifft nur seine Zeile; der Rest bleibt lesbar. Ändern, Einträge entfernen und

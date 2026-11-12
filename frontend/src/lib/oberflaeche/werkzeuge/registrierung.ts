@@ -8,6 +8,9 @@ import { validierenZustand } from "./validieren/validierenZustand.svelte";
 import { bereinigenZustand } from "./bereinigen/bereinigenZustand.svelte";
 import { konvertierenZustand } from "./konvertieren/konvertierenZustand.svelte";
 import { codeZustand } from "./code/codeZustand.svelte";
+import { testdatenZustand } from "./testdaten/testdatenZustand.svelte";
+import TestdatenWerkzeug from "./testdaten/TestdatenWerkzeug.svelte";
+import TestdatenInspektor from "./testdaten/TestdatenInspektor.svelte";
 import BereinigenWerkzeug from "./bereinigen/BereinigenWerkzeug.svelte";
 import BereinigenInspektor from "./bereinigen/BereinigenInspektor.svelte";
 import RezepteWerkzeug from "./rezepte/RezepteWerkzeug.svelte";
@@ -100,6 +103,16 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     komponente: CodeWerkzeug,
     inspektor: CodeInspektor,
     adresse: codeZustand,
+  },
+  {
+    kennung: "testdaten",
+    titel: "Testdaten",
+    beschreibung: "Erfundene Daten nach dem Vorbild dieses Dokuments: je Feld ein Erzeuger, gleicher Startwert, gleiche Daten",
+    symbol: "fa-dice",
+    abschnitt: "erzeugen",
+    komponente: TestdatenWerkzeug,
+    inspektor: TestdatenInspektor,
+    adresse: testdatenZustand,
   },
 ];
 

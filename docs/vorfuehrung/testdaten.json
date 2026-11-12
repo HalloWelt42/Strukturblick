@@ -1,0 +1,49 @@
+{
+  "kapitel": "testdaten",
+  "titel": "Testdaten nach dem Vorbild einer Datei",
+  "ticket": "STB-47",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, kunden.csv im Vordergrund",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Wer ein Programm prüfen will, braucht Daten, die echt aussehen, aber niemandem gehören. Testdaten nimmt die Kundenliste als Vorbild.",
+      "ziel": { "anker": "werkzeug-testdaten", "notbehelf": "Leiste, Abschnitt Erzeugen, Testdaten" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Vorlage kunden.csv, 8 Felder aus 1.214 Einträgen abgeleitet; Zielformat CSV mit Semikolon vorgewählt",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Für jede Spalte steht schon ein passender Erzeuger da: Kundennummern mit Muster, Namen, Postleitzahl und Ort, die zusammenpassen, und Beträge mit Tausenderpunkt.",
+      "ziel": { "anker": "testdaten-tafel", "notbehelf": "Karte Spezifikation" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "kundennr: Muster K-#####, ab 10001; plz: Postleitzahl; ort: Ort zur Postleitzahl; umsatz: Tausenderpunkt",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Ein Klick auf eine Zeile öffnet ihre Einstellungen rechts. Hier sollen die Kunden nur aus Sachsen und Thüringen kommen, also Postleitzahlen bis 09.",
+      "ziel": { "anker": "testdaten-einstellung", "notbehelf": "Zeile plz, Inspektor, Gebiet bis: 9" },
+      "aktion": { "art": "eingeben", "text": "9" },
+      "erwartung": "Marke Gebiet 01 bis 09, Beispiel mit 0 vorn, Abzeichen geändert",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Erzeugen läuft in Blöcken, man kann anhalten und weitermachen. Gleicher Startwert heißt gleiche Daten, morgen wie heute.",
+      "ziel": { "anker": "testdaten-erzeugen", "notbehelf": "Anzahl 50000, Erzeugen, dann Anhalten und Fortsetzen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "10 Blöcke zu 5.000, angehalten bei 30 %, nach Fortsetzen Fertig 50.000 von 50.000",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Das Ergebnis wird ein neues Dokument. Die Spezifikation lässt sich ablegen und später wieder öffnen.",
+      "ziel": { "anker": "testdaten-als-dokument", "notbehelf": "Als neues Dokument, danach Spezifikation speichern" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "kunden-testdaten.csv in der Tabelle mit allen acht Spalten; kunden.testdaten.json öffnet im Werkzeug als abgelegte Spezifikation",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

@@ -1,0 +1,389 @@
+/* Werkzeug Testdaten nach entwuerfe/testdaten.html (Vorbild teile/erzeugen.css, dort .ez-): Karten Spezifikation,
+   Erzeugen und Vorschau im Rollfeld, Tabellen eingelassen, Fortschritt in Blöcken. Nur Marken aus dem Stil. */
+
+.td-ansicht {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.td-vorlage {
+  min-width: 0;
+  font-size: var(--klein);
+  color: var(--text-2);
+}
+/* Rollfeld: oben kein Innenabstand, den Abstand geben die Karten (Sticky-Kopf ohne Lücke) */
+.td-inhalt {
+  padding: 0 var(--a4) var(--a5);
+}
+.td-inhalt > .karte {
+  margin-top: var(--a3);
+  padding: var(--a3) var(--a4) var(--a4);
+  max-width: 1180px;
+}
+.td-karte-kopf {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a3);
+  margin-bottom: var(--a3);
+}
+.td-karte-kopf h2 {
+  margin: 0;
+  font-size: var(--titel);
+  font-weight: 600;
+}
+.td-karte-kopf .rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+.td-hinweis {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a2);
+  margin: var(--a2) 0 0;
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+.td-hinweis > i {
+  flex: none;
+}
+
+/* ----- Tabellen (Spezifikation, Vorschau) ----- */
+
+.td-tafel-feld {
+  overflow-x: auto;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+}
+.td-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--klein);
+}
+.td-tabelle th {
+  padding: var(--a2) var(--a3);
+  text-align: left;
+  font-size: var(--marke);
+  font-weight: 600;
+  color: var(--text-3);
+  white-space: nowrap;
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.td-tabelle td {
+  padding: 6px var(--a3);
+  height: var(--zeile);
+  vertical-align: middle;
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.td-tabelle tbody tr {
+  cursor: pointer;
+}
+.td-vorschau tbody tr {
+  cursor: default;
+}
+.td-tabelle tbody tr:nth-child(even) {
+  background: var(--flaeche-wechsel);
+}
+.td-tabelle tbody tr.gewaehlt {
+  background: var(--flaeche-hervor);
+}
+:root[data-theme="dunkel"] .td-tabelle tbody tr.gewaehlt {
+  background: var(--akzent-weich);
+}
+.td-tabelle .mono {
+  white-space: nowrap;
+}
+.td-tabelle .zahl {
+  text-align: right;
+  font-family: var(--schrift-mono);
+  white-space: nowrap;
+}
+.td-tabelle td.td-feldname {
+  padding-left: calc(var(--a3) + var(--tiefe, 0) * var(--a4));
+  font-weight: 600;
+  color: var(--typ-schluessel);
+  white-space: nowrap;
+}
+.td-beispiel {
+  color: var(--text-2);
+  max-width: 22em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.td-aufbau {
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+
+/* Erzeuger-Wahl: sieht aus wie ein Auswahlfeld, öffnet eine eigene Liste */
+.td-menue {
+  position: relative;
+}
+.td-wahl {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  min-height: calc(var(--knopf-hoehe) - 6px);
+  padding: 0 var(--a2) 0 var(--a3);
+  border: 0;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  border-radius: var(--r-knopf);
+  font: inherit;
+  font-size: var(--klein);
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.td-wahl > i:last-child {
+  margin-left: auto;
+  color: var(--text-3);
+  font-size: var(--marke);
+}
+.td-liste {
+  position: absolute;
+  top: calc(100% - 4px);
+  left: var(--a3);
+  z-index: 20;
+  margin: 0;
+  min-width: 240px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: var(--a1);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+}
+.td-liste button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--zeile);
+  padding: 0 var(--a2);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--klein);
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+}
+.td-liste button:hover {
+  background: var(--akzent-weich);
+}
+.td-liste button.aktiv {
+  color: var(--akzent);
+  font-weight: 600;
+}
+
+/* Einstellungen als kleine Wertmarken */
+.td-marken {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a1);
+}
+.td-marke {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--marke);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.td-leer {
+  color: var(--text-3);
+}
+
+/* ----- Angaben in einer Reihe (Anzahl, Startwert, Zielformat, Name) ----- */
+
+.td-reihe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--a3) var(--a4);
+}
+.td-angabe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a1);
+  min-width: 0;
+}
+.td-angabe-titel {
+  font-size: var(--marke);
+  font-weight: 600;
+  color: var(--text-3);
+}
+.td-angabe .feld {
+  font-family: var(--schrift-mono);
+}
+.td-angabe.schmal .feld {
+  width: 9em;
+}
+.td-angabe.breit {
+  flex: 1 1 14em;
+}
+.td-wuerfel {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  padding: 0 var(--a1) 0 0;
+}
+.td-wuerfel:hover {
+  color: var(--akzent);
+}
+
+/* ----- Fortschritt in Blöcken ----- */
+
+.td-lauf {
+  margin-top: var(--a4);
+  padding: var(--a3);
+  background: var(--flaeche-panel-2);
+  box-shadow: var(--kante);
+}
+.td-lauf-kopf {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a3);
+  margin-bottom: var(--a2);
+}
+.td-lauf-kopf strong {
+  font-weight: 600;
+}
+.td-lauf-kopf .rechts {
+  margin-left: auto;
+  font-family: var(--schrift-mono);
+  font-size: var(--titel);
+  color: var(--akzent);
+}
+.td-bloecke {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 3px;
+  padding: 3px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.td-bloecke > span {
+  position: relative;
+  height: 14px;
+  background: var(--flaeche-panel-2);
+  overflow: hidden;
+}
+.td-bloecke > .fertig {
+  background: var(--akzent-flaeche);
+}
+.td-bloecke > .laeuft::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--anteil, 50%);
+  background: var(--akzent-flaeche);
+}
+.td-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2);
+  margin-top: var(--a3);
+}
+.td-aktionen .rechts {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2);
+}
+.td-text {
+  margin: 0;
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre;
+}
+
+/* ----- Inspektor ----- */
+
+.td-name {
+  width: 100%;
+  margin-bottom: var(--a2);
+}
+.td-einstellung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--a1);
+  margin-top: var(--a3);
+}
+.td-einstellung-titel {
+  font-size: var(--marke);
+  font-weight: 600;
+  color: var(--text-3);
+}
+.td-einstellung-hilfe {
+  font-size: var(--marke);
+  color: var(--text-3);
+}
+.td-einstellung .feld {
+  width: 100%;
+}
+.td-einstellung .feld.fehler {
+  box-shadow: var(--vertieft), inset 0 0 0 1px var(--fehler);
+}
+.td-segment {
+  flex-wrap: wrap;
+}
+.td-werte {
+  width: 100%;
+  min-height: 7em;
+  padding: var(--a2);
+  border: 0;
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  font-size: max(16px, var(--klein));
+  color: var(--text-1);
+  resize: vertical;
+}
+.td-erzeugerwahl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a1);
+}
+.td-chip {
+  padding: 2px 8px;
+  border: 0;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font: inherit;
+  font-size: var(--marke);
+  color: var(--text-2);
+  cursor: pointer;
+}
+.td-chip:hover {
+  color: var(--text-1);
+}
+.td-chip.aktiv {
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante);
+  color: var(--akzent);
+  font-weight: 600;
+}
+.td-entfernen {
+  margin-top: var(--a3);
+}
+.td-proben {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--a1);
+  font-size: var(--klein);
+}
