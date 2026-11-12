@@ -320,7 +320,7 @@ verschieben und entfernen, bei Betrag und Datum gilt für nicht lesbare Werte "s
 ein Vorgang im Dokument. Rezepte liegen in der Ablage (auf pi5b je Konto, ohne Server im Browser) und lassen sich
 einzeln als Datei herunterladen.
 
-Die Befehlspalette (⌘ K, unter Windows und Linux Strg K, oder das Suchfeld oben rechts) findet Befehle, Dokumente,
+Die Befehlspalette ist das Suchfeld oben rechts im Kopf: hineinklicken oder ⌘ K (unter Windows und Linux Strg K) und gleich tippen, die Treffer erscheinen als Liste darunter, ohne Dialog und ohne Abdunkeln. Sie findet Befehle, Dokumente,
 Ordner und Ansichten mit unscharfer Suche; zuletzt Benutztes steht oben, jeder Befehl zeigt sein Tastenkürzel. Die
 Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 

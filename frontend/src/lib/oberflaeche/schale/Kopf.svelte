@@ -1,12 +1,12 @@
 <script lang="ts">
-  // Kopf: Marke, Reiter der offenen Dokumente, Rückgängig und Wiederholen, Befehlspalette, Anzeige (Thema, Schrift).
+  // Kopf: Marke, Reiter der offenen Dokumente, Rückgängig und Wiederholen, Befehlsfeld, Anzeige (Thema, Schrift).
   // Die Knöpfe führen Aktionen aus dem Register aus; Titel und Kürzel kommen von dort.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { kontext } from "../bausteine/kontextstand.svelte";
   import { reiterMenue } from "../aktionen/kontextmenues";
   import { aktion } from "../aktionen/aktionen";
-  import { knopfTitel, paletteKappen } from "../aktionen/tastatur";
-  import { palette } from "../palette/palettenstand.svelte";
+  import { knopfTitel } from "../aktionen/tastatur";
+  import Befehlsfeld from "../palette/Befehlsfeld.svelte";
   import Anzeigewahl from "./Anzeigewahl.svelte";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
@@ -39,10 +39,7 @@
     <button class="knopf nur-symbol" disabled={!vor.verfuegbar()} title={vor.verfuegbar() ? knopfTitel(vor, `Wiederholen: ${vor.beschreibung}`) : vor.beschreibung} onclick={() => vor.ausfuehren()}>
       <i class="fa-solid {vor.symbol}"></i>
     </button>
-    <button class="befehl-feld" title="Befehlspalette: Befehle, Dokumente, Ansichten" onclick={() => palette.oeffnen()}>
-      <i class="fa-solid fa-magnifying-glass"></i><span class="text">Befehl oder Dokument</span>
-      <span class="rechts">{#each paletteKappen() as k, i (i)}<span class="taste">{k}</span>{/each}</span>
-    </button>
+    <Befehlsfeld />
     <Anzeigewahl />
   </div>
 </header>
@@ -61,10 +58,5 @@
   }
   .reiter-knopf:not(.reiter) {
     padding: 0;
-  }
-  button.befehl-feld {
-    border: 0;
-    font: inherit;
-    font-size: var(--klein);
   }
 </style>

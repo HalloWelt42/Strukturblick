@@ -111,7 +111,7 @@
   box-shadow: var(--vertieft);
   color: var(--text-3);
   font-size: var(--klein);
-  cursor: pointer;
+  cursor: text;
 }
 .befehl-feld .rechts {
   margin-left: auto;

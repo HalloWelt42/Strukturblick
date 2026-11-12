@@ -12,8 +12,6 @@
   import Kontextmenue from "./lib/oberflaeche/bausteine/Kontextmenue.svelte";
   import Ablagezone from "./lib/oberflaeche/schale/Ablagezone.svelte";
   import { tastaturAnmelden } from "./lib/oberflaeche/aktionen/tastatur";
-  import Palette from "./lib/oberflaeche/palette/Palette.svelte";
-  import { palette } from "./lib/oberflaeche/palette/palettenstand.svelte";
   import Zugangsseite from "./lib/oberflaeche/schale/Zugangsseite.svelte";
   import Startanzeige from "./lib/oberflaeche/schale/Startanzeige.svelte";
   import StartHinweis from "./lib/oberflaeche/schale/StartHinweis.svelte";
@@ -72,7 +70,6 @@
     <Fuss />
   </div>
 </Ablagezone>
-{#if palette.offen}<Palette />{/if}
 {/if}
 <Meldung />
 <Kontextmenue />

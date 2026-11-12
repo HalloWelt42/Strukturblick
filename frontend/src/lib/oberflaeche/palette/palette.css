@@ -1,42 +1,42 @@
-/* Befehlspalette (.pl-), übernommen aus dem abgenommenen Entwurf entwuerfe/teile/abfrage.css, Abschnitt 6. */
+/* Befehlsfeld mit Trefferliste (.pl-), Liste nach dem Entwurf entwuerfe/teile/abfrage.css, Abschnitt 6. */
 
-/* Abdunkeln ohne eigene Farbe: der Hintergrund wird nur gedämpft */
-.pl-abdunkeln {
-  position: fixed;
-  inset: 0;
-  z-index: 24;
-  backdrop-filter: brightness(0.55) saturate(0.7);
-  -webkit-backdrop-filter: brightness(0.55) saturate(0.7);
+/* Das Befehlsfeld im Kopf ist das Eingabefeld selbst; die Treffer hängen als Liste darunter (kein Abdunkeln, kein
+   Dialog: schwebend ist nur das Lexikon). */
+.pl-ort {
+  position: relative;
+}
+.befehl-feld input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: max(16px, var(--klein));
+  color: var(--text-1);
+  outline: none;
+}
+.befehl-feld input::placeholder {
+  color: var(--text-3);
+}
+.befehl-feld.offen,
+.befehl-feld:focus-within {
+  box-shadow: var(--vertieft), inset 0 0 0 1px var(--akzent-flaeche);
+}
+.befehl-feld.offen > i {
+  color: var(--akzent);
 }
 .pl-fenster {
-  position: fixed;
+  position: absolute;
   z-index: 25;
-  top: calc(var(--kopf-hoehe) + var(--a4));
-  left: 50%;
-  translate: -50% 0;
-  width: min(820px, calc(100vw - 32px));
+  top: calc(100% + 4px);
+  right: 0;
+  width: min(620px, calc(100vw - 32px));
   max-height: calc(100vh - var(--kopf-hoehe) - var(--fuss-hoehe) - var(--a6));
   display: flex;
   flex-direction: column;
   background-color: var(--flaeche-panel);
   background-image: var(--erhaben);
   box-shadow: var(--kante), var(--schatten-schwebend);
-}
-.pl-eingabe {
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: var(--a3);
-  padding: var(--a3);
-  box-shadow: inset 0 -1px 0 var(--rand-1);
-}
-.pl-eingabe .feld {
-  flex: 1;
-  min-height: calc(var(--knopf-hoehe) + 10px);
-  font-size: var(--titel);
-}
-.pl-eingabe .feld > i {
-  color: var(--akzent);
 }
 .pl-liste {
   flex: 1;

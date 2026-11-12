@@ -7,10 +7,10 @@
   "schritte": [
     {
       "nr": 1,
-      "sprechtext": "Oben rechts sitzt das Feld für Befehle. Schneller geht es mit Befehlstaste und K, von überall, auch aus dem Editor.",
+      "sprechtext": "Oben rechts sitzt das Feld für Befehle: hineinklicken und tippen, die Treffer erscheinen gleich darunter. Schneller geht es mit Befehlstaste und K, von überall, auch aus dem Editor.",
       "ziel": { "anker": "befehl-feld", "notbehelf": ".befehl-feld" },
       "aktion": { "art": "taste", "kuerzel": "⌘ K" },
-      "erwartung": "Palette offen, darunter Befehle, Dokumente, Ansichten, jeder Befehl mit seinem Kürzel",
+      "erwartung": "Fokus im Suchfeld oben rechts, darunter die Liste mit Befehlen, Dokumenten, Ansichten, jeder Befehl mit seinem Kürzel; kein Abdunkeln",
       "geprueft": "2026-11-11, Bauart ohne Server, 1440 x 900"
     },
     {
