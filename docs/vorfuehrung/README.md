@@ -63,3 +63,4 @@ Die Drehbücher spielen in der Bauart ohne Server mit dem Demosatz (STB-19): `be
 | `vergleich.json` | Zwei Stände vergleichen (STB-44) | durchgespielt 12.11.2026 |
 | `xsd.json` | XML gegen XML Schema prüfen (STB-39) | durchgespielt 12.11.2026 |
 | `schema.json` | Ein XML Schema im Überblick (STB-39) | durchgespielt 12.11.2026 |
+| `xsd-ableiten.json` | XML Schema aus Daten ableiten (STB-39) | durchgespielt 12.11.2026 |

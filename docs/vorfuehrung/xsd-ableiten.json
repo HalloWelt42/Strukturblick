@@ -1,0 +1,33 @@
+{
+  "kapitel": "xsd-ableiten",
+  "titel": "XML Schema aus Daten ableiten",
+  "ticket": "STB-39",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, lieferungen.xml im Vordergrund, Ansicht Struktur",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Hier liegen Lieferscheine in XML, aber kein Schema dazu. Bei XML-Dokumenten bietet die Ansicht Struktur an, eins aus den Daten abzuleiten.",
+      "ziel": { "anker": "struktur-xsd-ableiten", "notbehelf": "Ansicht Struktur, Knopf XML Schema ableiten" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Meldung: lieferungen.abgeleitet.xsd abgeleitet, dazu eine Datei für weitere Namensräume, 9 Erklärungen aus 100 Elementen; das Schema öffnet in der Ansicht Schema",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Die Positionen stehen im Namensraum des Hofladens. Dafür gibt es eine eigene Datei, die das Hauptschema importiert, und der Elementbaum zeigt beides zusammen.",
+      "ziel": { "anker": "schema-ebene-weiter", "notbehelf": "Knopf Eine Ebene weiter, dreimal, dann hl:position wählen" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "15 Zeilen; hl:position 1..n mit @menge xs:integer und @preis xs:decimal; Fundstelle in lieferungen.abgeleitet.hl.xsd mit Knopf Öffnen",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Abgeleitet wird so streng, wie die Daten es zeigen. Postleitzahlen mit führender Null bleiben Text, und bezahlt ist Text, weil die Daten ja und nein sagen. Vor dem Einsatz also prüfen und wo nötig lockern.",
+      "ziel": { "anker": "schema-zeile", "notbehelf": "Zeilen plz und bezahlt" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "plz xs:string, bezahlt xs:string, hinweis 0..1",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

@@ -90,6 +90,15 @@ Kanten nennen 1, 0..1 oder 0..n. Namen kommen aus den Schlüsseln, Listeneinträ
 Einzahl. "Als JSON Schema" lädt das Schema (Entwurf 2020-12) herunter; der Inspektor zeigt den gewählten Typ und
 seinen Ausschnitt zum Kopieren.
 
+Bei XML-Dokumenten leitet "XML Schema ableiten" (auch in der Befehlspalette) ein XSD aus den Daten ab und legt es
+neben das Dokument: name.abgeleitet.xsd, dazu je weiterem Namensraum eine Datei (name.abgeleitet.präfix.xsd), die
+die erste importiert; das Ergebnis öffnet in der Ansicht Schema. Abgeleitet wird so streng, wie die Daten es zeigen:
+Reihenfolge der Kinder aus dem Dokument (wechselt sie, eine Auswahl in beliebiger Reihenfolge), Pflicht ist, was in
+jedem Vorkommen da ist, was mehrfach vorkommt, darf beliebig oft. Werttypen: Wahrheitswert nur mit true oder false,
+ganze Zahl, Dezimalzahl, Datum, Zeitpunkt, Uhrzeit, sonst Text; Ziffern mit führender Null bleiben Text. Typen aus
+xsi:type im Dokument werden benannt erklärt, xsi:nil macht ein Element nillable. Das Ausgangsdokument ist gegen das
+Ergebnis gültig; vor dem Einsatz für andere Daten prüfen und wo nötig lockern.
+
 Die Ansicht Vergleich (⌥ ⌘ 6) vergleicht das Dokument mit einer Gegenseite: einem anderen offenen Dokument, einem aus
 der Ablage, einem früheren Stand aus dem Verlauf (vorgewählt ist der Anfang, sobald es Änderungen gibt) oder einer
 Datei, die dafür nicht abgelegt wird. Verglichen wird der Aufbau, nicht der Text: Objekte nach Schlüsseln (ihre
