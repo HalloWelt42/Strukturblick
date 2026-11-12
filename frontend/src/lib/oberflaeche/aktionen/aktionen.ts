@@ -19,6 +19,7 @@ import { ANSICHTEN, ansichtWaehlbar } from "../ansichten/registrierung";
 import { WERKZEUGE } from "../werkzeuge/registrierung";
 import { dateiWaehlen, herunterladen } from "../schale/dateien";
 import type { Tasten } from "../palette/tasten";
+import { lexikon } from "../lexikon/lexikonZustand.svelte";
 
 export interface Aktion {
   readonly kennung: string;
@@ -279,6 +280,16 @@ const ANZEIGE: readonly Aktion[] = [
 ];
 
 const ZUGANG: readonly Aktion[] = [
+  {
+    kennung: "lexikon",
+    titel: "Lexikon",
+    beschreibung: "Hilfe zu Pfaden, Abfragen, Formaten, Ansichten, Werkzeugen und Fachwörtern, durchsuchbar",
+    symbol: "fa-book-open",
+    tasten: [{ taste: "F1" }],
+    ueberall: true,
+    verfuegbar: () => true,
+    ausfuehren: () => lexikon.umschalten(),
+  },
   {
     kennung: "ueber",
     titel: "Über Strukturblick",

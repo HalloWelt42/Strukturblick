@@ -32,7 +32,7 @@ function listenPunkt(h: Hauptliste, t: Tabellierung, o: Konvertieroptionen): Ver
     const zeilen = mal(x.zeilen.length, "Zeile", "Zeilen");
     if (w === "zeilen") {
       const andere = Object.keys(h.eintraege.find(istObjekt) ?? {}).filter((k) => k !== f);
-      return { wert: w, titel: `Eine Zeile je Eintrag in ${f}`, text: `${zeilen}; ${und(andere.slice(0, 3))}${andere.length > 3 ? " usw." : ""} wiederholen sich` };
+      return { wert: w, titel: `Eine Zeile je Eintrag in ${f}`, text: `${zeilen}; ${und(andere.slice(0, 3))}${andere.length > 3 ? " und weitere" : ""} wiederholen sich` };
     }
     if (w === "spalten") {
       const je = x.spalten.filter((s) => s.name.startsWith(`${f}.`));

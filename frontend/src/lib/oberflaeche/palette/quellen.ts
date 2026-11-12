@@ -1,5 +1,5 @@
 // Woraus die Befehlspalette schöpft: die gerade möglichen Aktionen, die Ansichten, die Dokumente und Ordner der
-// Ablage. Rezepte kommen mit Stufe 6 als weitere Quelle dazu.
+// Ablage.
 
 import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
 import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";

@@ -43,6 +43,8 @@ export interface Werkzeug {
   readonly inspektor: Component<{ blatt: Arbeitsblatt }>;
   /** Einstellungen, die in die Adresse gehören (STB-48) */
   readonly adresse?: (blatt: Arbeitsblatt) => Adressierbar;
+  /** Thema im Lexikon, wenn es anders heißt als die Kennung */
+  readonly lexikon?: string;
 }
 
 export const WERKZEUGE: readonly Werkzeug[] = [
@@ -103,6 +105,7 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     komponente: CodeWerkzeug,
     inspektor: CodeInspektor,
     adresse: codeZustand,
+    lexikon: "code-erzeugen",
   },
   {
     kennung: "testdaten",

@@ -1,0 +1,49 @@
+{
+  "kapitel": "lexikon",
+  "titel": "Das Lexikon erklärt, was du gerade siehst",
+  "ticket": "STB-50",
+  "rolle": "erzaehler",
+  "voraussetzung": "Beispiele geöffnet, bestellungen.json in der Ansicht Baum, im Baum der Preis der ersten Position der zweiten Bestellung gewählt",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Unten rechts steht Hilfe. Das Lexikon schwebt über dem Arbeitsplatz; man liest und bedient gleichzeitig.",
+      "ziel": { "anker": "fuss-hilfe", "notbehelf": "Fußleiste, Knopf Hilfe (oder F1)" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Schwebendes Fenster Lexikon, links acht Bereiche von Anfang bis Begriffe, rechts das zuletzt gelesene Thema",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900 und Telefon 375 x 812 (dort als Vollbild)"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Das Thema JSON Pointer zeigt den gewählten Wert gleich mit seinem Pfad in jeder Schreibweise, vom Zeiger bis zu PHP.",
+      "ziel": { "anker": "lexikon-gewaehlt", "notbehelf": "Thema JSON Pointer und jq-Pfade, Kasten Dein gewählter Wert" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Dein gewählter Wert in bestellungen.json: 2.49, Zeiger /bestellungen/1/positionen/0/preis, jq .bestellungen[1].positionen[0].preis",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "Beispiele lassen sich ausprobieren. Ein Klick schreibt den Ausdruck ins Abfragefeld und rechnet ihn auf dem offenen Dokument.",
+      "ziel": { "anker": "lexikon-ausprobieren", "notbehelf": "Beispiel Noch nicht bezahlte Bestellungen, Knopf Ausprobieren" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Abfrage offen mit jq, .bestellungen[] | select(.bezahlt | not) | .nr, 7 Ergebnisse",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 4,
+      "sprechtext": "Die Suche geht über alle Themen. Enter springt zum nächsten Treffer, auch ins nächste Thema.",
+      "ziel": { "anker": "lexikon-suche", "notbehelf": "Suchfeld im Lexikon, facette tippen" },
+      "aktion": { "art": "eingeben", "text": "facette" },
+      "erwartung": "1/26, Themenliste zeigt nur Themen mit Treffern samt Zahl, Bereinigen 13, Treffer markiert",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 5,
+      "sprechtext": "Die kleinen i-Knöpfe an Ansichten und Werkzeugen springen genau zur passenden Stelle. Hier geht es von den ähnlichen Werten in Bereinigen direkt zu ihrer Erklärung.",
+      "ziel": { "anker": "lexikon-knopf", "notbehelf": "kunden.csv, Werkzeug Bereinigen, Reiter Ähnliche Werte, i-Knopf daneben" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Lexikon im Thema Bereinigen, Abschnitt Ähnliche Werte oben",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}

@@ -3,6 +3,7 @@
   import { SCHREIBWEISEN, SCHREIBWEISE_NAME, schreiben, type Schreibweise, type Teil } from "../../kern";
   import { meldungen } from "../../zustand/meldungen.svelte";
   import type { InspektorZustand } from "./inspektorZustand.svelte";
+  import LexikonKnopf from "../lexikon/LexikonKnopf.svelte";
 
   let { zustand, teile }: { zustand: InspektorZustand; teile: readonly Teil[] } = $props();
 
@@ -32,7 +33,7 @@
 </script>
 
 <div class="karte">
-  <div class="karte-titel">Pfad kopieren</div>
+  <div class="karte-titel">Pfad kopieren <span class="rechts"><LexikonKnopf thema="json-pointer" titel="Was die Schreibweisen bedeuten" /></span></div>
   <div class="knopf-reihe">
     {#each SCHREIBWEISEN as w (w)}
       <button class="knopf" title="Pfad als {SCHREIBWEISE_NAME[w]} kopieren" onclick={() => void kopieren(w)}>

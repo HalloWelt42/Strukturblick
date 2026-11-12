@@ -5,6 +5,7 @@
   // Neuladen nichts neu geraten wird.
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import type { Analyse } from "../../../kern/befehl";
+  import LexikonKnopf from "../../lexikon/LexikonKnopf.svelte";
 
   let { blatt, analyse }: { blatt: Arbeitsblatt; analyse: Analyse } = $props();
 
@@ -42,6 +43,7 @@
   <span class="tb-dialekt" title={erklaerung} bind:this={huelle}>
     <span class="abzeichen zweit">{kurz}</span>
     <button class="knopf still" aria-expanded={offen} onclick={() => (offen = !offen)}>Ändern</button>
+    <LexikonKnopf thema="begriffe" abschnitt="dialekt" titel="Was ein Dialekt ist" />
     {#if offen}
       <div class="tb-dialekt-menue" role="group" aria-label="Leseweise ändern">
         {#each optionen as o (o.kennung)}

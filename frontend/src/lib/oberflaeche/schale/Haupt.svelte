@@ -4,7 +4,8 @@
   // SQL-Ergebnis, das mehrere Dokumente verbindet.
   import type { Arbeitsblatt } from "../../zustand/arbeitsblatt.svelte";
   import { abfrage } from "../../zustand/abfrage.svelte";
-  import { ansicht, ansichtenFuer } from "../ansichten/registrierung";
+  import { ANSICHTEN, ansicht, ansichtenFuer } from "../ansichten/registrierung";
+  import LexikonKnopf from "../lexikon/LexikonKnopf.svelte";
   import { werkzeug } from "../werkzeuge/registrierung";
   import Konsole from "../abfrage/Konsole.svelte";
   import SqlErgebnis from "../abfrage/SqlErgebnis.svelte";
@@ -13,6 +14,8 @@
   const gewaehlt = $derived(ansicht(blatt.platz.kennung));
   const Komponente = $derived(gewaehlt.komponente);
   const offenesWerkzeug = $derived(blatt.platz.art === "werkzeug" ? werkzeug(blatt.platz.kennung) : null);
+  /** Lexikon-Thema zum offenen Werkzeug oder zur gezeigten Ansicht (i-Knopf im Kopf) */
+  const lexikonThema = $derived(offenesWerkzeug ? (offenesWerkzeug.lexikon ?? offenesWerkzeug.kennung) : (ANSICHTEN.find((a) => a.kennung === blatt.platz.kennung)?.lexikon ?? blatt.platz.kennung));
   const Werkzeug = $derived(offenesWerkzeug?.komponente);
 
   // Gezeigt wird das letzte gültige SQL-Ergebnis; ist das letzte ein Fehler, gilt es als veraltet
@@ -37,6 +40,7 @@
     {#if offenesWerkzeug && !sqlZeigen}
       <nav class="segment offen-segment" aria-label="Offenes Werkzeug"><button class="aktiv" title="Werkzeug schließen" onclick={() => blatt.werkzeugSchliessen()}><i class="fa-solid {offenesWerkzeug.symbol}"></i><span>{offenesWerkzeug.titel}</span> <i class="fa-solid fa-xmark"></i></button></nav>
     {/if}
+    {#if !sqlZeigen}<LexikonKnopf thema={lexikonThema} />{/if}
     {#if sqlZeigen}
       <nav class="segment offen-segment"><button class="aktiv" title="Ergebnis schließen" onclick={() => (abfrage.ergebnisZeigen = false)}><i class="fa-solid fa-database"></i><span>Abfrageergebnis</span> <i class="fa-solid fa-xmark"></i></button></nav>
     {/if}

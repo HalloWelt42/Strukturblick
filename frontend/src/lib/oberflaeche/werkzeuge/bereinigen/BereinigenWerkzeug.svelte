@@ -5,6 +5,8 @@
   import type { Arbeitsblatt } from "../../../zustand/arbeitsblatt.svelte";
   import { spaltentypen } from "../../../analyse/bereinigen/typen";
   import { bereinigenZustand, REITER } from "./bereinigenZustand.svelte";
+  import LexikonKnopf from "../../lexikon/LexikonKnopf.svelte";
+  import { ankerAus } from "../../lexikon/anker";
   import SpaltenMenue from "../../bausteine/SpaltenMenue.svelte";
   import Facetten from "./Facetten.svelte";
   import Aehnlich from "./Aehnlich.svelte";
@@ -30,6 +32,7 @@
         <button class:aktiv={z.reiter === r.kennung} title={r.erklaerung} onclick={() => (z.reiter = r.kennung)}><i class="fa-solid {r.symbol}"></i><span>{r.titel}</span></button>
       {/each}
     </nav>
+    <LexikonKnopf thema="bereinigen" abschnitt={ankerAus(REITER.find((r) => r.kennung === z.reiter)?.titel ?? "")} titel="So arbeitet der Reiter {REITER.find((r) => r.kennung === z.reiter)?.titel}" />
     {#if s}
       <div class="rechts">
         {#if z.reiter === "facetten"}

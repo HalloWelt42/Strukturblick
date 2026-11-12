@@ -19,6 +19,7 @@
   import AblageSeite from "./lib/oberflaeche/ablage/AblageSeite.svelte";
   import { zugang } from "./lib/zustand/zugang.svelte";
   import { adresseVerfolgen } from "./lib/oberflaeche/schale/adressleitung.svelte";
+  import LexikonFenster from "./lib/oberflaeche/lexikon/LexikonFenster.svelte";
 
   // Sobald der Zugang bereit ist (ohne Server sofort, mit Server nach der Anmeldung), startet der Arbeitsplatz einmal
   $effect(() => {
@@ -73,5 +74,6 @@
 {/if}
 <Meldung />
 <Kontextmenue />
+<LexikonFenster />
 {#if starthinweis.offen}<StartHinweis />{/if}
 

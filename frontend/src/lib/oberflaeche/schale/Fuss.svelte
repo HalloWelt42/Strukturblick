@@ -3,6 +3,7 @@
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { FASSUNG, URHEBER } from "../../zustand/app";
   import { kannReparieren } from "../../analyse/reparatur/reparatur";
+  import { lexikon } from "../lexikon/lexikonZustand.svelte";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const a = $derived(blatt?.analyse ?? null);
@@ -41,6 +42,7 @@
     {#if blatt}
       <span class="teil"><span class="punkt" class:warn={!blatt.gespeichert}></span> {blatt.gespeichert ? "Abgelegt" : "Wird abgelegt"}</span>
     {/if}
+    <button class="teil fuss-knopf" class:aktiv={lexikon.offen} title="Lexikon: Hilfe zu allem in Strukturblick, durchsuchbar (F1)" onclick={() => lexikon.umschalten()}><i class="fa-solid fa-circle-question"></i> Hilfe</button>
     <a class="teil profil" href={URHEBER.profil} target="_blank" rel="noopener" title="Profil von {URHEBER.name} mit dem Quelltext (neuer Tab)"><i class="fa-brands fa-github"></i> {URHEBER.name}</a>
     <span class="teil mono">{FASSUNG}</span>
   </span>
@@ -65,5 +67,16 @@
   }
   .fuss-reparieren:hover {
     text-decoration: underline;
+  }
+  .fuss-knopf {
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  .fuss-knopf:hover,
+  .fuss-knopf.aktiv {
+    color: var(--akzent);
   }
 </style>

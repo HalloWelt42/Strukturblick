@@ -44,6 +44,13 @@ Stand: 11.11.2026, Ticket STB-3. Die Fassung 0.x ist an ihrem Zustand gescheiter
 
 Ansichten und Werkzeuge melden sich an einer Registrierung an. Die Schale baut Ansichtswahl und Leiste nur aus ihr auf, ohne hart geschriebene Reiter.
 
+Lexikon (Hilfe, STB-50): Themen als Markdown mit Kopf unter `oberflaeche/lexikon/themen/`, beim Bauen eingelesen,
+mit marked zu HTML und durch DOMPurify geführt (`themen.ts`); ein Zustand für das schwebende Fenster
+(`lexikonZustand.svelte.ts`), das Fenster (`LexikonFenster.svelte`) und der i-Knopf (`LexikonKnopf.svelte`) als einziger
+Weg zum Öffnen an einem Thema und Abschnitt. Lebendige Teile im Text: `data-live="gewaehlt"`, Beispielblöcke mit
+Ausprobieren, Verweise `#thema/abschnitt`, `#ansicht:x`, `#werkzeug:x`. `themen.test.ts` prüft alle Themen (Kopf,
+Verweise, Hausregeln). Ansichten und Werkzeuge nennen ihr Thema in der Registrierung (`lexikon`), wenn es anders heißt.
+
 Adressen (Deeplinks, STB-48): `zustand/adresse.ts` übersetzt zwischen Pfad und Ort (Seite, Dokument, Ansicht oder
 Werkzeug, Stelle, Einstellungen), ohne Browser und testbar. Was eine Ansicht oder ein Werkzeug in die Adresse gibt,
 sagt sie selbst: ihr Zustand erfüllt `Adressierbar` (Werte abweichend von der Vorgabe, Übernehmen mit Vorgabe für

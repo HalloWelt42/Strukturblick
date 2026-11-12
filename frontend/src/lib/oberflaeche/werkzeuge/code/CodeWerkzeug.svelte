@@ -48,7 +48,7 @@
   function alleHerunterladen(): void {
     if (dateien.length === 1) return herunterladen(dateien[0].name, dateien[0].text);
     const zip = zipSync(Object.fromEntries(dateien.map((d) => [d.name, strToU8(d.text)])));
-    herunterladen(`${z.wurzel(blatt)}-${ziel.kennung}.zip`, zip, "application/zip");
+    herunterladen(`${z.wurzel(blatt)}-${ziel.kennung}-klassen.zip`, zip, "application/zip");
   }
 </script>
 

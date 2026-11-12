@@ -37,6 +37,16 @@ const NAMEN: readonly [RegExp, string, Einstellungen][] = [
   [/(uuid|guid)/, "uuid", {}],
 ];
 
+/** Domains, die niemandem gehören (RFC 2606, RFC 6761): nur sie werden aus einer Vorlage übernommen */
+const RESERVIERT = /(^|\.)(example|test|invalid|localhost)$|(^|\.)example\.(com|org|net)$/i;
+
+/** Gemeinsame Domain der Vorlage, wenn sie reserviert ist; sonst leer (dann nimmt der Erzeuger seine .example-Domains),
+ *  damit erfundene Adressen nie an eine echte Domain gehen */
+function domainVon(roh: readonly string[]): string {
+  const d = roh[0]?.split("@")[1] ?? "";
+  return d && roh.every((r) => r.split("@")[1] === d) && RESERVIERT.test(d) ? d : "";
+}
+
 const UUID_MUSTER = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Wie das Feld leer ist: der häufigste Grund und sein Anteil */
@@ -81,7 +91,7 @@ function einfacherErzeuger(index: Strukturindex, text: string, f: Feld, hinweise
   for (const [muster, erz, e] of NAMEN) if (muster.test(name) && texte >= gefuellt * MEHRHEIT) {
     if (erz === "telefon") return { erzeuger: erz, einstellungen: { netz: roh.filter((r) => /^(\+49\s?1|01)/.test(r)).length > roh.length / 2 ? "mobil" : "festnetz", schreibweise: roh.some((r) => r.includes("/")) ? "strich" : roh.some((r) => r.startsWith("+")) ? "international" : "leerzeichen" } };
     if (erz === "plz" && f.textBereich) return { erzeuger: erz, einstellungen: { von: Math.max(1, Number(f.textBereich.min.slice(0, 2)) || 1), bis: Math.max(1, Number(f.textBereich.max.slice(0, 2)) || 99) } };
-    if (erz === "email") return { erzeuger: erz, einstellungen: { domain: roh[0]?.split("@")[1] && roh.every((r) => r.split("@")[1] === roh[0].split("@")[1]) ? roh[0].split("@")[1] : "", eindeutig: eindeutig ? "ja" : "nein" } };
+    if (erz === "email") return { erzeuger: erz, einstellungen: { domain: domainVon(roh), eindeutig: eindeutig ? "ja" : "nein" } };
     return { erzeuger: erz, einstellungen: e };
   }
   if (texte && roh.length && roh.every((r) => UUID_MUSTER.test(r))) return { erzeuger: "uuid", einstellungen: {} };

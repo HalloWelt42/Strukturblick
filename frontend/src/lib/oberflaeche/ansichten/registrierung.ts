@@ -35,6 +35,8 @@ export interface Ansicht {
   readonly verfuegbar?: (blatt: Arbeitsblatt) => boolean;
   /** Einstellungen, die in die Adresse gehören (STB-48); ohne: nur Ansicht und Stelle */
   readonly adresse?: (blatt: Arbeitsblatt) => Adressierbar;
+  /** Thema im Lexikon, wenn es anders heißt als die Kennung */
+  readonly lexikon?: string;
 }
 
 export const ANSICHTEN: readonly Ansicht[] = [
@@ -45,7 +47,7 @@ export const ANSICHTEN: readonly Ansicht[] = [
   { kennung: "struktur", titel: "Struktur", symbol: "fa-diagram-project", komponente: StrukturAnsicht, inspektor: StrukturInspektor, adresse: strukturZustand },
   { kennung: "graph", titel: "Graph", symbol: "fa-circle-nodes", komponente: GraphAnsicht, inspektor: GraphInspektor, adresse: graphZustand },
   { kennung: "vergleich", titel: "Vergleich", symbol: "fa-code-compare", komponente: VergleichAnsicht, inspektor: VergleichInspektor, adresse: vergleichZustand },
-  { kennung: "schema", titel: "Schema", symbol: "fa-sitemap", komponente: SchemaAnsicht, inspektor: SchemaInspektor, verfuegbar: istSchemaDokument, adresse: schemaZustand },
+  { kennung: "schema", titel: "Schema", symbol: "fa-sitemap", komponente: SchemaAnsicht, inspektor: SchemaInspektor, verfuegbar: istSchemaDokument, adresse: schemaZustand, lexikon: "schema-ansicht" },
 ];
 
 /** Ist die Ansicht für dieses Blatt wählbar? Die gerade gezeigte bleibt es, damit ihr Reiter nicht verschwindet */

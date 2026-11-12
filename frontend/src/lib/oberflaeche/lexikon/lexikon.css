@@ -1,0 +1,326 @@
+/* Lexikon (Hilfe) als schwebendes Fenster (.lx-), nach entwuerfe/lexikon.html: erhabene Fläche mit Kante und Schatten,
+   Kopf zum Ziehen, Griff unten rechts. Fließtext mindestens 17 px (große Schrift), Code in der Mono-Schrift. */
+
+.lx-fenster {
+  position: fixed;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--flaeche-panel);
+  background-image: var(--erhaben);
+  box-shadow: var(--kante), var(--schatten-schwebend);
+  color: var(--text-1);
+}
+.lx-fenster.maximiert {
+  inset: var(--a3);
+}
+.lx-kopf {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  min-height: 48px;
+  padding: 0 var(--a2) 0 var(--a4);
+  cursor: grab;
+  user-select: none;
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.lx-fenster.maximiert .lx-kopf {
+  cursor: default;
+}
+.lx-marke {
+  color: var(--akzent);
+}
+.lx-titel {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a3);
+  min-width: 0;
+}
+.lx-titel b {
+  font-size: var(--titel);
+  font-weight: 600;
+}
+.lx-titel span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-3);
+}
+.lx-kopf-knoepfe {
+  margin-left: auto;
+  display: flex;
+  gap: var(--a1);
+}
+.lx-suche {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  padding: var(--a3) var(--a4);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.lx-suchfeld {
+  flex: 1 1 16em;
+  min-width: 0;
+}
+.lx-suchfeld input {
+  font-size: max(16px, var(--gross));
+}
+.lx-zaehler {
+  font-family: var(--schrift-mono);
+  font-size: var(--klein);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.lx-feldknopf {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  padding: 0 var(--a1);
+}
+.lx-feldknopf:hover {
+  color: var(--akzent);
+}
+.lx-hinweis {
+  flex: none;
+  padding: var(--a2) var(--a4);
+  font-size: var(--klein);
+  color: var(--text-3);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.lx-koerper {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 15em) minmax(0, 1fr);
+}
+.lx-themen {
+  overflow-y: auto;
+  padding: var(--a2) 0 var(--a4);
+  background: var(--flaeche-panel-2);
+  box-shadow: inset -1px 0 0 var(--rand-1);
+}
+.lx-bereich {
+  padding: var(--a3) var(--a4) var(--a1);
+  font-size: var(--marke);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+.lx-themen a {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a1) var(--a4);
+  font-size: max(16px, var(--klein));
+  color: var(--text-2);
+  text-decoration: none;
+}
+.lx-themen a span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lx-themen a .abzeichen {
+  margin-left: auto;
+}
+.lx-themen a:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+.lx-themen a.aktiv {
+  color: var(--akzent);
+  font-weight: 600;
+  background: var(--akzent-weich);
+}
+.lx-text {
+  overflow-y: auto;
+  padding: 0 var(--a5) var(--a5);
+}
+.lx-griff {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 50%, var(--rand-2) 50%, var(--rand-2) 60%, transparent 60%, transparent 70%, var(--rand-2) 70%, var(--rand-2) 80%, transparent 80%);
+}
+
+/* ----- Artikel ----- */
+
+.lx-artikel {
+  max-width: 52em;
+  font-size: max(17px, var(--gross));
+  line-height: 1.6;
+}
+.lx-artikel h1 {
+  margin: var(--a4) 0 var(--a1);
+  font-size: calc(var(--titel) + 4px);
+  font-weight: 600;
+}
+.lx-artikel h1 i {
+  color: var(--akzent);
+  margin-right: var(--a2);
+}
+.lx-unterzeile {
+  margin: 0 0 var(--a3);
+  color: var(--text-3);
+}
+.lx-inhalt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a1) var(--a2);
+  margin: 0 0 var(--a3);
+}
+.lx-inhalt a {
+  padding: 1px 8px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+  font-size: var(--klein);
+  color: var(--text-2);
+  text-decoration: none;
+}
+.lx-inhalt a:hover {
+  color: var(--akzent);
+}
+.lx-artikel h2 {
+  margin: var(--a5) 0 var(--a2);
+  font-size: var(--titel);
+  font-weight: 600;
+  scroll-margin-top: var(--a3);
+}
+.lx-artikel h3 {
+  margin: var(--a4) 0 var(--a1);
+  font-size: var(--gross);
+  font-weight: 600;
+  scroll-margin-top: var(--a3);
+}
+.lx-artikel p,
+.lx-artikel ul,
+.lx-artikel ol {
+  margin: 0 0 var(--a3);
+}
+.lx-artikel li {
+  margin-bottom: var(--a1);
+}
+.lx-artikel a {
+  color: var(--akzent);
+}
+.lx-artikel code {
+  font-family: var(--schrift-mono);
+  font-size: 0.92em;
+  padding: 0 4px;
+  background: var(--mulde);
+  box-shadow: var(--vertieft);
+}
+.lx-artikel pre {
+  position: relative;
+  margin: 0 0 var(--a3);
+  padding: var(--a3);
+  background: var(--flaeche-eingabe);
+  box-shadow: var(--vertieft);
+  overflow-x: auto;
+}
+.lx-artikel pre code {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  white-space: pre;
+}
+.lx-artikel pre.lx-beispiel {
+  padding-right: calc(var(--a3) + 10em);
+}
+.lx-ausprobieren {
+  position: absolute;
+  top: var(--a2);
+  right: var(--a2);
+}
+.lx-artikel table {
+  width: 100%;
+  margin: 0 0 var(--a3);
+  border-collapse: collapse;
+  font-size: max(16px, var(--klein));
+}
+.lx-artikel th {
+  padding: var(--a2) var(--a3);
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-3);
+  background: var(--flaeche-panel-2);
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.lx-artikel td {
+  padding: var(--a2) var(--a3);
+  vertical-align: top;
+  box-shadow: inset 0 -1px 0 var(--rand-1);
+}
+.lx-artikel blockquote {
+  margin: 0 0 var(--a3);
+  padding: var(--a2) var(--a3);
+  background: var(--flaeche-panel-2);
+  box-shadow: var(--kante);
+  color: var(--text-2);
+}
+.lx-artikel blockquote p:last-child {
+  margin-bottom: 0;
+}
+.lx-quellen {
+  margin-top: var(--a5);
+  font-size: var(--klein);
+  color: var(--text-3);
+}
+mark.lx-treffer {
+  background: var(--akzent-weich);
+  color: inherit;
+}
+mark.lx-treffer.aktiv {
+  background: var(--akzent-flaeche);
+  color: var(--text-auf-akzent, var(--text-1));
+}
+
+/* Lebendiger Teil: der gewählte Wert mit seinen Pfaden */
+.lx-live {
+  margin: 0 0 var(--a3);
+  padding: var(--a3);
+  background: var(--flaeche-panel-2);
+  box-shadow: var(--kante);
+}
+.lx-live-kopf {
+  margin-bottom: var(--a2);
+}
+.lx-pfade {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--a1) var(--a3);
+  margin: 0;
+  font-size: max(16px, var(--klein));
+}
+.lx-pfade dt {
+  color: var(--text-3);
+}
+.lx-pfade dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Schmal: Themen über dem Text statt daneben */
+@media (max-width: 720px) {
+  .lx-koerper {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 9em) minmax(0, 1fr);
+  }
+  .lx-themen {
+    box-shadow: inset 0 -1px 0 var(--rand-1);
+  }
+  .lx-text {
+    padding: 0 var(--a3) var(--a4);
+  }
+}

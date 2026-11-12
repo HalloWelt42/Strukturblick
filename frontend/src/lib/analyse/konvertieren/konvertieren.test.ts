@@ -59,7 +59,7 @@ describe("Umwandeln", () => {
       "`shop` und `stand` fehlen",
     ]);
     expect(u.verluste[0].wahl?.wege.map((w) => w.text)).toEqual([
-      "3 Zeilen; nr, kunde und bezahlt usw. wiederholen sich",
+      "3 Zeilen; nr, kunde und bezahlt und weitere wiederholen sich",
       "2 Zeilen; positionen.0.artikel bis positionen.1.preis, 6 Spalten",
       "2 Zeilen; vollständig, aber nicht mehr rechenbar",
     ]);

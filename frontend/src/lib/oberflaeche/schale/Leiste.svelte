@@ -5,6 +5,7 @@
   import { ablageverwaltung } from "../../zustand/ablageverwaltung.svelte";
   import { aktion } from "../aktionen/aktionen";
   import { ABSCHNITTE, WERKZEUGE } from "../werkzeuge/registrierung";
+  import { lexikon } from "../lexikon/lexikonZustand.svelte";
   import { rezepte } from "../../zustand/rezepte.svelte";
   import { knopfTitel } from "../aktionen/tastatur";
   import { kontext } from "../bausteine/kontextstand.svelte";
@@ -116,6 +117,10 @@
     {:else}
       <button class="eintrag" disabled={!rezepteAktion.verfuegbar()} title="Was Rezepte sind und wie eins entsteht" onclick={() => rezepteAktion.ausfuehren()}><i class="fa-solid fa-scroll"></i><span class="name text-3">Noch keine Rezepte</span></button>
     {/each}
+    <div class="leiste-titel">Nachschlagen</div>
+    <button class="eintrag" class:aktiv={lexikon.offen} title="Lexikon: Pfade, Abfragen, Formate, Ansichten, Werkzeuge und Fachwörter (F1)" onclick={() => lexikon.umschalten()}>
+      <i class="fa-solid fa-book-open"></i><span class="name">Lexikon</span>
+    </button>
   </div>
   <div class="leiste-fuss"><i class="fa-solid fa-circle-info"></i><span>{arbeitsplatz.ablage.hinweis}</span></div>
 </aside>

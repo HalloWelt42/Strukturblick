@@ -107,6 +107,18 @@ describe("Ableiten aus einer Vorlage", () => {
   });
 });
 
+describe("E-Mail-Domain aus der Vorlage", () => {
+  const domain = (csv: string) => {
+    const index = format("csv").lesen(csv).index!;
+    return ableiten(index, csv, 0).spezifikation.felder.find((f) => f.pfad === "email")?.einstellungen.domain;
+  };
+  it("übernimmt nur reservierte Beispieldomains, nie eine echte", () => {
+    expect(domain("name;email\nA;a@example.org\nB;b@example.org\nC;c@example.org\n")).toBe("example.org");
+    expect(domain("name;email\nA;a@firma.de\nB;b@firma.de\nC;c@firma.de\n")).toBe("");
+    expect(domain("name;email\nA;a@shop.example\nB;b@shop.example\nC;c@shop.example\n")).toBe("shop.example");
+  });
+});
+
 describe("Ausgabe und Auftrag", () => {
   const daten: Json[] = [{ nr: "K-1", plz: "04109", umsatz: "1.087,15" }, { nr: "K-2", plz: "01067", umsatz: "58,90" }];
   it("schreibt CSV mit Trennzeichen, NDJSON, JSON und YAML", () => {

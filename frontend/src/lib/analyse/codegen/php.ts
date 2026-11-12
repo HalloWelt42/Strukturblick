@@ -210,7 +210,7 @@ export const phpWurzel = (m: Klassenmodell, daten: string): string => (m.wurzel.
 
 export const PHP: Codeziel = {
   kennung: "php",
-  name: "PHP 8.4",
+  name: "PHP",
   sprache: "php",
   namensraum: true,
   attribute: true,

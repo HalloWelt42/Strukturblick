@@ -22,7 +22,18 @@ Strukturblick öffnet Strukturdaten (JSON, NDJSON, CSV, YAML, TOML, XML, Markdow
 der Inspektor zeigt das Gewählte, kopiert seinen Pfad (jq, JSONPath, Zeiger, PHP, Python, TypeScript) und zählt
 alle Werte desselben Pfads. Alle Ansichten arbeiten auf demselben Text: eine Änderung in der Tabelle ist eine
 Textänderung an genau dieser Stelle, CSV-Dialekt, Kommentare und Formatierung bleiben. Rückgängig gilt für alle
-Ansichten gemeinsam, der Verlauf bleibt beim Neuladen erhalten.
+Ansichten gemeinsam, der Verlauf bleibt beim Neuladen erhalten. Die Werkzeugzeile des Editors bietet bei JSON und
+JSON Lines Formatieren, Kompakt und Schlüssel sortieren (je ein Vorgang, rückgängig möglich); bei den übrigen Formaten
+bleibt der Text, wie er geschrieben ist.
+
+Das Lexikon ist die Hilfe: ein schwebendes Fenster über dem Arbeitsplatz ("Hilfe" im Fuß, F1, Leiste "Nachschlagen",
+Befehlsfeld "Lexikon" oder die kleinen i-Knöpfe an Ansichten, Werkzeugen, Abfrage und Pfaden, die gleich zum passenden
+Abschnitt springen). Es lässt sich am Kopf verschieben, an der Ecke in der Größe ziehen, minimieren und maximieren und
+merkt Lage, Größe und Thema. Links stehen die Themen nach Bereichen (Anfang, Arbeitsplatz, Pfade und Abfragen, Formate,
+Prüfen, Ansichten, Werkzeuge, Begriffe), rechts das Thema mit Inhaltsverzeichnis. Die Volltextsuche markiert Treffer;
+"Alle Themen" blättert mit Enter von Thema zu Thema. In den Themen läuft vieles am offenen Dokument: "Dein gewählter Wert"
+zeigt die Stelle in allen Pfadschreibweisen, "Ausprobieren" führt Beispiele in jq, JSONPath, XPath, SQL und Suche gleich im
+Abfragefeld aus, Verweise springen in andere Themen, Ansichten und Werkzeuge.
 
 Verschachteltes in der Tabelle: Zellen mit Objekten oder Listen zeigen einen Auszug ihres Inhalts
 (`{Marta Demir, 06108, Halle (Saale)}`, `[2] Kartoffeln 2,5 kg, Apfelsaft ...`, bei Listen von Objekten je Eintrag
@@ -30,12 +41,14 @@ sein erster Wert). Der Knopf in einer Objektzelle oder im Spaltenkopf klappt die
 (`kunde.name`, `kunde.plz`, auch tiefer), der Knopf daneben im Kopf klappt wieder zu. Der Knopf in einer Listenzelle
 (oder ein Doppelklick) zeigt die Einträge als Tabelle; der Pfad oben nennt dann, wessen Liste es ist
 (`bestellungen > [1] B-24018 > positionen`), "Zurück" und jeder Pfadteil führen wieder hinaus. Aufgeklappte Spalten
-und die gezeigte Liste stehen in der Adresse.
+und die gezeigte Liste stehen in der Adresse. Der Zeilenfilter sucht in einfachen Werten; was in einem Objekt steht,
+findet er, sobald die Spalte aufgeklappt ist.
 
 Die Seite Ablage (Ordnerknopf oben in der Leiste) verwaltet die Dokumente: Ordner (eine Ebene), Umbenennen,
 Verschieben, Herunterladen, mehrere auf einmal wählen. Entfernen legt in den Papierkorb, die Meldung bietet
 Rückgängig; nach 30 Tagen löscht die Ablage dort endgültig. "Alles sichern" schreibt alle Dokumente samt Verlauf und
-Ordnern in eine Datei, "Einspielen" fügt eine solche Datei hinzu, ohne Vorhandenes zu überschreiben.
+Ordnern in eine Datei, "Einspielen" fügt eine solche Datei hinzu, ohne Vorhandenes zu überschreiben. Eingespielte
+Dokumente bekommen neue Kennungen; Adressen (Lesezeichen) auf die alten führen deshalb nicht zu den Kopien.
 
 Die Adresszeile zeigt immer, wo man ist (Deeplinks): `/dokument/<Kennung>/<Name>/<Ansicht oder Werkzeug>`, dahinter
 die Einstellungen, die von der Vorgabe abweichen, und die gewählte Stelle, etwa
@@ -58,7 +71,7 @@ Zum Üben gibt es erfundene Beispieldaten: "Beispiele zum Üben" auf der Startse
 Befehlspalette ("Beispiele öffnen"). Sie landen im Ordner Beispiele der eigenen Ablage: bestellungen.json (128
 Bestellungen eines Hofladens), kunden.csv (1.214 Kunden mit absichtlichen Unsauberkeiten), dienste.yaml,
 bestellung.schema.json (Schema eines Lieferdienstes zum Validieren), kundenimport.ndjson (Kundenimport mit vier
-kaputten Zeilen zum Reparieren) webshop.toml (Einstellungen des Webshops in TOML), lieferungen.xml (Lieferscheine in XML) mit lieferungen.xsd und
+kaputten Zeilen zum Reparieren), webshop.toml (Einstellungen des Webshops in TOML), lieferungen.xml (Lieferscheine in XML) mit lieferungen.xsd und
 hofladen-position.xsd (XML Schema dazu, das zweite vom ersten importiert). Ein
 zweites Öffnen zeigt die vorhandenen samt Änderungen; frisch anfangen: die Beispiele in den Papierkorb legen.
 Quelle ist frontend/pruefdaten; Adressen unter example.org, Telefonnummern aus dem für Film und Fernsehen
@@ -78,6 +91,10 @@ Die Abfrage am Fuß des Hauptbereichs (⌥ ⌘ E oder "Öffnen" in der Leiste) r
 - SQL (SQLite im Browser) über alle offenen Dokumente: jedes Dokument ist eine Tabelle, Listen von Objekten
   werden eigene Tabellen mit Verweis auf die Elternzeile (etwa positionen.nr auf bestellungen); lower und upper
   kennen Umlaute, REGEXP geht. Das Ergebnis belegt die Ansicht mit Balken zum Vergleich.
+- XPath bei XML-Dokumenten (nur dann steht es zur Wahl), gerechnet mit libxml2 wie die Prüfung gegen XML Schema:
+  Elemente, Attribute (`//lieferung/@nr`), Bedingungen, Präfixe aus dem Dokument (`hl:position`) und Funktionen wie
+  `count()`. Getroffene Knoten werden Stellen in der Lesart von Strukturblick und springen wie jq-Treffer; Zahlen,
+  Text und Wahrheitswerte stehen als ein Wert da. Wechselt das Dokument auf eines ohne XML, gilt wieder jq.
 - Suche über Schlüssel und Werte, wahlweise als regulärer Ausdruck und mit Groß und Klein.
 
 Ein Fehler im Ausdruck steht an der Stelle im Feld; das letzte gültige Ergebnis bleibt gedimmt stehen. Jedes
@@ -136,7 +153,7 @@ Reihenfolge ist ein eigener Unterschied, außer "Reihenfolge ignorieren" ist an.
 Die Ansicht Schema (⌥ ⌘ 8) gibt es nur bei XML-Schema-Dokumenten (Wurzel xs:schema). Sie liest das Schema samt allem,
 was es importiert oder einbindet; die Dateien dafür sucht Strukturblick im selben Ordner der Ablage, was fehlt, nennt das
 Hinweisband. Drei Reiter: Elementbaum zeigt, was in einem gültigen Dokument wo stehen darf, Ebene für Ebene beim
-Aufklappen, mit Vielfalt (1, 0..1, 0..n) und * für Pflicht. Erweiterte Typen bringen Inhalt und Attribute ihrer Basis
+Aufklappen, mit Vielfalt (1, 0..1, 0..n, 1..n oder Grenzen wie 2..5) und * für Pflicht. Erweiterte Typen bringen Inhalt und Attribute ihrer Basis
 mit, eine Auswahl steht als eigener Knoten "eins von", ein abstraktes Element zeigt die Elemente seiner Ersetzungsgruppe,
 und wo sich ein Typ wiederholt, endet der Zweig mit der Marke rekursiv. Typen listet alle benannten Typen mit Art,
 Ableitung, Zahl der erlaubten Werte und Verwendungen, mit Suche und Filtern (Komplex, Einfach, Mit Werten, Ungenutzt).
@@ -222,7 +239,10 @@ Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
   Angaben, Zahlen rechtsbündig. Typen werden Text, null eine leere Zelle. Markdown wird ein neues Dokument, HTML eine
   Seite zum Herunterladen.
 
-Das Werkzeug Code erzeugen (Leiste, "Erzeugen") schreibt Klassen zu den Daten: PHP 8.4 (final readonly class mit
+Im Werkzeug zeigt der Inspektor Zeilen, Spalten, Größe und bei CSV, woher jede Spalte kommt (aus dem Eintrag,
+aufgeklappt, je Element der Liste).
+
+Das Werkzeug Code erzeugen (Leiste, "Erzeugen") schreibt Klassen zu den Daten: PHP (final readonly class mit
 fromArray), TypeScript (Interfaces für JSON.parse), Python mit Pydantic (BaseModel, Grenzen als Field) oder mit
 dataclasses (from_dict). Quelle ist das Schema der Daten (wie in der Ansicht Struktur abgeleitet) oder ein JSON Schema
 aus der Ablage. Einstellbar sind Wurzelname, Namensraum (PHP), readonly oder veränderbar und eine Datei oder je Klasse
@@ -291,9 +311,6 @@ Wahrheitswerte und Datum (am Zahlenformat erkannt, als 2026-11-03) behalten ihre
 berechnetes Ergebnis; Formeln, Fehlerwerte und verbundene Zellen nennt die Meldung beim Öffnen. Die Datei selbst
 bleibt unverändert.
 
-Der Inspektor zeigt Zeilen, Spalten, Größe und bei CSV, woher jede Spalte kommt (aus dem Eintrag, aufgeklappt, je
-Element der Liste).
-
 Das Werkzeug Bereinigen (Leiste, "Prüfen und umbauen", oder die Befehlspalette) arbeitet auf der Liste, die
 auch die Tabelle zeigt, und belegt den Platz der Ansicht, bis es über das Kreuz im Segment geschlossen wird:
 
@@ -326,8 +343,9 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 
 | Kürzel | Befehl |
 |---|---|
-| ⌘ K | Befehlspalette, auch im Editor |
-| ⌘ Z, ⇧ ⌘ Z oder ⌘ Y | Rückgängig, Wiederholen (im Editor dessen eigene) |
+| ⌘ K | Ins Befehlsfeld oben rechts, auch aus dem Editor |
+| F1 | Lexikon (Hilfe) öffnen oder schließen |
+| ⌘ Z, ⇧ ⌘ Z oder ⌘ Y | Rückgängig, Wiederholen im gemeinsamen Verlauf des Dokuments, auch im Editor (in Eingabefeldern und im Abfragefeld deren eigenes) |
 | ⌘ S | Jetzt ablegen (geschieht sonst von selbst) |
 | ⇧ ⌘ S | Dokument herunterladen |
 | ⌘ O | Datei öffnen |
@@ -337,8 +355,14 @@ Kürzel (am Mac ⌘ und ⌥, sonst Strg und Alt):
 | ⌥ ⌘ 1 bis 8 | Ansicht Baum, Editor, Tabelle, Statistik, Struktur, Graph, Vergleich, Schema (nur bei XML Schema) |
 | ⌥ ⌘ E | Abfrage öffnen oder einklappen |
 | F3, ⇧ F3 | Nächster, voriger Treffer im Baum |
+| F2 | Dokument in der Leiste umbenennen |
+| ⌘ F, ⌥ ⌘ F | Im Editor suchen, suchen und ersetzen |
+| ⌘ Enter | Ergebnis der Abfrage als neues Dokument |
+| ⇧ F10 oder Menütaste | Kontextmenü an der gewählten Stelle |
 
-⌘ N, ⌘ W und ⌘ 1 bis 9 belegt der Browser selbst; deshalb tragen diese Befehle ⌥ dazu.
+⌘ N, ⌘ W und ⌘ 1 bis 9 belegt der Browser selbst; deshalb tragen diese Befehle ⌥ dazu. Unter Windows und Linux wirken
+die Kürzel mit Strg und Alt in Eingabefeldern nicht, weil Strg und Alt dort AltGr bedeuten (etwa für @ und eckige
+Klammern).
 
 Zwei Bauarten aus demselben Code:
 
