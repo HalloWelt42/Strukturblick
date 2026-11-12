@@ -2,11 +2,14 @@
   // Fuß: Zustand des aktiven Dokuments (Format, Größe, Stand, Befunde, abgelegt) und Fassung.
   import { arbeitsplatz } from "../../zustand/arbeitsplatz.svelte";
   import { FASSUNG, URHEBER } from "../../zustand/app";
+  import { kannReparieren } from "../../analyse/reparatur/reparatur";
 
   const blatt = $derived(arbeitsplatz.aktivesBlatt);
   const a = $derived(blatt?.analyse ?? null);
   const fehler = $derived(a?.diagnosen.filter((d) => d.schwere === "fehler").length ?? 0);
   const warnungen = $derived(a?.diagnosen.filter((d) => d.schwere === "warnung").length ?? 0);
+  /** Reparieren kennt JSON und JSON Lines */
+  const reparierbar = $derived(kannReparieren(a?.format.kennung));
 
   function groesse(zeichen: number): string {
     if (zeichen < 1024) return `${zeichen} Zeichen`;
@@ -25,7 +28,8 @@
       {:else if blatt.lesefehler}
         <i class="fa-solid fa-circle-xmark" style="color: var(--fehler)"></i> {blatt.lesefehler}
       {:else if fehler}
-        <i class="fa-solid fa-circle-xmark" style="color: var(--fehler)"></i> {fehler} {fehler === 1 ? "Fehler" : "Fehler"}{#if warnungen}, {warnungen} {warnungen === 1 ? "Warnung" : "Warnungen"}{/if}
+        <i class="fa-solid fa-circle-xmark" style="color: var(--fehler)"></i> {fehler} Fehler{#if warnungen}, {warnungen} {warnungen === 1 ? "Warnung" : "Warnungen"}{/if}
+        {#if reparierbar}<button class="fuss-reparieren" title="Im Werkzeug Reparieren nach festen Regeln lesbar machen" onclick={() => blatt.zeigen({ art: "werkzeug", kennung: "reparieren" })}><i class="fa-solid fa-screwdriver-wrench"></i> Reparieren</button>{/if}
       {:else if warnungen}
         <i class="fa-solid fa-triangle-exclamation" style="color: var(--warn)"></i> {warnungen} {warnungen === 1 ? "Warnung" : "Warnungen"}
       {:else}
@@ -49,5 +53,17 @@
   }
   .profil:hover {
     color: var(--akzent);
+  }
+  .fuss-reparieren {
+    margin-left: var(--a2);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--akzent);
+    cursor: pointer;
+  }
+  .fuss-reparieren:hover {
+    text-decoration: underline;
   }
 </style>

@@ -24,8 +24,9 @@ export const anzeige = (w: NeuerWert): string =>
 export const TEXT_AENDERN = befehl({
   kennung: "text.aendern",
   titel: "Text bearbeitet",
-  werte: z.object({ aenderungen: z.array(aenderung).min(1) }),
+  werte: z.object({ aenderungen: z.array(aenderung).min(1), titel: z.string().optional() }),
   brauchtAnalyse: false,
+  beschreiben: (w) => w.titel ?? "Text bearbeitet",
   aenderungen: (w) => w.aenderungen,
 });
 

@@ -9,6 +9,8 @@ import RezepteWerkzeug from "./rezepte/RezepteWerkzeug.svelte";
 import RezepteInspektor from "./rezepte/RezepteInspektor.svelte";
 import ValidierenWerkzeug from "./validieren/ValidierenWerkzeug.svelte";
 import ValidierenInspektor from "./validieren/ValidierenInspektor.svelte";
+import ReparierenWerkzeug from "./reparieren/ReparierenWerkzeug.svelte";
+import ReparierenInspektor from "./reparieren/ReparierenInspektor.svelte";
 
 export interface Werkzeug {
   readonly kennung: string;
@@ -40,6 +42,15 @@ export const WERKZEUGE: readonly Werkzeug[] = [
     abschnitt: "pruefen",
     komponente: BereinigenWerkzeug,
     inspektor: BereinigenInspektor,
+  },
+  {
+    kennung: "reparieren",
+    titel: "Reparieren",
+    beschreibung: "Kaputtes JSON und JSON Lines lesbar machen: feste Regeln, jede Änderung sichtbar und einzeln abwählbar",
+    symbol: "fa-screwdriver-wrench",
+    abschnitt: "pruefen",
+    komponente: ReparierenWerkzeug,
+    inspektor: ReparierenInspektor,
   },
   {
     kennung: "rezepte",

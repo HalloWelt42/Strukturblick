@@ -32,4 +32,9 @@ export const BEISPIELE: readonly Beispiel[] = [
     beschreibung: "JSON Schema eines erfundenen Lieferdienstes für die Bestellungen (höchstens drei Positionen); zum Üben im Werkzeug Validieren",
     laden: async () => (await import("../../../pruefdaten/bestellung.schema.json?raw")).default,
   },
+  {
+    name: "kundenimport.ndjson",
+    beschreibung: "Kundenimport als JSON Lines mit vier kaputten Zeilen (abgeschnitten, einfache Anführungszeichen, zwei Datensätze in einer Zeile); zum Üben im Werkzeug Reparieren",
+    laden: async () => (await import("../../../pruefdaten/kundenimport.ndjson?raw")).default,
+  },
 ];

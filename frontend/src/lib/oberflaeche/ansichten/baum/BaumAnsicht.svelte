@@ -89,7 +89,10 @@
     <i class="fa-solid fa-triangle-exclamation"></i>
     <p><strong>Nicht lesbar.</strong> Der Text lässt sich nicht als Baum lesen.</p>
     {#if fehlertext}<p class="mono klein text-3">{fehlertext}</p>{/if}
-    <button class="knopf primaer" onclick={() => blatt.zeigen({ art: "ansicht", kennung: "editor" })}><i class="fa-solid fa-code"></i> Zum Editor</button>
+    <div class="knopf-reihe">
+      <button class="knopf primaer" title="Fehlende Kommas, Anführungszeichen und Klammern nach festen Regeln ergänzen" onclick={() => blatt.zeigen({ art: "werkzeug", kennung: "reparieren" })}><i class="fa-solid fa-screwdriver-wrench"></i> Reparieren</button>
+      <button class="knopf" onclick={() => blatt.zeigen({ art: "ansicht", kennung: "editor" })}><i class="fa-solid fa-code"></i> Zum Editor</button>
+    </div>
   </div>
 {/if}
 
