@@ -4,6 +4,7 @@ import { knotenZu, zeigerVon } from "../kern/pfade";
 import { JSON_FORMAT } from "./json";
 import { NDJSON_FORMAT } from "./ndjson";
 import { Formatfehler, type NeuerWert } from "./vertrag";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 function gelesen(text: string): Strukturindex {
   const e = JSON_FORMAT.lesen(text);
@@ -245,7 +246,7 @@ describe("JSON erkennen", () => {
 });
 
 describe("JSON Leistung", () => {
-  it("liest etwa 5 MB deutlich unter 3 s", () => {
+  leistungstest("liest etwa 5 MB deutlich unter 3 s", () => {
     const eintraege: string[] = [];
     let i = 0;
     let groesse = 0;
@@ -262,6 +263,6 @@ describe("JSON Leistung", () => {
     console.log(`JSON: ${(text.length / 1e6).toFixed(1)} Mio. Zeichen, ${e.index!.anzahl} Knoten in ${dauer.toFixed(0)} ms`);
     expect(e.diagnosen).toEqual([]);
     expect(e.index!.kinder[0]).toBe(i);
-    expect(dauer).toBeLessThan(3000);
+    expect(dauer).toBeLessThan(zeitgrenze(3000));
   });
 });

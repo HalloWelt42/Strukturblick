@@ -4,6 +4,7 @@ import { knotenZu } from "../kern/pfade";
 import { JSON_FORMAT } from "../formate/json";
 import { CSV_FORMAT } from "../formate/csv";
 import { listeFinden, ortVon, sichtBerechnen, sichtStellen, tabelleBauen, vorschau, zahlenwert, zelle, zellenDerZeile, zellZeiger, WERT_SPALTE_NAME } from "./tabelle";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 function json(text: string): Strukturindex {
   const e = JSON_FORMAT.lesen(text);
@@ -141,7 +142,7 @@ describe("Sicht: Filter und Sortierung", () => {
 });
 
 describe("Große Tabellen", () => {
-  it("baut 100.000 Zeilen, filtert und sortiert in vertretbarer Zeit", () => {
+  leistungstest("baut 100.000 Zeilen, filtert und sortiert in vertretbarer Zeit", () => {
     const teile: string[] = [];
     for (let i = 0; i < 100_000; i++) teile.push(`{"nr": ${i}, "name": "Name ${i % 997}", "ort": "Ort ${i % 50}", "betrag": "${i % 1000},50"}`);
     const text = "[" + teile.join(",\n") + "]";
@@ -153,7 +154,7 @@ describe("Große Tabellen", () => {
     const fertig = performance.now();
     expect(t.zeilen.length).toBe(100_000);
     expect(s.length).toBe(2000); // Orte gehen nur bis 49, also genau "Ort 7"
-    expect(gebaut - anfang).toBeLessThan(1500);
-    expect(fertig - gebaut).toBeLessThan(1500);
+    expect(gebaut - anfang).toBeLessThan(zeitgrenze(1500));
+    expect(fertig - gebaut).toBeLessThan(zeitgrenze(1500));
   });
 });

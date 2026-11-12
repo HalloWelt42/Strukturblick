@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { format } from "../../formate/registrierung";
 import { flicken } from "./flicker";
 import { lesartVermuten, nachher, reparieren, vorhaben, zeichenUnterschied, zeilenSteckbrief, zeilentextNach } from "./reparatur";
+import { leistungstest, zeitgrenze } from "../../../pruefhilfen/zeitgrenze";
 
 const ZEILE = { jsonc: false, zeilenweise: true };
 
@@ -131,12 +132,12 @@ describe("Reparatur eines Dokuments", () => {
     expect(nachher(vorhaben(text, r.befunde).text, "ndjson")).toEqual({ fehler: 0, datensaetze: 21 });
   });
 
-  it("bleibt bei großen Dateien schnell", () => {
+  leistungstest("bleibt bei großen Dateien schnell", () => {
     const zeilen = Array.from({ length: 20000 }, (_, i) => (i % 500 === 7 ? `{"nr":${i} "name":"x` : `{"nr":${i},"name":"Kunde ${i}","ort":"Ort"}`));
     const text = zeilen.join("\n");
     const start = performance.now();
     const r = reparieren(text, "ndjson");
     expect(r.befunde).toHaveLength(40);
-    expect(performance.now() - start).toBeLessThan(1500);
+    expect(performance.now() - start).toBeLessThan(zeitgrenze(1500));
   });
 });

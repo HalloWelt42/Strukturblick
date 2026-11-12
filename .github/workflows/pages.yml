@@ -33,6 +33,9 @@ jobs:
       - name: Tests
         working-directory: frontend
         run: npx vitest run
+      - name: Leistung (eigener Lauf, nacheinander)
+        working-directory: frontend
+        run: npm run test:leistung
       - name: Bau ohne Server
         working-directory: frontend
         run: npm run build:eigenstaendig

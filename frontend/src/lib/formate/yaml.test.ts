@@ -3,6 +3,7 @@ import { inhalt, KEIN, KnotenArt, schluessel, type Strukturindex } from "../kern
 import { knotenZu, zeigerVon } from "../kern/pfade";
 import { Formatfehler, type Leseergebnis, type NeuerWert } from "./vertrag";
 import { YAML_FORMAT } from "./yaml";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 // Im Worker wählt Vite die Browser-Fassung der Bibliothek (Bedingung "default"). Vitest wählt in Node die Fassung
 // "node", die bei jedem Zeichen-Baustein process.env abfragt und dadurch etwa dreimal langsamer liest. Die Tests
@@ -394,10 +395,10 @@ describe("YAML Leistung", () => {
     expect(fehler(e)).toEqual([]);
     return dauer;
   }
-  it("liest 1 MB in unter 2 s", () => {
-    expect(messen(erzeugen(1_000_000))).toBeLessThan(2000);
+  leistungstest("liest 1 MB in unter 2 s", () => {
+    expect(messen(erzeugen(1_000_000))).toBeLessThan(zeitgrenze(2000));
   });
-  it("liest 5 MB überhaupt (nur gemessen)", () => {
+  leistungstest("liest 5 MB überhaupt (nur gemessen)", () => {
     messen(erzeugen(5_000_000));
   }, 30_000);
 });

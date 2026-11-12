@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { knotenZu, KnotenArt, type Strukturindex } from "../kern";
 import { JSON_FORMAT } from "../formate/json";
 import { pfadwerte, stellenZu } from "./pfadwerte";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 function gelesen(text: string): Strukturindex {
   const e = JSON_FORMAT.lesen(text);
@@ -46,13 +47,13 @@ describe("Alle Werte eines Pfads", () => {
     expect(stellenZu(i, t, [0, "*"])).toMatchObject({ fehlt: 1 });
   });
 
-  it("schafft 100.000 Werte schnell", () => {
+  leistungstest("schafft 100.000 Werte schnell", () => {
     const gross = JSON.stringify({ liste: Array.from({ length: 100_000 }, (_, i) => ({ id: i, wert: i % 7, name: `n${i % 100}` })) });
     const gi = gelesen(gross);
     const ziel = knotenZu(gi, gross, "/liste/5/name");
     const t0 = performance.now();
     const w = pfadwerte(gi, gross, ziel);
-    expect(performance.now() - t0).toBeLessThan(1000);
+    expect(performance.now() - t0).toBeLessThan(zeitgrenze(1000));
     expect(w.anzahl).toBe(100_000);
     expect(w.verschiedene).toBe(100);
     expect(w.haeufigste[0].anzahl).toBe(1000);

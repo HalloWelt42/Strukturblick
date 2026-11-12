@@ -5,6 +5,7 @@ import { CSV_FORMAT } from "../formate/csv";
 import { ALLE_EBENEN, sichtbareZeilen, zeileVon, zuAufklappen, type Aufklappen } from "./baumzeilen";
 import { markieren, naechsterTreffer, suchen } from "./baumsuche";
 import { behaelterInfo, gleichAufgebaut, zeileBeschreiben } from "./baumbeschreibung";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 const DOK = JSON.stringify({
   shop: "Hofladen",
@@ -72,12 +73,12 @@ describe("Sichtbare Zeilen", () => {
     expect(s).not.toContain(k("/bestellungen/0/nr"));
   });
 
-  it("bleibt bei 100.000 Zeilen schnell und ohne Rekursion bei tiefer Schachtelung", () => {
+  leistungstest("bleibt bei 100.000 Zeilen schnell und ohne Rekursion bei tiefer Schachtelung", () => {
     const gross = JSON.stringify(Array.from({ length: 100_000 }, (_, i) => ({ i })));
     const gi = gelesen(gross);
     const t0 = performance.now();
     const s = sichtbareZeilen(gi, regel(ALLE_EBENEN));
-    expect(performance.now() - t0).toBeLessThan(1000);
+    expect(performance.now() - t0).toBeLessThan(zeitgrenze(1000));
     expect(s.anzahl).toBe(gi.anzahl);
     const tief = "[".repeat(20_000) + "]".repeat(20_000);
     expect(sichtbareZeilen(gelesen(tief), regel(ALLE_EBENEN)).anzahl).toBe(20_000);

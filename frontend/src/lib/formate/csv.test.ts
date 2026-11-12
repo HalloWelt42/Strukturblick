@@ -3,6 +3,7 @@ import { CSV_FORMAT } from "./csv";
 import { Formatfehler, type Leseergebnis, type NeuerWert } from "./vertrag";
 import { inhalt, KEIN, KnotenArt, kinderVon, schluessel, type Strukturindex } from "../kern/strukturindex";
 import { knotenZu, zeigerVon } from "../kern/pfade";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 function lies(text: string, optionen?: Record<string, string | boolean>): Leseergebnis & { index: Strukturindex } {
   const e = CSV_FORMAT.lesen(text, optionen);
@@ -353,7 +354,7 @@ describe("CSV wertSchreiben", () => {
 });
 
 describe("CSV Leistung", () => {
-  it("liest 5 MB (50.000 Zeilen, 8 Spalten) deutlich unter 2 s", () => {
+  leistungstest("liest 5 MB (50.000 Zeilen, 8 Spalten) deutlich unter 2 s", () => {
     const kopf = "id,name,ort,plz,betrag,datum,notiz,aktiv\n";
     const zeilen: string[] = [];
     for (let i = 0; i < 50000; i++) {
@@ -368,6 +369,6 @@ describe("CSV Leistung", () => {
     expect(diagnosen).toEqual([]);
     expect(merkmale.spalten).toBe(8);
     expect(index.kinder[0]).toBe(merkmale.zeilen);
-    expect(dauer).toBeLessThan(3000);
+    expect(dauer).toBeLessThan(zeitgrenze(3000));
   });
 });

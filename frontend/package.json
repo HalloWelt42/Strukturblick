@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
+    "test:leistung": "STRUKTURBLICK_LEISTUNG=1 vitest run --no-file-parallelism -t \"Leistung: \"",
     "dev:eigenstaendig": "VITE_BAUART=eigenstaendig vite"
   },
   "devDependencies": {

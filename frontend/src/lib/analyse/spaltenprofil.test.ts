@@ -4,6 +4,7 @@ import { JSON_FORMAT } from "../formate/json";
 import { CSV_FORMAT } from "../formate/csv";
 import { tabelleBauen } from "./tabelle";
 import { siehtAusWie, spaltenprofil } from "./spaltenprofil";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 function csvProfil(text: string, spalte: string) {
   const index = CSV_FORMAT.lesen(text).index!;
@@ -59,7 +60,7 @@ describe("Spaltenprofil", () => {
     const t = tabelleBauen(index, json, 0);
     expect(spaltenprofil(t, index, json, 0).verschieden).toBe(2);
   });
-  it("bleibt bei 100.000 Zeilen flott", () => {
+  leistungstest("bleibt bei 100.000 Zeilen flott", () => {
     const zeilen = ["nr;ort;betrag"];
     for (let i = 0; i < 100_000; i++) zeilen.push(`${i};Ort ${i % 50};${i % 1000},50`);
     const csv = zeilen.join("\n");
@@ -67,7 +68,7 @@ describe("Spaltenprofil", () => {
     const t = tabelleBauen(index, csv, 0);
     const anfang = performance.now();
     const profile = t.spalten.map((_, j) => spaltenprofil(t, index, csv, j));
-    expect(performance.now() - anfang).toBeLessThan(1500);
+    expect(performance.now() - anfang).toBeLessThan(zeitgrenze(1500));
     expect(profile[0].verschieden).toBe(100_000);
     expect(profile[1].haeufigste[0].anzahl).toBe(2000);
     expect(profile[2].typ.siehtAusWie).toBe("betrag");

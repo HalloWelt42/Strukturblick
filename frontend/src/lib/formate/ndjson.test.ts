@@ -3,6 +3,7 @@ import { inhalt, kinderVon, KnotenArt, schluessel } from "../kern/strukturindex"
 import { knotenZu, zeigerVon } from "../kern/pfade";
 import { NDJSON_FORMAT } from "./ndjson";
 import { Formatfehler } from "./vertrag";
+import { leistungstest, zeitgrenze } from "../../pruefhilfen/zeitgrenze";
 
 describe("NDJSON lesen", () => {
   it("liest je nichtleere Zeile einen Eintrag der Wurzelliste", () => {
@@ -109,7 +110,7 @@ describe("NDJSON erkennen", () => {
 });
 
 describe("NDJSON Leistung", () => {
-  it("liest etwa 5 MB deutlich unter 3 s", () => {
+  leistungstest("liest etwa 5 MB deutlich unter 3 s", () => {
     const zeilen: string[] = [];
     let groesse = 0;
     while (groesse < 5_000_000) {
@@ -125,6 +126,6 @@ describe("NDJSON Leistung", () => {
     console.log(`NDJSON: ${(text.length / 1e6).toFixed(1)} Mio. Zeichen, ${e.index!.anzahl} Knoten in ${dauer.toFixed(0)} ms`);
     expect(e.diagnosen).toEqual([]);
     expect(e.index!.kinder[0]).toBe(zeilen.length);
-    expect(dauer).toBeLessThan(3000);
+    expect(dauer).toBeLessThan(zeitgrenze(3000));
   });
 });
