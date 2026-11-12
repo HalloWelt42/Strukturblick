@@ -140,9 +140,14 @@
 .an-muster-name {
   font-weight: 600;
 }
+.an-muster-eintrag > div {
+  min-width: 0;
+}
+/* Lange Pfade (etwa aus XML Schema) brechen innerhalb der Karte um, statt über den Rand zu laufen (STB-62) */
 .an-muster-text {
   font-size: var(--klein);
   color: var(--text-2);
+  overflow-wrap: anywhere;
 }
 
 @container an-raum (max-width: 1049px) {

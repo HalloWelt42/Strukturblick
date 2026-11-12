@@ -145,7 +145,7 @@
               {#each muster as m (m.art + m.feld.pfad)}
                 <button class="an-muster-eintrag" onclick={() => waehlen(m.feld)}>
                   <i class="fa-solid {MUSTER_SYMBOL[m.art]}"></i>
-                  <div><div class="an-muster-name">{MUSTER_NAME[m.art]}</div><div class="an-muster-text"><span class="mono">{m.feld.pfad}</span>: {musterText(m.art, m.feld)}</div></div>
+                  <div><div class="an-muster-name">{MUSTER_NAME[m.art]}</div><div class="an-muster-text"><span class="mono">{#each m.feld.pfad.split(/(?<=\.)/) as teil, i (i)}{teil}<wbr />{/each}</span>: {musterText(m.art, m.feld)}</div></div>
                   <span class="abzeichen" class:gut={m.art !== "zahl-als-text"} class:warn={m.art === "zahl-als-text"}>{m.art === "zahl-als-text" ? "Text" : prozent(Math.round(m.anteil * 1000), 1000)}</span>
                 </button>
               {:else}

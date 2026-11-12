@@ -28,7 +28,7 @@
         {#if t.notiz}<div class="af-tab-notiz">{t.notiz}</div>{/if}
         {#each t.spalten as s (s.name)}
           <button class="af-spalte still-knopf" title="{s.name} einfügen" onclick={() => oneinfuegen(s.name)}>
-            <span class="mono">{s.name}</span><span class="rechts"><span class="af-typ">{s.art}</span></span>
+            <span class="mono">{#each s.name.split(/(?<=_)/) as teil, i (i)}{teil}<wbr />{/each}</span><span class="rechts"><span class="af-typ">{s.art}</span></span>
           </button>
         {/each}
       {/if}
