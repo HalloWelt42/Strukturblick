@@ -114,7 +114,7 @@ ergänzt und gelöscht werden, die Zeile unten, wie viele Datensätze danach les
 im Verlauf, "Verwerfen" schließt das Werkzeug ohne Änderung.
 
 Das Werkzeug Konvertieren (Leiste, "Prüfen und umbauen") schreibt das Dokument in ein anderes Format um: CSV, JSON
-Lines, JSON, YAML, TOML oder XML (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
+Lines, JSON, YAML, TOML, XML oder XLSX (das eigene Format steht nicht zur Wahl). Das Dokument bleibt unverändert; das Ergebnis wird
 mit "Als neues Dokument" ein eigener Reiter im selben Ordner oder mit "Herunterladen" eine Datei. Über Quelle und
 Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
 
@@ -133,6 +133,10 @@ Ergebnis steht die Verlustkarte "Was ... nicht kann", ehrlich vor dem Umwandeln:
 - XML braucht ein Wurzelelement (sonst steht alles unter daten), Felder mit @ werden Attribute, #text wird Text, Listen
   werden wiederholte Elemente, null ein leeres Element; Namen, die XML nicht erlaubt, werden angepasst und genannt.
   Aus XML sagt die Karte, welche Elemente mal einzeln, mal als Liste vorkommen (ein einzelnes wird keine Liste).
+- XLSX ist eine Tabellendatei: die Hauptliste wird ein Blatt (Listen in den Einträgen wie bei CSV), Felder außerhalb
+  der Liste kommen auf das Blatt Angaben. Zahlen, Wahrheitswerte und Datum behalten ihren Typ, Nummern mit führender
+  Null bleiben Text, die Kopfzeile ist fett und bleibt beim Rollen stehen. Das Ergebnis wird heruntergeladen; ein
+  neues Dokument entsteht daraus nicht, weil es kein Text ist.
 
 TOML liest Strukturblick selbst, mit allen Stellen im Text: Tabellen ([kontakt]), Tabellenlisten (versand in doppelten eckigen Klammern)
 als Liste, Punktschlüssel (offen.tage), eingebettete Tabellen ({ prozent = 2 }), alle Textformen, Zahlen auch zur Basis 16,
@@ -149,6 +153,13 @@ gemeldet. Ändern und Entfernen wirken nur an ihren Stellen; Kommentare, Einrüc
 Beim Öffnen einer Datei erkennt Strukturblick die Kodierung: Bytereihenfolge-Marke, die Angabe encoding in der
 XML-Deklaration (etwa ISO-8859-1), sonst UTF-8; ist eine Datei kein gültiges UTF-8, wird sie als Windows-1252 gelesen.
 Eine Meldung sagt, wenn nicht UTF-8 gelesen wurde; Herunterladen schreibt immer UTF-8.
+
+Tabellendateien (.xlsx) lassen sich öffnen wie andere Dateien (Datei öffnen oder hineinziehen). Strukturblick arbeitet
+auf Text, deshalb wird daraus ein JSON-Dokument mit einer Liste je Blatt: Die erste Zeile gibt die Feldnamen, wenn sie
+nur Texte enthält (sonst heißen die Felder A, B ...), leere Zellen werden null, ganz leere Zeilen fallen weg. Zahlen,
+Wahrheitswerte und Datum (am Zahlenformat erkannt, als 2026-11-03) behalten ihren Typ. Formeln liefern ihr zuletzt
+berechnetes Ergebnis; Formeln, Fehlerwerte und verbundene Zellen nennt die Meldung beim Öffnen. Die Datei selbst
+bleibt unverändert.
 
 Der Inspektor zeigt Zeilen, Spalten, Größe und bei CSV, woher jede Spalte kommt (aus dem Eintrag, aufgeklappt, je
 Element der Liste).

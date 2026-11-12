@@ -1,0 +1,33 @@
+{
+  "kapitel": "xlsx",
+  "titel": "Tabellendateien öffnen und schreiben",
+  "ticket": "STB-42",
+  "rolle": "erzaehler",
+  "voraussetzung": "Eine Tabellendatei mit zwei Blättern zur Hand (zum Vorführen frontend/pruefdaten/umsatz.xlsx); Beispiele geöffnet",
+  "schritte": [
+    {
+      "nr": 1,
+      "sprechtext": "Eine Tabellendatei lässt sich einfach hineinziehen. Strukturblick arbeitet auf Text und macht daraus ein JSON-Dokument mit einer Liste je Blatt. Was dabei nicht mitkommt, sagt die Meldung: hier eine Formel und ein verbundener Bereich.",
+      "ziel": { "anker": "ablagezone", "notbehelf": "umsatz.xlsx auf das Fenster ziehen oder Datei öffnen" },
+      "aktion": { "art": "ziehen" },
+      "erwartung": "Reiter umsatz.json; Meldung 2 Blätter, 4 Zeilen, 1 Formel, 1 verbundener Bereich",
+      "geprueft": "2026-11-12, Bauart ohne Server, 1440 x 900"
+    },
+    {
+      "nr": 2,
+      "sprechtext": "Die Typen bleiben: Datum als Datum, Zahlen als Zahlen, Ja und Nein als Wahrheitswerte. Leere Zellen sind null.",
+      "ziel": { "anker": "baum", "notbehelf": "Baum, Umsatz November, erster Eintrag" },
+      "aktion": { "art": "zeigen" },
+      "erwartung": "Tag 2026-11-03 als Datum, Menge 2, Preis 7.5, Bezahlt true, Notiz null",
+      "geprueft": "2026-11-12"
+    },
+    {
+      "nr": 3,
+      "sprechtext": "In die andere Richtung: Die Bestellungen als XLSX. Die Karte nennt nur, was eine Tabelle wirklich nicht kann, die Listen in den Einträgen und null. Typen bleiben, und shop und stand kommen auf ein zweites Blatt.",
+      "ziel": { "anker": "konvertieren-ziel", "notbehelf": "bestellungen.json, Konvertieren, Ziel XLSX" },
+      "aktion": { "art": "klicken" },
+      "erwartung": "Karte mit 2 Punkten; Inspektor 297 Zeilen, 10 Spalten, 2 Blätter; Knopf Herunterladen",
+      "geprueft": "2026-11-12"
+    }
+  ]
+}
