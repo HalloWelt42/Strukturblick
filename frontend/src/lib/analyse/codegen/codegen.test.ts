@@ -62,8 +62,10 @@ describe("Klassenmodell aus JSON Schema", () => {
     const a = codeziel("php").schreiben(m, { ...OPTIONEN, attribute: true });
     expect(a.dateien[0].text).toContain("#[Assert\\Regex('/^[0-9]+$/u')]");
     expect(a.abbildung.find((x) => x.feld === "plz")?.typ).toBe("string, #[Assert\\Regex('/^[0-9]+$/u')]");
-    expect(a.abbildung.find((x) => x.feld === "bestellungen")?.typ).toBe("array, im PHPDoc list<Bestellung>, #[Assert\\Valid]");
-    expect(a.hinweis).toBe("Attribute des Symfony Validators am Feld: 1 Grenze, 3 Prüfungen verschachtelter Klassen (Valid). Listentypen bleiben PHPDoc.");
+    expect(a.abbildung.find((x) => x.feld === "bestellungen")?.typ).toBe("array, im PHPDoc list<Bestellung>, #[Assert\\All([new Assert\\Type(Bestellung::class)])], #[Assert\\Valid]");
+    expect(a.dateien[0].text).toContain("     * @param list<Bestellung> $bestellungen\n");
+    expect(a.dateien[0].text).toContain("        #[Assert\\All([new Assert\\Type(Bestellung::class)])]\n        #[Assert\\Valid]\n        public array $bestellungen,");
+    expect(a.hinweis).toBe("Attribute des Symfony Validators am Feld: 1 Grenze, 2 Eintragstypen (All), 3 Prüfungen verschachtelter Klassen (Valid). list<T> steht zusätzlich im PHPDoc für Editor und Analyse.");
     expect(codeziel("php").schreiben(m, OPTIONEN).abbildung.find((x) => x.feld === "plz")?.typ).toBe("string");
   });
 });
@@ -126,6 +128,28 @@ describe("Zielsprachen", () => {
     expect(codeziel("typescript").schreiben(m, o).dateien[0].text).toContain('readonly "@nr": string;');
     expect(codeziel("php").schreiben(m, o).dateien[0].text).toContain("            nr: $daten['@nr'],");
     expect(codeziel("dataclasses").schreiben(m, o).dateien[0].text).toContain('termine=[date.fromisoformat(x) for x in d["termine"]],');
+  });
+
+  it("PHP-Attribute: Eintragstyp je Liste und Zuordnung über Assert\\All", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        termine: { type: "array", items: { type: "string", format: "date" } },
+        preise: { type: "array", items: { type: "number" } },
+        stufen: { type: "array", items: { enum: ["a", "b"] } },
+        gemischt: { type: "array", items: { type: ["integer", "string", "null"] } },
+        roh: { type: "array", items: { anyOf: [{ type: "object", properties: { x: { type: "string" } } }, { type: "string" }] } },
+        frei: { type: "object", additionalProperties: { type: "integer" } },
+      },
+    };
+    const t = codeziel("php").schreiben(ausJsonSchema(schema, "Probe"), { ...OPTIONEN, attribute: true }).dateien[0].text;
+    expect(t).toContain("#[Assert\\All([new Assert\\Type(DateTimeImmutable::class)])]");
+    expect(t).toContain("#[Assert\\All([new Assert\\Type(['int', 'float'])])]");
+    expect(t).toContain("#[Assert\\All([new Assert\\Choice(['a', 'b'])])]");
+    expect(t).toContain("#[Assert\\All([new Assert\\Type(['int', 'string'])])]");
+    expect(t).toContain("#[Assert\\All([new Assert\\Type('int')])]");
+    // Vereinigung mit Klasse bleibt Rohwert: keine Typprüfung
+    expect(t.match(/Assert\\All/g)).toHaveLength(5);
   });
 });
 

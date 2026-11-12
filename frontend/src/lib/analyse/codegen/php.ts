@@ -1,7 +1,8 @@
 // Zielsprache PHP: je Klasse eine final (readonly) class mit Konstruktor-Eigenschaften und fromArray() zum Einlesen aus
 // json_decode(..., true). Datum und Zeitpunkt werden DateTimeImmutable, Klassen und Listen von Klassen über ihr
-// fromArray(). Grenzen stehen als PHPDoc oder als Attribute des Symfony Validators (wählbar); list<T> bleibt PHPDoc,
-// denn Generics kennen PHPStan, Psalm und die IDE nur von dort.
+// fromArray(). Grenzen stehen als PHPDoc oder als Attribute des Symfony Validators (wählbar). Bei Attributen prüft
+// Assert\All den Eintragstyp von Listen; list<T> steht trotzdem im PHPDoc, denn Generics kennen PHPStan, Psalm und
+// die IDE nur von dort.
 
 import { feldKommentar, type Feld, type Feldtyp, type Klasse, type Klassenmodell } from "./modell";
 import { phpMiniprojekt } from "./phpProjekt";
@@ -87,6 +88,42 @@ function feldWert(f: Feld): string {
   return w ? `isset(${roh}) ? ${w} : null` : `${roh} ?? null`;
 }
 
+/** Assert\Choice mit den festen Werten */
+const auswahl = (werte: readonly (string | number | boolean | null)[]): string =>
+  `Assert\\Choice([${werte.map((w) => (typeof w === "string" ? schluesselText(w) : String(w))).join(", ")}])`;
+
+/** Typen für Assert\Type; null, wenn sich der Eintrag so nicht fassen lässt (Zahlen kommen aus JSON auch als int) */
+function typnamen(t: Feldtyp): string[] | null {
+  switch (t.art) {
+    case "text": return ["'string'"];
+    case "ganz": return ["'int'"];
+    case "zahl": return ["'int'", "'float'"];
+    case "wahrheit": return ["'bool'"];
+    case "datum":
+    case "zeitpunkt": return ["DateTimeImmutable::class"];
+    case "klasse": return [`${t.name}::class`];
+    case "liste":
+    case "zuordnung": return ["'array'"];
+    case "vereinigung": {
+      // Klassen und Datum bleiben in einer Vereinigung Rohwerte (siehe grundtyp): dann keine Typprüfung
+      if (t.teile.some((x) => ["klasse", "datum", "zeitpunkt"].includes(x.art))) return null;
+      const teile = t.teile.filter((x) => x.art !== "null").map(typnamen);
+      return teile.length && teile.every(Boolean) ? [...new Set(teile.flat() as string[])] : null;
+    }
+    default: return null;
+  }
+}
+
+/** Prüfung je Eintrag einer Liste oder Zuordnung (Assert\All); null lässt Assert\Type ohnehin durch */
+function eintragPruefung(t: Feldtyp): string | null {
+  if (t.art === "aufzaehlung") return t.werte.length ? `new ${auswahl(t.werte)}` : null;
+  const n = typnamen(t);
+  return n ? `new Assert\\Type(${n.length === 1 ? n[0] : `[${n.join(", ")}]`})` : null;
+}
+
+/** Typ im Innersten von Listen und Zuordnungen */
+const innersterTyp = (t: Feldtyp): Feldtyp => (t.art === "liste" || t.art === "zuordnung" ? innersterTyp(t.von) : t);
+
 /** Attribute des Symfony Validators für ein Feld */
 function attribute(f: Feld): string[] {
   const r = f.regeln;
@@ -101,9 +138,13 @@ function attribute(f: Feld): string[] {
   if (r.maxExklusiv !== undefined) a.push(`Assert\\LessThan(${r.maxExklusiv})`);
   if (r.vielfaches !== undefined) a.push(`Assert\\DivisibleBy(${r.vielfaches})`);
   if (r.ohneDoppel) a.push("Assert\\Unique");
-  if (f.typ.art === "aufzaehlung" && f.typ.werte.length) a.push(`Assert\\Choice([${f.typ.werte.map((w) => (typeof w === "string" ? schluesselText(w) : String(w))).join(", ")}])`);
-  // Verschachtelte Klassen mitprüfen
-  if (f.typ.art === "klasse" || ((f.typ.art === "liste" || f.typ.art === "zuordnung") && f.typ.von.art === "klasse")) a.push("Assert\\Valid");
+  if (f.typ.art === "aufzaehlung" && f.typ.werte.length) a.push(auswahl(f.typ.werte));
+  if (f.typ.art === "liste" || f.typ.art === "zuordnung") {
+    const p = eintragPruefung(f.typ.von);
+    if (p) a.push(`Assert\\All([${p}])`);
+  }
+  // Verschachtelte Klassen mitprüfen, auch in Listen von Listen (Valid geht Arrays in die Tiefe durch)
+  if (innersterTyp(f.typ).art === "klasse") a.push("Assert\\Valid");
   return a;
 }
 
@@ -134,13 +175,14 @@ function klasseSchreiben(k: Klasse, o: Codeoptionen): string[] {
 /** Was im Modus Attribute am Feld steht; ohne Grenzen im Schema bleibt es bei Valid für verschachtelte Klassen */
 function attributHinweis(m: Klassenmodell): string {
   const alle = m.klassen.flatMap((k) => k.felder.flatMap(attribute));
-  const grenzen = alle.filter((a) => a !== "Assert\\Valid").length;
-  const valid = alle.length - grenzen;
+  const valid = alle.filter((a) => a === "Assert\\Valid").length;
+  const eintraege = alle.filter((a) => a.startsWith("Assert\\All")).length;
+  const grenzen = alle.length - valid - eintraege;
   const zahl = (n: number, eins: string, viele: string) => `${n} ${n === 1 ? eins : viele}`;
   if (!alle.length) return "Das Schema hat keine Grenzen, daher keine Attribute. Ein JSON Schema mit Grenzen aus der Ablage liefert sie.";
-  const teile = [grenzen ? zahl(grenzen, "Grenze", "Grenzen") : "", valid ? `${zahl(valid, "Prüfung", "Prüfungen")} verschachtelter Klassen (Valid)` : ""].filter(Boolean);
+  const teile = [grenzen ? zahl(grenzen, "Grenze", "Grenzen") : "", eintraege ? `${zahl(eintraege, "Eintragstyp", "Eintragstypen")} (All)` : "", valid ? `${zahl(valid, "Prüfung", "Prüfungen")} verschachtelter Klassen (Valid)` : ""].filter(Boolean);
   const wenige = grenzen ? "" : " Aus Daten abgeleitet gibt es kaum Grenzen; ein JSON Schema aus der Ablage liefert mehr.";
-  return `Attribute des Symfony Validators am Feld: ${teile.join(", ")}. Listentypen bleiben PHPDoc.${wenige}`;
+  return `Attribute des Symfony Validators am Feld: ${teile.join(", ")}. list<T> steht zusätzlich im PHPDoc für Editor und Analyse.${wenige}`;
 }
 
 /** readonly class gibt es ab 8.2; sonst trägt Klasse::fromArray(...) (first-class callable) ab 8.1 */

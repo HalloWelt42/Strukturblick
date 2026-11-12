@@ -100,7 +100,7 @@
         <span class="wz-etikett">Grenzen als</span>
         <nav class="segment" aria-label="Grenzen als">
           <button class:aktiv={!z.attribute} title="Grenzen als Kommentar (PHPDoc); ohne Abhängigkeit" onclick={() => (z.attribute = false)}>PHPDoc</button>
-          <button class:aktiv={z.attribute} title="Attribute des Symfony Validators (#[Assert\Count] ...); prüfbar mit symfony/validator, list<T> bleibt PHPDoc" onclick={() => (z.attribute = true)}>Attribute</button>
+          <button class:aktiv={z.attribute} title="Attribute des Symfony Validators (#[Assert\Count] ...); Eintragstyp der Listen über Assert\All; prüfbar mit symfony/validator, list<T> zusätzlich als PHPDoc" onclick={() => (z.attribute = true)}>Attribute</button>
         </nav>
       </div>
     {/if}
